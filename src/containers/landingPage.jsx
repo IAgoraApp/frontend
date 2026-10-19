@@ -1,7 +1,11 @@
+import { Sections } from '../components/LandingPage';
+
 export default function LandingPage() {
   return (
-    <>
-      <h1>Lp World</h1>
-    </>
+    <main>
+      <Sections.FirstSection />
+      <Sections.VideoSection />
+      <Sections.RecursosSection />
+    </main>
   );
 }
