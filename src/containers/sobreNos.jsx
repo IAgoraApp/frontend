@@ -4,6 +4,9 @@ function SobreNos(){
     return(
         <main>
             <Header/>
+            <section>
+                <h1>Ola muundo</h1>
+            </section>
         </main>
     )
 }
