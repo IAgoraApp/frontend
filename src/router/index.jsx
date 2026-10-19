@@ -24,6 +24,10 @@ const routes = createBrowserRouter([
                         path: '/',
                         element: <Pages.LandingPage />,
                     },
+                    {
+                        path: '/sobrenos',
+                        element: <Pages.SobreNos />,     
+                    }
                 ],
             },
             {
