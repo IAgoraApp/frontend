@@ -35,6 +35,15 @@ const routes = createBrowserRouter([
                     },
                 ],
             },
+            {
+                element: <PrivateRoute />,
+                children: [
+                    {
+                        path: '/FinancasA',
+                        element: <Pages.FinancasA />,
+                    },
+                ],
+            },
         ],
     },
 ]);
