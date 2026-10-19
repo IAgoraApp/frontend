@@ -1,0 +1,138 @@
+.section1 {
+    width: 100%;
+    height: 100vh;
+    background-image: url(../assets/images/casa.jpg);
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.div_sec1 {
+    width: 580px;
+    margin-right: 120px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 40px;
+
+    & h2 {
+        color: #D54C15;
+        font-family: "Poppins", sans-serif;
+        font-size: 40px;
+        font-weight: 600;
+    }
+
+    & .p {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 20px;
+
+        & p {
+            color: #000;
+            font-family: "Poppins", sans-serif;
+            font-size: 19px;
+            font-weight: 400;
+            text-align: left;
+        }
+
+        & span {
+            color: #d54c15;
+        }
+    }
+}
+
+.section2 {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 190px;
+}
+
+.div1_sec2 {
+    padding-top: 100px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    & h2 {
+        color: #000;
+        text-align: center;
+        font-family: "Poppins", sans-serif;
+        font-size: 35px;
+        font-weight: 600;
+    }
+
+    & img {
+        width: 800px;
+    }
+}
+
+.container_cards{
+    width: 1070px;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.card {
+    width: 520px;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    border-radius: 20px;
+    background: #12377D;
+    box-shadow: 0 7px 4px 0 rgba(0, 0, 0, 0.25);
+    margin: 15px 0;
+
+    & .aluno {
+        width: 150px;
+        border-radius: 50%;
+    }
+
+    & h3 {
+        color: #FFF;
+        font-family: Poppins;
+        font-size: 30px;
+        font-weight: 600;
+    }
+
+    p {
+        color: #FFF;
+        font-family: Poppins;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    & .links{
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+    }
+}
+.textos{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+
+    & .texto{
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 11px;
+    }
+}
