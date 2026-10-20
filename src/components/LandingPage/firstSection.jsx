@@ -23,7 +23,7 @@ export default function FirstSection() {
       <Button
         variant='solido'
         color='laranja'
-        className='mt-10 font-bold px-20 text-2xl'
+        className='mt-5 font-bold px-20 text-2xl'
       >
         Bora lá <ArrowUpRight />
       </Button>
