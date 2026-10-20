@@ -28,8 +28,8 @@ export default function RecursosSection() {
               className={`
              ${
                id == valor
-                 ? 'bg-(--azul-principal) text-white'
-                 : 'bg-white text-(--azul-principal) hover:bg-gray-200'
+                 ? 'bg-(--azul-escuro) text-white'
+                 : 'bg-white text-(--azul-escuro) hover:bg-gray-200'
              } rounded-full w-full py-3 font-semibold transition-colors duration-300 cursor-pointer`}
             >
               {item.nome}
@@ -37,12 +37,22 @@ export default function RecursosSection() {
           ))}
         </div>
 
-        <div className='mt-10'>
-          <Title variant='pequenoLj' className='mb-5'>{valor} / {content[valor].nome}</Title>
-          <Title variant='normal' className='mb-4'>{content[valor].titulo}</Title>
-          <p className='mb-7'>{content[valor].desc}</p>
+        <div className='mt-10 flex'>
+          <div className='w-1/3'>imagem</div>
+          <div>
+            <Title variant='pequenoLj' className='mb-5'>
+              {valor} / {content[valor].nome}
+            </Title>
+            <Title variant='normal' className='mb-4'>
+              {content[valor].titulo}
+            </Title>
+            <p className='mb-7'>{content[valor].desc}</p>
 
-          <Button color='laranja'>Explorar guias<ArrowUpRight/></Button>
+            <Button color='laranja'>
+              Explorar guias
+              <ArrowUpRight />
+            </Button>
+          </div>
         </div>
       </div>
     </section>

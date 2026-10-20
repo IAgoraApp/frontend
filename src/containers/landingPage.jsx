@@ -6,6 +6,7 @@ export default function LandingPage() {
       <Sections.FirstSection />
       <Sections.VideoSection />
       <Sections.RecursosSection />
+      <Sections.MomentoSection/>
     </main>
   );
 }
