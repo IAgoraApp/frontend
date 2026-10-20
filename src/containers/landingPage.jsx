@@ -11,6 +11,7 @@ export default function LandingPage() {
         <Sections.MomentoSection />
         <Sections.RecursosSection />
         <Sections.PerguntasSection />
+        <Sections.EndSection />
       </main>
       <Footer />
     </>

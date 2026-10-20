@@ -31,7 +31,7 @@ export default function PerguntasSection() {
 
       <div className='flex flex-col gap-3 mt-5'>
         {perguntas.map(item => (
-          <div key={item.id} className='p-4 bg-white'>
+          <div key={item.id} className='p-6 bg-white'>
             <h3 className='text-xl font-bold text-(--azul-escuro) mb-2'>{item.pergunta}</h3>
             <p className='text-(--azul-escuro)'>{item.resposta}</p>
           </div>

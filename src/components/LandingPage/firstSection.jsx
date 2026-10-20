@@ -11,7 +11,7 @@ export default function FirstSection() {
         Quero morar sozinho
       </h1>
 
-      <div className='bg-(--laranja-principal) w-fit px-20 rotate-2 mt-5 mb-5'>
+      <div className='bg-(--laranja-principal) w-fit px-20 rotate-4 mt-5 mb-5 hover:rotate-0 transition-all duration-300'>
         <h1 className='text-9xl font-heading text-white font-bold'>I agora?</h1>
       </div>
 
