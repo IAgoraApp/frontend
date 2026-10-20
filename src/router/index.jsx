@@ -32,7 +32,12 @@ const routes = createBrowserRouter([
                     {
                         path: '/home',
                         element: <Pages.Home />,
-                    },
+                    }, 
+                    
+                    {
+                        path: '/aprendendo',
+                        element: <Pages.Aprendendo />,
+                    }
                 ],
             },
         ],
