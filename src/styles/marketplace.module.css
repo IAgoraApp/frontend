@@ -1,0 +1,137 @@
+* {
+    box-sizing: border-box;
+}
+
+
+main {
+    width: 1440px;
+    height: 2321px;
+    background: var(--color-white, #FFF);
+}
+
+.apresentacao {
+    width: 1200px;
+    height: 670px;
+    background: var(--color-white, #FFF);
+    margin-left: 120px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.apresentacao_texto1 {
+    display: flex;
+    width: 740px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.h3 {
+    width: 700px;
+    color: var(--color-orange, #D54C15);
+    font-family: "DM Sans";
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    /* 138.462% */
+    margin-top: 38px;
+}
+
+.apresentacao_texto2 {
+    width: 740px;
+    color: var(--color-navy, #102A43);
+    font-family: "Bricolage Grotesque";
+    font-size: 90px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 92px;
+    margin-top: 20px;
+    /* 102.222% */
+}
+
+.apresentacao_texto3 {
+    display: flex;
+    width: 600px;
+    transform: rotate(2deg);
+    padding: 6px 20px 8px 20px;
+    align-items: flex-start;
+    background: var(--color-orange, #D54C15);
+    margin-top: 20px;
+}
+
+.h2 {
+    width: 600px;
+    flex-shrink: 0;
+    color: var(--color-white, #FFF);
+    font-family: "Bricolage Grotesque";
+    font-size: 80px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 88px;
+    /* 102.326% */
+}
+
+.apresentacao_texto4 {
+    width: 570px;
+    color: var(--color-navy, #102A43);
+    font-family: "DM Sans";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 28px;
+    /* 140% */
+    margin-top: 25px;
+}
+
+.apresentacao_texto5 {
+    display: flex;
+    width: 340px;
+    height: 56px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 28px;
+    background: var(--color-action, #D54C15);
+    margin-top: 20px;
+    flex-shrink: 0;
+    color: var(--color-white, #FFF);
+    text-align: center;
+    font-family: "DM Sans";
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 22px;
+    /* 146.667% */
+
+}
+
+.apresentacao_texto5:hover {
+    background: #e76b3a;
+}
+
+.apresentacao_texto6 {
+    display: flex;
+    width: 330px;
+    height: 40px;
+    transform: rotate(2deg);
+    padding: 10px 16px;
+    justify-content: center;
+    align-items: center;
+    background: var(--color-navy, #102A43);
+    color: var(--color-white, #FFF);
+    text-align: center;
+    font-family: "DM Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    /* 142.857% */
+    margin-top: 80px;
+
+}
+
+.apresentacao_texto6:hover {
+    background: #223b65;
+}
+
+
