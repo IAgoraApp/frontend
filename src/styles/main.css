@@ -1,1 +1,11 @@
-@import "tailwindcss";
+@import url('./var.css');
+@import 'tailwindcss';
+
+body {
+  font-family: var(--font-body);
+}
+
+@theme {
+  --font-heading: "Bricolage Grotesque", sans-serif;
+  --font-body: "DM Sans", sans-serif;
+}
