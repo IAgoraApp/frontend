@@ -1,6 +1,7 @@
 import { Button, Title } from '../ui';
 import { useState } from 'react';
 import { Content } from '../../data/landingPage';
+import { ArrowUpRight } from 'lucide-react';
 
 export default function RecursosSection() {
   const content = Content;
@@ -16,23 +17,33 @@ export default function RecursosSection() {
         Sua casa tem muitas partes. <br /> A ajuda também.
       </Title>
 
-      <div className='flex gap-3 bg-(--azul-fundo) p-10 mt-10'>
-        {Object.entries(content).map(([id, item]) => (
-          <button
-            key={id}
-            onClick={() => {
-              setValor(id);
-            }}
-            className={`
+      <div className='bg-(--azul-fundo) p-10 mt-10'>
+        <div className='justify-between flex gap-5'>
+          {Object.entries(content).map(([id, item]) => (
+            <button
+              key={id}
+              onClick={() => {
+                setValor(id);
+              }}
+              className={`
              ${
                id == valor
                  ? 'bg-(--azul-principal) text-white'
-                 : 'bg-white text-(--azul-principal)'
-             } rounded-full w-50 py-3 font-semibold `}
-          >
-            {item.nome}
-          </button>
-        ))}
+                 : 'bg-white text-(--azul-principal) hover:bg-gray-200'
+             } rounded-full w-full py-3 font-semibold transition-colors duration-300 cursor-pointer`}
+            >
+              {item.nome}
+            </button>
+          ))}
+        </div>
+
+        <div className='mt-10'>
+          <Title variant='pequenoLj' className='mb-5'>{valor} / {content[valor].nome}</Title>
+          <Title variant='normal' className='mb-4'>{content[valor].titulo}</Title>
+          <p className='mb-7'>{content[valor].desc}</p>
+
+          <Button color='laranja'>Explorar guias<ArrowUpRight/></Button>
+        </div>
       </div>
     </section>
   );
