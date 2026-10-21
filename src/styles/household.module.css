@@ -457,6 +457,9 @@
 .footer a:hover {
   color: var(--laranja-principal);
 }
+.footer nav a:last-child {
+  margin-bottom: 0;
+}
 .legal {
   margin-top: 48px;
   padding-top: 24px;
@@ -637,6 +640,14 @@
   }
 }
 
+@media (min-width: 1440px) {
+  .hero {
+    grid-template-columns: 740px 490px;
+  }
+  .heroReversed {
+    grid-template-columns: 490px 740px;
+  }
+}
 @media (max-width: 1250px) {
   .header {
     padding-inline: 40px;
