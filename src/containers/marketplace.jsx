@@ -1,5 +1,4 @@
-import Header from '../components/Header'
-import Footer from '../components/Footer'
+import { Header, Footer } from '../components'
 import Styles from '../styles/marketplace.module.css'
 import Direita from '../assets/images/div-direita.png'
 import Manutenção from '../assets/images/essentials.png'
