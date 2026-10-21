@@ -155,7 +155,7 @@
 
     & .div_left {
         width: 53%;
-        padding-left: 58px;
+        padding-left: 120px;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
@@ -197,7 +197,7 @@
 
     & .div_right {
         width: 47%;
-        padding-right: 58px;
+        padding-right: 120px;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
@@ -232,7 +232,7 @@
     width: 100%;
     height: 450px;
     background: #D54C15;
-    padding: 51px 58px;
+    padding: 51px 120px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -253,7 +253,7 @@
     justify-content: space-between;
 
     & .sec5_card {
-    width: 398px;
+    width: 350px;
     border-radius: 20px;
     background: #FFF;
     padding: 25px 25px;
