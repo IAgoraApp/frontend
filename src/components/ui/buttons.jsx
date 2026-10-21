@@ -19,6 +19,10 @@ const colors = {
     solido: 'bg-gray-900 text-white hover:bg-gray-700',
     link: 'text-gray-900',
   },
+  branco: {
+    solido: 'bg-white text-black hover:bg-gray-300',
+    link: 'text-white',
+  },
 };
 
 export function Button({

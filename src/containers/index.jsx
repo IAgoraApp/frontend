@@ -4,6 +4,7 @@ import Dashboard from './dashboard';
 import MeusServicos from './meusServicos';
 import PerfilEmpresa from './perfilEmpresa';
 import CadastroEmpresa from './cadastroEmpresa';
+import Marketplace from './marketplace';
 
 const TelaErro = () => {
   return <h1>Erro não esperado</h1>;
@@ -17,4 +18,5 @@ export const Pages = {
   PerfilEmpresa,
   CadastroEmpresa,
   TelaErro,
+  Marketplace 
 };

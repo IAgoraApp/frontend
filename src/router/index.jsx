@@ -63,7 +63,11 @@ const routes = createBrowserRouter([
                     {
                         path: '/perfilEmpresa',
                         element: <Pages.PerfilEmpresa />,
-                    }
+                    },
+                    {
+                        path: '/marketplace',
+                        element: <Pages.Marketplace />,
+                    },
                 ],
             },
         ],
