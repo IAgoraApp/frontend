@@ -68,6 +68,7 @@ function GoogleIcon() {
   );
 }
 
+// eslint-disable-next-line no-unused-vars
 function Illustration() {
   return (
     <svg
@@ -155,6 +156,7 @@ function Illustration() {
   );
 }
 
+// eslint-disable-next-line no-unused-vars
 function BoxIllustration() {
   return (
     <svg
@@ -466,9 +468,9 @@ export default function Auth({
     "w-full min-w-0 bg-transparent text-[#526579] text-[16px] leading-[24px] font-normal outline-none placeholder:text-[#526579]";
 
   const labelClass =
-    "text-[#102A43] text-[14px] leading-[18px] font-bold";
+    "text-[#102A43] text-[14px] leading-[18px] font-bold"; 
 
-  return (
+  return ( 
     <>
       <style>{`
         @import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=DM+Sans:wght@400;500;700&display=swap");

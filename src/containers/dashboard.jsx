@@ -1,14 +1,8 @@
 import { Link } from 'react-router-dom';
-import Logo from '../assets/images/logoLaranja.png';
 import { Title, Button, CaixaAnimada } from '../components/ui';
 import { Footer } from '../components';
 
 export default function Dashboard() {
-  const abasEmpresa = [
-    { nome: 'Painel', rota: '/dashboard' },
-    { nome: 'Meus serviços', rota: '/meus-servicos' },
-    { nome: 'Perfil da empresa', rota: '/perfil-empresa' },
-  ];
 
   const servicos = [
     {
@@ -66,31 +60,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <header className='mx-30 flex justify-between py-5 items-center border-b border-gray-100'>
-        <Link to='/dashboard'>
-          <img className='w-40 cursor-pointer' src={Logo} alt='IAgora' />
-        </Link>
 
-        <div className='flex gap-10'>
-          {abasEmpresa.map((item, index) => (
-            <Link
-              key={index}
-              to={item.rota}
-              className={`font-semibold cursor-pointer transition-all ${
-                item.nome === 'Painel'
-                  ? 'text-(--laranja-principal)'
-                  : 'hover:text-(--laranja-principal)'
-              }`}
-            >
-              {item.nome}
-            </Link>
-          ))}
-        </div>
-
-        <Link to='/meus-servicos'>
-          <Button color='laranja'>+ Anunciar serviço</Button>
-        </Link>
-      </header>
 
       <main className='mx-30 mb-20 mt-10 flex flex-col gap-12'>
         <section className='grid grid-cols-1 lg:grid-cols-12 gap-6 items-center py-2'>

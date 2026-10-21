@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Header, Footer } from '../index';
+import { Footer } from '../index';
 import styles from '../../styles/household.module.css';
 
 export default function HouseholdLayout({ title, children, className = '' }) {
@@ -16,7 +16,6 @@ export default function HouseholdLayout({ title, children, className = '' }) {
       <a href='#conteudo-principal' className={styles.skipLink}>
         Pular para o conteúdo
       </a>
-      <Header />
       <main id='conteudo-principal' tabIndex={-1} className={styles.main}>
         {children}
       </main>
