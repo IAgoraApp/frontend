@@ -5,7 +5,7 @@ export default function MinhaJornada(){
         <>
         <Header/>
         <main>
-
+            <h2>ola mundo</h2>
         </main>
         <Footer/>
         </>
