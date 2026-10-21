@@ -6,6 +6,7 @@ import Fernando from '../assets/images/fernando.jpg';
 import Joao from '../assets/images/joao.png';
 import Kaua from '../assets/images/kaua.png';
 import Igor from '../assets/images/igor.jpg';
+import Emily from '../assets/images/emily.png';
 import IconeLinkedin from '../assets/images/icone-linkedin.svg';
 import IconeGithub from '../assets/images/icone-github.svg';
 import Autonomia from "../assets/images/autonomia.svg"
@@ -110,7 +111,7 @@ function SobreNos() {
 
                 {/* EMILY BATISTA - CARD */}
                 <div className={Styles.card}>
-                    <img className={Styles.aluno} src={Gomes} alt='foto do gabriel' />
+                    <img className={Styles.aluno} src={Emily} alt='foto da Emily' />
 
                     <div className={Styles.textos}>
                         <div className={Styles.texto}>
