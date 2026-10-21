@@ -1,46 +1,24 @@
-* {
-    box-sizing: border-box;
-}
-
-
-main {
-    width: 100%;
-    max-width: 1440px;
-    height: 2321px;
-    background: var(--color-white, #FFF);
-    margin: 0 auto;
-}
-
 .apresentacao {
-    width: 90%;
-    max-width: 1296px;
+    width: 100%;
     height: 670px;
     background: var(--color-white, #FFF);
-    margin: 0 auto;
+    margin-left: 120px;
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 
-.div1 {
-    display: flex;
-    width: calc(100% - 490px);
-    flex-direction: column;
-    align-items: flex-start;
-}
-
 .apresentacao_texto1 {
     display: flex;
     width: 100%;
-    max-width: 740px;
     flex-direction: column;
     align-items: flex-start;
     gap: 20px;
+
 }
 
 .h3 {
-    width: 100%;
-    max-width: 700px;
+    width: 700px;
     color: var(--color-orange, #D54C15);
     font-family: "DM Sans";
     font-size: 13px;
@@ -51,8 +29,7 @@ main {
 }
 
 .apresentacao_texto2 {
-    width: 100%;
-    max-width: 740px;
+    width: 740px;
     color: var(--color-navy, #102A43);
     font-family: "Bricolage Grotesque";
     font-size: 90px;
@@ -65,8 +42,7 @@ main {
 
 .apresentacao_texto3 {
     display: flex;
-    width: 100%;
-    max-width: 600px;
+    width: 600px;
     transform: rotate(2deg);
     padding: 6px 20px 8px 20px;
     align-items: flex-start;
@@ -75,8 +51,7 @@ main {
 }
 
 .h2 {
-    width: 100%;
-    max-width: 600px;
+    width: 600px;
     flex-shrink: 0;
     color: var(--color-white, #FFF);
     font-family: "Bricolage Grotesque";
@@ -88,8 +63,7 @@ main {
 }
 
 .apresentacao_texto4 {
-    width: 100%;
-    max-width: 570px;
+    width: 570px;
     color: var(--color-navy, #102A43);
     font-family: "DM Sans";
     font-size: 20px;
@@ -102,8 +76,7 @@ main {
 
 .apresentacao_texto5 {
     display: flex;
-    width: 100%;
-    max-width: 340px;
+    width: 340px;
     height: 56px;
     justify-content: center;
     align-items: center;
@@ -128,8 +101,7 @@ main {
 
 .apresentacao_texto6 {
     display: flex;
-    width: 100%;
-    max-width: 330px;
+    width: 330px;
     height: 40px;
     transform: rotate(2deg);
     padding: 10px 16px;
@@ -156,26 +128,22 @@ main {
 .div2 {
     position: relative;
     width: 490px;
-    max-width: 40%;
     height: 610px;
-    flex-shrink: 0;
 }
 
 .cuidado {
     display: flex;
-    width: 90%;
-    max-width: 1296px;
+    width: 1296px;
     height: 247px;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    margin: 0 auto;
+    margin-left: 120px;
 
 }
 
 .p2 {
-    width: 100%;
-    max-width: 1296px;
+    width: 1296px;
     color: var(--color-orange, #D54C15);
     font-family: "DM Sans";
     font-size: 12px;
@@ -186,8 +154,7 @@ main {
 }
 
 .h2_cuidado {
-    width: 100%;
-    max-width: 1296px;
+    width: 1296px;
     color: var(--color-navy, #102A43);
     font-family: "Bricolage Grotesque";
     font-size: 48px;
@@ -208,14 +175,10 @@ main {
     background: var(--color-neutral, #F4F7FA);
     margin-top: 40px;
     flex-direction: row;
-    width: 100%;
-    max-width: 1296px;
 }
 
 .pesquisa form {
     display: flex;
-    flex: 1 1 0;
-    min-width: 0;
     flex-direction: column;
     /* label em cima, input embaixo */
     gap: 8px;
@@ -223,7 +186,6 @@ main {
 }
 
 .pesquisa label {
-    width: 100%;
     color: var(--color-navy, #102A43);
     font-family: "DM Sans";
     font-size: 14px;
@@ -236,8 +198,7 @@ main {
 
 .pesquisa input {
     display: flex;
-    width: 100%;
-    max-width: none;
+    width: 465px;
     height: 52px;
     padding: 16px;
     align-items: center;
@@ -254,9 +215,7 @@ main {
 
 .buscar_empresa {
     display: flex;
-    width: 100%;
-    max-width: 272px;
-    flex: 0 0 272px;
+    width: 272px;
     height: 52px;
     justify-content: center;
     align-items: center;
@@ -270,8 +229,7 @@ main {
 
 .empresa {
     display: flex;
-    width: 100%;
-    max-width: 272px;
+    width: 272px;
     height: 52px;
     justify-content: center;
     align-items: center;
@@ -286,14 +244,12 @@ main {
 
 .buscar_empresas {
     display: flex;
-    width: 90%;
-    max-width: 1296px;
+    width: 1296px;
     height: 600px;
     flex-direction: column;
     align-items: flex-start;
     gap: 40px;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 120px;
     margin-top: 40px;
 }
 
@@ -302,8 +258,7 @@ main {
     align-items: center;
     gap: 12px;
     align-self: stretch;
-    width: 100%;
-    max-width: 1296px;
+    width: 1296px;
     height: 70px;
 }
 
@@ -333,8 +288,7 @@ main {
 .manutencao,
 .mudanca {
     display: flex;
-    width: calc((100% - 48px) / 3);
-    max-width: 416px;
+    width: 416px;
     height: 508px;
     flex-direction: column;
     justify-content: space-between;
@@ -349,16 +303,14 @@ main {
 }
 
 .limpeza_img {
-    width: 100%;
-    max-width: 416px;
+    width: 416px;
     height: 270px;
     background: url(<path-to-image>) lightgray 50% / cover no-repeat;
 }
 
 .limpeza_text {
     display: flex;
-    width: 100%;
-    max-width: 416px;
+    width: 416px;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -366,8 +318,7 @@ main {
 }
 
 .h3_limpeza {
-    width: calc(100% - 48px);
-    max-width: 368px;
+    width: 368px;
     color: var(--color-orange, #D54C15);
     font-family: "DM Sans";
     font-size: 12px;
@@ -378,8 +329,7 @@ main {
 }
 
 .h2_limpeza {
-    width: calc(100% - 48px);
-    max-width: 368px;
+    width: 368px;
     color: var(--color-navy, #102A43);
     font-family: "Bricolage Grotesque";
     font-size: 32px;
@@ -391,8 +341,7 @@ main {
 }
 
 .p_limpeza {
-    width: calc(100% - 48px);
-    max-width: 368px;
+    width: 368px;
     color: var(--color-muted, #596579);
     font-family: "DM Sans";
     font-size: 16px;
@@ -404,8 +353,7 @@ main {
 
 .conhecer {
     display: flex;
-    width: calc(100% - 48px);
-    max-width: 368px;
+    width: 368px;
     height: 52px;
     justify-content: center;
     align-items: center;
@@ -422,8 +370,7 @@ main {
 
 .divulgacao {
     display: flex;
-    width: 90%;
-    max-width: 1296px;
+    width: 1296px;
     height: 143px;
     padding: 32px;
     justify-content: center;
@@ -431,13 +378,11 @@ main {
     gap: 32px;
     background: var(--color-navy, #102A43);
     margin-top: 40px;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 120px;
 }
 
 .divulgacao_h2 {
-    width: 100%;
-    max-width: 900px;
+    width: 900px;
     color: var(--color-white, #FFF);
     font-family: "Bricolage Grotesque";
     font-size: 42px;
@@ -448,8 +393,7 @@ main {
 }
 
 .p_divulgacao {
-    width: 100%;
-    max-width: 900px;
+    width: 900px;
     color: var(--color-white, #FFF);
     font-family: "DM Sans";
     font-size: 17px;
@@ -462,8 +406,7 @@ main {
 
 .divulgacao_botao{
     display: flex;
-width: 100%;
-max-width: 300px;
+width: 300px;
 height: 52px;
 justify-content: center;
 align-items: center;
@@ -474,152 +417,4 @@ color: var(--color-white, #FFF);
 
 .divulgacao_botao:hover {
     background: #e76b3a;
-}
-
-@media (max-width: 1100px) {
-    main {
-        height: auto;
-    }
-
-    .apresentacao {
-        height: auto;
-        min-height: 670px;
-        justify-content: center;
-        gap: 48px;
-        padding: 32px 0;
-    }
-
-    .div1 {
-        width: calc(100% - 360px);
-    }
-
-    .apresentacao_texto1,
-    .apresentacao_texto2,
-    .apresentacao_texto3,
-    .apresentacao_texto4,
-    .apresentacao_texto5,
-    .apresentacao_texto6 {
-        max-width: 100%;
-    }
-
-    .div2 {
-        width: 360px;
-        max-width: 40%;
-        height: auto;
-    }
-
-    .apresentacao_texto2 {
-        font-size: clamp(56px, 8vw, 90px);
-        line-height: 1.05;
-    }
-
-    .h2 {
-        font-size: clamp(48px, 7vw, 80px);
-        line-height: 1.1;
-    }
-
-    .pesquisa {
-        height: auto;
-        flex-wrap: wrap;
-        align-items: flex-end;
-    }
-
-    .cuidado {
-        height: auto;
-        min-height: 247px;
-        padding-bottom: 40px;
-    }
-
-    .pesquisa form {
-        flex: 1 1 280px;
-    }
-
-    .pesquisa input {
-        max-width: none;
-    }
-
-    .buscar_empresa {
-        flex-basis: 272px;
-    }
-
-    .servicos2 {
-        flex-wrap: wrap;
-        row-gap: 24px;
-    }
-
-    .buscar_empresas {
-        height: auto;
-        min-height: 600px;
-    }
-
-    .limpeza,
-    .manutencao,
-    .mudanca {
-        width: calc((100% - 24px) / 2);
-    }
-
-    .divulgacao {
-        height: auto;
-        flex-wrap: wrap;
-        margin-top: 40px;
-    }
-
-    .divulgacao_h2,
-    .divulgacao_botao {
-        max-width: none;
-    }
-}
-
-@media (max-width: 650px) {
-    .apresentacao,
-    .cuidado,
-    .buscar_empresas,
-    .divulgacao {
-        width: calc(100% - 32px);
-    }
-
-    .apresentacao {
-        min-height: 0;
-        flex-direction: column;
-        gap: 40px;
-    }
-
-    .div1,
-    .div2 {
-        width: 100%;
-        max-width: 100%;
-    }
-
-    .apresentacao_texto2 {
-        font-size: clamp(42px, 13vw, 64px);
-    }
-
-    .h2 {
-        font-size: clamp(38px, 11vw, 56px);
-    }
-
-    .limpeza,
-    .manutencao,
-    .mudanca {
-        width: 100%;
-    }
-
-    .buscar_empresas {
-        min-height: 0;
-    }
-
-    .servicos {
-        height: auto;
-        flex-wrap: wrap;
-    }
-
-    .pesquisa {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .pesquisa form,
-    .buscar_empresa {
-        width: 100%;
-    }
 }
