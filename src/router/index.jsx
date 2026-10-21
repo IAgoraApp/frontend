@@ -2,11 +2,6 @@ import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import { Pages } from '../containers';
 import { PrivateRoute, PublicRoute } from '../utils/checkAuth';
 
-// const Layout = () => (
-//     <div className='page-content'>
-//         <Outlet />
-//     </div>
-// );
 
 const routes = createBrowserRouter([
     {
@@ -27,7 +22,27 @@ const routes = createBrowserRouter([
                     {
                         path: '/sobrenos',
                         element: <Pages.SobreNos />,     
-                    }
+                    },
+                    {
+                        path: '/login',
+                        element: <Pages.Auth />
+                    },
+                    {
+                        path: '/cadastro-empresa',
+                        element: <Pages.CadastroEmpresa />,
+                    },
+                    {
+                        path: '/cadastroEmpresa',
+                        element: <Pages.CadastroEmpresa />,
+                    },
+                    {
+                        path: '/parceiros',
+                        element: <Pages.CadastroEmpresa />,
+                    },
+                    {
+                        path: '/seja-parceiro',
+                        element: <Pages.CadastroEmpresa />,
+                    },
                 ],
             },
             {
@@ -36,6 +51,30 @@ const routes = createBrowserRouter([
                     {
                         path: '/home',
                         element: <Pages.Home />,
+                    },
+                    {
+                        path: '/dashboard',
+                        element: <Pages.Dashboard />,
+                    },
+                    {
+                        path: '/meus-servicos',
+                        element: <Pages.MeusServicos />,
+                    },
+                    {
+                        path: '/meusServicos',
+                        element: <Pages.MeusServicos />,
+                    },
+                    {
+                        path: '/perfil-empresa',
+                        element: <Pages.PerfilEmpresa />,
+                    },
+                    {
+                        path: '/perfilEmpresa',
+                        element: <Pages.PerfilEmpresa />,
+                    },
+                    {
+                        path: '/marketplace',
+                        element: <Pages.Marketplace />,
                     },
                 ],
             },
