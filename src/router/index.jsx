@@ -33,6 +33,10 @@ const routes = createBrowserRouter([
                         path: '/home',
                         element: <Pages.Home />,
                     },
+                    {
+                        path: '/marketplace',
+                        element: <Pages.Marketplace />,
+                    },
                 ],
             },
         ],
