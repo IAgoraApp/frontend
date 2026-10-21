@@ -23,7 +23,7 @@ const perguntas = [
 
 export default function PerguntasSection() {
   return (
-    <section className='px-30 bg-(--laranja-principal) py-20'>
+    <section id='perguntas-frequentes' className='px-30 bg-(--laranja-principal) py-20'>
       <Title variant='pequenoBc'>Sem complicação</Title>
       <Title variant='normal' className='text-6xl text-white'>
         Antes de começar

@@ -9,7 +9,7 @@ export default function RecursosSection() {
   const [valor, setValor] = useState(1);
 
   return (
-    <section className='px-30 py-30'>
+    <section id='funcionalidades' className='px-30 py-30'>
       <Title as='h2' variant='pequenoLj'>
         A vida real pede
       </Title>

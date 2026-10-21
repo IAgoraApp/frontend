@@ -2,7 +2,7 @@ import { Title, Button } from '../ui';
 
 export default function MomentoSection() {
   return (
-    <section className='bg-(--azul-escuro) px-30 py-20 mt-40'>
+    <section id='como-funciona' className='bg-(--azul-escuro) px-30 py-20 mt-40'>
       <Title variant='pequenoBc'>Cada começo tem seu jeito.</Title>
       <Title variant='normal' className='text-white text-7xl mb-10'>
         Em que momento você está?
