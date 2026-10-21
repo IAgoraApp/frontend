@@ -20,6 +20,10 @@ const routes = createBrowserRouter([
                         element: <Pages.LandingPage />,
                     },
                     {
+                        path: '/login',
+                        element: <Pages.Auth />
+                    },
+                    {
                         path: '/cadastro-empresa',
                         element: <Pages.CadastroEmpresa />,
                     },

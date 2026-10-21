@@ -1,5 +1,6 @@
 import LandingPage from './landingPage';
 import Home from './home';
+import Auth from './auth';
 import Dashboard from './dashboard';
 import MeusServicos from './meusServicos';
 import PerfilEmpresa from './perfilEmpresa';
@@ -18,5 +19,6 @@ export const Pages = {
   PerfilEmpresa,
   CadastroEmpresa,
   TelaErro,
-  Marketplace 
+  Marketplace,
+  Auth
 };
