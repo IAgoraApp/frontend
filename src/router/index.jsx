@@ -39,6 +39,10 @@ const routes = createBrowserRouter([
                         path: '/seja-parceiro',
                         element: <Pages.CadastroEmpresa />,
                     },
+                    {
+                        path: '/onboarding',
+                        element: <Pages.Onboarding />,
+                    },
                 ],
             },
             {
