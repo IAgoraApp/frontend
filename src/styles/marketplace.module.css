@@ -1,14 +1,3 @@
-* {
-    box-sizing: border-box;
-}
-
-
-main {
-    width: 1440px;
-    height: 2321px;
-    background: var(--color-white, #FFF);
-}
-
 .apresentacao {
     width: 1296px;
     height: 670px;
