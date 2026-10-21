@@ -1,41 +1,28 @@
 import { useState } from "react";
-
+import Logo from "../assets/images/logolaranja.png";
+import Chaves from "../assets/images/chaves.png";
+import Mulher from "../assets/images/img esquerda.png";
+import Homem from "../assets/images/img2.png";
 export default function SeuMomento() {
   const [momento, setMomento] = useState("");
 
   const opcoes = [
-    {
-      id: "planejando",
-      titulo: "Quero morar sozinho",
-      descricao:
-        "Planejar os gastos, encontrar uma casa e se preparar para a mudança.",
-      imagem: "img esquerda.png",
-      fundo: "#FCE8DC",
-    },
-    {
-      id: "morando",
-      titulo: "Já moro sozinho",
-      descricao:
-        "Manter a casa, organizar a rotina e resolver problemas do dia a dia.",
-      imagem: "/img2.png",
-      fundo: "#FFFFFF",
-    },
+    {    id: "planejando",    titulo: "Quero morar sozinho",    descricao:      "Planejar os gastos, encontrar uma casa e se preparar para a mudança.",    imagem: Mulher,    fundo: "#FCE8DC",  },  {    id: "morando",    titulo: "Já moro sozinho",    descricao:      "Manter a casa, organizar a rotina e resolver problemas do dia a dia.",    imagem: Homem,    fundo: "#FFFFFF",  },
   ];
 
   return (
     <main
-      className="min-h-screen w-full"
+      className="w-full"
       style={{
         backgroundColor: "#102A43",
         color: "#FFFFFF",
         fontFamily: "'DM Sans', sans-serif",
-        minHeight: "100vh",
-        minHeight: "100dvh",
+        height: "auto",
         width: "100%",
         margin: 0,
       }}
     >
-      <div className="mx-auto flex min-h-screen w-full max-w-[1440px] flex-col gap-10 px-6 py-9 md:px-12 lg:px-[72px]">
+      <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-10 px-6 py-9 md:px-12 lg:px-[72px]">
 
         {/* Cabeçalho */}
         <header className="flex w-full items-center justify-between gap-4">
@@ -54,7 +41,7 @@ export default function SeuMomento() {
 
             {/* Logo */}
             <img
-              src="/logolaranja.png"
+              src={Logo}
               alt="IAGORA"
               className="mb-2 h-[47px] w-[126px] object-contain object-left"
               onError={(e) => {
@@ -85,7 +72,7 @@ export default function SeuMomento() {
 
           {/* Chave e casa na lateral direita */}
           <img
-            src=""
+            src={Chaves}
            
             className="hidden h-40 w-[154px] shrink-0 object-contain md:block lg:h-[190px] lg:w-[190px]"
             onError={(e) => {
