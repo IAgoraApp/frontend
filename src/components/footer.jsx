@@ -1,8 +1,6 @@
 import Logo from '../assets/images/logoLaranja.png';
-import HouseholdFooter from './Household/footer';
 
-export default function Footer({ variant }) {
-  if (variant === 'casa') return <HouseholdFooter />;
+export default function Footer() {
   return (
     <footer className='mx-30 pt-20'>
       <div className='flex border-b border-gray-300 pb-10'>

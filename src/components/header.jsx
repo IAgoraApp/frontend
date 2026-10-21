@@ -1,6 +1,5 @@
 import Logo from '../assets/images/logoLaranja.png';
 import { Button } from './ui';
-import HouseholdHeader from './Household/header';
 
 const abas = [
   'Inicio',
@@ -10,8 +9,7 @@ const abas = [
   'Empresas e Serviços',
 ];
 
-export default function Header({ variant }) {
-  if (variant === 'casa') return <HouseholdHeader />;
+export default function Header() {
   return (
     <header className='mx-30 flex justify-between py-5 items-center'>
       <img className='w-40' src={Logo} alt='' />
