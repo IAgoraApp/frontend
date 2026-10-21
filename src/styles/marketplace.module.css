@@ -2,10 +2,11 @@
     width: 100%;
     height: 670px;
     background: var(--color-white, #FFF);
-    margin-left: 120px;
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
+    padding: 120px;
 }
 
 .apresentacao_texto1 {
@@ -133,12 +134,12 @@
 
 .cuidado {
     display: flex;
-    width: 1296px;
+    width: 100%;
     height: 247px;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    margin-left: 120px;
+    padding: 120px;
 
 }
 
@@ -166,6 +167,7 @@
 
 .pesquisa {
     display: flex;
+    width: 100%;
     height: 128px;
     padding: 24px;
     align-items: flex-end;
@@ -179,6 +181,7 @@
 
 .pesquisa form {
     display: flex;
+    width: 100%;
     flex-direction: column;
     /* label em cima, input embaixo */
     gap: 8px;
@@ -198,7 +201,7 @@
 
 .pesquisa input {
     display: flex;
-    width: 465px;
+    width: 100%;
     height: 52px;
     padding: 16px;
     align-items: center;
@@ -225,7 +228,7 @@
 
 .buscar_empresa:hover {
     background: #e76b3a;
-}   
+}
 
 .empresa {
     display: flex;
@@ -244,12 +247,12 @@
 
 .buscar_empresas {
     display: flex;
-    width: 1296px;
+    width: 100%;
     height: 600px;
     flex-direction: column;
     align-items: flex-start;
     gap: 40px;
-    margin-left: 120px;
+    padding: 0 120px;
     margin-top: 40px;
 }
 
@@ -258,7 +261,7 @@
     align-items: center;
     gap: 12px;
     align-self: stretch;
-    width: 1296px;
+    width: 100%;
     height: 70px;
 }
 
@@ -278,17 +281,19 @@
 
 .servicos2 {
     display: flex;
+    width: 100%;
     justify-content: center;
     align-items: center;
     gap: 24px;
     align-self: stretch;
+    justify-content: space-between;
 }
 
 .limpeza,
 .manutencao,
 .mudanca {
     display: flex;
-    width: 416px;
+    width: 100%;
     height: 508px;
     flex-direction: column;
     justify-content: space-between;
@@ -303,14 +308,20 @@
 }
 
 .limpeza_img {
-    width: 416px;
+    width: 100%;
     height: 270px;
     background: url(<path-to-image>) lightgray 50% / cover no-repeat;
 }
 
+.limpeza_img img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .limpeza_text {
     display: flex;
-    width: 416px;
+    width: 100%;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -318,7 +329,7 @@
 }
 
 .h3_limpeza {
-    width: 368px;
+    width: 100%;
     color: var(--color-orange, #D54C15);
     font-family: "DM Sans";
     font-size: 12px;
@@ -329,7 +340,7 @@
 }
 
 .h2_limpeza {
-    width: 368px;
+    width: 100%;
     color: var(--color-navy, #102A43);
     font-family: "Bricolage Grotesque";
     font-size: 32px;
@@ -341,7 +352,7 @@
 }
 
 .p_limpeza {
-    width: 368px;
+    width: 100%;
     color: var(--color-muted, #596579);
     font-family: "DM Sans";
     font-size: 16px;
@@ -370,15 +381,13 @@
 
 .divulgacao {
     display: flex;
-    width: 1296px;
     height: 143px;
-    padding: 32px;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    gap: 32px;
     background: var(--color-navy, #102A43);
+    margin: 0 120px;
     margin-top: 40px;
-    margin-left: 120px;
+    padding: 40px;
 }
 
 .divulgacao_h2 {
@@ -404,15 +413,15 @@
     margin-top: 8px;
 }
 
-.divulgacao_botao{
+.divulgacao_botao {
     display: flex;
-width: 300px;
-height: 52px;
-justify-content: center;
-align-items: center;
-border-radius: 28px;
-background: var(--color-action, #C64411);
-color: var(--color-white, #FFF);
+    width: 300px;
+    height: 52px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 28px;
+    background: var(--color-action, #C64411);
+    color: var(--color-white, #FFF);
 }
 
 .divulgacao_botao:hover {
