@@ -1,6 +1,7 @@
 const variants = {
   normal: "font-heading text-4xl font-bold text-(--azul-titulo)",
   pequenoLj: "text-1xl font-bold uppercase text-(--laranja-principal)",
+  pequenoBc: "text-1xl font-bold uppercase text-white",
 };
 
 export function Title({
