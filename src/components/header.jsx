@@ -3,37 +3,11 @@ import Logo from '../assets/images/logoLaranja.png';
 import { Button } from './ui';
 import { headerVariants } from '../data/header';
 
-export default function Header({
-  variant = 'home',
-  type,
-  links,
-  actionButton,
-  className = '',
-}) {
-  const selectedVariant = type || variant;
-  const currentConfig = headerVariants[selectedVariant] || headerVariants.home;
-
-  const navLinks = links || currentConfig.navLinks || [];
-  const button = actionButton !== undefined ? actionButton : currentConfig.actionButton;
-  const logoLink = currentConfig.logoLink || '/';
-
+export default function Header({ variant = 'home', className = '', borderClass = '' }) {
   const location = useLocation();
-
-  const isLinkActive = (rota) => {
-    if (!rota) return false;
-    if (rota === '/') {
-      return location.pathname === '/';
-    }
-    // Suporte para rotas com variações kebab e camelCase (ex: /meus-servicos e /meusServicos)
-    const normalizedPath = location.pathname.toLowerCase().replace(/[-_]/g, '');
-    const normalizedRota = rota.toLowerCase().replace(/[-_]/g, '');
-    return normalizedPath === normalizedRota;
-  };
-
-  const borderClass =
-    selectedVariant === 'dashboard' || selectedVariant === 'home'
-      ? 'border-b border-gray-100'
-      : '';
+  const { logoLink, navLinks, actionButton: button } =
+    headerVariants[variant] ?? headerVariants.home;
+  const isLinkActive = route => location.pathname === route;
 
   return (
     <header

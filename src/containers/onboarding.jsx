@@ -1,10 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Logo from "../assets/images/logoLaranja.png";
 import Chaves from "../assets/images/chaves.png";
 import Mulher from "../assets/images/img esquerda.png";
 import Homem from "../assets/images/img2.png";
 export default function SeuMomento() {
-  const [momento, setMomento] = useState("");
+  const navigate = useNavigate();
 
   const opcoes = [
     {    id: "planejando",    titulo: "Quero morar sozinho",    descricao:      "Planejar os gastos, encontrar uma casa e se preparar para a mudança.",    imagem: Mulher,    fundo: "#FCE8DC",  },  {    id: "morando",    titulo: "Já moro sozinho",    descricao:      "Manter a casa, organizar a rotina e resolver problemas do dia a dia.",    imagem: Homem,    fundo: "#FFFFFF",  },
@@ -84,23 +85,16 @@ export default function SeuMomento() {
         {/* Cards de seleção */}
         <section className="grid w-full grid-cols-1 gap-8 md:grid-cols-2">
           {opcoes.map((opcao) => {
-            const selecionado = momento === opcao.id;
-
             return (
               <button
                 key={opcao.id}
                 type="button"
-                aria-pressed={selecionado}
-                onClick={() => setMomento(opcao.id)}
+                onClick={() => navigate("/home")}
                 className="flex w-full flex-col overflow-hidden rounded-md text-left transition duration-200 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-[#D54C15]"
                 style={{
                   backgroundColor: opcao.fundo,
-                  border: selecionado
-                    ? "3px solid #D54C15"
-                    : "1px solid rgba(16, 42, 67, 0.15)",
-                  boxShadow: selecionado
-                    ? "0 0 0 3px rgba(213, 76, 21, 0.18)"
-                    : "none",
+                  border: "1px solid rgba(16, 42, 67, 0.15)",
+                  boxShadow: "none",
                 }}
               >
                 {/* Imagem do card */}

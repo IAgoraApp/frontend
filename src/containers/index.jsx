@@ -1,5 +1,6 @@
 import LandingPage from './landingPage';
 import Home from './home';
+import FinancasA from './financasA'
 import SobreNos from './sobreNos';
 import Auth from './auth';
 import Dashboard from './dashboard';
@@ -9,6 +10,7 @@ import CadastroEmpresa from './cadastroEmpresa';
 import Marketplace from './marketplace';
 import Onboarding from './onboarding';
 import MinhaJornada from './minhaJornada';
+import Casa from './casa';
 
 const TelaErro = () => {
   return <h1>Erro não esperado</h1>;
@@ -26,5 +28,7 @@ export const Pages = {
   Auth,
   Onboarding,
   SobreNos,
-  MinhaJornada
+  MinhaJornada,
+  Casa,
+  FinancasA
 };
