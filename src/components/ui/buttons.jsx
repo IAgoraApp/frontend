@@ -1,4 +1,3 @@
-
 import { ArrowUpRight } from 'lucide-react';
 
 const variants = {
@@ -7,6 +6,10 @@ const variants = {
 };
 
 const colors = {
+  acao: {
+    solido: 'bg-(--cor-acao) text-white hover:bg-(--laranja-principal)',
+    link: 'text-(--laranja-principal)',
+  },
   azul: {
     solido: 'bg-(--azul-principal) text-white hover:opacity-80',
     link: 'text-(--azul-principal)',
@@ -19,9 +22,14 @@ const colors = {
     solido: 'bg-gray-900 text-white hover:bg-gray-700',
     link: 'text-gray-900',
   },
+  branco: {
+    solido: 'bg-white text-black hover:bg-gray-300',
+    link: 'text-white',
+  },
 };
 
 export function Button({
+  as: Tag = 'button',
   variant = 'solido',
   color = 'azul',
   children,
@@ -29,12 +37,12 @@ export function Button({
   ...props
 }) {
   return (
-    <button
+    <Tag
       className={`inline-flex items-center justify-center transition-colors cursor-pointer ${variants[variant]} ${colors[color][variant]} ${className}`}
       {...props}
     >
       {children}
       {variant === 'link' && <ArrowUpRight size={18} />}
-    </button>
+    </Tag>
   );
 }

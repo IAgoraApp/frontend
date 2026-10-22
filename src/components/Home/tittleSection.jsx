@@ -1,4 +1,3 @@
-import { ArrowUpRight } from 'lucide-react';
 import { Title, Button } from '../ui';
 
 export default function TittleSection() {

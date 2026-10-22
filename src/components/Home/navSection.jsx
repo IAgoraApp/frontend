@@ -2,7 +2,7 @@ import { Title } from '../ui';
 import { IconCard } from '../cards';
 import { Items } from '../../data/home';
 
-const items = Items
+const items = Items;
 
 export default function NavSection() {
   return (
@@ -15,7 +15,14 @@ export default function NavSection() {
         {items.map(i => {
           const Icone = i.icone;
 
-          return <IconCard icone={<Icone size={30} />}>{i.texto}</IconCard>;
+          return (
+            <IconCard
+              icone={<Icone size={30} className='group-hover:text-(--laranja-principal) transition-all'/>}
+              className='group w-full hover:bg-(--laranja-principal) transition-all cursor-pointer hover:text-white'
+            >
+              <span className='group-hover:text-white transition-all'>{i.texto}</span>
+            </IconCard>
+          );
         })}
       </div>
     </section>
