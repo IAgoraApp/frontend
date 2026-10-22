@@ -17,7 +17,7 @@ export const homeHeaderData = {
     { nome: 'Início', rota: '/home' },
     { nome: 'Rotina', rota: '/minhajornada' },
     { nome: 'Minha casa', rota: '/casa' },
-    { nome: 'Finanças', rota: '/manutencao' },
+    { nome: 'Finanças', rota: '/financas' },
     { nome: 'Empresas e Serviços', rota: '/marketplace' },
   ],
   actionButton: {

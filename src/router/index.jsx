@@ -91,6 +91,10 @@ const routes = createBrowserRouter([
                 path: '/casa',
                 element: <Pages.Casa/>
               },
+              {
+                path: '/financas',
+                element: <Pages.FinancasA/>
+              },
               ...featureRoutes,
             ],
           },
