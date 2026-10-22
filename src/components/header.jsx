@@ -1,18 +1,73 @@
+import { Link, useLocation } from 'react-router-dom';
 import Logo from '../assets/images/logoLaranja.png';
 import { Button } from './ui';
+import { headerVariants } from '../data/header';
 
-const abas = ['Inicio', 'Rotina', 'Minha casa', 'Finanças', 'Empresas e Serviços'];
+export default function Header({
+  variant = 'home',
+  type,
+  links,
+  actionButton,
+  className = '',
+}) {
+  const selectedVariant = type || variant;
+  const currentConfig = headerVariants[selectedVariant] || headerVariants.home;
 
-export default function Header() {
+  const navLinks = links || currentConfig.navLinks || [];
+  const button = actionButton !== undefined ? actionButton : currentConfig.actionButton;
+  const logoLink = currentConfig.logoLink || '/';
+
+  const location = useLocation();
+
+  const isLinkActive = (rota) => {
+    if (!rota) return false;
+    if (rota === '/') {
+      return location.pathname === '/';
+    }
+    // Suporte para rotas com variações kebab e camelCase (ex: /meus-servicos e /meusServicos)
+    const normalizedPath = location.pathname.toLowerCase().replace(/[-_]/g, '');
+    const normalizedRota = rota.toLowerCase().replace(/[-_]/g, '');
+    return normalizedPath === normalizedRota;
+  };
+
+  const borderClass =
+    selectedVariant === 'dashboard' || selectedVariant === 'home'
+      ? 'border-b border-gray-100'
+      : '';
+
   return (
-    <header className='mx-30 flex justify-between py-5 items-center'>
-      <img className='w-40' src={Logo} alt='' />
-      <div className='flex gap-10'>
-        {abas.map(i => {
-          return <a className='font-semibold hover:text-(--laranja-principal) cursor-pointer transition-all'>{i}</a>;
+    <header
+      className={`mx-30 flex justify-between py-5 items-center ${borderClass} ${className}`}
+    >
+      <Link to={logoLink} aria-label='Página inicial Iagora'>
+        <img className='w-40 cursor-pointer' src={Logo} alt='IAgora' />
+      </Link>
+
+      <nav className='flex gap-10 items-center'>
+        {navLinks.map((item, index) => {
+          const active = isLinkActive(item.rota);
+
+          return (
+            <Link
+              key={item.rota || index}
+              to={item.rota}
+              className={`font-semibold cursor-pointer transition-all ${
+                active
+                  ? 'text-(--laranja-principal)'
+                  : 'hover:text-(--laranja-principal)'
+              }`}
+            >
+              {item.nome}
+            </Link>
+          );
         })}
-      </div>
-      <Button color='laranja'>Meu perfil</Button>
+      </nav>
+
+      {button && (
+        <Link to={button.rota}>
+          <Button color={button.color || 'laranja'}>{button.label}</Button>
+        </Link>
+      )}
     </header>
   );
 }

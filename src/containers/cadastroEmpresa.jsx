@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Title, Button } from '../components/ui';
-import { Header, Footer } from '../components';
+import { Footer } from '../components';
 
 export default function CadastroEmpresa() {
   const navigate = useNavigate();
@@ -17,7 +17,6 @@ export default function CadastroEmpresa() {
 
   return (
     <>
-      <Header />
 
       <main className='mx-30 mb-20 mt-6 flex flex-col gap-14'>
         <section className='bg-[#102a43] text-white p-10 lg:p-14 rounded-3xl flex flex-col lg:flex-row items-center justify-between gap-10 shadow-lg'>
