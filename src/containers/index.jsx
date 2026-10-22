@@ -1,5 +1,6 @@
 import LandingPage from './landingPage';
 import Home from './home';
+import FinancasA from './financasA'
 import SobreNos from './sobreNos';
 import Auth from './auth';
 import Dashboard from './dashboard';
@@ -28,5 +29,6 @@ export const Pages = {
   Onboarding,
   SobreNos,
   MinhaJornada,
-  Casa
+  Casa,
+  FinancasA
 };
