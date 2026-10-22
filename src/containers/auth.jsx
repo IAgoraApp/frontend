@@ -732,13 +732,6 @@ export default function Auth({
                   {isLogin ? 'Criar conta →' : 'Fazer login →'}
                 </button>
               </div>
-              <button type="button" className="flex h-[56px] w-full cursor-pointer items-center gap-[14px] rounded-[12px] border border-[#D8E1E8] bg-white px-[14px] transition-colors hover:bg-[#F4F7FA]"><GoogleIcon /><span className="text-left text-[15px] font-bold leading-[20px]" style={{ color: NAVY }}>Continuar com Google</span></button>
-              <div className="flex h-[20px] w-full items-center gap-[10px]"><div className="h-px flex-1" style={{ backgroundColor: BORDER }} /><span className="whitespace-nowrap text-[12px] font-normal leading-[16px]" style={{ color: GREY }}>ou com e-mail</span><div className="h-px flex-1" style={{ backgroundColor: BORDER }} /></div>
-              <div className="flex w-full flex-col items-start gap-[8px]"><label htmlFor="auth-email" className={labelClass}>E-mail</label><div className={inputBox}><input id="auth-email" name="email" type="email" autoComplete="email" placeholder="seu@email.com" className={inputClass} /></div></div>
-              <div className="flex w-full flex-col items-start gap-[8px]"><label htmlFor="auth-password" className={labelClass}>Senha</label><div className={inputBox}><input id="auth-password" name="password" type="password" autoComplete="current-password" placeholder="••••••••••" className={inputClass} /></div></div>
-              <div className="flex min-h-[44px] w-full items-center justify-between gap-3"><label className="flex cursor-pointer items-center gap-[10px]"><input type="checkbox" className="h-[18px] w-[18px] cursor-pointer" style={{ accentColor: ORANGE }} /><span className="text-[14px] font-normal leading-[20px]" style={{ color: NAVY }}>Lembrar de mim</span></label><span className="text-[14px] font-bold leading-[18px]" style={{ color: ORANGE }}>Esqueci a senha</span></div>
-              <button type="submit" className="h-[56px] w-full cursor-pointer rounded-[28px] text-[15px] font-bold leading-[20px] text-white transition-opacity hover:opacity-95" style={{ backgroundColor: ORANGE }}>Entrar no meu cantinho →</button>
-              <div className="flex min-h-[44px] w-full flex-wrap items-center justify-center gap-[6px]"><span className="text-[14px] font-normal leading-[20px]" style={{ color: GREY }}>Ainda não tem conta?</span><span className="text-[14px] font-bold leading-[18px]" style={{ color: ORANGE }}>Criar conta →</span></div>
             </form>
 
             {/* IMAGEM NA LATERAL DIREITA */}
