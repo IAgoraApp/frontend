@@ -1,4 +1,4 @@
-import { Header, Footer } from '../components'
+import { Footer } from '../components'
 import Styles from '../styles/marketplace.module.css'
 import Direita from '../assets/images/div-direita.png'
 import Manutenção from '../assets/images/essentials.png'
@@ -9,7 +9,6 @@ function Marketplace() {
 
     return (
         <main>
-            <Header />
             <section className={Styles.apresentacao}>
                 <div className={Styles.div1}>
                     <div className={Styles.apresentacao_texto1}>

@@ -1,5 +1,5 @@
 import Styles from '../styles/sobrenos.module.css';
-import { Header, Footer } from '../components';
+import { Footer } from '../components';
 import ImagemGrupo from '../assets/images/imgGrupo.png';
 import Gomes from '../assets/images/gomes.png';
 import Fernando from '../assets/images/fernando.jpg';
@@ -18,7 +18,6 @@ import Coracao from "../assets/images/coracao.svg"
 function SobreNos() {
   return (
     <main>
-      <Header />
       <section className={Styles.section1}>
         <div className={Styles.div_sec1}>
           <h2>Sobre nós</h2>

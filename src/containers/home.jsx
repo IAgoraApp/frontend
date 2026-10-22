@@ -1,10 +1,9 @@
 import { Sections } from '../components/Home';
-import { Footer, Header } from '../components';
+import { Footer } from '../components';
 
 export default function Home() {
   return (
     <>
-      <Header />
 
       <main className='mx-30 mb-20 mt-10'>
         <Sections.TittleSection />

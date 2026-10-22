@@ -1,13 +1,10 @@
-import { Header, Footer } from '../components';
+import { Footer } from '../components';
 
-export default function MinhaJornada(){
-    return(
-        <>
-        <Header/>
-        <main>
-
-        </main>
-        <Footer/>
-        </>
-    )
+export default function MinhaJornada() {
+  return (
+    <>
+      <main></main>
+      <Footer />
+    </>
+  );
 }
