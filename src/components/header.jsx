@@ -1,40 +1,16 @@
 import { Link, useLocation } from 'react-router-dom';
 import Logo from '../assets/images/logoLaranja.png';
 import { Button } from './ui';
-import { headerVariants } from '../data/header';
 
-export default function Header({
-  variant = 'home',
-  type,
-  links,
-  actionButton,
-  className = '',
-}) {
-  const selectedVariant = type || variant;
-  const currentConfig = headerVariants[selectedVariant] || headerVariants.home;
+const abas = [
+  'Inicio',
+  'Rotina',
+  'Minha casa',
+  'Finanças',
+  'Empresas e Serviços',
+];
 
-  const navLinks = links || currentConfig.navLinks || [];
-  const button = actionButton !== undefined ? actionButton : currentConfig.actionButton;
-  const logoLink = currentConfig.logoLink || '/';
-
-  const location = useLocation();
-
-  const isLinkActive = (rota) => {
-    if (!rota) return false;
-    if (rota === '/') {
-      return location.pathname === '/';
-    }
-    // Suporte para rotas com variações kebab e camelCase (ex: /meus-servicos e /meusServicos)
-    const normalizedPath = location.pathname.toLowerCase().replace(/[-_]/g, '');
-    const normalizedRota = rota.toLowerCase().replace(/[-_]/g, '');
-    return normalizedPath === normalizedRota;
-  };
-
-  const borderClass =
-    selectedVariant === 'dashboard' || selectedVariant === 'home'
-      ? 'border-b border-gray-100'
-      : '';
-
+export default function Header() {
   return (
     <header
       className={`mx-30 flex justify-between py-5 items-center ${borderClass} ${className}`}
