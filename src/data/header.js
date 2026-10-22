@@ -1,8 +1,7 @@
 export const dashboardHeaderData = {
-  logoLink: '/dashboard',
+  logoLink: '/',
   navLinks: [
     { nome: 'Painel', rota: '/dashboard' },
-    { nome: 'Meus serviços', rota: '/meus-servicos' },
     { nome: 'Perfil da empresa', rota: '/perfil-empresa' },
   ],
   actionButton: {
@@ -13,11 +12,11 @@ export const dashboardHeaderData = {
 };
 
 export const homeHeaderData = {
-  logoLink: '/home',
+  logoLink: '/',
   navLinks: [
     { nome: 'Início', rota: '/home' },
     { nome: 'Rotina', rota: '/minhajornada' },
-    { nome: 'Minha casa', rota: '/cozinha' },
+    { nome: 'Minha casa', rota: '/casa' },
     { nome: 'Finanças', rota: '/manutencao' },
     { nome: 'Empresas e Serviços', rota: '/marketplace' },
   ],

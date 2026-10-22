@@ -1,16 +1,14 @@
 import { Link, useLocation } from 'react-router-dom';
 import Logo from '../assets/images/logoLaranja.png';
 import { Button } from './ui';
+import { headerVariants } from '../data/header';
 
-const abas = [
-  'Inicio',
-  'Rotina',
-  'Minha casa',
-  'Finanças',
-  'Empresas e Serviços',
-];
+export default function Header({ variant = 'home', className = '', borderClass = '' }) {
+  const location = useLocation();
+  const { logoLink, navLinks, actionButton: button } =
+    headerVariants[variant] ?? headerVariants.home;
+  const isLinkActive = route => location.pathname === route;
 
-export default function Header() {
   return (
     <header
       className={`mx-30 flex justify-between py-5 items-center ${borderClass} ${className}`}

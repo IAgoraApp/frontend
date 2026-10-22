@@ -9,6 +9,7 @@ import CadastroEmpresa from './cadastroEmpresa';
 import Marketplace from './marketplace';
 import Onboarding from './onboarding';
 import MinhaJornada from './minhaJornada';
+import Casa from './casa';
 
 const TelaErro = () => {
   return <h1>Erro não esperado</h1>;
@@ -26,5 +27,6 @@ export const Pages = {
   Auth,
   Onboarding,
   SobreNos,
-  MinhaJornada
+  MinhaJornada,
+  Casa
 };
