@@ -7,6 +7,7 @@ import MeusServicos from './meusServicos';
 import PerfilEmpresa from './perfilEmpresa';
 import CadastroEmpresa from './cadastroEmpresa';
 import Marketplace from './marketplace';
+import Onboarding from './onboarding';
 import MinhaJornada from './minhaJornada';
 
 const TelaErro = () => {
@@ -23,6 +24,7 @@ export const Pages = {
   TelaErro,
   Marketplace,
   Auth,
+  Onboarding,
   SobreNos,
   MinhaJornada
 };

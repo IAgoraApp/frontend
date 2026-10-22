@@ -25,46 +25,76 @@ const routes = createBrowserRouter([
       {
         element: <PublicRoute />,
         children: [
-          // Auth Layout (Exceção: sem Header)
-          {
-            element: <AuthLayout />,
-            children: [
-              {
-                path: '/login',
-                element: <Pages.Auth />,
-              },
-            ],
-          },
-          // Landing Layout (Variante 3: Landing / Institucional)
-          {
-            element: <LandingLayout />,
-            children: [
-              {
-                path: '/',
-                element: <Pages.LandingPage />,
-              },
-              {
-                path: '/sobrenos',
-                element: <Pages.SobreNos />,
-              },
-              {
-                path: '/cadastro-empresa',
-                element: <Pages.CadastroEmpresa />,
-              },
-              {
-                path: '/cadastroEmpresa',
-                element: <Pages.CadastroEmpresa />,
-              },
-              {
-                path: '/parceiros',
-                element: <Pages.CadastroEmpresa />,
-              },
-              {
-                path: '/seja-parceiro',
-                element: <Pages.CadastroEmpresa />,
-              },
-            ],
-          },
+            {
+                path: '/manutencao',
+                element: <h1>Tela em manutenção</h1>,
+            },
+            {
+                element: <PublicRoute />,
+                children: [
+                    {
+                        path: '/',
+                        element: <Pages.LandingPage />,
+                    },
+                    {
+                        path: '/login',
+                        element: <Pages.Auth />
+                    },
+                    {
+                        path: '/cadastro-empresa',
+                        element: <Pages.CadastroEmpresa />,
+                    },
+                    {
+                        path: '/cadastroEmpresa',
+                        element: <Pages.CadastroEmpresa />,
+                    },
+                    {
+                        path: '/parceiros',
+                        element: <Pages.CadastroEmpresa />,
+                    },
+                    {
+                        path: '/seja-parceiro',
+                        element: <Pages.CadastroEmpresa />,
+                    },
+                    {
+                        path: '/onboarding',
+                        element: <Pages.Onboarding />,
+                    },
+                ],
+            },
+            {
+                element: <PrivateRoute />,
+                children: [
+                    {
+                        path: '/home',
+                        element: <Pages.Home />,
+                    },
+                    {
+                        path: '/dashboard',
+                        element: <Pages.Dashboard />,
+                    },
+                    {
+                        path: '/meus-servicos',
+                        element: <Pages.MeusServicos />,
+                    },
+                    {
+                        path: '/meusServicos',
+                        element: <Pages.MeusServicos />,
+                    },
+                    {
+                        path: '/perfil-empresa',
+                        element: <Pages.PerfilEmpresa />,
+                    },
+                    {
+                        path: '/perfilEmpresa',
+                        element: <Pages.PerfilEmpresa />,
+                    },
+                    {
+                        path: '/marketplace',
+                        element: <Pages.Marketplace />,
+                    },
+                ],
+            },
         ],
       },
       {
