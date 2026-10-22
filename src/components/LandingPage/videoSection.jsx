@@ -2,7 +2,7 @@ import Video from '../../assets/videos/bannerVideo.mp4';
 
 export default function VideoSection() {
   return (
-    <section className='w-screen flex items-center justify-center'>
+    <section className='w-full flex items-center justify-center'>
       <video
         src={Video}
         autoPlay
