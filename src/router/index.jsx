@@ -91,6 +91,10 @@ const routes = createBrowserRouter([
                         path: '/marketplace',
                         element: <Pages.Marketplace />,
                     },
+                    {
+                      path: '/meuperfil',
+                        element: <Pages.MeuPerfil />,
+                    }
                 ],
             },
         ],
