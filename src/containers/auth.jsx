@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Chave from '../assets/images/Group 7.png';
 import { Link, useLocation } from 'react-router-dom';
+import Logo from '../assets/images/logoLaranja.png';
 
 const ORANGE = '#C64411';
 const ORANGE_BRAND = '#D54C15';
@@ -330,8 +331,7 @@ export default function Auth({
     }
 
     if (typeof onForgotPassword !== 'function') {
-      setMessage(
-      );
+      setMessage();
       return;
     }
 
@@ -471,16 +471,14 @@ export default function Auth({
         <div className='mx-auto flex min-h-screen w-full max-w-[1440px] flex-col px-6 md:px-12 lg:px-[72px]'>
           {/* Cabeçalho */}
           <header className='flex w-full items-center justify-between gap-4 py-7'>
-            <div
-              className='select-none text-[30px] font-bold tracking-[-0.5px]'
-              style={{
-                color: ORANGE,
-                fontFamily: "'Bricolage Grotesque', sans-serif",
+            <img
+              src={Logo}
+              alt='IAGORA'
+              className='mb-2 h-[47px] w-[126px] object-contain object-left'
+              onError={e => {
+                e.currentTarget.style.display = 'none';
               }}
-              aria-label='Logo Iagora'
-            >
-              Iagora
-            </div>
+            />
 
             <div
               className='text-right text-[10px] font-bold leading-[16px] tracking-[0.7px] sm:text-[12px]'
@@ -704,7 +702,7 @@ export default function Auth({
               {/* Botão principal */}
 
               <Link
-                to={'/home'}
+                to={'/onboarding'}
                 disabled={busy}
                 style={{ backgroundColor: ORANGE }}
                 className='h-[56px] w-full cursor-pointer rounded-[28px] text-[15px] font-bold leading-[20px] text-white transition-opacity hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60 flex items-center justify-center'
