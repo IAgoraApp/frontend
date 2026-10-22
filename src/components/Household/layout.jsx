@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Header, Footer } from '../index';
+import { Footer } from '../index';
 import styles from '../../styles/household.module.css';
 
 export default function HouseholdLayout({ title, children, className = '' }) {

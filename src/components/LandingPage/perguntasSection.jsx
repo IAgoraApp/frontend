@@ -1,4 +1,4 @@
-import { Title, Button } from '../ui';
+import { Title } from '../ui';
 
 const perguntas = [
   {
