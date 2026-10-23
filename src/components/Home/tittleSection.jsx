@@ -1,20 +1,28 @@
+import { Link } from 'react-router-dom';
 import { Title, Button } from '../ui';
+import { useAppStore } from '../../store/useAppStore';
+import { profiles } from '../../data/demo';
+import styles from '../../styles/app.module.css';
 
 export default function TittleSection() {
+  const { person, profile } = useAppStore(state => state.data);
   return (
-    <section className='flex justify-between py-4 items-center'>
-      <Title variant='normal' as='h1'>
-        Olá Débora! O que vamos resolver hoje?
-      </Title>
-
-      <div className='flex bg-(--azul-fundo) p-2 w-90 justify-between items-center'>
-        <div>
-          <Title as='h2' variant='pequenoLj'>
-            Seu momento
-          </Title>
-          <p className='font-semibold'>Vou morar sozinho</p>
-        </div>
-        <Button variant='link' color='laranja'>Alterar</Button>
+    <section className={`${styles.pageHeading} ${styles.app}`}>
+      <div className={styles.stack}>
+        <p className={styles.eyebrow}>SEU AGORA COMEÇA AQUI</p>
+        <Title variant='normal' as='h1'>
+          Olá, {person.name.split(' ')[0]}!<br />O que vamos resolver hoje?
+        </Title>
+        <p className={styles.muted}>
+          Um passo de cada vez também é seguir em frente.
+        </p>
+      </div>
+      <div className={`${styles.panel} ${styles.white}`}>
+        <p className={styles.eyebrow}>SEU MOMENTO</p>
+        <strong>{profiles.find(item => item.id === profile)?.title}</strong>
+        <Button as={Link} to='/perfil' variant='link' color='laranja'>
+          Alterar meu momento
+        </Button>
       </div>
     </section>
   );

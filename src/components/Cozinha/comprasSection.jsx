@@ -1,6 +1,7 @@
 import SectionHeading from '../Household/sectionHeading';
 import Checklist from '../Household/checklist';
 import { shoppingSteps } from '../../data/cozinha';
+import ShoppingList from './shoppingList';
 
 export default function ComprasSection() {
   return (
@@ -14,6 +15,7 @@ export default function ComprasSection() {
         eyebrow='ANTES DO MERCADO'
         title='Abra a geladeira. Depois, a lista.'
       />
+      <ShoppingList />
       <Checklist
         items={shoppingSteps}
         storageKey='iagora:cozinha:compras'

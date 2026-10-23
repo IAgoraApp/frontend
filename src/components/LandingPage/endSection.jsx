@@ -1,5 +1,6 @@
 import { Title, Button } from '../ui';
 import { ArrowUpRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function EndSection() {
   return (
@@ -14,7 +15,13 @@ export default function EndSection() {
         Independência é uma grande conquista. Você pode aprender um pouco por
         vez.
       </p>
-      <Button variant='solido' color='azul' className='bg-(--azul-escuro)! mb-10'>
+      <Button
+        as={Link}
+        to='/cadastro'
+        variant='solido'
+        color='azul'
+        className='bg-(--azul-escuro)! mb-10'
+      >
         {' '}
         Começar agora <ArrowUpRight />
       </Button>

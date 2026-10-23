@@ -6,6 +6,7 @@ import NextStep from '../components/Household/nextStep';
 import CuidadosSection from '../components/Casa/cuidadosSection';
 import { houseHero, houseCards } from '../data/casa';
 import styles from '../styles/household.module.css';
+import HouseManager from '../components/Casa/houseManager';
 
 export default function Casa() {
   return (
@@ -16,6 +17,7 @@ export default function Casa() {
         title='Uma casa com a sua cara.'
         description='Cuidar do básico abre espaço para viver o que importa.'
       />
+      <HouseManager />
       <HeroSection {...houseHero} reversed headingAs='h2' />
       <section
         className={styles.cards}

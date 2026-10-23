@@ -1,27 +1,56 @@
-import { Title, Button } from '../ui';
-import Checklist from '../../assets/images/checklist.png'
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Button } from '../ui';
+import { Panel, Empty } from '../App/ui';
+import TaskForm from '../App/taskForm';
+import { useAppStore } from '../../store/useAppStore';
+import { dateLabel } from '../../utils/format';
+import styles from '../../styles/app.module.css';
 
 export default function RotinaSection() {
+  const tasks = useAppStore(state => state.data.tasks);
+  const completeTask = useAppStore(state => state.completeTask);
+  const [adding, setAdding] = useState(false);
+  const pending = tasks
+    .filter(task => !task.done)
+    .sort((a, b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`));
   return (
-    <section className='bg-(--laranja-fundo) w-full h-full flex items-center p-10'>
-      <div className='w-full flex justify-between'>
-        <div className='w-[60%]'>
-          <Title as='h2' variant='pequenoLj'>
-            Minha rotina
-          </Title>
-          <Title as='h1' variant='normal' className='mt-2'>
-            Adicione sua primeira tarefa.
-          </Title>
-          <p className='text-(--texto-claro) mt-5'>
-            Organize o que você precisa fazer na semana: casa, contas, compras e
-            mais.
-          </p>
-          <Button variant='solido' color='laranja' className='mt-4'>Adicionar Tarefa</Button>
-        </div>
-        <div>
-          <img className='w-full' src={Checklist} alt="" />
-        </div>
+    <Panel title='Seu próximo passo.' className={styles.tinted}>
+      {pending.length ? (
+        <ul className={styles.list}>
+          {pending.slice(0, 4).map(task => (
+            <li key={task.id}>
+              <label className={styles.check}>
+                <input
+                  type='checkbox'
+                  checked={false}
+                  onChange={() => completeTask(task.id)}
+                />
+                <div>
+                  <strong>{task.title}</strong>
+                  <p className={styles.muted}>
+                    {dateLabel(task.date)} · {task.time}
+                  </p>
+                </div>
+              </label>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <Empty
+          title='Um respiro na sua rotina.'
+          description='Nenhuma tarefa pendente. Que tal planejar os próximos dias?'
+        />
+      )}
+      <div className={styles.actions}>
+        <Button color='laranja' onClick={() => setAdding(true)}>
+          + Adicionar tarefa
+        </Button>
+        <Button as={Link} to='/rotina' color='azul'>
+          Ver minha rotina
+        </Button>
       </div>
-    </section>
+      {adding && <TaskForm onClose={() => setAdding(false)} />}
+    </Panel>
   );
 }

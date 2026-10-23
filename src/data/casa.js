@@ -9,7 +9,7 @@ export const houseHero = {
   highlight: 'a sua cara.',
   description:
     'Organize a limpeza, descubra o que cozinhar e encontre ajuda quando precisar.',
-  action: { to: '/manutencao?area=rotina', label: 'Organizar minha rotina' },
+  action: { to: '/rotina', label: 'Organizar minha rotina' },
   primaryPhoto: essentials,
   secondaryPhoto: apartment,
 };

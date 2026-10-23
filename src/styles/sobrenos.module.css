@@ -1,261 +1,261 @@
 .section1 {
-    width: 100%;
-    height: 100vh;
-    background-image: url(../assets/images/casa.jpg);
-    background-size: cover;
-    background-position: center;
+  width: 100%;
+  height: 100vh;
+  background-image: url(../assets/images/casa.jpg);
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  & .div_sec1 {
+    width: 580px;
+    margin-right: 120px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px;
     display: flex;
-    justify-content: flex-end;
-    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    gap: 40px;
 
-    & .div_sec1 {
-        width: 580px;
-        margin-right: 120px;
-        border-radius: 20px;
-        background: rgba(255, 255, 255, 0.95);
-        padding: 40px;
-        display: flex;
-        flex-direction: column;
-        text-align: center;
-        gap: 40px;
-
-        & h2 {
-            color: #D54C15;
-            font-family: "Bricolage Grotesque";
-            font-weight: 800;
-            font-size: 40px;
-        }
-
-        & .p {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            justify-content: center;
-            gap: 20px;
-
-            & p {
-                color: #000;
-                font-family: "Poppins", sans-serif;
-                font-size: 19px;
-                font-weight: 400;
-                text-align: left;
-            }
-
-            & span {
-                color: #d54c15;
-            }
-        }
+    & :is(h1, h2) {
+      color: #d54c15;
+      font-family: 'Bricolage Grotesque';
+      font-weight: 800;
+      font-size: 40px;
     }
+
+    & .p {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 20px;
+
+      & p {
+        color: #000;
+        font-family: var(--font-body);
+        font-size: 19px;
+        font-weight: 400;
+        text-align: left;
+      }
+
+      & span {
+        color: #d54c15;
+      }
+    }
+  }
 }
 
 .section2 {
-    width: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 190px;
+  padding: 80px 0;
+
+  & .div1_sec2 {
+    text-align: center;
     display: flex;
-    align-items: center;
-    justify-content: center;
     flex-direction: column;
-    gap: 190px;
-    padding: 80px 0;
+    gap: 35px;
 
-    & .div1_sec2 {
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        gap: 35px;
-
-        & h2 {
-            color: #000;
-            text-align: center;
-            font-family: "Bricolage Grotesque";
-            font-size: 35px;
-            font-weight: 800;
-        }
-
-        & img {
-            width: 850px;
-        }
+    & :is(h1, h2) {
+      color: #000;
+      text-align: center;
+      font-family: 'Bricolage Grotesque';
+      font-size: 35px;
+      font-weight: 800;
     }
+
+    & img {
+      width: 850px;
+    }
+  }
 }
 
 .container_cards {
-    width: 1100px;
-    height: auto;
+  width: 1100px;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex-wrap: wrap;
+
+  & .card {
+    width: 540px;
+    height: 180px;
     display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    border-radius: 20px;
+    background: #12377d;
+    box-shadow: 0 7px 4px 0 rgba(0, 0, 0, 0.25);
+    margin: 15px 0;
 
-    & .card {
-        width: 540px;
-        height: 180px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 20px;
-        border-radius: 20px;
-        background: #12377D;
-        box-shadow: 0 7px 4px 0 rgba(0, 0, 0, 0.25);
-        margin: 15px 0;
-
-        & .aluno {
-            width: 140px;
-            border-radius: 50%;
-        }
-
-        & h3 {
-            color: #FFF;
-            font-family: Poppins;
-            font-size: 30px;
-            font-weight: 600;
-        }
-
-        p {
-            color: #FFF;
-            font-family: Poppins;
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        & .links {
-            display: flex;
-            flex-direction: row;
-            gap: 5px;
-        }
-
-        & .textos {
-            width: 350px;
-            height: 135px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 10px;
-
-            & .texto {
-                display: flex;
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-            & img {
-                width: 40px;
-            }
-        }
+    & .aluno {
+      width: 140px;
+      border-radius: 50%;
     }
+
+    & h3 {
+      color: #fff;
+      font-family: var(--font-body);
+      font-size: 30px;
+      font-weight: 600;
+    }
+
+    p {
+      color: #fff;
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    & .links {
+      display: flex;
+      flex-direction: row;
+      gap: 5px;
+    }
+
+    & .textos {
+      width: 350px;
+      height: 135px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+
+      & .texto {
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      & img {
+        width: 40px;
+      }
+    }
+  }
 }
 
 .section3 {
-    width: 100%;
-    height: 450px;
-    background: #12377D;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+  width: 100%;
+  height: 450px;
+  background: #12377d;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 
-    & .div_left {
-        width: 53%;
-        padding-left: 120px;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 30px;
-
-        & h2 {
-            color: #FFF;
-            font-family: "Bricolage Grotesque";
-            font-weight: 800;
-            font-size: 40px;
-        }
-
-        & p {
-            width: 550px;
-            color: #FFF;
-            font-family: Poppins;
-            font-size: 22px;
-            font-weight: 600;
-        }
-    }
-
-    & .div_right {
-        width: 47%;
-        height: 450px;
-        background-image: url(../assets/images/img-missao.png);
-        background-position: center;
-        background-size: cover;
-    }
-}
-
-.section4 {
-    width: 100%;
-    height: 450px;
-    background: #fff;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-
-    & .div_right {
-        width: 47%;
-        padding-right: 120px;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 30px;
-
-        & h2 {
-            color: #14213B;
-            font-family: "Bricolage Grotesque";
-            font-weight: 800;
-            font-size: 40px;
-        }
-
-        & p {
-            width: 550px;
-            color: #14213B;
-            font-family: Poppins;
-            font-size: 22px;
-            font-weight: 600;
-        }
-    }
-
-    & .div_left {
-        width: 47%;
-        height: 450px;
-        background-image: url(../assets/images/jovens.png);
-        background-position: center;
-        background-size: cover;
-    }
-}
-
-.section5 {
-    width: 100%;
-    height: 450px;
-    background: #D54C15;
-    padding: 51px 120px;
+  & .div_left {
+    width: 53%;
+    padding-left: 120px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: center;
-    gap: 40px;
+    gap: 30px;
 
-    & h2 {
-        color: #FFF;
-        font-family: "Bricolage Grotesque";
-        font-size: 40px;
-        font-weight: 800;
+    & :is(h1, h2) {
+      color: #fff;
+      font-family: 'Bricolage Grotesque';
+      font-weight: 800;
+      font-size: 40px;
     }
+
+    & p {
+      width: 550px;
+      color: #fff;
+      font-family: var(--font-body);
+      font-size: 22px;
+      font-weight: 600;
+    }
+  }
+
+  & .div_right {
+    width: 47%;
+    height: 450px;
+    background-image: url(../assets/images/img-missao.png);
+    background-position: center;
+    background-size: cover;
+  }
+}
+
+.section4 {
+  width: 100%;
+  height: 450px;
+  background: #fff;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  & .div_right {
+    width: 47%;
+    padding-right: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 30px;
+
+    & :is(h1, h2) {
+      color: #14213b;
+      font-family: 'Bricolage Grotesque';
+      font-weight: 800;
+      font-size: 40px;
+    }
+
+    & p {
+      width: 550px;
+      color: #14213b;
+      font-family: var(--font-body);
+      font-size: 22px;
+      font-weight: 600;
+    }
+  }
+
+  & .div_left {
+    width: 47%;
+    height: 450px;
+    background-image: url(../assets/images/jovens.png);
+    background-position: center;
+    background-size: cover;
+  }
+}
+
+.section5 {
+  width: 100%;
+  height: 450px;
+  background: #d54c15;
+  padding: 51px 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 40px;
+
+  & :is(h1, h2) {
+    color: #fff;
+    font-family: 'Bricolage Grotesque';
+    font-size: 40px;
+    font-weight: 800;
+  }
 }
 
 .sec5_cards {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
 
-    & .sec5_card {
+  & .sec5_card {
     width: 350px;
     border-radius: 20px;
-    background: #FFF;
+    background: #fff;
     padding: 25px 25px;
     display: flex;
     flex-direction: column;
@@ -263,27 +263,27 @@
     gap: 25px;
 
     & .titulo_card {
-        display: flex;
-        align-items: center;
-        gap: 5px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
 
-        & h3 {
-            color: #000;
-            font-family: Poppins;
-            font-size: 25px;
-            font-weight: 600;
-        }
+      & h3 {
+        color: #000;
+        font-family: var(--font-body);
+        font-size: 25px;
+        font-weight: 600;
+      }
 
-        & img {
-            width: 35px;
-        }
+      & img {
+        width: 35px;
+      }
     }
 
     & p {
-        color: #000;
-        font-family: Poppins;
-        font-size: 18px;
-        font-weight: 400;
+      color: #000;
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 400;
     }
-}
+  }
 }

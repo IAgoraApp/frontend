@@ -1,61 +1,300 @@
-import { useNavigate } from "react-router-dom";
-import Chave from "../assets/images/Group 7.png";
+import { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import Logo from '../assets/images/logoLaranja.png';
+import Chave from '../assets/images/Group 7.png';
+import { Button } from '../components/ui';
+import { Field, Modal, Confirm } from '../components/App/ui';
+import { useAppStore } from '../store/useAppStore';
+import { passwordDigest } from '../utils/demoAuth';
+import styles from '../styles/app.module.css';
 
-const ORANGE = "#C64411";
-const NAVY = "#102A43";
-const GREY = "#526579";
-const BORDER = "#D8E1E8";
-
-function GoogleIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 48 48" aria-hidden="true">
-      <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.5l6.7-6.7C35.6 2.4 30.2 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.8 6C12.3 13.5 17.7 9.5 24 9.5z" />
-      <path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4 7.1-10 7.1-17.5z" />
-      <path fill="#FBBC05" d="M10.4 28.8c-.5-1.4-.8-2.9-.8-4.8s.3-3.4.8-4.8l-7.8-6C.9 16.5 0 20.1 0 24s.9 7.5 2.6 10.8l7.8-6z" />
-      <path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.8 2.3-8.4 2.3-6.3 0-11.7-4.2-13.6-9.9l-7.8 6C6.5 42.6 14.6 48 24 48z" />
-    </svg>
-  );
-}
+const titles = {
+  login: 'Que bom ter você de volta!',
+  cadastro: 'Seu novo capítulo começa aqui.',
+  recuperar: 'Vamos recuperar seu acesso.',
+  redefinir: 'Escolha uma nova senha.',
+};
 
 export default function Auth() {
   const navigate = useNavigate();
-  const goToOnboarding = (event) => {
-    event?.preventDefault();
-    navigate("/onboarding");
-  };
-  const labelClass = "text-[14px] font-bold leading-[20px]";
-  const inputBox = "flex h-[56px] w-full items-center rounded-[12px] border border-[#D8E1E8] bg-white px-[14px]";
-  const inputClass = "h-full w-full bg-transparent text-[15px] outline-none placeholder:text-[#8A9AAA]";
+  const location = useLocation();
+  const [mode, setMode] = useState(
+    location.pathname === '/cadastro'
+      ? 'cadastro'
+      : location.pathname === '/recuperar-senha'
+        ? 'recuperar'
+        : 'login'
+  );
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [legal, setLegal] = useState('');
+  const [replacement, setReplacement] = useState(null);
+  const account = useAppStore(state => state.account);
+  const notify = useAppStore(state => state.notify);
+
+  function changeMode(value) {
+    setMode(value);
+    setError('');
+  }
+  function goHome() {
+    const { data } = useAppStore.getState();
+    navigate(data.profile ? '/home' : '/onboarding', { replace: true });
+  }
+  async function submit(event) {
+    event.preventDefault();
+    setError('');
+    const values = Object.fromEntries(new FormData(event.currentTarget));
+    const normalizedEmail = email.trim().toLowerCase();
+    setBusy(true);
+    try {
+      if (mode === 'recuperar') {
+        if (!account || account.demo || account.email !== normalizedEmail) {
+          setError(
+            'Não existe uma conta local com este e-mail neste navegador. Crie uma conta ou explore a demonstração.'
+          );
+          return;
+        }
+        changeMode('redefinir');
+        notify('Recuperação local liberada. Nenhum e-mail foi enviado.');
+        return;
+      }
+      if (mode === 'cadastro' || mode === 'redefinir') {
+        if (values.password !== values.confirm) {
+          setError('As senhas precisam ser iguais.');
+          return;
+        }
+        const salt = crypto.randomUUID();
+        const digest = await passwordDigest(values.password, salt);
+        if (mode === 'redefinir') {
+          if (account?.email !== normalizedEmail || account.demo) {
+            setError('Reinicie a recuperação com o e-mail da conta local.');
+            return;
+          }
+          useAppStore.setState({ account: { ...account, salt, digest } });
+          changeMode('login');
+          notify('Senha da demonstração redefinida neste navegador.');
+          return;
+        }
+        const newAccount = {
+          name: values.name.trim(),
+          email: normalizedEmail,
+          salt,
+          digest,
+          acceptedAt: new Date().toISOString(),
+        };
+        if (!newAccount.name) {
+          setError('Informe seu nome.');
+          return;
+        }
+        if (account) {
+          setReplacement(newAccount);
+          return;
+        }
+        useAppStore.getState().register(newAccount);
+        navigate('/onboarding');
+        return;
+      }
+      if (
+        !account ||
+        account.demo ||
+        account.email !== normalizedEmail ||
+        (await passwordDigest(values.password, account.salt)) !== account.digest
+      ) {
+        setError(
+          'E-mail ou senha não correspondem à conta salva neste navegador.'
+        );
+        return;
+      }
+      useAppStore.getState().login();
+      goHome();
+    } catch {
+      setError('Não foi possível concluir o acesso local. Tente novamente.');
+    } finally {
+      setBusy(false);
+    }
+  }
 
   return (
-    <>
-      <style>{`@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=DM+Sans:wght@400;500;700&display=swap"); * { box-sizing: border-box; }`}</style>
-      <div className="min-h-screen w-full overflow-x-hidden bg-white" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-        <div className="mx-auto flex min-h-screen w-full max-w-[1440px] flex-col px-6 md:px-12 lg:px-[72px]">
-          <header className="flex w-full items-center justify-between gap-4 py-7">
-            <div className="select-none text-[30px] font-bold tracking-[-0.5px]" style={{ color: ORANGE, fontFamily: "'Bricolage Grotesque', sans-serif" }} aria-label="Logo Iagora">Iagora</div>
-            <div className="text-right text-[10px] font-bold leading-[16px] tracking-[0.7px] sm:text-[12px]" style={{ color: GREY }}>IAGORA · SEU NOVO CAPÍTULO</div>
-          </header>
-          <main className="flex flex-1 flex-col items-center justify-center gap-10 py-8 md:flex-row md:items-center md:justify-between md:gap-8 lg:gap-12">
-            <form onSubmit={goToOnboarding} className="flex w-full max-w-[520px] flex-col items-start gap-[12px] bg-white md:w-[46%] md:shrink-0 lg:w-[44%]">
-              <div className="flex w-full flex-col items-start gap-[8px]">
-                <span className="text-[12px] font-bold leading-[16px] tracking-[0.7px]" style={{ color: ORANGE }}>OLHA QUEM VOLTOU!</span>
-                <h1 className="text-[42px] font-extrabold leading-[1.08] tracking-[-1px] sm:text-[50px] lg:text-[56px]" style={{ color: NAVY, fontFamily: "'Bricolage Grotesque', sans-serif" }}>Que bom ter você<br />de volta!</h1>
-                <p className="text-[16px] font-normal leading-[24px]" style={{ color: GREY }}>Seu cantinho no Iagora está te esperando.</p>
-              </div>
-              <button type="button" className="flex h-[56px] w-full cursor-pointer items-center gap-[14px] rounded-[12px] border border-[#D8E1E8] bg-white px-[14px] transition-colors hover:bg-[#F4F7FA]"><GoogleIcon /><span className="text-left text-[15px] font-bold leading-[20px]" style={{ color: NAVY }}>Continuar com Google</span></button>
-              <div className="flex h-[20px] w-full items-center gap-[10px]"><div className="h-px flex-1" style={{ backgroundColor: BORDER }} /><span className="whitespace-nowrap text-[12px] font-normal leading-[16px]" style={{ color: GREY }}>ou com e-mail</span><div className="h-px flex-1" style={{ backgroundColor: BORDER }} /></div>
-              <div className="flex w-full flex-col items-start gap-[8px]"><label htmlFor="auth-email" className={labelClass}>E-mail</label><div className={inputBox}><input id="auth-email" name="email" type="email" autoComplete="email" placeholder="seu@email.com" className={inputClass} /></div></div>
-              <div className="flex w-full flex-col items-start gap-[8px]"><label htmlFor="auth-password" className={labelClass}>Senha</label><div className={inputBox}><input id="auth-password" name="password" type="password" autoComplete="current-password" placeholder="••••••••••" className={inputClass} /></div></div>
-              <div className="flex min-h-[44px] w-full items-center justify-between gap-3"><label className="flex cursor-pointer items-center gap-[10px]"><input type="checkbox" className="h-[18px] w-[18px] cursor-pointer" style={{ accentColor: ORANGE }} /><span className="text-[14px] font-normal leading-[20px]" style={{ color: NAVY }}>Lembrar de mim</span></label><span className="text-[14px] font-bold leading-[18px]" style={{ color: ORANGE }}>Esqueci a senha</span></div>
-              <button type="submit" className="h-[56px] w-full cursor-pointer rounded-[28px] text-[15px] font-bold leading-[20px] text-white transition-opacity hover:opacity-95" style={{ backgroundColor: ORANGE }}>Entrar no meu cantinho →</button>
-              <div className="flex min-h-[44px] w-full flex-wrap items-center justify-center gap-[6px]"><span className="text-[14px] font-normal leading-[20px]" style={{ color: GREY }}>Ainda não tem conta?</span><span className="text-[14px] font-bold leading-[18px]" style={{ color: ORANGE }}>Criar conta →</span></div>
-            </form>
-            <aside className="hidden items-center justify-center md:flex md:w-[54%] md:flex-none"><div className="relative flex w-full items-center justify-center"><img src={Chave} alt="Ilustração da chave do Iagora" className="h-auto w-full max-w-[720px] object-contain" /></div></aside>
-          </main>
-          <footer className="h-6 shrink-0" />
+    <main className={`${styles.auth} ${styles.app}`}>
+      <header>
+        <Link to='/' aria-label='Página inicial Iagora'>
+          <img src={Logo} alt='Iagora' />
+        </Link>
+        <span className={styles.eyebrow}>SEU NOVO CAPÍTULO</span>
+      </header>
+      <div className={styles.authContent}>
+        <div className={styles.stack}>
+          <p className={styles.eyebrow}>UM PASSO DE CADA VEZ</p>
+          <h1>{titles[mode]}</h1>
+          <p className={styles.muted}>
+            Demonstração local: a conta e os dados ficam apenas neste navegador.
+            Nenhum acesso externo ou envio de e-mail é realizado.
+          </p>
+          <form onSubmit={submit} className={styles.form} key={mode}>
+            {mode === 'cadastro' && (
+              <Field
+                label='Seu nome'
+                name='name'
+                autoComplete='name'
+                required
+                maxLength={80}
+              />
+            )}
+            <Field
+              label='E-mail'
+              name='email'
+              type='email'
+              autoComplete='email'
+              value={email}
+              onChange={event => setEmail(event.target.value)}
+              readOnly={mode === 'redefinir'}
+              required
+            />
+            {mode !== 'recuperar' && (
+              <Field
+                label={
+                  mode === 'redefinir'
+                    ? 'Nova senha (mínimo 8 caracteres)'
+                    : 'Senha (mínimo 8 caracteres)'
+                }
+                name='password'
+                type='password'
+                autoComplete={
+                  mode === 'login' ? 'current-password' : 'new-password'
+                }
+                minLength={8}
+                maxLength={128}
+                required
+              />
+            )}
+            {['cadastro', 'redefinir'].includes(mode) && (
+              <Field
+                label='Confirme a senha'
+                name='confirm'
+                type='password'
+                autoComplete='new-password'
+                minLength={8}
+                required
+              />
+            )}
+            {mode === 'cadastro' && (
+              <>
+                <label className={styles.check}>
+                  <input type='checkbox' required />
+                  Li e aceito os termos e a política de privacidade desta
+                  demonstração.
+                </label>
+                <div className={styles.actions}>
+                  <button
+                    type='button'
+                    className={styles.textButton}
+                    onClick={() => setLegal('Termos de uso')}
+                  >
+                    Ler termos
+                  </button>
+                  <button
+                    type='button'
+                    className={styles.textButton}
+                    onClick={() => setLegal('Política de privacidade')}
+                  >
+                    Ler política de privacidade
+                  </button>
+                </div>
+              </>
+            )}
+            {error && (
+              <p role='alert' className={styles.error}>
+                {error}
+              </p>
+            )}
+            <Button color='laranja' disabled={busy}>
+              {busy
+                ? 'Aguarde…'
+                : mode === 'login'
+                  ? 'Entrar no meu cantinho →'
+                  : mode === 'cadastro'
+                    ? 'Criar conta local →'
+                    : mode === 'recuperar'
+                      ? 'Continuar recuperação local'
+                      : 'Salvar nova senha'}
+            </Button>
+          </form>
+          <div className={styles.actions}>
+            {mode === 'login' ? (
+              <>
+                <button
+                  className={styles.textButton}
+                  onClick={() => changeMode('cadastro')}
+                >
+                  Criar conta
+                </button>
+                <button
+                  className={styles.textButton}
+                  onClick={() => changeMode('recuperar')}
+                >
+                  Esqueci a senha
+                </button>
+              </>
+            ) : (
+              <button
+                className={styles.textButton}
+                onClick={() => changeMode('login')}
+              >
+                Voltar para login
+              </button>
+            )}
+          </div>
+          <Button
+            color='azul'
+            onClick={() => {
+              if (useAppStore.getState().startDemo()) goHome();
+            }}
+          >
+            Explorar demonstração
+          </Button>
+          <small className={styles.muted}>
+            O acesso com Google estará disponível quando houver integração de
+            autenticação.
+          </small>
         </div>
+        <img src={Chave} alt='Chaves para seu novo capítulo' />
       </div>
-    </>
+      {legal && (
+        <Modal title={legal} onClose={() => setLegal('')}>
+          <div className={styles.stack}>
+            <p>
+              Esta versão permite experimentar os fluxos do Iagora com dados
+              locais e exemplos fictícios. Não realiza contratação, pagamentos
+              ou autenticação em serviços externos.
+            </p>
+            <p>
+              Os dados de perfil, preferências e registros ficam no
+              armazenamento deste navegador. A senha é representada por um
+              resumo criptográfico local. Esta demonstração não oferece
+              segurança de autenticação para uso em produção.
+            </p>
+            <p>
+              Você pode apagar os dados em Meu perfil. Evite usar dados
+              sensíveis. Termos definitivos serão necessários antes da
+              disponibilização do serviço real.
+            </p>
+            <Button onClick={() => setLegal('')}>Entendi</Button>
+          </div>
+        </Modal>
+      )}
+      {replacement && (
+        <Confirm
+          title='Substituir a conta local?'
+          description='Esta demonstração mantém uma conta por navegador. Criar outra conta remove os registros locais da conta anterior.'
+          onClose={() => setReplacement(null)}
+          onConfirm={() => {
+            useAppStore.getState().deleteAccount();
+            useAppStore.getState().register(replacement);
+            navigate('/onboarding');
+          }}
+        />
+      )}
+    </main>
   );
 }

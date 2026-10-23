@@ -5,6 +5,8 @@ import HeroSection from '../components/Household/heroSection';
 import RotinaSection from '../components/Limpeza/rotinaSection';
 import KitSection from '../components/Limpeza/kitDialog';
 import { cleaningHero, cleaningCadences } from '../data/limpeza';
+import { useAppStore } from '../store/useAppStore';
+import { today } from '../utils/format';
 
 export default function Limpeza() {
   const [params, setParams] = useSearchParams();
@@ -16,20 +18,28 @@ export default function Limpeza() {
     : 'dia';
 
   function saveRoutine() {
-    try {
-      const selected = cleaningCadences.find(item => item.id === cadence);
-      localStorage.setItem(
-        'iagora:rotina:limpeza',
-        JSON.stringify({ cadence, items: selected.items })
-      );
-      setStatus(
-        'Sua rotina de limpeza está salva neste navegador. Marque as tarefas conforme for concluindo.'
-      );
-    } catch {
-      setStatus(
-        'Não foi possível salvar a rotina. Você ainda pode marcar suas tarefas nesta página.'
-      );
-    }
+    const selected = cleaningCadences.find(item => item.id === cadence);
+    const { data, addCleaningTasks } = useAppStore.getState();
+    const items = [
+      ...selected.items,
+      ...data.cleaningCustom.filter(item => item.cadence === cadence),
+    ];
+    addCleaningTasks(
+      items.map(item => ({
+        title: item.title,
+        cleaningId: item.id,
+        date: today(),
+        time: '09:00',
+        category: 'Limpeza',
+        frequency: { dia: 'Diária', semana: 'Semanal', mes: 'Mensal' }[cadence],
+        days: [String(new Date().getDay())],
+        done: false,
+        reminder: true,
+      }))
+    );
+    setStatus(
+      'Atividades disponíveis em Minha rotina. Lá você pode ajustar dias, horários e frequência.'
+    );
     document
       .getElementById('rotina-limpeza')
       .scrollIntoView({ block: 'start' });

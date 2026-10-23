@@ -1,41 +1,43 @@
+import { Link } from 'react-router-dom';
 import Logo from '../assets/images/logoLaranja.png';
 
 export default function Footer() {
   return (
-    <footer className='mx-30 pt-20'>
-      <div className='flex border-b border-gray-300 pb-10'>
-        <div className='w-1/3'>
-          <img className='w-40' src={Logo} alt='' />
+    <footer className='site-footer mx-30 pt-20'>
+      <div className='footer-columns flex border-b border-gray-300 pb-10 gap-8'>
+        <div className='footer-brand w-1/3'>
+          <Link to='/'>
+            <img className='w-40' src={Logo} alt='Iagora · voltar ao início' />
+          </Link>
           <p className='text-[20px] text-(--texto-claro) mt-4'>
-            Um guia para conquistar e cuidar da sua <br />
-            independência.
+            Um guia para conquistar e cuidar da sua independência.
           </p>
         </div>
-
-        <div className='grid grid-cols-3 flex-1'>
-          <div>
-            <p className='font-semibold mb-3'>Conheça o Iagora</p>
-            <p className='mb-2 text-(--texto-claro)'>Funcionalidades</p>
-            <p className='mb-2 text-(--texto-claro)'>Como funciona</p>
-            <p className='mb-2 text-(--texto-claro)'>Sobre nós</p>
+        <div className='footer-links grid grid-cols-3 flex-1 gap-6'>
+          <div className='flex flex-col gap-2'>
+            <p className='font-semibold mb-1'>Conheça o Iagora</p>
+            <Link to='/#funcionalidades'>Funcionalidades</Link>
+            <Link to='/#como-funciona'>Como funciona</Link>
+            <Link to='/sobrenos'>Sobre nós</Link>
+            <Link to='/cadastro-empresa'>Para anunciantes</Link>
           </div>
-          <div>
-            <p className='font-semibold mb-3'>Sua conta</p>
-            <p className='mb-2 text-(--texto-claro)'>Meu perfil</p>
-            <p className='mb-2 text-(--texto-claro)'>Suporte</p>
-            <p className='mb-2 text-(--texto-claro)'>Perguntas frequentes</p>
+          <div className='flex flex-col gap-2'>
+            <p className='font-semibold mb-1'>Sua conta</p>
+            <Link to='/perfil'>Meu perfil</Link>
+            <a href='mailto:Iagora@hotmail.com'>Suporte por e-mail</a>
+            <Link to='/#perguntas-frequentes'>Perguntas frequentes</Link>
           </div>
-          <div>
-            <p className='font-semibold mb-3'>Vamos conversar</p>
-            <p className='mb-2 text-(--texto-claro)'>Iagora@hotmail.com</p>
-            <p className='mb-2 text-(--texto-claro)'>
-              Instagram · GitHub · LinkedIn
-            </p>
+          <div className='flex flex-col gap-2'>
+            <p className='font-semibold mb-1'>Vamos conversar</p>
+            <a href='mailto:Iagora@hotmail.com'>Iagora@hotmail.com</a>
+            <Link to='/sobrenos'>Equipe e redes disponíveis ↗</Link>
+            <span className='text-sm text-(--texto-claro)'>
+              Demonstração frontend · dados neste navegador
+            </span>
           </div>
         </div>
       </div>
-
-      <p className='text-[20px] text-(--texto-claro) mt-10 mb-10'>
+      <p className='text-[16px] text-(--texto-claro) mt-8 mb-10'>
         © Iagora · Todos os direitos reservados.
       </p>
     </footer>

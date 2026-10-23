@@ -1,7 +1,18 @@
-import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Outlet,
+  ScrollRestoration,
+  Navigate,
+} from 'react-router-dom';
 import { Pages } from '../containers';
 import { PrivateRoute, PublicRoute } from '../utils/checkAuth';
 import { DashboardLayout, HomeLayout, LandingLayout } from '../layouts';
+import Rotina from '../containers/rotina';
+import Perfil from '../containers/perfil';
+import Aprendendo from '../containers/aprendendo';
+import EncontrarCasa from '../containers/encontrarCasa';
+import Manutencao from '../containers/manutencao';
 
 // Each feature registers its own route without coupling independent screen branches.
 const featureRoutes = Object.values(
@@ -10,19 +21,24 @@ const featureRoutes = Object.values(
 
 const routes = createBrowserRouter([
   {
-    element: <Outlet />,
+    element: (
+      <>
+        <ScrollRestoration />
+        <Outlet />
+      </>
+    ),
     errorElement: <Pages.TelaErro />,
     children: [
       {
         path: '/manutencao',
-        element: <h1>Tela em manutenção</h1>,
+        element: <Manutencao />,
       },
       {
         element: <PublicRoute />,
         children: [
           {
             path: '/manutencao',
-            element: <h1>Tela em manutenção</h1>,
+            element: <Manutencao />,
           },
           {
             element: <PublicRoute />,
@@ -48,17 +64,19 @@ const routes = createBrowserRouter([
                 path: '/login',
                 element: <Pages.Auth />,
               },
+              { path: '/cadastro', element: <Pages.Auth /> },
+              { path: '/recuperar-senha', element: <Pages.Auth /> },
               {
                 path: '/cadastroEmpresa',
-                element: <Pages.CadastroEmpresa />,
+                element: <Navigate to='/cadastro-empresa' replace />,
               },
               {
                 path: '/parceiros',
-                element: <Pages.CadastroEmpresa />,
+                element: <Navigate to='/cadastro-empresa' replace />,
               },
               {
                 path: '/seja-parceiro',
-                element: <Pages.CadastroEmpresa />,
+                element: <Navigate to='/cadastro-empresa' replace />,
               },
               {
                 path: '/onboarding',
@@ -88,13 +106,14 @@ const routes = createBrowserRouter([
                 element: <Pages.Marketplace />,
               },
               {
-                path: '/casa',
-                element: <Pages.Casa/>
-              },
-              {
                 path: '/financas',
-                element: <Pages.FinancasA/>
+                element: <Pages.FinancasA />,
               },
+              { path: '/rotina', element: <Rotina /> },
+              { path: '/minha-rotina', element: <Rotina /> },
+              { path: '/perfil', element: <Perfil /> },
+              { path: '/aprendendo', element: <Aprendendo /> },
+              { path: '/encontrar-casa', element: <EncontrarCasa /> },
               ...featureRoutes,
             ],
           },

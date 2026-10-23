@@ -60,7 +60,7 @@
   color: var(--laranja-principal);
   font-size: 13px;
   line-height: 18px;
-  animation: reveal 2s infinite;
+  animation: reveal 0.7s both;
 }
 .heroTitle {
   font-family: var(--font-heading);
@@ -73,13 +73,13 @@
   gap: 20px;
 }
 .heroTitle > span:first-child {
-  animation: revealTitle 2s infinite;
+  animation: revealTitle 1s both;
 }
 .paperWrapper {
   display: flex;
   min-height: 118px;
   align-items: center;
-  animation: revealPaper 2s infinite;
+  animation: revealPaper 1s both;
 }
 .orangePaper {
   display: block;
@@ -95,11 +95,11 @@
   font-size: 20px;
   line-height: 28px;
   max-width: 570px;
-  animation: revealDescription 2s infinite;
+  animation: revealDescription 1s both;
 }
 .heroAction {
   width: min(100%, 340px);
-  animation: revealAction 2s infinite;
+  animation: revealAction 1s both;
 }
 .heroAction .action {
   width: 100%;
@@ -143,7 +143,7 @@
   border: 8px solid white;
   box-shadow: 0 12px 22px -6px rgb(16 42 67 / 0.13);
   rotate: 6deg;
-  animation: primaryPhoto 2s infinite;
+  animation: primaryPhoto 1s both;
 }
 .secondaryPhoto {
   position: absolute;
@@ -154,7 +154,7 @@
   border: 8px solid white;
   box-shadow: 0 12px 22px -6px rgb(16 42 67 / 0.13);
   rotate: 7deg;
-  animation: secondaryPhoto 2s infinite;
+  animation: secondaryPhoto 1s both;
 }
 .primaryPhoto img,
 .secondaryPhoto img {
@@ -168,7 +168,7 @@
   top: 205px;
   width: 205px;
   height: 266.5px;
-  animation: illustration 2s infinite;
+  animation: illustration 1s both;
 }
 .plant img,
 .movingBox img {
@@ -192,7 +192,7 @@
   top: 280px;
   width: 220px;
   height: 180.19px;
-  animation: illustration 2s infinite;
+  animation: illustration 1s both;
 }
 .boxBody {
   left: 9.95px;
@@ -229,20 +229,20 @@
   align-items: center;
   justify-content: center;
   rotate: -4deg;
-  animation: smallTape 2s infinite;
+  animation: smallTape 1s both;
 }
 .doodle {
   position: absolute;
   left: 105px;
   top: 532px;
-  animation: doodle 2s infinite;
+  animation: doodle 1s both;
 }
 .paperTape {
   position: absolute;
   left: 201.98px;
   top: 20.42px;
   rotate: 9deg;
-  animation: smallTape 2s infinite;
+  animation: smallTape 1s both;
 }
 .navyTape {
   position: absolute;
@@ -258,7 +258,7 @@
   font-size: 14px;
   line-height: 20px;
   rotate: 2deg;
-  animation: navyTape 2s infinite;
+  animation: navyTape 1s both;
 }
 .heroReversed .navyTape {
   left: 549.2px;

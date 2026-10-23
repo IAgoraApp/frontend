@@ -7,6 +7,8 @@ export default function Checklist({
   storageKey,
   label,
   initialChecked = [],
+  checkedIds,
+  onToggle,
 }) {
   const [checked, setChecked] = useState(() => {
     try {
@@ -33,13 +35,15 @@ export default function Checklist({
           <label className={styles.checklistItem}>
             <input
               type='checkbox'
-              checked={checked.includes(id)}
+              checked={(checkedIds ?? checked).includes(id)}
               onChange={() =>
-                setChecked(current =>
-                  current.includes(id)
-                    ? current.filter(value => value !== id)
-                    : [...current, id]
-                )
+                onToggle
+                  ? onToggle(id)
+                  : setChecked(current =>
+                      current.includes(id)
+                        ? current.filter(value => value !== id)
+                        : [...current, id]
+                    )
               }
             />
             <span className={styles.checkIndicator} aria-hidden='true' />

@@ -4,10 +4,12 @@ import NextStep from '../components/Household/nextStep';
 import ReceitaSection from '../components/Cozinha/receitaSection';
 import ComprasSection from '../components/Cozinha/comprasSection';
 import { kitchenHero } from '../data/cozinha';
+import RecipeExplorer from '../components/Cozinha/recipeExplorer';
 
 export default function Cozinha() {
   return (
     <HouseholdLayout title='Cozinha'>
+      <RecipeExplorer />
       <HeroSection {...kitchenHero} />
       <ReceitaSection />
       <ComprasSection />

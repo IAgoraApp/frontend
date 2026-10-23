@@ -1,5 +1,6 @@
 import { Title, Button } from '../ui';
 import { ArrowUpRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function FirstSection() {
   return (
@@ -12,7 +13,7 @@ export default function FirstSection() {
       </h1>
 
       <div className='bg-(--laranja-principal) w-fit px-20 rotate-4 mt-5 mb-5 hover:rotate-0 transition-all duration-300'>
-        <h1 className='text-9xl font-heading text-white font-bold'>I agora?</h1>
+        <p className='text-9xl font-heading text-white font-bold'>I agora?</p>
       </div>
 
       <p className='text-center'>
@@ -21,13 +22,14 @@ export default function FirstSection() {
       </p>
 
       <Button
+        as={Link}
+        to='/cadastro'
         variant='solido'
         color='laranja'
         className='mt-5 font-bold px-20 text-2xl'
       >
         Bora lá <ArrowUpRight />
       </Button>
-
     </section>
   );
 }
