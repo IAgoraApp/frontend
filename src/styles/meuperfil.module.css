@@ -1,13 +1,15 @@
 .meuperfil {
-    width: 100%;
+    width: 84%;
     height: 520px;
     background: var(--color-white, #FFF);
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: 120px;
     margin-top: 43px;
+    background: var(--color-white, #FFF);
+    margin-left: 120px;
+
 }
 
 .foto_perfil {
@@ -90,7 +92,7 @@
 .informacao_usuario {
     display: flex;
     width: 65%;
-    height: 510px;
+    height: 520px;
     padding: 27px 8px;
     flex-direction: column;
     align-items: flex-start;
@@ -199,7 +201,7 @@
     /* 16.52px */
 }
 
-.dados_usuario2{
+.dados_usuario2 {
     display: flex;
     width: 100%;
     height: 52px;
@@ -234,7 +236,7 @@
     background: #e76b3a;
 }
 
-.img_frase{
+.img_frase {
     display: flex;
     width: 50%;
     height: 52px;
@@ -243,3 +245,178 @@
     margin-top: 40px;
 }
 
+.momento {
+    display: flex;
+    width: 84%;
+    height: 738px;
+    padding: 0px 30px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 58px;
+    border-radius: 20px;
+    background: var(--color-navy, #102A43);
+    margin-top: 43px;
+    margin-left: 120px;
+}
+
+.momento_frase {
+    color: #FFB591;
+    font-family: "DM Sans";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 118%;
+    /* 14.16px */
+}
+
+.momento_h2 {
+    color: var(--color-white, #FFF);
+    font-family: "Bricolage Grotesque";
+    font-size: 39px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 118%;
+    /* 46.02px */
+    margin-top: 10px;
+}
+
+.momento_p1 {
+    color: #DCE8F2;
+    font-family: "DM Sans";
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 118%;
+    /* 17.7px */
+    margin-top: 10px;
+}
+
+.momento_img {
+    display: flex;
+    width: 100%;
+    height: 445px;
+    flex-direction: row;
+    align-items: center;
+    gap: 100px;
+    align-self: stretch;
+    padding: 0 75px;
+
+}
+
+.momento_cards {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 100px;
+    align-self: stretch;
+    width: 100%;
+}
+
+.momento_card1 {
+    display: flex;
+    width: 476px;
+    height: 445px;
+    padding-bottom: 42px;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    background-color: #e1e3e4;
+}
+
+.momento_card1:hover {
+    background: #FCE8DC;
+}
+
+.momento_img1 {
+    width: 476px;
+    height: 299px;
+    flex-shrink: 0;
+}
+
+.momento_img1_text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.momento_h3 {
+    width: 427px;
+    height: 45px;
+    color: var(--color-navy, #102A43);
+    text-align: center;
+    font-family: "Bricolage Grotesque";
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 36px;
+    /* 120% */
+}
+
+.momento_p2 {
+    width: 427px;
+    color: var(--color-navy, #102A43);
+    font-family: "DM Sans";
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    /* 133.333% */
+}
+
+.momento_card2 {
+    display: flex;
+    width: 476px;
+    height: 445px;
+    padding-bottom: 42px;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    background-color: #e1e3e4;
+}
+
+.momento_card2:hover {
+    background: #FCE8DC;
+}
+
+.momento_img2_text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.momento_h4 {
+    width: 427px;
+    height: 45px;
+    color: var(--color-navy, #102A43);
+    text-align: center;
+    font-family: "Bricolage Grotesque";
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 36px;
+    /* 120% */
+}
+
+.momento_p3 {
+    width: 427px;
+    color: var(--color-navy, #102A43);
+    font-family: "DM Sans";
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    /* 133.333% */
+}
+
+.momento_p4{
+    color: #BED1E0;
+font-family: "DM Sans";
+font-size: 12px;
+font-style: normal;
+font-weight: 400;
+line-height: 118%; /* 14.16px */
+}

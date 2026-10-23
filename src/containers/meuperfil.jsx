@@ -2,6 +2,9 @@ import { Header, Footer } from '../components'
 import Styles from '../styles/meuperfil.module.css'
 import Foto from '../assets/images/fotoperfil.png'
 import Frase from '../assets/images/frase.png'
+import Mulher1 from '../assets/images/morarsozinho.png'
+import Homem1 from '../assets/images/morosozinho.png'
+
 
 export default function MeuPerfil() {
     return (
@@ -85,6 +88,68 @@ export default function MeuPerfil() {
                 </div>
 
             </section>
+
+            <section className={Styles.momento}>
+
+                <div className={Styles.momento_frase}>
+                    <h3 className={Styles.momento_h3}>
+                        PERSONALIZE SUA JORNADA.
+                    </h3>
+
+                    <h2 className={Styles.momento_h2}>
+                        Em que momento você está?
+                    </h2>
+
+                    <p className={Styles.momento_p1}>
+                        Você pode mudar essa escolha depois. O Iagora acompanha seu ritmo.
+                    </p>
+                </div>
+
+                <div className={Styles.momento_img}>
+
+                    <div className={Styles.momento_cards}>
+                        <div className={Styles.momento_card1}>
+
+                            <div className={Styles.momento_img1}>
+                                <img src={Mulher1} />
+                            </div>
+                            <div className={Styles.momento_img1_text}>
+                                <h3 className={Styles.momento_h3}>
+                                    Quero morar sozinho
+                                </h3>
+
+                                <p className={Styles.momento_p2}>
+                                    Planejar os gastos, encontrar uma casa e se preparar para a mudança.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div className={Styles.momento_card2}>
+                            <div className={Styles.momento_img2}>
+                                <img src={Homem1} />
+                            </div>
+                            <div className={Styles.momento_img2_text}>
+                                <h4 className={Styles.momento_h4}>
+                                    Quero morar sozinho
+                                </h4>
+
+                                <p className={Styles.momento_p3}>
+                                    Manter a casa, organizar a rotina e resolver problemas do dia a dia.
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div className={Styles.momento_p4}>
+                    <p className={Styles.momento_p4_text}>
+                        A escolha mostrada aqui é ilustrativa e ainda não está salva.
+                    </p>
+                </div>
+            </section>
+
 
             <Footer />
         </main>
