@@ -1,13 +1,14 @@
 import { Header, Footer } from '../components';
+import { Sections } from '../components/MinhaJornada';
 
-export default function MinhaJornada(){
-    return(
-        <>
-        <Header/>
-        <main>
-            <h2>ola mundo</h2>
-        </main>
-        <Footer/>
-        </>
-    )
+export default function MinhaJornada() {
+  return (
+    <>
+      <Header/>
+      <main>
+        <Sections.CreativeEditorial/>
+      </main>
+      <Footer/>
+    </>
+  );
 }
