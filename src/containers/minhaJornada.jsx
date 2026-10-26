@@ -7,6 +7,7 @@ export default function MinhaJornada() {
       <Header/>
       <main>
         <Sections.CreativeEditorial/>
+        <Sections.Titulo/>
       </main>
       <Footer/>
     </>
