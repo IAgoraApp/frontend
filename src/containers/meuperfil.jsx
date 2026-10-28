@@ -150,6 +150,61 @@ export default function MeuPerfil() {
                 </div>
             </section>
 
+            <section className={Styles.sobcontrole}>
+
+                <div className={Styles.sobcontrole_div1}>
+                    <p className={Styles.sobcontrole_p1}>
+                        CUIDE DO SEU CANTINHO
+                    </p>
+
+                    <h2 className={Styles.sobcontrole_h2}>
+                        Sua conta, sob seu controle.
+                    </h2>
+
+                    <div className={Styles.sobcontrole_senha}>
+
+                        <div className={Styles.sobcontrole_senhaeacesso}>
+                            <h6 className={Styles.sobcontrole_h6}>
+                                Senha e acesso
+                            </h6>
+
+                            <p className={Styles.sobcontrole_p2}>
+                                Gerencie como você entra no Iagora.
+                            </p>
+                        </div>
+
+                        <div className={Styles.sobcontrole_link}>
+                            <a href='#' className={Styles.gerenciaracesso}>
+                                Gerenciar acesso  ↗
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div className={Styles.sobcontrole_div2}>
+
+                    <div className={Styles.sobcontrole_sairagora}>
+                        <div className={Styles.sobcontrole_sair}>
+                            <h7 className={Styles.sobcontrole_h7}>
+                                Precisa sair por agora?
+                            </h7>
+
+                            <p className={Styles.sobcontrole_p3}>
+                                Seu espaço estará aqui quando voltar.
+                            </p>
+                        </div>
+
+                        <div className={Styles.sobcontrole_link2}>
+                            <a href='#' className={Styles.sairdaconta}>
+                               Sair da conta  ↗
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
 
             <Footer />
         </main>
