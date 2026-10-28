@@ -1,0 +1,108 @@
+.section_EditorialCards {
+    width: 100%;
+    padding: 0 72px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 40px;
+}
+
+.Card1 {
+    width: 48.5%;
+    background: #F4F7FA;
+    border-radius: 10px;
+
+    & .div_top {
+        width: 100%;
+        height: 330px;
+        background-image: url(../../assets/images/apartamento.png);
+        background-size: cover;
+        background-position: center;
+        border-radius: 10px 10px 0 0;
+    }
+
+    & .div_bottom {
+        width: 100%;
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        
+
+        & h3 {
+            color: var(--color-orange, #D54C15);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        & h2 {
+            color: var(--color-navy, #102A43);
+            font-family: "Bricolage Grotesque";
+            font-size: 35px;
+            font-weight: 800;
+            line-height: 44px;
+        }
+
+        & p {
+            color: var(--color-muted, #596579);
+            font-size: 17.5px;
+            font-weight: 400;
+        }
+
+        & .btn_encontrar{
+            width: 100%;
+            font-weight: 700;
+        }
+    }
+}
+
+.Card2 {
+    width: 48.5%;
+    background: #F4F7FA;
+    border-radius: 10px;
+
+    & .div_top {
+        width: 100%;
+        height: 330px;
+        background-image: url(../../assets/images/essentials.png);
+        background-size: cover;
+        background-position: center;
+        border-radius: 10px 10px 0 0;
+    }
+
+    & .div_bottom {
+        width: 100%;
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        
+
+        & h3 {
+            color: var(--color-orange, #D54C15);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        & h2 {
+            color: var(--color-navy, #102A43);
+            font-family: "Bricolage Grotesque";
+            font-size: 35px;
+            font-weight: 800;
+            line-height: 44px;
+        }
+
+        & p {
+            color: var(--color-muted, #596579);
+            font-size: 17.5px;
+            font-weight: 400;
+        }
+
+        & .btn_aprender{
+            width: 100%;
+            font-weight: 700;
+        }
+    }
+}

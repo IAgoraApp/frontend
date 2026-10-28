@@ -1,11 +1,10 @@
 .titulo {
     width: 100%;
-    background-color: aqua;
     padding: 0 72px;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    margin-top: 38px;
+    margin-bottom: 40px;
 
     & h3 {
         color: var(--color-orange, #D54C15);

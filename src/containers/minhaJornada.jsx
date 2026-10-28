@@ -8,6 +8,8 @@ export default function MinhaJornada() {
       <main>
         <Sections.CreativeEditorial/>
         <Sections.Titulo/>
+        <Sections.JourneyOverview/>
+        <Sections.EditorialCards/>
       </main>
       <Footer/>
     </>
