@@ -1,8 +1,8 @@
-import { Button, Title } from '../ui';
+import { Button, Title } from '../shared/ui';
 import { useState } from 'react';
 import { Content } from '../../data/landingPage';
 import { ArrowUpRight } from 'lucide-react';
-import Prancheta from '../../assets/images/prancheta.png'
+import Prancheta from '../../assets/images/prancheta.png';
 
 export default function RecursosSection() {
   const content = Content;
@@ -39,7 +39,9 @@ export default function RecursosSection() {
         </div>
 
         <div className='mt-10 flex'>
-          <div className='w-1/3'><img src={Prancheta} alt="" /></div>
+          <div className='w-1/3'>
+            <img src={Prancheta} alt='' />
+          </div>
           <div>
             <Title variant='pequenoLj' className='mb-5'>
               {valor} / {content[valor].nome}

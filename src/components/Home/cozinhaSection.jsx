@@ -1,5 +1,5 @@
 import Prato from '../../assets/images/prato.png';
-import { Title, Button } from '../ui';
+import { Title, Button } from '../shared/ui';
 
 export default function CozinhaSection() {
   return (
@@ -14,7 +14,9 @@ export default function CozinhaSection() {
       <p className='text-(--texto-claro)'>
         Ideias simples para as refeições do dia a dia.
       </p>
-      <Button variant='link' color='laranja' className='mt-2 mb-8'>Explorar cozinha</Button>
+      <Button variant='link' color='laranja' className='mt-2 mb-8'>
+        Explorar cozinha
+      </Button>
     </section>
   );
 }

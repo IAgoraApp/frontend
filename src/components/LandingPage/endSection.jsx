@@ -1,4 +1,4 @@
-import { Title, Button } from '../ui';
+import { Title, Button } from '../shared/ui';
 import { ArrowUpRight } from 'lucide-react';
 
 export default function EndSection() {
@@ -14,7 +14,11 @@ export default function EndSection() {
         Independência é uma grande conquista. Você pode aprender um pouco por
         vez.
       </p>
-      <Button variant='solido' color='azul' className='bg-(--azul-escuro)! mb-10'>
+      <Button
+        variant='solido'
+        color='azul'
+        className='bg-(--azul-escuro)! mb-10'
+      >
         {' '}
         Começar agora <ArrowUpRight />
       </Button>

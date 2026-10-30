@@ -1,4 +1,4 @@
-import { Title } from '../ui';
+import { Title } from '../shared/ui';
 
 const perguntas = [
   {
@@ -23,7 +23,10 @@ const perguntas = [
 
 export default function PerguntasSection() {
   return (
-    <section id='perguntas-frequentes' className='px-30 bg-(--laranja-principal) py-20'>
+    <section
+      id='perguntas-frequentes'
+      className='px-30 bg-(--laranja-principal) py-20'
+    >
       <Title variant='pequenoBc'>Sem complicação</Title>
       <Title variant='normal' className='text-6xl text-white'>
         Antes de começar
@@ -32,7 +35,9 @@ export default function PerguntasSection() {
       <div className='flex flex-col gap-3 mt-5'>
         {perguntas.map(item => (
           <div key={item.id} className='p-6 bg-white'>
-            <h3 className='text-xl font-bold text-(--azul-escuro) mb-2'>{item.pergunta}</h3>
+            <h3 className='text-xl font-bold text-(--azul-escuro) mb-2'>
+              {item.pergunta}
+            </h3>
             <p className='text-(--azul-escuro)'>{item.resposta}</p>
           </div>
         ))}

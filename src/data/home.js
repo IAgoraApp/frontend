@@ -1,4 +1,10 @@
-import { UsersRound, Calendar, Cookie, BrushCleaning, HandCoins } from 'lucide-react';
+import {
+  UsersRound,
+  Calendar,
+  Cookie,
+  BrushCleaning,
+  HandCoins,
+} from 'lucide-react';
 
 export const Items = [
   {

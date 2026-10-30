@@ -1,4 +1,4 @@
-export const dashboardHeaderData = {
+export const empresasHeaderData = {
   logoLink: '/',
   navLinks: [
     { nome: 'Painel', rota: '/dashboard' },
@@ -11,12 +11,11 @@ export const dashboardHeaderData = {
   },
 };
 
-export const homeHeaderData = {
+export const userHeaderData = {
   logoLink: '/',
   navLinks: [
     { nome: 'Início', rota: '/home' },
     { nome: 'Rotina', rota: '/minhajornada' },
-    { nome: 'Minha casa', rota: '/casa' },
     { nome: 'Finanças', rota: '/financas' },
     { nome: 'Empresas e Serviços', rota: '/marketplace' },
   ],
@@ -27,7 +26,7 @@ export const homeHeaderData = {
   },
 };
 
-export const landingHeaderData = {
+export const publicHeaderData = {
   logoLink: '/',
   navLinks: [
     { nome: 'Início', rota: '/' },
@@ -42,10 +41,10 @@ export const landingHeaderData = {
 };
 
 export const headerVariants = {
-  dashboard: dashboardHeaderData,
-  home: homeHeaderData,
-  landing: landingHeaderData,
-  institucional: landingHeaderData,
+  empresas: empresasHeaderData,
+  user: userHeaderData,
+  public: publicHeaderData,
+  institucional: publicHeaderData,
 };
 
 export default headerVariants;

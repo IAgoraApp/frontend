@@ -1,4 +1,3 @@
-export { default as DashboardLayout } from './DashboardLayout';
-export { default as HomeLayout } from './HomeLayout';
-export { default as LandingLayout } from './LandingLayout';
-export { default as AuthLayout } from './AuthLayout';
+export { default as EmpresasLayout } from './empresasLayout';
+export { default as UserLayout } from './userLayout';
+export { default as PublicLayout } from './publicLayout';

@@ -1,5 +1,5 @@
-import { Title, Button } from '../ui';
-import Checklist from '../../assets/images/checklist.png'
+import { Title, Button } from '../shared/ui';
+import Checklist from '../../assets/images/checklist.png';
 
 export default function RotinaSection() {
   return (
@@ -16,10 +16,12 @@ export default function RotinaSection() {
             Organize o que você precisa fazer na semana: casa, contas, compras e
             mais.
           </p>
-          <Button variant='solido' color='laranja' className='mt-4'>Adicionar Tarefa</Button>
+          <Button variant='solido' color='laranja' className='mt-4'>
+            Adicionar Tarefa
+          </Button>
         </div>
         <div>
-          <img className='w-full' src={Checklist} alt="" />
+          <img className='w-full' src={Checklist} alt='' />
         </div>
       </div>
     </section>
