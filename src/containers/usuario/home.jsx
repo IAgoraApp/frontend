@@ -4,7 +4,6 @@ import { Footer } from '../../components/shared';
 export default function Home() {
   return (
     <>
-
       <main className='mx-30 mb-20 mt-10'>
         <Sections.TittleSection />
         <Sections.NavSection />

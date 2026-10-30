@@ -3,10 +3,17 @@ import Logo from '../../assets/images/logoLaranja.png';
 import { Button } from './ui/index';
 import { headerVariants } from '../../data/header';
 
-export default function Header({ variant = 'user', className = '', borderClass = '' }) {
+export default function Header({
+  variant = 'user',
+  className = '',
+  borderClass = '',
+}) {
   const location = useLocation();
-  const { logoLink, navLinks, actionButton: button } =
-    headerVariants[variant] ?? headerVariants.user;
+  const {
+    logoLink,
+    navLinks,
+    actionButton: button,
+  } = headerVariants[variant] ?? headerVariants.user;
   const isLinkActive = route => location.pathname === route;
 
   return (

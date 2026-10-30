@@ -14,7 +14,11 @@ export default function EndSection() {
         Independência é uma grande conquista. Você pode aprender um pouco por
         vez.
       </p>
-      <Button variant='solido' color='azul' className='bg-(--azul-escuro)! mb-10'>
+      <Button
+        variant='solido'
+        color='azul'
+        className='bg-(--azul-escuro)! mb-10'
+      >
         {' '}
         Começar agora <ArrowUpRight />
       </Button>

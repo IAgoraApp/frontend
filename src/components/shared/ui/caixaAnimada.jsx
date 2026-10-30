@@ -26,9 +26,33 @@ export function CaixaAnimada({ className = '' }) {
             }`}
             style={{ transformOrigin: '130px 24px' }}
           >
-            <line x1='130' y1='6' x2='130' y2='24' stroke='#d54c15' strokeWidth='5' strokeLinecap='round' />
-            <line x1='106' y1='12' x2='118' y2='28' stroke='#d54c15' strokeWidth='5' strokeLinecap='round' />
-            <line x1='154' y1='12' x2='142' y2='28' stroke='#d54c15' strokeWidth='5' strokeLinecap='round' />
+            <line
+              x1='130'
+              y1='6'
+              x2='130'
+              y2='24'
+              stroke='#d54c15'
+              strokeWidth='5'
+              strokeLinecap='round'
+            />
+            <line
+              x1='106'
+              y1='12'
+              x2='118'
+              y2='28'
+              stroke='#d54c15'
+              strokeWidth='5'
+              strokeLinecap='round'
+            />
+            <line
+              x1='154'
+              y1='12'
+              x2='142'
+              y2='28'
+              stroke='#d54c15'
+              strokeWidth='5'
+              strokeLinecap='round'
+            />
           </g>
 
           <g
@@ -80,9 +104,25 @@ export function CaixaAnimada({ className = '' }) {
             strokeLinejoin='round'
           />
 
-          <line x1='130' y1='92' x2='130' y2='185' stroke='#102a43' strokeWidth='5' strokeLinejoin='round' />
+          <line
+            x1='130'
+            y1='92'
+            x2='130'
+            y2='185'
+            stroke='#102a43'
+            strokeWidth='5'
+            strokeLinejoin='round'
+          />
 
-          <line x1='78' y1='146' x2='118' y2='162' stroke='#d54c15' strokeWidth='7' strokeLinecap='round' />
+          <line
+            x1='78'
+            y1='146'
+            x2='118'
+            y2='162'
+            stroke='#d54c15'
+            strokeWidth='7'
+            strokeLinecap='round'
+          />
           <rect
             x='88'
             y='122'
@@ -95,7 +135,15 @@ export function CaixaAnimada({ className = '' }) {
             strokeWidth='3.5'
           />
 
-          <line x1='168' y1='90' x2='168' y2='158' stroke='#d54c15' strokeWidth='7' strokeLinecap='round' />
+          <line
+            x1='168'
+            y1='90'
+            x2='168'
+            y2='158'
+            stroke='#d54c15'
+            strokeWidth='7'
+            strokeLinecap='round'
+          />
           <rect
             x='142'
             y='132'
@@ -149,8 +197,24 @@ export function CaixaAnimada({ className = '' }) {
               strokeWidth='8'
               strokeLinecap='round'
             />
-            <line x1='124' y1='52' x2='136' y2='52' stroke='#d54c15' strokeWidth='5' strokeLinecap='round' />
-            <line x1='124' y1='92' x2='136' y2='92' stroke='#d54c15' strokeWidth='5' strokeLinecap='round' />
+            <line
+              x1='124'
+              y1='52'
+              x2='136'
+              y2='52'
+              stroke='#d54c15'
+              strokeWidth='5'
+              strokeLinecap='round'
+            />
+            <line
+              x1='124'
+              y1='92'
+              x2='136'
+              y2='92'
+              stroke='#d54c15'
+              strokeWidth='5'
+              strokeLinecap='round'
+            />
 
             <rect
               x='86'
@@ -163,8 +227,22 @@ export function CaixaAnimada({ className = '' }) {
               stroke='#102a43'
               strokeWidth='3'
             />
-            <line x1='90' y1='68' x2='98' y2='70' stroke='#102a43' strokeWidth='2' />
-            <line x1='90' y1='72' x2='100' y2='75' stroke='#102a43' strokeWidth='2' />
+            <line
+              x1='90'
+              y1='68'
+              x2='98'
+              y2='70'
+              stroke='#102a43'
+              strokeWidth='2'
+            />
+            <line
+              x1='90'
+              y1='72'
+              x2='100'
+              y2='75'
+              stroke='#102a43'
+              strokeWidth='2'
+            />
           </g>
 
           <g

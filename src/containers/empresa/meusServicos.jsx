@@ -5,7 +5,6 @@ import { Footer } from '../../components/shared';
 export default function MeusServicos() {
   return (
     <>
-
       <main className='mx-30 mb-20 mt-10 flex flex-col gap-10'>
         <section className='grid grid-cols-1 lg:grid-cols-12 gap-6 items-center py-2'>
           <div className='lg:col-span-7 flex flex-col justify-center'>
@@ -14,7 +13,9 @@ export default function MeusServicos() {
             </Title>
             <h1 className='font-heading text-6xl sm:text-7xl lg:text-[5.25rem] xl:text-[5.75rem] font-black text-(--azul-titulo) leading-[0.98] mt-3 tracking-tight'>
               Você faz bem. <br />
-              <span className='text-(--laranja-principal)'>Conta pra geral.</span>
+              <span className='text-(--laranja-principal)'>
+                Conta pra geral.
+              </span>
             </h1>
           </div>
 
@@ -119,7 +120,8 @@ export default function MeusServicos() {
                   + Adicionar fotos do serviço
                 </p>
                 <p className='text-xs text-(--texto-claro) mt-1'>
-                  Use imagens da sua equipe, dos materiais e dos trabalhos realizados.
+                  Use imagens da sua equipe, dos materiais e dos trabalhos
+                  realizados.
                 </p>
               </div>
             </div>
@@ -153,7 +155,8 @@ export default function MeusServicos() {
                   São Paulo e região · Valor sob orçamento
                 </p>
                 <p className='text-sm text-(--texto-claro) mt-2 leading-relaxed'>
-                  Uma descrição direta ajuda o consumidor a entender o serviço e combinar os próximos passos.
+                  Uma descrição direta ajuda o consumidor a entender o serviço e
+                  combinar os próximos passos.
                 </p>
 
                 <div className='mt-4'>

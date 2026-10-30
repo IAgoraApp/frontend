@@ -5,4 +5,11 @@ import MomentoSection from './momentoSection';
 import PerguntasSection from './perguntasSection';
 import EndSection from './endSection';
 
-export const Sections = { FirstSection, VideoSection, RecursosSection, MomentoSection, PerguntasSection, EndSection };
+export const Sections = {
+  FirstSection,
+  VideoSection,
+  RecursosSection,
+  MomentoSection,
+  PerguntasSection,
+  EndSection,
+};

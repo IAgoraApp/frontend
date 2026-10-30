@@ -5,7 +5,6 @@ import { Footer } from '../../components/shared';
 export default function PerfilEmpresa() {
   return (
     <>
-
       <main className='mx-30 mb-20 mt-10 flex flex-col gap-14'>
         <section className='grid grid-cols-1 lg:grid-cols-12 gap-6 items-center py-2'>
           <div className='lg:col-span-7 flex flex-col justify-center'>
@@ -14,7 +13,9 @@ export default function PerfilEmpresa() {
             </Title>
             <h1 className='font-heading text-6xl sm:text-7xl lg:text-[5.25rem] xl:text-[5.75rem] font-black text-(--azul-titulo) leading-[0.98] mt-3 tracking-tight'>
               Sua empresa. <br />
-              <span className='text-(--laranja-principal)'>Sua assinatura.</span>
+              <span className='text-(--laranja-principal)'>
+                Sua assinatura.
+              </span>
             </h1>
 
             <div className='flex flex-wrap gap-2.5 mt-5'>
@@ -58,7 +59,8 @@ export default function PerfilEmpresa() {
             </button>
 
             <p className='text-gray-400 text-[11px] mt-6 leading-normal'>
-              Seu perfil público mostra os serviços e as regiões de atendimento da empresa.
+              Seu perfil público mostra os serviços e as regiões de atendimento
+              da empresa.
             </p>
 
             <div className='w-full mt-auto pt-6 flex flex-col gap-4'>
@@ -172,7 +174,11 @@ export default function PerfilEmpresa() {
           <Title as='h3' variant='pequenoLj'>
             SEU TRABALHO EM IMAGENS
           </Title>
-          <Title as='h2' variant='normal' className='text-3xl font-bold text-(--azul-titulo)'>
+          <Title
+            as='h2'
+            variant='normal'
+            className='text-3xl font-bold text-(--azul-titulo)'
+          >
             Mostre quem faz acontecer.
           </Title>
 

@@ -3,7 +3,6 @@ import { Title, Button, CaixaAnimada } from '../../components/shared/ui';
 import { Footer } from '../../components/shared';
 
 export default function Dashboard() {
-
   const servicos = [
     {
       id: 1,
@@ -60,8 +59,6 @@ export default function Dashboard() {
 
   return (
     <>
-
-
       <main className='mx-30 mb-20 mt-10 flex flex-col gap-12'>
         <section className='grid grid-cols-1 lg:grid-cols-12 gap-6 items-center py-2'>
           <div className='lg:col-span-7 flex flex-col justify-center'>
@@ -263,14 +260,17 @@ export default function Dashboard() {
                         item.status === 'Novo contato'
                           ? 'bg-green-100 text-green-700'
                           : item.status === 'Agendado'
-                          ? 'bg-blue-100 text-blue-700'
-                          : 'bg-gray-200 text-gray-700'
+                            ? 'bg-blue-100 text-blue-700'
+                            : 'bg-gray-200 text-gray-700'
                       }`}
                     >
                       {item.status}
                     </span>
                     <div className='w-28 flex justify-end'>
-                      <Button color='preto' className='text-xs py-1.5 px-4 w-full text-center'>
+                      <Button
+                        color='preto'
+                        className='text-xs py-1.5 px-4 w-full text-center'
+                      >
                         Responder
                       </Button>
                     </div>
@@ -292,7 +292,7 @@ export default function Dashboard() {
           </div>
 
           <div className='bg-(--azul-fundo) p-8 flex flex-col gap-4 mt-2 rounded-2xl'>
-            {servicos.map((s) => (
+            {servicos.map(s => (
               <div
                 key={s.id}
                 className='bg-white p-6 flex justify-between items-center shadow-xs rounded-xl'
@@ -321,7 +321,10 @@ export default function Dashboard() {
                 </div>
 
                 <Link to='/meus-servicos' className='shrink-0'>
-                  <Button color='preto' className='whitespace-nowrap px-7 py-2.5 text-sm'>
+                  <Button
+                    color='preto'
+                    className='whitespace-nowrap px-7 py-2.5 text-sm'
+                  >
                     Editar anúncio ↗
                   </Button>
                 </Link>
@@ -344,7 +347,9 @@ export default function Dashboard() {
               Seu perfil também vende confiança.
             </h2>
             <p className='text-gray-300 text-sm mt-1.5'>
-              Conte sobre a empresa, mostre sua equipe e mantenha o contato em dia. Empresas com perfil 100% completo fecham até 3x mais negócios.
+              Conte sobre a empresa, mostre sua equipe e mantenha o contato em
+              dia. Empresas com perfil 100% completo fecham até 3x mais
+              negócios.
             </p>
           </div>
 

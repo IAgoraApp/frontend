@@ -10,14 +10,13 @@ export default function CadastroEmpresa() {
   const [telefone, setTelefone] = useState('');
   const [categoria, setCategoria] = useState('Limpeza e conservação');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
     navigate('/dashboard');
   };
 
   return (
     <>
-
       <main className='mx-30 mb-20 mt-6 flex flex-col gap-14'>
         <section className='bg-[#102a43] text-white p-10 lg:p-14 rounded-3xl flex flex-col lg:flex-row items-center justify-between gap-10 shadow-lg'>
           <div className='flex-1 flex flex-col gap-4'>
@@ -30,7 +29,9 @@ export default function CadastroEmpresa() {
             </h1>
 
             <p className='text-gray-300 text-base lg:text-lg leading-relaxed max-w-xl'>
-              Cadastre sua empresa gratuitamente no IAgora e receba contatos diretos de clientes buscando serviços residenciais na sua cidade, sem taxas abusivas.
+              Cadastre sua empresa gratuitamente no IAgora e receba contatos
+              diretos de clientes buscando serviços residenciais na sua cidade,
+              sem taxas abusivas.
             </p>
 
             <div className='flex flex-col gap-2.5 mt-2 text-sm text-gray-200'>
@@ -40,11 +41,16 @@ export default function CadastroEmpresa() {
               </div>
               <div className='flex items-center gap-2'>
                 <span className='text-(--laranja-principal) font-bold'>✓</span>
-                <span>Clientes entram em contato direto com você pelo WhatsApp</span>
+                <span>
+                  Clientes entram em contato direto com você pelo WhatsApp
+                </span>
               </div>
               <div className='flex items-center gap-2'>
                 <span className='text-(--laranja-principal) font-bold'>✓</span>
-                <span>Acesso a um painel exclusivo para gerenciar seus anúncios e métricas</span>
+                <span>
+                  Acesso a um painel exclusivo para gerenciar seus anúncios e
+                  métricas
+                </span>
               </div>
             </div>
           </div>
@@ -72,7 +78,7 @@ export default function CadastroEmpresa() {
                   required
                   placeholder='Ex.: Casa em Dia Serviços'
                   value={nomeEmpresa}
-                  onChange={(e) => setNomeEmpresa(e.target.value)}
+                  onChange={e => setNomeEmpresa(e.target.value)}
                   className='w-full bg-(--azul-fundo) border border-gray-200 px-3.5 py-2.5 text-sm focus:outline-none focus:border-(--laranja-principal)'
                 />
               </div>
@@ -86,7 +92,7 @@ export default function CadastroEmpresa() {
                   required
                   placeholder='seuemail@empresa.com.br'
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={e => setEmail(e.target.value)}
                   className='w-full bg-(--azul-fundo) border border-gray-200 px-3.5 py-2.5 text-sm focus:outline-none focus:border-(--laranja-principal)'
                 />
               </div>
@@ -100,7 +106,7 @@ export default function CadastroEmpresa() {
                   required
                   placeholder='(11) 99999-9999'
                   value={telefone}
-                  onChange={(e) => setTelefone(e.target.value)}
+                  onChange={e => setTelefone(e.target.value)}
                   className='w-full bg-(--azul-fundo) border border-gray-200 px-3.5 py-2.5 text-sm focus:outline-none focus:border-(--laranja-principal)'
                 />
               </div>
@@ -111,13 +117,19 @@ export default function CadastroEmpresa() {
                 </label>
                 <select
                   value={categoria}
-                  onChange={(e) => setCategoria(e.target.value)}
+                  onChange={e => setCategoria(e.target.value)}
                   className='w-full bg-(--azul-fundo) border border-gray-200 px-3.5 py-2.5 text-sm focus:outline-none focus:border-(--laranja-principal)'
                 >
-                  <option value='Limpeza e conservação'>Limpeza e conservação</option>
+                  <option value='Limpeza e conservação'>
+                    Limpeza e conservação
+                  </option>
                   <option value='Reformas e reparos'>Reformas e reparos</option>
-                  <option value='Organização residencial'>Organização residencial</option>
-                  <option value='Manutenção e elétrica'>Manutenção e elétrica</option>
+                  <option value='Organização residencial'>
+                    Organização residencial
+                  </option>
+                  <option value='Manutenção e elétrica'>
+                    Manutenção e elétrica
+                  </option>
                   <option value='Outros serviços'>Outros serviços</option>
                 </select>
               </div>
@@ -129,7 +141,8 @@ export default function CadastroEmpresa() {
               </div>
 
               <p className='text-[11px] text-(--texto-claro) text-center leading-normal'>
-                Ao cadastrar, você concorda com os termos de parceria do IAgora. Seus dados estão protegidos.
+                Ao cadastrar, você concorda com os termos de parceria do IAgora.
+                Seus dados estão protegidos.
               </p>
             </form>
           </div>
@@ -178,7 +191,11 @@ export default function CadastroEmpresa() {
             <Title as='h2' variant='pequenoLj'>
               PASSO A PASSO
             </Title>
-            <Title as='h1' variant='normal' className='text-3xl lg:text-4xl mt-1'>
+            <Title
+              as='h1'
+              variant='normal'
+              className='text-3xl lg:text-4xl mt-1'
+            >
               Como funciona a parceria com o IAgora
             </Title>
           </div>
@@ -192,7 +209,8 @@ export default function CadastroEmpresa() {
                 Cadastre sua empresa e serviços
               </h4>
               <p className='text-sm text-(--texto-claro) leading-relaxed'>
-                Descreva suas especialidades, regiões de atendimento e adicione fotos dos seus trabalhos no painel.
+                Descreva suas especialidades, regiões de atendimento e adicione
+                fotos dos seus trabalhos no painel.
               </p>
             </div>
 
@@ -204,7 +222,8 @@ export default function CadastroEmpresa() {
                 Apareça para quem precisa na sua região
               </h4>
               <p className='text-sm text-(--texto-claro) leading-relaxed'>
-                Clientes do IAgora pesquisam por profissionais próximos e encontram seu perfil destacado.
+                Clientes do IAgora pesquisam por profissionais próximos e
+                encontram seu perfil destacado.
               </p>
             </div>
 
@@ -216,7 +235,8 @@ export default function CadastroEmpresa() {
                 Receba contatos e feche direto
               </h4>
               <p className='text-sm text-(--texto-claro) leading-relaxed'>
-                O cliente entra em contato direto no seu WhatsApp ou telefone para orçar e agendar o serviço.
+                O cliente entra em contato direto no seu WhatsApp ou telefone
+                para orçar e agendar o serviço.
               </p>
             </div>
           </div>
@@ -231,7 +251,8 @@ export default function CadastroEmpresa() {
               Mais de 1.200 profissionais e empresas já confiam no IAgora.
             </h3>
             <p className='text-sm text-(--texto-claro) mt-2 leading-relaxed'>
-              De empresas de limpeza e organização a instaladores e reparos: o IAgora é o guia de quem busca autonomia e qualidade.
+              De empresas de limpeza e organização a instaladores e reparos: o
+              IAgora é o guia de quem busca autonomia e qualidade.
             </p>
           </div>
 
@@ -249,7 +270,11 @@ export default function CadastroEmpresa() {
             <Title as='h2' variant='pequenoLj'>
               TIRA DÚVIDAS
             </Title>
-            <Title as='h1' variant='normal' className='text-3xl font-bold text-(--azul-titulo) mt-1'>
+            <Title
+              as='h1'
+              variant='normal'
+              className='text-3xl font-bold text-(--azul-titulo) mt-1'
+            >
               Perguntas frequentes de quem quer ser parceiro
             </Title>
           </div>
@@ -260,7 +285,8 @@ export default function CadastroEmpresa() {
                 Preciso pagar mensalidade ou taxa de adesão?
               </h4>
               <p className='text-xs text-(--texto-claro) mt-2 leading-relaxed'>
-                Não! O cadastro da empresa é gratuito. Você cria seu perfil e já pode anunciar seus serviços para começar a receber solicitações.
+                Não! O cadastro da empresa é gratuito. Você cria seu perfil e já
+                pode anunciar seus serviços para começar a receber solicitações.
               </p>
             </div>
 
@@ -269,7 +295,9 @@ export default function CadastroEmpresa() {
                 Como os clientes entram em contato com a minha empresa?
               </h4>
               <p className='text-xs text-(--texto-claro) mt-2 leading-relaxed'>
-                Ao visualizarem seu anúncio, os clientes clicam para entrar em contato diretamente pelo seu WhatsApp comercial ou telefone cadastrado.
+                Ao visualizarem seu anúncio, os clientes clicam para entrar em
+                contato diretamente pelo seu WhatsApp comercial ou telefone
+                cadastrado.
               </p>
             </div>
 
@@ -278,7 +306,9 @@ export default function CadastroEmpresa() {
                 Posso cadastrar mais de um serviço?
               </h4>
               <p className='text-xs text-(--texto-claro) mt-2 leading-relaxed'>
-                Sim! No seu painel da empresa você pode criar e gerenciar múltiplos anúncios com fotos, descrições e faixas de preço diferentes.
+                Sim! No seu painel da empresa você pode criar e gerenciar
+                múltiplos anúncios com fotos, descrições e faixas de preço
+                diferentes.
               </p>
             </div>
 
@@ -287,7 +317,8 @@ export default function CadastroEmpresa() {
                 Como funciona a cobrança dos clientes?
               </h4>
               <p className='text-xs text-(--texto-claro) mt-2 leading-relaxed'>
-                Você combina os valores e a forma de pagamento diretamente com o cliente, tendo total autonomia no seu modelo de negócio.
+                Você combina os valores e a forma de pagamento diretamente com o
+                cliente, tendo total autonomia no seu modelo de negócio.
               </p>
             </div>
           </div>
@@ -299,14 +330,13 @@ export default function CadastroEmpresa() {
               Pronto para fazer sua empresa crescer no IAgora?
             </h2>
             <p className='text-gray-300 text-sm mt-1.5'>
-              Crie seu perfil agora mesmo e comece a receber os primeiros contatos na sua região.
+              Crie seu perfil agora mesmo e comece a receber os primeiros
+              contatos na sua região.
             </p>
           </div>
 
           <Link to='/dashboard'>
-            <Button color='laranja'>
-              Acessar painel da empresa ↗
-            </Button>
+            <Button color='laranja'>Acessar painel da empresa ↗</Button>
           </Link>
         </section>
       </main>

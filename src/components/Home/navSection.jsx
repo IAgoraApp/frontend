@@ -17,10 +17,17 @@ export default function NavSection() {
 
           return (
             <IconCard
-              icone={<Icone size={30} className='group-hover:text-(--laranja-principal) transition-all'/>}
+              icone={
+                <Icone
+                  size={30}
+                  className='group-hover:text-(--laranja-principal) transition-all'
+                />
+              }
               className='group w-full hover:bg-(--laranja-principal) transition-all cursor-pointer hover:text-white'
             >
-              <span className='group-hover:text-white transition-all'>{i.texto}</span>
+              <span className='group-hover:text-white transition-all'>
+                {i.texto}
+              </span>
             </IconCard>
           );
         })}

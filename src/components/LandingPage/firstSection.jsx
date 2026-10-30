@@ -27,7 +27,6 @@ export default function FirstSection() {
       >
         Bora lá <ArrowUpRight />
       </Button>
-
     </section>
   );
 }

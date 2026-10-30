@@ -14,7 +14,9 @@ export default function TittleSection() {
           </Title>
           <p className='font-semibold'>Vou morar sozinho</p>
         </div>
-        <Button variant='link' color='laranja'>Alterar</Button>
+        <Button variant='link' color='laranja'>
+          Alterar
+        </Button>
       </div>
     </section>
   );
