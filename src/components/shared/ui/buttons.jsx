@@ -6,10 +6,6 @@ const variants = {
 };
 
 const colors = {
-  acao: {
-    solido: 'bg-(--cor-acao) text-white hover:bg-(--laranja-principal)',
-    link: 'text-(--laranja-principal)',
-  },
   azul: {
     solido: 'bg-(--azul-principal) text-white hover:opacity-80',
     link: 'text-(--azul-principal)',

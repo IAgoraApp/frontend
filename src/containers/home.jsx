@@ -1,5 +1,5 @@
 import { Sections } from '../components/Home';
-import { Footer } from '../components';
+import { Footer } from '../components/shared';
 
 export default function Home() {
   return (

@@ -1,4 +1,4 @@
-import { Title } from '../ui';
+import { Title } from '../shared/ui';
 
 const perguntas = [
   {

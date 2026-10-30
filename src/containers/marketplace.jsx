@@ -1,4 +1,4 @@
-import { Footer } from '../components'
+import { Footer } from '../components/shared'
 import Styles from '../styles/marketplace.module.css'
 import Direita from '../assets/images/div-direita.png'
 import Manutenção from '../assets/images/essentials.png'

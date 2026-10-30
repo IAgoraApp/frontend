@@ -1,16 +1,16 @@
-import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Pages } from '../containers';
 import { PrivateRoute, PublicRoute } from '../utils/checkAuth';
-import { DashboardLayout, HomeLayout, LandingLayout } from '../layouts';
-
-// Each feature registers its own route without coupling independent screen branches.
-const featureRoutes = Object.values(
-  import.meta.glob('./features/*.jsx', { eager: true, import: 'default' })
-);
+import {
+  ClearLayout,
+  EmpresasLayout,
+  PublicLayout,
+  UserLayout,
+} from '../layouts';
 
 const routes = createBrowserRouter([
   {
-    element: <Outlet />,
+    element: <ClearLayout />,
     errorElement: <Pages.TelaErro />,
     children: [
       {
@@ -28,7 +28,7 @@ const routes = createBrowserRouter([
             element: <PublicRoute />,
             children: [
               {
-                element: <LandingLayout />,
+                element: <PublicLayout />,
                 children: [
                   {
                     path: '/',
@@ -71,9 +71,9 @@ const routes = createBrowserRouter([
       {
         element: <PrivateRoute />,
         children: [
-          // Home Layout (Variante 2: Home)
+          // Área do usuário
           {
-            element: <HomeLayout />,
+            element: <UserLayout />,
             children: [
               {
                 path: '/home',
@@ -88,19 +88,14 @@ const routes = createBrowserRouter([
                 element: <Pages.Marketplace />,
               },
               {
-                path: '/casa',
-                element: <Pages.Casa/>
-              },
-              {
                 path: '/financas',
                 element: <Pages.FinancasA/>
               },
-              ...featureRoutes,
             ],
           },
-          // Dashboard Layout (Variante 1: Dashboard)
+          // Área das empresas
           {
-            element: <DashboardLayout />,
+            element: <EmpresasLayout />,
             children: [
               {
                 path: '/dashboard',

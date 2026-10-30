@@ -1,5 +1,5 @@
 import { Sections } from '../components/LandingPage';
-import { Footer } from '../components';
+import { Footer } from '../components/shared';
 
 export default function LandingPage() {
   return (

@@ -1,4 +1,4 @@
-import { Title, Button } from '../ui';
+import { Title, Button } from '../shared/ui';
 import { ArrowUpRight } from 'lucide-react';
 
 export default function FirstSection() {

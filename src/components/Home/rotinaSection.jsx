@@ -1,4 +1,4 @@
-import { Title, Button } from '../ui';
+import { Title, Button } from '../shared/ui';
 import Checklist from '../../assets/images/checklist.png'
 
 export default function RotinaSection() {

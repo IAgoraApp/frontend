@@ -1,5 +1,5 @@
 import Styles from '../styles/sobrenos.module.css';
-import { Footer } from '../components';
+import { Footer } from '../components/shared';
 import ImagemGrupo from '../assets/images/imgGrupo.png';
 import Gomes from '../assets/images/gomes.png';
 import Fernando from '../assets/images/fernando.jpg';

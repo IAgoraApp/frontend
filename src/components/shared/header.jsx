@@ -1,12 +1,12 @@
 import { Link, useLocation } from 'react-router-dom';
-import Logo from '../assets/images/logoLaranja.png';
+import Logo from '../../assets/images/logoLaranja.png';
 import { Button } from './ui';
-import { headerVariants } from '../data/header';
+import { headerVariants } from '../../data/header';
 
-export default function Header({ variant = 'home', className = '', borderClass = '' }) {
+export default function Header({ variant = 'user', className = '', borderClass = '' }) {
   const location = useLocation();
   const { logoLink, navLinks, actionButton: button } =
-    headerVariants[variant] ?? headerVariants.home;
+    headerVariants[variant] ?? headerVariants.user;
   const isLinkActive = route => location.pathname === route;
 
   return (

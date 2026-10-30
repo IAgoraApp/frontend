@@ -1,4 +1,4 @@
-import { Title, Button } from '../ui';
+import { Title, Button } from '../shared/ui';
 
 export default function MomentoSection() {
   return (

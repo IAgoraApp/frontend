@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import { Title, Button, PlantaAnimada } from '../components/ui';
-import { Footer } from '../components';
+import { Title, Button, PlantaAnimada } from '../components/shared/ui';
+import { Footer } from '../components/shared';
 
 export default function PerfilEmpresa() {
   return (

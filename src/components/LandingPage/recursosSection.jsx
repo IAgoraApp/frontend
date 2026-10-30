@@ -1,4 +1,4 @@
-import { Button, Title } from '../ui';
+import { Button, Title } from '../shared/ui';
 import { useState } from 'react';
 import { Content } from '../../data/landingPage';
 import { ArrowUpRight } from 'lucide-react';

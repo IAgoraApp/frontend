@@ -1,4 +1,4 @@
-import { Button, Title} from '../components/ui'
+import { Button, Title} from '../components/shared/ui'
 import { ArrowRight, BookOpen } from 'lucide-react'
 export default function FinancasA() {
   return(

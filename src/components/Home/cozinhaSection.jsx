@@ -1,5 +1,5 @@
 import Prato from '../../assets/images/prato.png';
-import { Title, Button } from '../ui';
+import { Title, Button } from '../shared/ui';
 
 export default function CozinhaSection() {
   return (

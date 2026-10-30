@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Title, Button } from '../components/ui';
-import { Footer } from '../components';
+import { Title, Button } from '../components/shared/ui';
+import { Footer } from '../components/shared';
 
 export default function CadastroEmpresa() {
   const navigate = useNavigate();

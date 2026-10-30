@@ -1,5 +1,5 @@
-import { Title } from '../ui';
-import { IconCard } from '../cards';
+import { Title } from '../shared/ui';
+import { IconCard } from '../shared/cards';
 import { Items } from '../../data/home';
 
 const items = Items;
