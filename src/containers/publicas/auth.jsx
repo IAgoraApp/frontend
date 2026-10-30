@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import Chave from '../assets/images/Group 7.png';
+import Chave from '../../assets/images/Group 7.png';
 import { Link, useLocation } from 'react-router-dom';
-import Logo from '../assets/images/logoLaranja.png';
+import Logo from '../../assets/images/logoLaranja.png';
 
 const ORANGE = '#C64411';
 const ORANGE_BRAND = '#D54C15';

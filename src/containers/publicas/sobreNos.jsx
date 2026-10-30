@@ -1,17 +1,17 @@
-import Styles from '../styles/sobrenos.module.css';
-import { Footer } from '../components/shared';
-import ImagemGrupo from '../assets/images/imgGrupo.png';
-import Gomes from '../assets/images/gomes.png';
-import Fernando from '../assets/images/fernando.jpg';
-import Joao from '../assets/images/joao.png';
-import Kaua from '../assets/images/kaua.png';
-import Igor from '../assets/images/igor.jpg';
-import Emily from '../assets/images/emily.png';
-import IconeLinkedin from '../assets/images/icone-linkedin.svg';
-import IconeGithub from '../assets/images/icone-github.svg';
-import Autonomia from "../assets/images/autonomia.svg"
-import Praticidade from "../assets/images/praticidade.svg"
-import Coracao from "../assets/images/coracao.svg"
+import Styles from '../../styles/sobrenos.module.css';
+import { Footer } from '../../components/shared';
+import ImagemGrupo from '../../assets/images/imgGrupo.png';
+import Gomes from '../../assets/images/gomes.png';
+import Fernando from '../../assets/images/fernando.jpg';
+import Joao from '../../assets/images/joao.png';
+import Kaua from '../../assets/images/kaua.png';
+import Igor from '../../assets/images/igor.jpg';
+import Emily from '../../assets/images/emily.png';
+import IconeLinkedin from '../../assets/images/icone-linkedin.svg';
+import IconeGithub from '../../assets/images/icone-github.svg';
+import Autonomia from "../../assets/images/autonomia.svg"
+import Praticidade from "../../assets/images/praticidade.svg"
+import Coracao from "../../assets/images/coracao.svg"
 
 
 

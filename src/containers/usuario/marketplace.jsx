@@ -1,9 +1,9 @@
-import { Footer } from '../components/shared'
-import Styles from '../styles/marketplace.module.css'
-import Direita from '../assets/images/div-direita.png'
-import Manutenção from '../assets/images/essentials.png'
-import Mudança from '../assets/images/moving.png'
-import Limpeza from '../assets/images/services.png'
+import { Footer } from '../../components/shared'
+import Styles from '../../styles/marketplace.module.css'
+import Direita from '../../assets/images/div-direita.png'
+import Manutenção from '../../assets/images/essentials.png'
+import Mudança from '../../assets/images/moving.png'
+import Limpeza from '../../assets/images/services.png'
 
 function Marketplace() {
 

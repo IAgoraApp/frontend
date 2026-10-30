@@ -1,16 +1,10 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Pages } from '../containers';
 import { PrivateRoute, PublicRoute } from '../utils/checkAuth';
-import {
-  ClearLayout,
-  EmpresasLayout,
-  PublicLayout,
-  UserLayout,
-} from '../layouts';
+import { EmpresasLayout, PublicLayout, UserLayout } from '../layouts';
 
 const routes = createBrowserRouter([
   {
-    element: <ClearLayout />,
     errorElement: <Pages.TelaErro />,
     children: [
       {
@@ -21,59 +15,50 @@ const routes = createBrowserRouter([
         element: <PublicRoute />,
         children: [
           {
-            path: '/manutencao',
-            element: <h1>Tela em manutenção</h1>,
-          },
-          {
-            element: <PublicRoute />,
+            element: <PublicLayout />,
             children: [
               {
-                element: <PublicLayout />,
-                children: [
-                  {
-                    path: '/',
-                    element: <Pages.LandingPage />,
-                  },
-                  {
-                    path: '/sobrenos',
-                    element: <Pages.SobreNos />,
-                  },
-                  {
-                    path: '/cadastro-empresa',
-                    element: <Pages.CadastroEmpresa />,
-                  },
-                ],
+                path: '/',
+                element: <Pages.LandingPage />,
               },
               {
-                path: '/login',
-                element: <Pages.Auth />,
+                path: '/sobrenos',
+                element: <Pages.SobreNos />,
               },
               {
-                path: '/cadastroEmpresa',
+                path: '/cadastro-empresa',
                 element: <Pages.CadastroEmpresa />,
-              },
-              {
-                path: '/parceiros',
-                element: <Pages.CadastroEmpresa />,
-              },
-              {
-                path: '/seja-parceiro',
-                element: <Pages.CadastroEmpresa />,
-              },
-              {
-                path: '/onboarding',
-                element: <Pages.Onboarding />,
               },
             ],
+          },
+          {
+            path: '/login',
+            element: <Pages.Auth />,
+          },
+          {
+            path: '/cadastroEmpresa',
+            element: <Pages.CadastroEmpresa />,
+          },
+          {
+            path: '/parceiros',
+            element: <Pages.CadastroEmpresa />,
+          },
+          {
+            path: '/seja-parceiro',
+            element: <Pages.CadastroEmpresa />,
+          },
+          {
+            path: '/onboarding',
+            element: <Pages.Onboarding />,
           },
         ],
       },
       {
         element: <PrivateRoute />,
         children: [
-          // Área do usuário
           {
             element: <UserLayout />,
+            // usuário
             children: [
               {
                 path: '/home',
@@ -89,13 +74,13 @@ const routes = createBrowserRouter([
               },
               {
                 path: '/financas',
-                element: <Pages.FinancasA/>
+                element: <Pages.FinancasA />,
               },
             ],
           },
-          // Área das empresas
           {
             element: <EmpresasLayout />,
+            // empresas
             children: [
               {
                 path: '/dashboard',

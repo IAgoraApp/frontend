@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Logo from "../assets/images/logoLaranja.png";
-import Chaves from "../assets/images/chaves.png";
-import Mulher from "../assets/images/img esquerda.png";
-import Homem from "../assets/images/img2.png";
+import Logo from "../../assets/images/logoLaranja.png";
+import Chaves from "../../assets/images/chaves.png";
+import Mulher from "../../assets/images/img esquerda.png";
+import Homem from "../../assets/images/img2.png";
 export default function SeuMomento() {
   const navigate = useNavigate();
 
