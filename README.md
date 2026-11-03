@@ -1,16 +1,31 @@
-# React + Vite
+# IAgora
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Site institucional em React e Vite com as telas LandingPage e Sobre nós.
 
-Currently, two official plugins are available:
+## Desenvolvimento
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Instale as dependências: npm ci
+- Inicie o servidor: npm run dev
+- Gere a versão de produção: npm run build
+- Verifique o código: npm run lint
 
-## React Compiler
+## Organização por funcionalidade
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- src/app: configuração das rotas, layout público e estilos globais.
+- src/features/landing-page: página inicial, seções, conteúdo e assets próprios.
+- src/features/sobre-nos: página Sobre nós, CSS Module e assets próprios.
+- src/shared: header, footer, componentes de UI reutilizáveis e logo.
 
-## Expanding the ESLint configuration
+Cada funcionalidade expõe sua página pelo index.js. Componentes compartilhados
+não dependem das funcionalidades.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+As páginas públicas são / e /sobrenos, agrupadas em PublicRoute e PublicLayout.
+A rota técnica /manutencao e o errorElement seguem a organização do router original.
+Endereços desconhecidos são tratados pelo errorElement.
+
+Os helpers PublicRoute e PrivateRoute ficam em src/app/utils/checkAuth.jsx.
+Como no projeto original, ambos apenas renderizam Outlet; ainda não validam autenticação.
+Os layouts PublicLayout, UserLayout e EmpresasLayout são exportados por src/app/layouts.
+Somente PublicLayout está associado às páginas atuais; os demais ficam disponíveis
+para futuras funcionalidades. Cada layout seleciona a variante do header (public, user ou empresas).
+As configurações de navegação e botões por variante ficam em src/shared/headerConfig.js, preservando os destinos originais. As telas desses destinos não foram recriadas.
