@@ -1,9 +1,8 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { LandingPage } from '../../features/landing-page';
-import { SobreNos } from '../../features/sobre-nos';
 import { PublicRoute } from '../utils/checkAuth';
 import { PublicLayout } from '../layouts';
 import TelaErro from './components/telaErro';
+import { Features } from '../../features';
 
 const routes = createBrowserRouter([
   {
@@ -21,11 +20,15 @@ const routes = createBrowserRouter([
             children: [
               {
                 path: '/',
-                element: <LandingPage />,
+                element: <Features.LandingPage />,
               },
               {
                 path: '/sobrenos',
-                element: <SobreNos />,
+                element: <Features.SobreNos />,
+              },
+              {
+                path: '/login',
+                element: <Features.Auth />,
               },
             ],
           },
