@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { PublicRoute } from '../utils/checkAuth';
-import { PublicLayout } from '../layouts';
+import { PrivateRoute, PublicRoute } from '../utils/checkAuth';
+import { EmpresasLayout, PublicLayout, UserLayout } from '../layouts';
 import TelaErro from './components/telaErro';
 import { Features } from '../../features';
 
@@ -13,14 +13,39 @@ const routes = createBrowserRouter([
         element: <h1>Tela em manutenção</h1>,
       },
       {
-        path: '/home',
-        element: (
-          <main className='min-h-dvh bg-(--azul-fundo) p-6 sm:p-12'>
-            <h1 className='font-heading text-3xl font-bold text-(--azul-titulo)'>
-              Início
-            </h1>
-          </main>
-        ),
+        element: <PrivateRoute />,
+        children: [
+          {
+            element: <UserLayout />,
+            children: [
+              {
+                path: '/home',
+                element: (
+                  <main className='min-h-dvh bg-(--azul-fundo) p-6 sm:p-12'>
+                    <h1 className='font-heading text-3xl font-bold text-(--azul-titulo)'>
+                      Início
+                    </h1>
+                  </main>
+                ),
+              },
+            ],
+          },
+          {
+            element: <EmpresasLayout />,
+            children: [
+              {
+                path: '/dashboard',
+                element: (
+                  <main className='min-h-dvh bg-(--azul-fundo) p-6 sm:p-12'>
+                    <h1 className='font-heading text-3xl font-bold text-(--azul-titulo)'>
+                      Painel da empresa
+                    </h1>
+                  </main>
+                ),
+              },
+            ],
+          },
+        ],
       },
       {
         path: '/onboarding',
@@ -37,12 +62,21 @@ const routes = createBrowserRouter([
             element: <PublicLayout />,
             children: [
               {
+                path: '/cadastro-empresa',
+                element: <Features.EmpresaAcesso />,
+              },
+              { path: '/empresa/acesso', element: <Features.EmpresaAcesso /> },
+              {
                 path: '/',
                 element: <Features.LandingPage />,
               },
               {
                 path: '/sobrenos',
                 element: <Features.SobreNos />,
+              },
+              {
+                path: '/sejaparceiro',
+                element: <Features.SejaParceiro />,
               },
             ],
           },

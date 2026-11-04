@@ -2,5 +2,14 @@ import { Auth } from './auth';
 import { LandingPage } from './landing-page';
 import { SobreNos } from './sobre-nos';
 import { Onboarding } from './onboarding';
+import { SejaParceiro } from './seja-parceiro';
+import { EmpresaAcesso } from './empresa-acesso';
 
-export const Features = { Auth, LandingPage, SobreNos, Onboarding };
+export const Features = {
+  Auth,
+  LandingPage,
+  SobreNos,
+  Onboarding,
+  SejaParceiro,
+  EmpresaAcesso,
+};
