@@ -8,6 +8,8 @@ body {
 @theme {
   --font-heading: 'Bricolage Grotesque', sans-serif;
   --font-body: 'DM Sans', sans-serif;
+  --font-poppins: 'Poppins', sans-serif;
+  --font-inter: 'Inter', sans-serif;
 }
 
 * {
