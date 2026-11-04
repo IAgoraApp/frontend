@@ -1,11 +1,21 @@
+import { Link } from 'react-router-dom';
 import { Sections } from './components';
+import Logo from '../../shared/assets/logoLaranja.png';
 import Imagem from './assets/Imagem.png';
 import Vetor from './assets/Vetor.png';
 
 export default function Auth() {
   return (
     <main className='relative isolate min-h-dvh w-full overflow-x-clip bg-white [@media(width>=1024px)_and_(height>=640px)]:grid [@media(width>=1024px)_and_(height>=640px)]:grid-cols-[minmax(0,1fr)_44%]'>
-      <div className='flex min-h-dvh min-w-0 justify-center px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))] pt-[max(1.5rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:px-[clamp(1.5rem,5vw,6rem)]'>
+      <Link
+        to='/'
+        aria-label='Voltar para a página inicial'
+        className='absolute top-[max(1rem,env(safe-area-inset-top))] left-[max(1rem,env(safe-area-inset-left))] z-10 inline-flex min-h-11 items-center rounded-lg py-2 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--laranja-principal) sm:top-[max(2rem,env(safe-area-inset-top))] sm:left-[max(2rem,env(safe-area-inset-left))] lg:left-[max(5rem,env(safe-area-inset-left))]'
+      >
+        <img src={Logo} alt='IAgora' className='h-auto w-24 sm:w-32' />
+      </Link>
+
+      <div className='flex min-h-dvh min-w-0 justify-center px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))] pt-[max(5rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:px-[clamp(1.5rem,5vw,6rem)] sm:pt-[max(7rem,env(safe-area-inset-top))] [@media(height<=620px)_and_(width<640px)]:pt-[max(4.5rem,env(safe-area-inset-top))] [@media(height<=620px)]:pb-[max(1rem,env(safe-area-inset-bottom))]'>
         <Sections.CampoSection />
       </div>
 
