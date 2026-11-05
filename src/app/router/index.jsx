@@ -25,6 +25,18 @@ const routes = createBrowserRouter([
             element: <UserLayout />,
             children: [
               {
+                path: '/marketplace',
+                element: <Features.Marketplace />,
+              },
+              {
+                path: '/empresas/:id',
+                element: <Features.Marketplace pagina='perfil' />,
+              },
+              {
+                path: '/servicos/:id',
+                element: <Features.Marketplace pagina='servico' />,
+              },
+              {
                 path: '/home',
                 element: <Features.Home />,
               },
@@ -76,17 +88,52 @@ const routes = createBrowserRouter([
             element: <EmpresasLayout />,
             children: [
               {
+                path: '/empresa',
+                element: <Features.Empresa />,
+              },
+              {
                 path: '/dashboard',
-                element: (
-                  <Container
-                    as='main'
-                    className='flex-1 bg-(--azul-fundo) py-4 sm:py-8'
-                  >
-                    <h1 className='font-heading text-3xl font-bold text-(--azul-titulo)'>
-                      Painel da empresa
-                    </h1>
-                  </Container>
-                ),
+                element: <Features.Empresa pagina='painel' />,
+              },
+              {
+                path: '/meus-servicos',
+                element: <Features.Empresa pagina='anuncios' />,
+              },
+              {
+                path: '/anunciar-servico',
+                element: <Features.Empresa pagina='novo' />,
+              },
+              {
+                path: '/meus-servicos/:id',
+                element: <Features.Empresa pagina='detalhe' />,
+              },
+              {
+                path: '/meus-servicos/:id/editar',
+                element: <Features.Empresa pagina='editar' />,
+              },
+              {
+                path: '/meus-servicos/:id/fotos',
+                element: <Features.Empresa pagina='fotos' />,
+              },
+              {
+                path: '/meus-servicos/:id/previa',
+                element: <Features.Empresa pagina='previa' />,
+              },
+              {
+                path: '/perfil-empresa',
+                element: <Features.Empresa pagina='perfil' />,
+              },
+              {
+                path: '/contatos',
+                element: <Features.Empresa pagina='contatos' />,
+              },
+              {
+                path: '/contatos/:id',
+                element: <Features.Empresa pagina='conversa' />,
+              },
+              {
+                path: '/empresa/marketplace',
+                element: <Features.Marketplace empresa />,
               },
             ],
           },

@@ -1,12 +1,13 @@
 const empresasHeaderData = {
-  logoLink: '/dashboard',
+  logoLink: '/empresa',
   navLinks: [
     { nome: 'Painel', rota: '/dashboard' },
     { nome: 'Perfil da empresa', rota: '/perfil-empresa' },
+    { nome: 'Contatos', rota: '/contatos' },
   ],
   actionButton: {
     label: '+ Anunciar serviço',
-    rota: '/meus-servicos',
+    rota: '/anunciar-servico',
     color: 'laranja',
   },
 };

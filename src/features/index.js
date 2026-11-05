@@ -3,6 +3,8 @@ import { Home } from './home';
 import { Casa } from './casa';
 import { Limpeza } from './limpeza';
 import { Cozinha } from './cozinha';
+import { Empresa } from './empresa';
+import { Marketplace } from './marketplace';
 import { Auth } from './auth';
 import { LandingPage } from './landing-page';
 import { SobreNos } from './sobre-nos';
@@ -18,6 +20,8 @@ export const Features = {
   Casa,
   Limpeza,
   Cozinha,
+  Empresa,
+  Marketplace,
   Financas,
   Auth,
   LandingPage,

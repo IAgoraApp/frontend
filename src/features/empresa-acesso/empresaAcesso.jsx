@@ -9,6 +9,7 @@ import {
 } from '../../shared/ui';
 import Equipe from './assets/equipe-servicos.png';
 import { companyFields } from './content';
+import { updateEmpresa } from '../empresa/content';
 
 export default function EmpresaAcesso() {
   const navigate = useNavigate();
@@ -20,12 +21,36 @@ export default function EmpresaAcesso() {
     password: '',
   });
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [error, setError] = useState('');
 
   if (isLogin) return <Navigate to='/login?perfil=empresa' replace />;
 
   function handleContinue(event) {
     event.preventDefault();
-    navigate('/dashboard');
+    if (
+      !values.companyName.trim() ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email) ||
+      values.password.length < 8 ||
+      !acceptedTerms
+    ) {
+      setError(
+        'Informe o nome, um e-mail válido, uma senha com ao menos 8 caracteres e aceite os termos.'
+      );
+      return;
+    }
+    try {
+      updateEmpresa(previous => ({
+        ...previous,
+        company: {
+          ...previous.company,
+          name: values.companyName.trim(),
+          email: values.email.trim(),
+        },
+      }));
+      navigate('/empresa');
+    } catch (error) {
+      setError(error.message);
+    }
   }
 
   return (
@@ -119,6 +144,15 @@ export default function EmpresaAcesso() {
           >
             Criar conta da empresa ↗
           </Button>
+          {error && (
+            <p role='alert' className='text-sm text-red-700'>
+              {error}
+            </p>
+          )}
+          <p className='text-xs text-(--texto-apoio)'>
+            Demonstração local: salva a apresentação da empresa, sem criar uma
+            conta autenticada. A senha não é armazenada.
+          </p>
           <p className='text-xs leading-[18px] font-bold text-(--azul-titulo) lg:text-[15px] lg:leading-[22px]'>
             Já tem uma conta? Entre com seu e-mail e senha.
           </p>
