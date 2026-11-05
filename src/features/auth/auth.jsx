@@ -6,7 +6,7 @@ import Vetor from './assets/Vetor.png';
 
 export default function Auth() {
   return (
-    <main className='relative isolate min-h-dvh w-full overflow-x-clip bg-white [@media(width>=1024px)_and_(height>=640px)]:grid [@media(width>=1024px)_and_(height>=640px)]:grid-cols-[minmax(0,1fr)_44%]'>
+    <main className='relative isolate min-h-dvh w-full bg-white [@media(width>=1024px)_and_(height>=640px)]:grid [@media(width>=1024px)_and_(height>=640px)]:grid-cols-[minmax(0,1fr)_44%]'>
       <Link
         to='/'
         aria-label='Voltar para a página inicial'

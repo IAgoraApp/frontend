@@ -1,11 +1,15 @@
-import { Outlet } from 'react-router-dom';
-import { Header } from '../../shared';
+import AppLayout from './appLayout';
 
-export default function UserLayout({ children }) {
+export default function UserLayout({
+  userType = 'userA',
+  headerProps,
+  ...props
+}) {
   return (
-    <>
-      <Header variant='user' />
-      {children || <Outlet />}
-    </>
+    <AppLayout
+      {...props}
+      headerVariant='user'
+      headerProps={{ ...headerProps, userType }}
+    />
   );
 }

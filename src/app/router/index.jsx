@@ -3,6 +3,7 @@ import { PrivateRoute, PublicRoute } from '../utils/checkAuth';
 import { EmpresasLayout, PublicLayout, UserLayout } from '../layouts';
 import TelaErro from './components/telaErro';
 import { Features } from '../../features';
+import { Container } from '../../shared/ui';
 
 const routes = createBrowserRouter([
   {
@@ -21,12 +22,45 @@ const routes = createBrowserRouter([
               {
                 path: '/home',
                 element: (
-                  <main className='min-h-dvh bg-(--azul-fundo) p-6 sm:p-12'>
+                  <Container
+                    as='main'
+                    className='flex-1 bg-(--azul-fundo) py-4 sm:py-8'
+                  >
                     <h1 className='font-heading text-3xl font-bold text-(--azul-titulo)'>
                       Início
                     </h1>
-                  </main>
+                  </Container>
                 ),
+              },
+              {
+                path: '/rotina',
+                element: <Features.Rotina />,
+              },
+              {
+                path: '/perfil',
+                element: (
+                  <Container
+                    as='main'
+                    className='flex-1 bg-(--azul-fundo) py-4 sm:py-8'
+                  >
+                    <h1 className='font-heading text-3xl font-bold text-(--azul-titulo)'>
+                      Meu perfil
+                    </h1>
+                  </Container>
+                ),
+              },
+            ],
+          },
+          {
+            element: <UserLayout userType='userB' />,
+            children: [
+              {
+                path: '/home-b',
+                element: <Features.HomeUserB />,
+              },
+              {
+                path: '/minhajornada',
+                element: <Features.MinhaJornada />,
               },
             ],
           },
@@ -36,11 +70,14 @@ const routes = createBrowserRouter([
               {
                 path: '/dashboard',
                 element: (
-                  <main className='min-h-dvh bg-(--azul-fundo) p-6 sm:p-12'>
+                  <Container
+                    as='main'
+                    className='flex-1 bg-(--azul-fundo) py-4 sm:py-8'
+                  >
                     <h1 className='font-heading text-3xl font-bold text-(--azul-titulo)'>
                       Painel da empresa
                     </h1>
-                  </main>
+                  </Container>
                 ),
               },
             ],
@@ -48,15 +85,15 @@ const routes = createBrowserRouter([
         ],
       },
       {
-        path: '/onboarding',
-        element: <Features.Onboarding />,
-      },
-      {
         element: <PublicRoute />,
         children: [
           {
             path: '/login',
             element: <Features.Auth />,
+          },
+          {
+            path: '/onboarding',
+            element: <Features.Onboarding />,
           },
           {
             element: <PublicLayout />,
@@ -67,16 +104,16 @@ const routes = createBrowserRouter([
               },
               { path: '/empresa/acesso', element: <Features.EmpresaAcesso /> },
               {
+                path: '/sejaparceiro',
+                element: <Features.SejaParceiro />,
+              },
+              {
                 path: '/',
                 element: <Features.LandingPage />,
               },
               {
                 path: '/sobrenos',
                 element: <Features.SobreNos />,
-              },
-              {
-                path: '/sejaparceiro',
-                element: <Features.SejaParceiro />,
               },
             ],
           },

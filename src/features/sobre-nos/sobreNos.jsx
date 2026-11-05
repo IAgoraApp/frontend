@@ -1,5 +1,6 @@
 import Styles from './sobrenos.module.css';
 import { Footer } from '../../shared';
+import { Container } from '../../shared/ui';
 import ImagemGrupo from './assets/imgGrupo.png';
 import Gomes from './assets/gomes.png';
 import Fernando from './assets/fernando.jpg';
@@ -34,7 +35,7 @@ function SobreNos() {
         </div>
       </section>
 
-      <section className={Styles.section2}>
+      <Container as='section' className={Styles.section2}>
         <div className={Styles.div1_sec2}>
           <h2>Conheça nossa Equipe</h2>
           <img src={ImagemGrupo} alt='imagem grupo' />
@@ -208,7 +209,7 @@ function SobreNos() {
             </div>
           </div>
         </div>
-      </section>
+      </Container>
 
       <section className={Styles.section3}>
         <div className={Styles.div_left}>
@@ -234,7 +235,7 @@ function SobreNos() {
         </div>
       </section>
 
-      <section className={Styles.section5}>
+      <Container as='section' className={Styles.section5}>
         <h2>Nossos Valores</h2>
 
         <div className={Styles.sec5_cards}>
@@ -265,7 +266,7 @@ function SobreNos() {
             <p>Faça escolhas com mais confiança e tranquilidade.</p>
           </div>
         </div>
-      </section>
+      </Container>
       <Footer />
     </main>
   );

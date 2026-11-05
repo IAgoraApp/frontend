@@ -13,7 +13,7 @@ export function Title({
 }) {
   return (
     <Tag
-      className={`font-heading ${variants[variant]} ${className}`}
+      className={`font-heading ${variants[variant] ?? ''} ${className}`}
       {...props}
     >
       {children}

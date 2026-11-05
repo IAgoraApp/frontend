@@ -1,7 +1,24 @@
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Title } from '../../../shared/ui';
-import { Entradas } from '../content';
+import { accessModes, Entradas } from '../content';
+
+// A grade reserva o espaço do maior texto, inclusive quando o zoom quebra linhas.
+function AccessText({ mode, field }) {
+  return (
+    <span className='grid min-w-0 max-w-full'>
+      {Object.entries(accessModes).map(([key, content]) => (
+        <span
+          key={key}
+          aria-hidden={key !== mode}
+          className={`col-start-1 row-start-1 ${key === mode ? '' : 'invisible'}`}
+        >
+          {content[field]}
+        </span>
+      ))}
+    </span>
+  );
+}
 
 function rememberedEmailKey(accountType) {
   return accountType === 'empresa'
@@ -88,6 +105,7 @@ function AccessForm({ accountType, onSelectAccount }) {
   const navigate = useNavigate();
   const isCompany = accountType === 'empresa';
   const [isRegistering, setIsRegistering] = useState(false);
+  const mode = isRegistering ? 'cadastro' : accountType;
   const [values, setValues] = useState(() => ({
     email: readRememberedEmail(accountType),
     password: '',
@@ -97,7 +115,7 @@ function AccessForm({ accountType, onSelectAccount }) {
     Boolean(readRememberedEmail(accountType))
   );
   const entradas = Object.values(Entradas).filter(
-    ({ id }) => isRegistering || id !== 'confirmPassword'
+    ({ id }) => id !== 'confirmPassword'
   );
 
   function handleChange(event) {
@@ -133,20 +151,12 @@ function AccessForm({ accountType, onSelectAccount }) {
           as='h1'
           id='auth-title'
           variant='normal'
-          className='font-body! leading-[1.15] font-extrabold! text-black! [@media(height<=620px)]:text-[1.75rem]'
+          className='font-body! text-[2.25rem]! leading-[1.15] font-extrabold! text-black! [@media(height<=620px)]:text-[1.75rem]!'
         >
-          {isRegistering
-            ? 'Crie sua conta'
-            : isCompany
-              ? 'Login da empresa'
-              : 'Login'}
+          <AccessText mode={mode} field='title' />
         </Title>
         <p className='mt-2 text-(--texto-apoio) [@media(height<=620px)]:mt-1 [@media(height<=620px)]:text-sm'>
-          {isRegistering
-            ? 'Cadastre-se para começar a experiência'
-            : isCompany
-              ? 'Entre com seu e-mail e senha para acessar o painel'
-              : 'Faça login para começar a experiência'}
+          <AccessText mode={mode} field='description' />
         </p>
       </header>
 
@@ -181,7 +191,6 @@ function AccessForm({ accountType, onSelectAccount }) {
       </button>
 
       <form
-        key={isRegistering ? 'register' : 'login'}
         onSubmit={handleSubmit}
         noValidate
         className='flex flex-col gap-5 [@media(height<=760px)]:gap-3'
@@ -196,7 +205,11 @@ function AccessForm({ accountType, onSelectAccount }) {
                 htmlFor={`auth-${id}`}
                 className='font-bold [@media(height<=760px)]:text-sm'
               >
-                {id === 'email' && isCompany ? 'E-mail da empresa' : nome}
+                {id === 'email' ? (
+                  <AccessText mode={mode} field='emailLabel' />
+                ) : (
+                  nome
+                )}
               </label>
               <input
                 className='h-12 w-full min-w-0 rounded-[5px] border border-black bg-white px-3 py-2.5 text-base [@media(height<=760px)]:h-11 [@media(height<=760px)]:py-2'
@@ -217,8 +230,33 @@ function AccessForm({ accountType, onSelectAccount }) {
           ))}
         </div>
 
-        {!isRegistering && (
-          <div className='flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-sm'>
+        {/* Os dois modos compartilham o mesmo espaço, sem deslocar o formulário. */}
+        <div className='grid'>
+          <div
+            className={`col-start-1 row-start-1 flex min-w-0 flex-col gap-1.5 [@media(height<=760px)]:gap-1 ${isRegistering ? '' : 'invisible'}`}
+            inert={!isRegistering}
+          >
+            <label
+              htmlFor='auth-confirmPassword'
+              className='font-bold [@media(height<=760px)]:text-sm'
+            >
+              {Entradas[3].nome}
+            </label>
+            <input
+              className='h-12 w-full min-w-0 rounded-[5px] border border-black bg-white px-3 py-2.5 text-base [@media(height<=760px)]:h-11 [@media(height<=760px)]:py-2'
+              id='auth-confirmPassword'
+              name='confirmPassword'
+              type='password'
+              value={values.confirmPassword}
+              onChange={handleChange}
+              autoComplete='new-password'
+              disabled={!isRegistering}
+            />
+          </div>
+          <div
+            className={`col-start-1 row-start-1 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-sm ${isRegistering ? 'invisible' : ''}`}
+            inert={isRegistering}
+          >
             <label className='inline-flex min-h-11 cursor-pointer items-center gap-2'>
               <input
                 type='checkbox'
@@ -243,40 +281,32 @@ function AccessForm({ accountType, onSelectAccount }) {
               Esqueci a senha
             </button>
           </div>
-        )}
+        </div>
 
         <button
           type='submit'
           className='flex min-h-12 w-full cursor-pointer items-center justify-center gap-3 rounded-[5px] bg-(--azul-escuro) px-4 py-2.5 text-xl font-bold text-white hover:bg-(--azul-principal) [@media(height<=760px)]:min-h-11 [@media(height<=760px)]:py-2'
         >
-          {isCompany
-            ? 'Entrar como empresa'
-            : isRegistering
-              ? 'Criar conta'
-              : 'Fazer login'}
+          <AccessText mode={mode} field='submit' />
         </button>
       </form>
 
-      <p className='text-center [@media(height<=620px)]:text-sm'>
-        {isCompany
-          ? 'Ainda não tem conta empresarial? '
-          : isRegistering
-            ? 'Já tem uma conta? '
-            : 'Ainda não tem conta? '}
+      <p className='flex flex-col items-center text-center [@media(height<=620px)]:text-sm'>
+        <AccessText mode={mode} field='prompt' />
         {isCompany ? (
           <Link
             to='/cadastro-empresa'
-            className='inline-flex min-h-11 items-center font-bold text-(--azul-principal) hover:underline'
+            className='inline-flex min-h-11 max-w-full items-center font-bold text-(--azul-principal) hover:underline'
           >
-            Cadastre sua empresa
+            <AccessText mode={mode} field='switchLabel' />
           </Link>
         ) : (
           <button
             type='button'
             onClick={toggleMode}
-            className='inline-flex min-h-11 cursor-pointer items-center font-bold text-(--azul-principal) hover:underline'
+            className='inline-flex min-h-11 max-w-full cursor-pointer items-center font-bold text-(--azul-principal) hover:underline'
           >
-            {isRegistering ? 'Faça login' : 'Cadastre-se'}
+            <AccessText mode={mode} field='switchLabel' />
           </button>
         )}
       </p>

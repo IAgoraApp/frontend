@@ -13,7 +13,7 @@ import { serviceCategories } from '../content';
 export default function HeroSection() {
   return (
     <section aria-labelledby='parceiro-title'>
-      <Container className='flex flex-col gap-10 py-10 lg:py-5'>
+      <Container className='flex flex-col gap-10 pt-6 pb-10 lg:py-5'>
         <div className='grid items-center gap-8 lg:min-h-[540px] lg:grid-cols-[minmax(0,650fr)_minmax(0,470fr)] lg:gap-[clamp(2rem,12.22vw,11rem)]'>
           <div className='flex min-w-0 flex-col items-start justify-center gap-[15px] lg:min-h-[500px]'>
             <Title

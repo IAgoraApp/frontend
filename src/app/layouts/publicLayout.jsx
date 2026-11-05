@@ -1,11 +1,5 @@
-import { Outlet } from 'react-router-dom';
-import { Header } from '../../shared';
+import AppLayout from './appLayout';
 
-export default function PublicLayout({ children }) {
-  return (
-    <>
-      <Header variant='public' />
-      {children || <Outlet />}
-    </>
-  );
+export default function PublicLayout(props) {
+  return <AppLayout {...props} headerVariant='public' />;
 }
