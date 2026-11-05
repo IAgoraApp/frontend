@@ -6,7 +6,7 @@ export const shortcuts = [
   { label: 'Cozinha', to: '/cozinha', icon: 'Frame1' },
   { label: 'Casa', to: '/casa', icon: 'Frame2' },
   { label: 'Finanças', to: '/financas', icon: 'Frame3' },
-  { label: 'Marketplace', to: '/casa?visao=servicos', icon: 'Frame4' },
+  { label: 'Marketplace', to: '/marketplace', icon: 'Frame4' },
   { label: 'Checklists', to: '/limpeza?visao=checklist', icon: 'Frame5' },
 ];
 
