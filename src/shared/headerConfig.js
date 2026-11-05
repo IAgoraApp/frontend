@@ -15,6 +15,7 @@ const userHeaderData = {
   logoLink: '/home',
   navLinks: [
     { nome: 'Início', rota: '/home' },
+    { nome: 'Casa', rota: '/casa' },
     { nome: 'Rotina', rota: '/rotina' },
     { nome: 'Finanças', rota: '/financas' },
     { nome: 'Empresas e Serviços', rota: '/marketplace' },
@@ -45,13 +46,15 @@ export const userHeaderVariants = {
   userB: {
     ...userHeaderData,
     logoLink: '/home-b',
-    navLinks: userHeaderData.navLinks.map(item => {
-      if (item.rota === '/home') return { ...item, rota: '/home-b' };
-      if (item.rota === '/rotina') {
-        return { nome: 'Minha jornada', rota: '/minhajornada' };
-      }
-      return item;
-    }),
+    navLinks: userHeaderData.navLinks
+      .filter(item => item.rota !== '/casa')
+      .map(item => {
+        if (item.rota === '/home') return { ...item, rota: '/home-b' };
+        if (item.rota === '/rotina') {
+          return { nome: 'Minha jornada', rota: '/minhajornada' };
+        }
+        return item;
+      }),
   },
 };
 

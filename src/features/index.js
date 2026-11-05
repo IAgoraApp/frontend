@@ -1,3 +1,8 @@
+import { Financas } from './financas';
+import { Home } from './home';
+import { Casa } from './casa';
+import { Limpeza } from './limpeza';
+import { Cozinha } from './cozinha';
 import { Auth } from './auth';
 import { LandingPage } from './landing-page';
 import { SobreNos } from './sobre-nos';
@@ -9,6 +14,11 @@ import { HomeUserB } from './home-user-b';
 import { MinhaJornada } from './minha-jornada';
 
 export const Features = {
+  Home,
+  Casa,
+  Limpeza,
+  Cozinha,
+  Financas,
   Auth,
   LandingPage,
   SobreNos,

@@ -1,0 +1,11 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="AI prompt icon">
+<rect width="72" height="72" rx="36" fill="#FFF4EC"/>
+<path id="AI / robot face" d="M24 24H48C52.4183 24 56 27.5817 56 32V44C56 48.4183 52.4183 52 48 52H24C19.5817 52 16 48.4183 16 44V32C16 27.5817 19.5817 24 24 24Z" fill="white" stroke-width="2" stroke="#102A43"/>
+<rect id="AI / antenna" x="35" y="6" width="2" height="8" fill="#102A43"/>
+<circle id="AI / antenna dot" cx="36" cy="5" r="3" fill="#D54C15"/>
+<circle id="AI / eye" cx="28" cy="34" r="2" fill="#102A43"/>
+<circle id="AI / eye_2" cx="44" cy="34" r="2" fill="#102A43"/>
+<rect id="AI / mouth" x="30" y="42" width="12" height="2" fill="#102A43"/>
+</g>
+</svg>
