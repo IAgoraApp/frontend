@@ -5,8 +5,9 @@ export function useAvailableHeight() {
 
   useLayoutEffect(() => {
     const element = ref.current;
-    const header = element.closest('[data-app-layout]')?.querySelector(':scope > header')
-      ?? element.previousElementSibling;
+    const header =
+      element.closest('[data-app-layout]')?.querySelector(':scope > header') ??
+      element.previousElementSibling;
     const update = () => {
       const height = window.visualViewport?.height ?? window.innerHeight;
       const top = element.getBoundingClientRect().top + window.scrollY;

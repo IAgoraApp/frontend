@@ -8,7 +8,10 @@ export default function AppLayout({
   headerProps,
 }) {
   return (
-    <div className={`flex min-h-dvh min-w-0 flex-col ${className}`} data-app-layout>
+    <div
+      className={`flex min-h-dvh min-w-0 flex-col ${className}`}
+      data-app-layout
+    >
       <Header {...headerProps} variant={headerVariant} />
       {children ?? <Outlet />}
     </div>

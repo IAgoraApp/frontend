@@ -4,4 +4,3 @@ export default function HomeUserB() {
   );
 }
 import { Container } from '../../shared/ui';
-
