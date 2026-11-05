@@ -1,11 +1,5 @@
-import { Outlet } from 'react-router-dom';
-import { Header } from '../../shared';
+import AppLayout from './appLayout';
 
-export default function EmpresasLayout({ children }) {
-  return (
-    <>
-      <Header variant='empresas' />
-      {children || <Outlet />}
-    </>
-  );
+export default function EmpresasLayout(props) {
+  return <AppLayout {...props} headerVariant='empresas' />;
 }

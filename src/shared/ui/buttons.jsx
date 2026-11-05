@@ -30,11 +30,12 @@ export function Button({
   color = 'azul',
   children,
   className = '',
+  unstyled = false,
   ...props
 }) {
   return (
     <Tag
-      className={`inline-flex items-center justify-center transition-colors cursor-pointer ${variants[variant]} ${colors[color][variant]} ${className}`}
+      className={`inline-flex items-center justify-center transition-colors cursor-pointer ${unstyled ? '' : `${variants[variant]} ${colors[color][variant]}`} ${className}`}
       {...props}
     >
       {children}

@@ -1,157 +1,131 @@
-import { Link, useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 import Logo from './assets/logoLaranja.png';
-import LogoFigma from './assets/logoFigma.png';
-import { Button, Container } from './ui/index';
-import { headerVariants } from './headerConfig';
+import { Button } from './ui/index';
+import { headerVariants, userHeaderVariants } from './headerConfig';
 
 export default function Header({
   variant = 'user',
+  userType = 'userA',
   className = '',
   borderClass = '',
 }) {
   const location = useLocation();
-  const [menuOpen, setMenuOpen] = useState(false);
+  const headerRef = useRef(null);
+  const toggleRef = useRef(null);
+  const menuId = useId();
+  const navigationKey = `${variant}:${userType}:${location.key}`;
+  const [openAt, setOpenAt] = useState(null);
+  const menuOpen = openAt === navigationKey;
+  const closeMenu = () => setOpenAt(null);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onPointerDown = event => {
+      if (!headerRef.current?.contains(event.target)) setOpenAt(null);
+    };
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => document.removeEventListener('pointerdown', onPointerDown);
+  }, [menuOpen]);
+
   const {
     logoLink,
     navLinks,
     actionButton: button,
-  } = headerVariants[variant] ?? headerVariants.user;
+  } = variant === 'user'
+    ? (userHeaderVariants[userType] ?? userHeaderVariants.userA)
+    : (headerVariants[variant] ?? headerVariants.public);
   const isLinkActive = route => location.pathname === route;
-  const isCompanyAccess = variant === 'empresa-acesso';
-  const isPublic = variant === 'public' || variant === 'institucional';
-
-  if (variant === 'prestadores' || isCompanyAccess) {
-    return (
-      <header
-        className={`${isCompanyAccess ? '' : 'border-b border-[#d6e0e8]'} bg-white [--laranja-principal:#e03b00] ${borderClass} ${className}`}
+  const renderLinks = (mobile = false) =>
+    navLinks.map(item => (
+      <Link
+        key={item.rota}
+        to={item.rota}
+        aria-current={isLinkActive(item.rota) ? 'page' : undefined}
+        onClick={closeMenu}
+        className={`font-semibold transition-colors hover:text-(--laranja-principal) ${isLinkActive(item.rota) ? 'text-(--laranja-principal)' : ''} ${mobile ? 'flex min-h-11 items-center rounded-lg p-3 wrap-anywhere hover:bg-(--azul-fundo)' : 'whitespace-nowrap'}`}
       >
-        <Container
-          className={`flex min-h-[88px] items-center justify-between gap-4 py-4 min-[1280px]:gap-[90px] min-[1280px]:py-0 ${isCompanyAccess ? 'min-[1280px]:min-h-24' : 'min-[1280px]:min-h-[139px]'}`}
-        >
-          <Link
-            to={logoLink}
-            aria-label='Página inicial Iagora'
-            className='shrink-0 rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--laranja-principal)'
-          >
-            <img
-              src={LogoFigma}
-              alt='IAgora'
-              width='126'
-              height='47'
-              className='h-[47px] w-[126px] object-cover'
-            />
-          </Link>
-          <nav
-            aria-label='Navegação de parceiros'
-            className={`hidden min-w-0 flex-1 items-center justify-center leading-5 font-bold text-(--azul-titulo) min-[1280px]:flex ${isCompanyAccess ? 'gap-6 text-sm' : 'gap-7 text-[15px]'}`}
-          >
-            {navLinks.map(item => (
-              <a
-                key={item.rota}
-                href={item.rota}
-                aria-current={item.active ? 'location' : undefined}
-                className={`whitespace-nowrap hover:text-(--laranja-principal) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--laranja-principal) ${item.className || ''} ${item.active ? 'text-[#d54c15]' : ''}`}
-              >
-                {item.nome}
-              </a>
-            ))}
-          </nav>
-          <div className='flex shrink-0 items-center gap-3'>
-            <Button
-              as={Link}
-              to={button.rota}
-              color={button.color}
-              className={`w-[190px] px-4! font-bold! max-sm:hidden! ${isCompanyAccess ? 'h-[52px] text-base' : 'h-[50px] text-xl'}`}
-            >
-              {button.label}
-            </Button>
-            <button
-              type='button'
-              aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
-              aria-expanded={menuOpen}
-              aria-controls='prestadores-menu'
-              onClick={() => setMenuOpen(!menuOpen)}
-              className='flex size-11 cursor-pointer items-center justify-center rounded-lg text-(--azul-titulo) hover:bg-(--azul-fundo) focus-visible:outline-2 focus-visible:outline-(--laranja-principal) min-[1280px]:hidden'
-            >
-              {menuOpen ? (
-                <X aria-hidden='true' />
-              ) : (
-                <Menu aria-hidden='true' />
-              )}
-            </button>
-          </div>
-        </Container>
-        <nav
-          id='prestadores-menu'
-          aria-label='Navegação de parceiros no celular'
-          className={`${menuOpen ? 'flex' : 'hidden'} flex-col border-t border-[#d6e0e8] px-4 py-3 text-base font-bold text-(--azul-titulo) sm:px-6 min-[1280px]:hidden`}
-        >
-          {navLinks.map(item => (
-            <a
-              key={item.rota}
-              href={item.rota}
-              onClick={() => setMenuOpen(false)}
-              className={`flex min-h-11 items-center rounded px-2 hover:bg-(--azul-fundo) ${item.active ? 'text-[#d54c15]' : ''}`}
-            >
-              {item.nome}
-            </a>
-          ))}
-          <Button
-            as={Link}
-            to={button.rota}
-            onClick={() => setMenuOpen(false)}
-            color={button.color}
-            className='mt-2 min-h-12 self-start font-bold! sm:hidden'
-          >
-            {button.label}
-          </Button>
-        </nav>
-      </header>
+        {item.nome}
+      </Link>
+    ));
+  const renderAction = () =>
+    button && (
+      <Button
+        as={Link}
+        to={button.rota}
+        color={button.color || 'laranja'}
+        onClick={closeMenu}
+      >
+        {button.label}
+      </Button>
     );
-  }
 
   return (
     <header
-      className={`${isPublic ? 'mx-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-3 py-5 sm:mx-6 lg:mx-12 xl:mx-30' : 'mx-30 flex items-center justify-between py-5'} ${borderClass} ${className}`}
-    >
-      <Link to={logoLink} aria-label='Página inicial Iagora'>
-        <img className='w-40 cursor-pointer' src={Logo} alt='IAgora' />
-      </Link>
-
-      <nav
-        className={
-          isPublic
-            ? 'order-last flex w-full flex-wrap items-center justify-center gap-x-4 gap-y-2 lg:order-none lg:w-auto lg:gap-10'
-            : 'flex items-center gap-10'
+      ref={headerRef}
+      className={`@container/header relative mx-(--page-gutter) [&_:is(a,button):focus-visible]:outline-2 [&_:is(a,button):focus-visible]:outline-offset-3 [&_:is(a,button):focus-visible]:outline-(--laranja-principal) ${borderClass} ${className}`}
+      onKeyDown={event => {
+        if (event.key === 'Escape' && menuOpen) {
+          closeMenu();
+          toggleRef.current?.focus();
         }
-      >
-        {navLinks.map((item, index) => {
-          const active = isLinkActive(item.rota);
-
-          return (
-            <Link
-              key={item.rota || index}
-              to={item.rota}
-              aria-current={active ? 'page' : undefined}
-              className={`font-semibold cursor-pointer transition-all ${
-                active
-                  ? 'text-(--laranja-principal)'
-                  : 'hover:text-(--laranja-principal)'
-              }`}
-            >
-              {item.nome}
-            </Link>
-          );
-        })}
-      </nav>
-
-      {button && (
-        <Link to={button.rota}>
-          <Button color={button.color || 'laranja'}>{button.label}</Button>
+      }}
+      onBlur={event => {
+        if (!event.currentTarget.contains(event.relatedTarget)) closeMenu();
+      }}
+    >
+      <div className='flex min-w-0 items-center justify-between gap-[clamp(1rem,2cqw,2rem)] py-4 @min-[55rem]/header:py-5'>
+        <Link
+          className='min-w-0 @min-[55rem]/header:shrink-0'
+          to={logoLink}
+          aria-label='Página inicial Iagora'
+          onClick={closeMenu}
+        >
+          <img
+            className='block h-auto w-[min(8rem,42cqw)] max-w-full @min-[30rem]/header:w-40'
+            src={Logo}
+            alt='IAgora'
+          />
         </Link>
-      )}
+        <nav
+          aria-label='Navegação principal'
+          className='hidden min-w-0 flex-1 items-center justify-center gap-[clamp(1rem,3.5cqw,2.5rem)] @min-[55rem]/header:flex'
+        >
+          {renderLinks()}
+        </nav>
+        <div className='flex shrink-0 items-center gap-3'>
+          {button && (
+            <div className='hidden whitespace-nowrap @min-[30rem]/header:block'>
+              {renderAction()}
+            </div>
+          )}
+          <button
+            ref={toggleRef}
+            type='button'
+            className='grid size-11 shrink-0 cursor-pointer place-items-center rounded-lg text-(--azul-titulo) hover:bg-(--azul-fundo) @min-[55rem]/header:hidden'
+            aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
+            aria-expanded={menuOpen}
+            aria-controls={menuId}
+            onClick={() => setOpenAt(menuOpen ? null : navigationKey)}
+          >
+            {menuOpen ? <X aria-hidden='true' /> : <Menu aria-hidden='true' />}
+          </button>
+        </div>
+      </div>
+      <nav
+        id={menuId}
+        aria-label='Navegação principal móvel'
+        className='absolute inset-x-0 top-full z-30 flex max-h-[70dvh] flex-col gap-1 overflow-y-auto overscroll-contain rounded-xl border border-gray-200 bg-white p-3 shadow-[0_12px_32px_#102d491a] @min-[55rem]/header:hidden [&[hidden]]:hidden'
+        hidden={!menuOpen}
+      >
+        {renderLinks(true)}
+        {button && (
+          <div className='pt-2 [&>a]:w-full [&>a]:text-center [&>a]:whitespace-normal @min-[30rem]/header:hidden'>
+            {renderAction()}
+          </div>
+        )}
+      </nav>
     </header>
   );
 }

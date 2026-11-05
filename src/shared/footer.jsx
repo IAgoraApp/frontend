@@ -1,6 +1,7 @@
 import Logo from './assets/logoLaranja.png';
 import LogoFigma from './assets/logoFigma.png';
 import { Link } from 'react-router-dom';
+import { Container } from './ui';
 
 function LandingFooter({ company = false }) {
   const groups = [
@@ -37,9 +38,10 @@ function LandingFooter({ company = false }) {
   ];
 
   return (
-    <footer
+    <Container
+      as='footer'
       id='contato'
-      className='mx-auto w-full max-w-[90rem] scroll-mt-6 px-5 pt-16 pb-8 text-[#526579] sm:px-10 lg:px-20'
+      className='scroll-mt-6 pt-16 pb-8 text-[#526579]'
     >
       <div className='grid gap-10 lg:gap-16 [@media(1024px<=width<1400px)]:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] min-[1400px]:grid-cols-[360px_minmax(0,1fr)]'>
         <div>
@@ -60,7 +62,7 @@ function LandingFooter({ company = false }) {
             Um guia para conquistar e cuidar da sua independência.
           </p>
         </div>
-        <div className='grid min-w-0 gap-8 sm:grid-cols-3 sm:gap-6 xl:grid-cols-[220px_220px_minmax(0,1fr)] xl:gap-12'>
+        <div className='grid min-w-0 gap-8 sm:grid-cols-3 sm:gap-6 xl:gap-12'>
           {groups.map(group => (
             <div
               key={group.title}
@@ -111,7 +113,7 @@ function LandingFooter({ company = false }) {
           © Iagora · Todos os direitos reservados.
         </p>
       </div>
-    </footer>
+    </Container>
   );
 }
 
@@ -120,9 +122,9 @@ export default function Footer({ variant = 'default' }) {
   if (variant === 'empresa') return <LandingFooter company />;
 
   return (
-    <footer className='mx-30 pt-20'>
-      <div className='flex border-b border-gray-300 pb-10'>
-        <div className='w-1/3'>
+    <Container as='footer' className='pt-20'>
+      <div className='grid gap-10 border-b border-gray-300 pb-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]'>
+        <div className='min-w-0'>
           <img className='w-40' src={Logo} alt='' />
           <p className='text-[20px] text-(--texto-claro) mt-4'>
             Um guia para conquistar e cuidar da sua <br />
@@ -130,7 +132,7 @@ export default function Footer({ variant = 'default' }) {
           </p>
         </div>
 
-        <div className='grid grid-cols-3 flex-1'>
+        <div className='grid min-w-0 gap-8 sm:grid-cols-3 sm:gap-6'>
           <div>
             <p className='font-semibold mb-3'>Conheça o Iagora</p>
             <p className='mb-2 text-(--texto-claro)'>Funcionalidades</p>
@@ -156,6 +158,6 @@ export default function Footer({ variant = 'default' }) {
       <p className='text-[20px] text-(--texto-claro) mt-10 mb-10'>
         © Iagora · Todos os direitos reservados.
       </p>
-    </footer>
+    </Container>
   );
 }

@@ -1,5 +1,5 @@
-export const empresasHeaderData = {
-  logoLink: '/',
+const empresasHeaderData = {
+  logoLink: '/dashboard',
   navLinks: [
     { nome: 'Painel', rota: '/dashboard' },
     { nome: 'Perfil da empresa', rota: '/perfil-empresa' },
@@ -11,22 +11,22 @@ export const empresasHeaderData = {
   },
 };
 
-export const userHeaderData = {
-  logoLink: '/',
+const userHeaderData = {
+  logoLink: '/home',
   navLinks: [
     { nome: 'Início', rota: '/home' },
-    { nome: 'Rotina', rota: '/minhajornada' },
+    { nome: 'Rotina', rota: '/rotina' },
     { nome: 'Finanças', rota: '/financas' },
     { nome: 'Empresas e Serviços', rota: '/marketplace' },
   ],
   actionButton: {
     label: 'Meu perfil',
-    rota: '/dashboard',
+    rota: '/perfil',
     color: 'laranja',
   },
 };
 
-export const publicHeaderData = {
+const publicHeaderData = {
   logoLink: '/',
   navLinks: [
     { nome: 'Início', rota: '/' },
@@ -40,43 +40,18 @@ export const publicHeaderData = {
   },
 };
 
-export const prestadoresHeaderData = {
-  logoLink: '/',
-  navLinks: [
-    { nome: 'Como funciona', rota: '#como-funciona' },
-    { nome: 'Categorias', rota: '#categorias' },
-    { nome: 'Vantagens', rota: '#vantagens' },
-    { nome: 'Perguntas frequentes', rota: '#perguntas-frequentes' },
-    { nome: 'Contato', rota: '#contato' },
-  ],
-  actionButton: {
-    label: 'Quero anunciar',
-    rota: '/cadastro-empresa',
-    color: 'laranja',
-  },
-};
-
-export const empresaAcessoHeaderData = {
-  logoLink: '/',
-  navLinks: [
-    {
-      nome: 'Como funciona',
-      rota: '/sejaparceiro#como-funciona',
-      className: 'w-[109px]',
-    },
-    { nome: 'Sobre nós', rota: '/sobrenos', className: 'w-[79px]' },
-    {
-      nome: 'Para empresas',
-      rota: '/sejaparceiro',
-      className: 'w-[109px]',
-      active: true,
-    },
-    { nome: 'Entrar', rota: '/login?perfil=empresa', className: 'w-14' },
-  ],
-  actionButton: {
-    label: 'Cadastrar empresa',
-    rota: '/cadastro-empresa',
-    color: 'laranja',
+export const userHeaderVariants = {
+  userA: userHeaderData,
+  userB: {
+    ...userHeaderData,
+    logoLink: '/home-b',
+    navLinks: userHeaderData.navLinks.map(item => {
+      if (item.rota === '/home') return { ...item, rota: '/home-b' };
+      if (item.rota === '/rotina') {
+        return { nome: 'Minha jornada', rota: '/minhajornada' };
+      }
+      return item;
+    }),
   },
 };
 
@@ -84,9 +59,4 @@ export const headerVariants = {
   empresas: empresasHeaderData,
   user: userHeaderData,
   public: publicHeaderData,
-  institucional: publicHeaderData,
-  prestadores: prestadoresHeaderData,
-  'empresa-acesso': empresaAcessoHeaderData,
 };
-
-export default headerVariants;

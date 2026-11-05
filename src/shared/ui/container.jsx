@@ -6,7 +6,7 @@ export function Container({
 }) {
   return (
     <Tag
-      className={`mx-auto w-full max-w-[90rem] px-4 sm:px-6 lg:px-[4.5rem] ${className}`}
+      className={`w-full min-w-0 px-(--page-gutter) ${className}`}
       {...props}
     >
       {children}

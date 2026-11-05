@@ -1,4 +1,4 @@
-import { Button, Title } from '../../../shared/ui';
+import { Button, Container, Title } from '../../../shared/ui';
 import { useState } from 'react';
 import { Content } from '../content';
 import { ArrowUpRight } from 'lucide-react';
@@ -9,17 +9,21 @@ export default function RecursosSection() {
   const [valor, setValor] = useState(1);
 
   return (
-    <section id='funcionalidades' className='px-30 py-30'>
+    <Container as='section' id='funcionalidades' className='py-16 sm:py-30'>
       <Title as='h2' variant='pequenoLj'>
         A vida real pede
       </Title>
 
-      <Title as='h2' variant='normal' className='text-7xl'>
+      <Title
+        as='h2'
+        variant='normal'
+        className='text-4xl! sm:text-5xl! lg:text-7xl!'
+      >
         Sua casa tem muitas partes. <br /> A ajuda também.
       </Title>
 
-      <div className='bg-(--azul-fundo) p-10 pb-0 mt-10'>
-        <div className='justify-between flex gap-5'>
+      <div className='min-w-0 bg-(--azul-fundo) p-4 sm:p-10 pb-0! mt-10'>
+        <div className='grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 lg:gap-5'>
           {Object.entries(content).map(([id, item]) => (
             <button
               key={id}
@@ -38,11 +42,11 @@ export default function RecursosSection() {
           ))}
         </div>
 
-        <div className='mt-10 flex'>
-          <div className='w-1/3'>
+        <div className='mt-10 flex min-w-0 flex-col gap-6 pb-6 md:flex-row'>
+          <div className='w-full max-w-64 md:w-1/3 md:shrink-0'>
             <img src={Prancheta} alt='' />
           </div>
-          <div>
+          <div className='min-w-0'>
             <Title variant='pequenoLj' className='mb-5'>
               {valor} / {content[valor].nome}
             </Title>
@@ -58,6 +62,6 @@ export default function RecursosSection() {
           </div>
         </div>
       </div>
-    </section>
+    </Container>
   );
 }
