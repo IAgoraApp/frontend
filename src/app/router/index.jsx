@@ -1,6 +1,11 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { PrivateRoute, PublicRoute } from '../utils/checkAuth';
-import { EmpresasLayout, PublicLayout, UserLayout } from '../layouts';
+import {
+  CasaLayout,
+  EmpresasLayout,
+  PublicLayout,
+  UserLayout,
+} from '../layouts';
 import TelaErro from './components/telaErro';
 import { Features } from '../../features';
 import { Container } from '../../shared/ui';
@@ -21,20 +26,23 @@ const routes = createBrowserRouter([
             children: [
               {
                 path: '/home',
-                element: (
-                  <Container
-                    as='main'
-                    className='flex-1 bg-(--azul-fundo) py-4 sm:py-8'
-                  >
-                    <h1 className='font-heading text-3xl font-bold text-(--azul-titulo)'>
-                      Início
-                    </h1>
-                  </Container>
-                ),
+                element: <Features.Home />,
+              },
+              {
+                element: <CasaLayout />,
+                children: [
+                  { path: '/casa', element: <Features.Casa /> },
+                  { path: '/limpeza', element: <Features.Limpeza /> },
+                  { path: '/cozinha', element: <Features.Cozinha /> },
+                ],
               },
               {
                 path: '/rotina',
                 element: <Features.Rotina />,
+              },
+              {
+                path: '/financas',
+                element: <Features.Financas />,
               },
               {
                 path: '/perfil',

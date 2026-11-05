@@ -36,7 +36,9 @@ export default function Header({
   } = variant === 'user'
     ? (userHeaderVariants[userType] ?? userHeaderVariants.userA)
     : (headerVariants[variant] ?? headerVariants.public);
-  const isLinkActive = route => location.pathname === route;
+  const isLinkActive = route =>
+    location.pathname === route ||
+    (route === '/casa' && ['/limpeza', '/cozinha'].includes(location.pathname));
   const renderLinks = (mobile = false) =>
     navLinks.map(item => (
       <Link
