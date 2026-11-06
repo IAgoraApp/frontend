@@ -1,4 +1,8 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from 'react-router-dom';
 import { PrivateRoute, PublicRoute } from '../utils/checkAuth';
 import {
   CasaLayout,
@@ -8,7 +12,6 @@ import {
 } from '../layouts';
 import TelaErro from './components/telaErro';
 import { Features } from '../../features';
-import { Container } from '../../shared/ui';
 
 const routes = createBrowserRouter([
   {
@@ -58,16 +61,15 @@ const routes = createBrowserRouter([
               },
               {
                 path: '/perfil',
-                element: (
-                  <Container
-                    as='main'
-                    className='flex-1 bg-(--azul-fundo) py-4 sm:py-8'
-                  >
-                    <h1 className='font-heading text-3xl font-bold text-(--azul-titulo)'>
-                      Meu perfil
-                    </h1>
-                  </Container>
-                ),
+                element: <Features.Perfil />,
+              },
+              {
+                path: '/calculadoras',
+                element: <Features.Calculadoras />,
+              },
+              {
+                path: '/calculadoras/:tipo',
+                element: <Features.Calculadoras />,
               },
             ],
           },
@@ -76,11 +78,31 @@ const routes = createBrowserRouter([
             children: [
               {
                 path: '/home-b',
-                element: <Features.HomeUserB />,
+                element: <Features.HomeB />,
               },
               {
                 path: '/minhajornada',
                 element: <Features.MinhaJornada />,
+              },
+              {
+                path: '/financas-b',
+                element: <Navigate to='/planejamento' replace />,
+              },
+              {
+                path: '/planejamento',
+                element: <Features.FinancasB />,
+              },
+              {
+                path: '/aprendendo',
+                element: <Features.Aprendendo />,
+              },
+              {
+                path: '/encontrar-casa',
+                element: <Features.EncontrarCasa />,
+              },
+              {
+                path: '/perfil-b',
+                element: <Features.Perfil />,
               },
             ],
           },

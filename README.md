@@ -63,7 +63,7 @@ pressionar Escape ou clicar fora; sua abertura não desloca a página.
 
 `rotina` implementa tarefas, calendário, histórico e modais com persistência local.
 Sua organização e limitações estão em `src/features/rotina/README.md`.
-As features `home-user-b` e `minha-jornada` têm apenas componentes vazios,
+As features `home-B` e `minha-jornada` têm apenas componentes vazios,
 exports e rotas, prontos para receber as telas. A home existente do userA foi mantida.
 Destinos como finanças e perfil empresarial ainda precisam das respectivas páginas.
 

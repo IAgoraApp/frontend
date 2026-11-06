@@ -12,8 +12,13 @@ import { Onboarding } from './onboarding';
 import { SejaParceiro } from './seja-parceiro';
 import { EmpresaAcesso } from './empresa-acesso';
 import { Rotina } from './rotina';
-import { HomeUserB } from './home-user-b';
+import { HomeB } from './home-B';
 import { MinhaJornada } from './minha-jornada';
+import { FinancasB } from './financas-B';
+import { Aprendendo } from './aprendendo';
+import { EncontrarCasa } from './encontrar-casa';
+import { Perfil } from './perfil';
+import { Calculadoras } from './calculadoras';
 
 export const Features = {
   Home,
@@ -30,6 +35,11 @@ export const Features = {
   SejaParceiro,
   EmpresaAcesso,
   Rotina,
-  HomeUserB,
+  HomeB,
   MinhaJornada,
+  FinancasB,
+  Aprendendo,
+  EncontrarCasa,
+  Perfil,
+  Calculadoras,
 };
