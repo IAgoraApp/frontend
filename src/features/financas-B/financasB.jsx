@@ -1,11 +1,7 @@
-import { Container } from '../../shared/ui';
-
-export default function FinancasB() {
+export default function Aprendendo() {
   return (
-    <Container
-      as='main'
-      className='flex-1'
-      aria-label='Planejamento da minha mudança'
-    />
+    <main>
+      <h1>Tela de Finanças do usuário B, davizin é foda</h1>
+    </main>
   );
 }
