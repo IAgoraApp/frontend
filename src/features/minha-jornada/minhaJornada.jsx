@@ -1,7 +1,16 @@
+import Styles from './styles/minhaJornada.module.css';
+import CreativeEditorial from './components/CreativeEditorial';
+import Overview from './components/Overview';
+import Checklist from './components/Checklist';
+import EditorialCards from './components/EditorialCards';
+
 export default function Aprendendo() {
   return (
-    <main>
-      <h1>Tela de Minha jornada, davizin é foda</h1>
+    <main className={Styles.main}>
+      <CreativeEditorial/>
+      <Overview/>
+      <Checklist/>
+      <EditorialCards/>
     </main>
   );
 }
