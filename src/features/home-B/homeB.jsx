@@ -1,4 +1,4 @@
-export default function HomeUserB() {
+export default function HomeB() {
   return (
     <Container as='main' className='flex-1' aria-label='Início do usuário B' />
   );
