@@ -1,4 +1,7 @@
-export default function MinhaJornada() {
-  return <Container as='main' className='flex-1' aria-label='Minha jornada' />;
+export default function Aprendendo() {
+  return (
+    <main>
+      <h1>Tela de Minha jornada, davizin é foda</h1>
+    </main>
+  );
 }
-import { Container } from '../../shared/ui';

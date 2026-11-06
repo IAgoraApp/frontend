@@ -1,6 +1,7 @@
-export default function HomeB() {
+export default function Aprendendo() {
   return (
-    <Container as='main' className='flex-1' aria-label='Início do usuário B' />
+    <main>
+      <h1>Tela de Home do usuário B, davizin é foda</h1>
+    </main>
   );
 }
-import { Container } from '../../shared/ui';

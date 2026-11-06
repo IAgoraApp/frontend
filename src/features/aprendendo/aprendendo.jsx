@@ -1,7 +1,7 @@
-import { Container } from '../../shared/ui';
-
 export default function Aprendendo() {
   return (
-    <Container as='main' className='flex-1' aria-label='Aprendendo a morar' />
+    <main>
+      <h1>Tela de aprendendo, davizin é foda</h1>
+    </main>
   );
 }
