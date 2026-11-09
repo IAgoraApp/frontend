@@ -1,16 +1,14 @@
 import Styles from './styles/minhaJornada.module.css';
-import CreativeEditorial from './components/CreativeEditorial';
-import Overview from './components/Overview';
-import Checklist from './components/Checklist';
+import PreparationStage from './components/PreparationStages';
 import EditorialCards from './components/EditorialCards';
+import Etapa1 from './components/etapa_1';
 
 export default function Aprendendo() {
   return (
     <main className={Styles.main}>
-      <CreativeEditorial/>
-      <Overview/>
-      <Checklist/>
+      <PreparationStage/>
       <EditorialCards/>
+      <Etapa1/>
     </main>
   );
 }

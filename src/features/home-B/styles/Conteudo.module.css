@@ -13,6 +13,7 @@
         height: 550px;
         display: flex;
         align-items: center;
+        justify-content: center;
         padding: 0 15px;
         background: #FDEBDD;
         border-radius: 6px 0 0 6px;

@@ -10,6 +10,8 @@
         width: 49%;
         display: flex;
         flex-direction: column;
+        justify-content: center;
+        align-items: center;
 
         & .top {
             width: 100%;
@@ -21,6 +23,7 @@
         }
 
         & .bottom {
+            width: 100%;
             display: flex;
             flex-direction: column;
             padding: 20px;
@@ -79,6 +82,7 @@
         }
 
         & .bottom {
+            width: 100%;
             display: flex;
             flex-direction: column;
             padding: 20px;
