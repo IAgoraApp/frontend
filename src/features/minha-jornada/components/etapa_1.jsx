@@ -1,10 +1,10 @@
 import Styles from '../styles/Etapa1.module.css';
 
-function Etapa1() {
+function Etapa1({onChange}) {
   return (
     <section className={Styles.Etapa1}>
       <div className={Styles.Titulo}>
-        <a href='#'>Voltar</a>
+        <a href='#' onClick={() => onChange(1)}>Voltar</a>
 
         <div className={Styles.CaixaLaranja}>
           <h3>ANTES DAS CHAVES</h3>

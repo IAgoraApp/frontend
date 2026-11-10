@@ -1,7 +1,7 @@
 import Styles from "../styles/PreparationStage.module.css"
 
 
-function PreparationStage(){
+function PreparationStage({onChange}){
     return(
         <section className={Styles.PreparationStage}>
 
@@ -15,7 +15,8 @@ function PreparationStage(){
             </div>
 
             <div className={Styles.Etapas}>
-                <a className={Styles.etapa} href="#">
+
+                <a className={Styles.etapa} href="#" onClick={() => onChange(2)}>
 
                     <div className={Styles.divTexto}>
                         <h3>01 / Seu plano</h3>
