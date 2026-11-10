@@ -1,11 +1,13 @@
 .informacao_usuario {
     display: flex;
-    padding: 40px 120px;
+    width: 100%;
     flex-direction: column;
     align-items: flex-start;
     gap: 32px;
-    background: var(--color-white, #FFF);
+    background: var(--color-white, #FFF)
 }
+
+
 
 .informacao_usuario1 {
     display: flex;
@@ -83,16 +85,16 @@
 
 .dados_usuario2 {
     display: flex;
-    width: 1296px;
+    width: 100%;
     align-items: center;
     gap: 24px;
 }
 
 .dados_usuario3 {
     display: flex;
-    width: 870px;
-    height: 400px;
-    padding: 42px;
+    height: 330px;
+    flex: 1;
+    padding: 30px;
     flex-direction: column;
     align-items: flex-start;
     gap: 30px;
@@ -216,11 +218,100 @@
 .momento_user {
     display: flex;
     width: 432px;
-    height: 400px;
+    height: 330px;
     padding: 24px;
     flex-direction: column;
     align-items: flex-start;
-    gap: 20px;
+    gap: 25px;
     border-radius: 8px;
-    background: #e25c5c;
+    background: #fff;
+}
+
+.momento_user_p1 {
+    align-self: stretch;
+    color: #102A43;
+    font-family: "DM Sans";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.momento_user_p2 {
+    align-self: stretch;
+    color: #102A43;
+    font-family: "Bricolage Grotesque";
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+}
+
+.momento_user_p3 {
+    align-self: stretch;
+    color: #102A43;
+    font-family: "DM Sans";
+    font-size: 17px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.momento_user_p4 {
+    align-self: stretch;
+    color: #102A43;
+    font-family: "DM Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.momento_user_p5 {
+    align-self: stretch;
+    color: #102A43;
+    font-family: "DM Sans";
+    font-size: 17px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.momento_user_p6 {
+    align-self: stretch;
+    color: #102A43;
+    font-family: "DM Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.alterar_momento {
+    display: flex;
+    width: 384px;
+    height: 52px;
+    padding: 14px 24px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 26px;
+    border: 1px solid #DBE5ED;
+    background: var(--color-neutral, #F4F7FA);
+}
+
+.pbotaoalterar_momento {
+    flex: 1 0 0;
+    color: var(--color-navy, #102A43);
+    text-align: center;
+    font-family: "DM Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.alterar_momento:hover {
+     background: #f3f3f3;
+    border: 1px solid #000000;
 }

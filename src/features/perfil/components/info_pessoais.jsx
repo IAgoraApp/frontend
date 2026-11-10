@@ -1,9 +1,9 @@
 import Styles from '../styles/info_pessoais.module.css'
-export default function InfoPessoais() {
+export default function InfoPessoais({mudarView}) {
     return (
         <section className={Styles.informacao_usuario}>
             <div className={Styles.informacao_usuario1}>
-                <a href='#' className={Styles.botao_voltar}>
+                <a href='#' className={Styles.botao_voltar} onClick={() => mudarView(1)}>
                     <p className={Styles.pbotao_voltar}>
                         ← Voltar
                     </p>
@@ -70,9 +70,43 @@ export default function InfoPessoais() {
                 </div>
 
                 <div className={Styles.momento_user}>
-                    <p>
-                        Momento do usuário
+
+                    <p className={Styles.momento_user_p1}>
+                        SUA CONTA, DO SEU JEITO
                     </p>
+
+                    <p className={Styles.momento_user_p2}>
+                        Maria Silva
+                    </p>
+
+                    <div className={Styles.seumomento}>
+                        <p className={Styles.momento_user_p3}>
+                            Seu momento
+                        </p>
+
+                        <p className={Styles.momento_user_p4}>
+                            Já moro sozinho
+                        </p>
+                    </div>
+
+                    <div className={Styles.seucidade}>
+                        <p className={Styles.momento_user_p5}>
+                            Sua cidade
+                        </p>
+
+                        <p className={Styles.momento_user_p6}>
+                            São Paulo, SP
+                        </p>
+                    </div>
+
+                    <div className={Styles.alterar_momento}>
+                        <a href='#' className={Styles.botaoalterar_momento}>
+                            <p className={Styles.pbotaoalterar_momento}>
+                                Alterar momento
+                            </p>
+                        </a>
+                    </div>
+
                 </div>
 
 
