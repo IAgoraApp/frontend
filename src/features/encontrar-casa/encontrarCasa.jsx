@@ -1,7 +1,18 @@
+import Styles from "./styles/Aprendendo.module.css"
+import CreativeMasthead from "./components/CreativeMasthead";
+import HousingSearth from "./components/HousingSearth";
+import HousingResults from "./components/HousingResults";
+import NextStep from "./components/NextStep";
+import Footer from '../../shared/footer'
+
 export default function Aprendendo() {
   return (
-    <main>
-      <h1>Tela de encontrar casa, davizin é foda</h1>
+    <main className={Styles.main}>
+      <CreativeMasthead/>
+      <HousingSearth/>
+      <HousingResults/>
+      <NextStep/>
+      <Footer/>
     </main>
   );
 }
