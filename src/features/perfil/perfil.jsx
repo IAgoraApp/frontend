@@ -4,6 +4,8 @@ import Frase from './assets/frase.png'
 import Mulher1 from './assets/morarsozinho.png'
 import Homem1 from './assets/morosozinho.png'
 import Footer from '../../shared/footer'
+import InfoPessoais from './components/info_pessoais'
+import { Info } from 'lucide-react'
 
 export default function Perfil() {
     return (
@@ -213,7 +215,9 @@ export default function Perfil() {
                 </section>
             </main>
 
+            <InfoPessoais />
             <Footer />
+            
 
         </>
     )
