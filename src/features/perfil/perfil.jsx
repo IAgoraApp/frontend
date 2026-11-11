@@ -17,10 +17,9 @@ export default function Perfil() {
             view == 1 && (<MeuPerfil mudarView={setView} />)
         }
         {
-            view == 2 && (<InfoPessoais mudarView={setView} />)
+            view == 2 && (<SobControle mudarView={setView} />)
         }
 
-        <SobControle />
 
         <Footer />
 

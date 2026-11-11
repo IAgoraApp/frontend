@@ -1,47 +1,40 @@
 .sobcontrole {
     display: flex;
     width: 100%;
-    height: 1000px;
     flex-direction: column;
     align-items: flex-start;
     gap: 32px;
     background: var(--color-white, #FFF);
 }
 
-.momento_nav {
+.div1 {
     display: flex;
     align-items: center;
     gap: 32px;
     align-self: stretch;
-    justify-content: center;
-    flex-direction: row;
-    background-color: #E03B00;
 }
 
-.informacao_usuario1 {
+.div1_esquerda {
     display: flex;
+    width: 70%;
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
+    gap: 14px;
     flex: 1 0 0;
-    width: 10%;
-    background: #102A43;
-    
 }
 
-.botao_voltar {
+.div1_voltar {
     display: flex;
     width: 180px;
-    height: 36px;
-    padding: 8px 0;
-    justify-content: center;
+    height: 52px;
+    padding: 14px 0;
     align-items: center;
     gap: 8px;
     border-radius: 26px;
     background: var(--color-white, #FFF);
 }
 
-.pbotao_voltar {
+.div1_esquerda_link {
     flex: 1 0 0;
     color: var(--color-navy, #102A43);
     font-family: "DM Sans";
@@ -51,11 +44,11 @@
     line-height: normal;
 }
 
-.pbotao_voltar:hover {
+.div1_esquerda_link:hover {
     color: var(--color-blue, #D54C15);
 }
 
-.suaconta {
+.suaconta_sob {
     display: flex;
     transform: rotate(1.6deg);
     padding: 9px 16px;
@@ -63,7 +56,7 @@
     background: #E03B00;
 }
 
-.sua_conta {
+.sua_conta_sob {
     align-self: stretch;
     color: #FFF;
     font-family: "DM Sans";
@@ -74,18 +67,18 @@
     letter-spacing: 0.72px;
 }
 
-.sob_controle {
+.suas_informacoes_sob {
     align-self: stretch;
     color: #102A43;
     font-family: "Bricolage Grotesque";
-    font-size: 44px;
+    font-size: 48px;
     font-style: normal;
     font-weight: 800;
     line-height: 110%;
-    /* 48.4px */
+    /* 52.8px */
 }
 
-.revise {
+.revise_sob {
     align-self: stretch;
     color: var(--color-muted, #596579);
     font-family: "DM Sans";
@@ -94,3 +87,140 @@
     font-weight: 400;
     line-height: normal;
 }
+
+.div1_direita {
+    width: 220px;
+    height: 180px;
+}
+
+.div1_direita_img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.div2 {
+    display: flex;
+    width: 100%;
+    padding: 24px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    border-radius: 6px;
+    background: var(--color-neutral, #F4F7FA);
+}
+
+.div2_cards {
+    display: flex;
+    width: 100%;
+    padding: 20px;
+    align-items: center;
+    gap: 20px;
+    border-radius: 10px;
+    background: var(--color-white, #FFF);
+}
+
+.div2_seta {
+    width: 32px;
+    flex-shrink: 0;
+    color: var(--color-orange, #D54C15);
+    font-family: "DM Sans";
+    font-size: 26px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.div2_text {
+    width: 80%;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.div2_text_h3 {
+    align-self: stretch;
+    color: var(--color-navy, #102A43);
+    font-family: "DM Sans";
+    font-size: 19px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 135%;
+    /* 25.65px */
+}
+
+.div2_text_p {
+    align-self: stretch;
+    color: var(--color-muted, #596579);
+    font-family: "DM Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.div2_detalhes {
+    display: flex;
+    width: 1248px;
+    padding: 10px;
+    align-items: center;
+    gap: 20px;
+}
+
+.div2_text_link {
+    width: 170px;
+    flex-shrink: 0;
+    color: var(--color-navy, #102A43);
+    text-align: right;
+    font-family: "DM Sans";
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.div2_text_link:hover {
+    color: var(--color-blue, #D54C15);
+}
+
+.sairdaconta {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    background: var(--color-white, #FFF);
+}
+
+.sairdaconta_link {
+    display: flex;
+    width: 194px;
+    height: 52px;
+    padding: 14px 24px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 26px;
+    border: 1px solid #DBE5ED;
+    background: var(--color-neutral, #F4F7FA);
+}
+
+.sairdaconta_p {
+    flex: 1 0 0;
+    color: var(--color-navy, #102A43);
+    text-align: center;
+    font-family: "DM Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.sairdaconta_link:hover {
+    background: #f3f3f3;
+    border: 1px solid #000000;
+}
+
+

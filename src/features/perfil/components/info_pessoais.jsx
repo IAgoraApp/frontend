@@ -1,9 +1,9 @@
 import Styles from '../styles/info_pessoais.module.css'
-export default function InfoPessoais({mudarView}) {
+export default function InfoPessoais() {
     return (
         <section className={Styles.informacao_usuario}>
             <div className={Styles.informacao_usuario1}>
-                <a href='#' className={Styles.botao_voltar} onClick={() => mudarView(1)}>
+                <a href='#' className={Styles.botao_voltar}>
                     <p className={Styles.pbotao_voltar}>
                         ← Voltar
                     </p>
