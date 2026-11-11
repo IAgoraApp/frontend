@@ -1,0 +1,9 @@
+.main_perfil{
+    width: 100%;
+    height: auto;
+    padding: 40px 72px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+

@@ -71,7 +71,7 @@ export default function MarketplaceSection({ empresa, pagina }) {
                   Deu ruim?
                   <br />
                   <span className='text-(--laranja-principal)'>
-                    Tem quem faz.
+                    Tem quem faça.
                   </span>
                 </Title>
                 <p className='max-w-xl text-lg leading-relaxed'>
