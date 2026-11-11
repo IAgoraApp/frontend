@@ -28,7 +28,7 @@
   }
 
   & button {
-    width: 300px;
+    width: 280px;
     height: 52px;
     border-radius: 28px;
     background: #e03b00;
@@ -36,5 +36,7 @@
     color: var(--color-white, #fff);
     font-size: 16px;
     font-weight: 700;
+
+    cursor: pointer;
   }
 }
