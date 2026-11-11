@@ -1,0 +1,121 @@
+{
+  "eyebrow": "ANTES DAS CHAVES",
+  "journeyTitle": "SEU CAMINHO ATÉ AS CHAVES",
+  "stages": [
+    {
+      "id": 0,
+      "number": "01",
+      "navTitle": "Seu plano",
+      "title": "Seu plano.",
+      "subtitle": "Definir momento e prioridades.",
+      "tasks": [
+        {
+          "title": "Escolher seu momento",
+          "description": "Como você quer começar essa nova fase?"
+        },
+        {
+          "title": "Definir três prioridades",
+          "description": "Custo, localização ou espaço: o que vem primeiro?"
+        },
+        {
+          "title": "Combinar um prazo possível",
+          "description": "Escolha uma referência e ajuste quando precisar."
+        }
+      ],
+      "actionLabel": "Ajustar prioridades",
+      "focus": "Suas prioridades ajudam a comparar escolhas. Elas não precisam ser definitivas."
+    },
+    {
+      "id": 1,
+      "number": "02",
+      "navTitle": "Seu dinheiro",
+      "title": "Seu dinheiro.",
+      "subtitle": "Estimar custos e reserva.",
+      "tasks": [
+        {
+          "title": "Anotar renda e valor guardado",
+          "description": "Comece pelos recursos que você tem hoje."
+        },
+        {
+          "title": "Estimar o custo do mês",
+          "description": "Inclua moradia, contas, alimentação e transporte."
+        },
+        {
+          "title": "Separar os custos de chegada",
+          "description": "Garantia, mudança e itens essenciais entram no plano inicial."
+        }
+      ],
+      "actionLabel": "Planejar meu dinheiro",
+      "focus": "Pense em duas contas diferentes: chegar ao novo endereço e manter o mês funcionando."
+    },
+    {
+      "id": 2,
+      "number": "03",
+      "navTitle": "Seu canto",
+      "title": "Seu canto.",
+      "subtitle": "Pesquisar imóveis e visitar.",
+      "tasks": [
+        {
+          "title": "Escolher regiões para pesquisar",
+          "description": "Compare deslocamento, serviços e custo total."
+        },
+        {
+          "title": "Salvar duas ou três opções",
+          "description": "Use os mesmos critérios para comparar imóveis."
+        },
+        {
+          "title": "Preparar perguntas para a visita",
+          "description": "Confirme valores, condições e disponibilidade com o anunciante."
+        }
+      ],
+      "actionLabel": "Pesquisar imóveis",
+      "focus": "Olhe além da foto: coloque o custo completo e a rotina do bairro na comparação."
+    },
+    {
+      "id": 3,
+      "number": "04",
+      "navTitle": "Sua mudança",
+      "title": "Sua mudança.",
+      "subtitle": "Organizar documentos e essenciais.",
+      "tasks": [
+        {
+          "title": "Organizar os documentos",
+          "description": "Confira o que será solicitado na sua negociação."
+        },
+        {
+          "title": "Anotar condições e dúvidas",
+          "description": "Guarde as informações combinadas e revise antes de decidir."
+        },
+        {
+          "title": "Preparar a chegada",
+          "description": "Combine transporte, acesso e o que precisa estar disponível no primeiro dia."
+        }
+      ],
+      "actionLabel": "Organizar documentos",
+      "focus": "Uma pasta e uma lista de perguntas ajudam a acompanhar os próximos passos sem depender da memória."
+    },
+    {
+      "id": 4,
+      "number": "05",
+      "navTitle": "Seu dia a dia",
+      "title": "Seu dia a dia.",
+      "subtitle": "Aprender os primeiros cuidados.",
+      "tasks": [
+        {
+          "title": "Separar o essencial",
+          "description": "Priorize o que você vai usar na primeira semana."
+        },
+        {
+          "title": "Planejar compras e refeições",
+          "description": "Confira o que já tem antes de montar a lista."
+        },
+        {
+          "title": "Criar uma rotina pequena",
+          "description": "Comece com tarefas possíveis e ajuste a frequência."
+        }
+      ],
+      "actionLabel": "Abrir os guias",
+      "focus": "Seu primeiro mês não precisa estar perfeito. Uma rotina pequena e repetível já ajuda."
+    }
+  ]
+}
