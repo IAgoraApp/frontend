@@ -57,6 +57,10 @@
         gap: 16px;
 
         & .etapa {
+            border: 0;
+            font-family: inherit;
+            text-align: left;
+            cursor: pointer;
             padding: 20px 35px;
             display: flex;
             flex-direction: row;

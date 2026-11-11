@@ -1,81 +1,89 @@
+import { useState } from 'react';
 import Styles from '../styles/Etapa1.module.css';
+import jornadaEtapas from '../data/jornadaEtapas.json';
 
-function Etapa1({onChange}) {
+function EtapaJornada({ etapaAtual, onChange }) {
+  const etapa = jornadaEtapas.stages.find((item) => item.id === etapaAtual);
+
+  if (!etapa) return null;
+
   return (
     <section className={Styles.Etapa1}>
       <div className={Styles.Titulo}>
-        <a href='#' onClick={() => onChange(1)}>Voltar</a>
+        <button
+          type="button"
+          className={Styles.voltar}
+          onClick={() => onChange(null)}
+        >
+          ← Voltar
+        </button>
 
         <div className={Styles.CaixaLaranja}>
-          <h3>ANTES DAS CHAVES</h3>
+          <h3>{jornadaEtapas.eyebrow}</h3>
         </div>
 
-        <h2>Seu plano</h2>
-
-        <p>Definir momento e prioridades.</p>
+        <h2>{etapa.title}</h2>
+        <p>{etapa.subtitle}</p>
       </div>
 
       <div className={Styles.containerEtapa1}>
         <div className={Styles.left}>
           <div className={Styles.top}>
             <form>
-
-              <div className={Styles.item1}>
-                <input type='checkbox' name='item1' id='item1' />
-                <label htmlFor='item1'>
-                  <h3>Escolher seu momento</h3>
-                  <p>Como você quer começar essa nova fase?</p>
-                </label>
-              </div>
-
-              <div className={Styles.item1}>
-                <input type='checkbox' name='item2' id='item2' />
-                <label htmlFor='item2'>
-                  <h3>Definir três prioridades</h3>
-                  <p>Custo, localização ou espaço: o que vem primeiro?</p>
-                </label>
-              </div>
-
-              <div className={Styles.item1}>
-                <input type='checkbox' name='item3' id='item3' />
-                <label htmlFor='item3'>
-                  <h3>Escolher seu momento</h3>
-                  <p>Como você quer começar essa nova fase?</p>
-                </label>
-              </div>
-
+              {etapa.tasks.map((task, index) => (
+                <div className={Styles.item1} key={`${etapa.id}-${index}`}>
+                  <input
+                    type="checkbox"
+                    name={`etapa-${etapa.id}-item-${index}`}
+                    id={`etapa-${etapa.id}-item-${index}`}
+                  />
+                  <label htmlFor={`etapa-${etapa.id}-item-${index}`}>
+                    <h3>{task.title}</h3>
+                    <p>{task.description}</p>
+                  </label>
+                </div>
+              ))}
             </form>
           </div>
 
           <div className={Styles.bottom_btns}>
-            <a href="#" className={Styles.btnLaranja}>Ajustar prioridades</a>
-            <a href="#" className={Styles.btnNormal}>Concluir etapa</a>
-            <a href="#" className={Styles.btnNormal}>Ver minhas pendências</a>
+            <button type="button" className={Styles.btnLaranja}>
+              {etapa.actionLabel}
+            </button>
+            <button type="button" className={Styles.btnNormal}>
+              Concluir etapa
+            </button>
+            <button type="button" className={Styles.btnNormal}>
+              Ver minhas pendências
+            </button>
           </div>
         </div>
 
+        <aside className={Styles.right}>
+          <div className={Styles.opcoes}>
+            <h3>{jornadaEtapas.journeyTitle}</h3>
 
-        <div className={Styles.right}>
+            {jornadaEtapas.stages.map((item) => (
+              <button
+                type="button"
+                key={item.id}
+                className={item.id === etapaAtual ? Styles.opcao1 : ''}
+                aria-current={item.id === etapaAtual ? 'step' : undefined}
+                onClick={() => onChange(item.id)}
+              >
+                {item.number} {item.navTitle}
+              </button>
+            ))}
+          </div>
 
-            <div className={Styles.opcoes}>
-                <h3>SEU CAMINHO ATÉ AS CHAVES</h3>
-
-                <a className={Styles.opcao1} href="#">01  Seu plano</a>
-                <a href="#">02 Seu dinheiro</a>
-                <a href="#">03 Seu canto</a>
-                <a href="#">04  Sua mudança</a>
-                <a href="#">05  Seu dia a dia</a>
-            </div>
-
-            <div className={Styles.textos}>
-                <h3>Um foco para esta etapa</h3>
-                <p>Suas prioridades ajudam a comparar escolhas. Elas não precisam ser definitivas.</p>
-            </div>
-
-        </div>
+          <div className={Styles.textos}>
+            <h3>Um foco para esta etapa</h3>
+            <p>{etapa.focus}</p>
+          </div>
+        </aside>
       </div>
     </section>
   );
 }
 
-export default Etapa1;
+export default EtapaJornada;
