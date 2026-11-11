@@ -176,6 +176,10 @@ const routes = createBrowserRouter([
             element: <PublicLayout />,
             children: [
               {
+                path: '/',
+                element: <Features.LandingPage />,
+              },
+              {
                 path: '/cadastro-empresa',
                 element: <Features.EmpresaAcesso />,
               },
@@ -183,10 +187,6 @@ const routes = createBrowserRouter([
               {
                 path: '/sejaparceiro',
                 element: <Features.SejaParceiro />,
-              },
-              {
-                path: '/',
-                element: <Features.LandingPage />,
               },
               {
                 path: '/sobrenos',
