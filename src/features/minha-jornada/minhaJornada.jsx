@@ -19,7 +19,6 @@ export default function Aprendendo() {
         <Etapa1 onChange={useView}/>
       </>
       )}
-
     </main>
   );
 }

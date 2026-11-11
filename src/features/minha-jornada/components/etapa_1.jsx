@@ -10,7 +10,7 @@ function Etapa1({onChange}) {
           <h3>ANTES DAS CHAVES</h3>
         </div>
 
-        <h2>Seu plano.</h2>
+        <h2>Seu plano</h2>
 
         <p>Definir momento e prioridades.</p>
       </div>
@@ -60,7 +60,7 @@ function Etapa1({onChange}) {
             <div className={Styles.opcoes}>
                 <h3>SEU CAMINHO ATÉ AS CHAVES</h3>
 
-                <a href="#">01  Seu plano</a>
+                <a className={Styles.opcao1} href="#">01  Seu plano</a>
                 <a href="#">02 Seu dinheiro</a>
                 <a href="#">03 Seu canto</a>
                 <a href="#">04  Sua mudança</a>

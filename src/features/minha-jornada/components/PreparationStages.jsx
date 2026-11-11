@@ -26,7 +26,7 @@ function PreparationStage({onChange}){
                     <p>Começar ↗</p>
                 </a>
 
-                <a className={Styles.etapa} href="#">
+                <a className={Styles.etapa}>
 
                     <div className={Styles.divTexto}>
                         <h3>02 / Seu dinheiro</h3>
@@ -36,7 +36,7 @@ function PreparationStage({onChange}){
                     <p>Começar ↗</p>
                 </a>
 
-                <a className={Styles.etapa} href="#">
+                <a className={Styles.etapa}>
 
                     <div className={Styles.divTexto}>
                         <h3>03 / Seu canto</h3>
