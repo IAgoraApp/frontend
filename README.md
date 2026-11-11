@@ -1,16 +1,26 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<div align="center">
 
-Currently, two official plugins are available:
+# IAGORA | Frontend
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### Sua independência começa aqui.
 
-## React Compiler
+Interface web do **IAGORA**, uma plataforma desenvolvida para facilitar a jornada de quem deseja morar sozinho ou já conquistou sua independência.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+O frontend é responsável por proporcionar uma experiência intuitiva e acessível, integrando ferramentas de **gestão financeira, organização doméstica, controle de estoque, planejamento de rotinas e acesso a serviços**.
 
-## Expanding the ESLint configuration
+### Tecnologias
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![JavaScript](https://img.shields.io/badge/JavaScript-20232A?style=for-the-badge&logo=javascript&logoColor=F7DF1E)
+![Vite](https://img.shields.io/badge/Vite-20232A?style=for-the-badge&logo=vite&logoColor=646CFF)
+
+### Acesse o projeto
+
+[![Website](https://img.shields.io/badge/Visualizar_Aplicação-2563EB?style=for-the-badge&logo=vercel&logoColor=white)](https://frontend-three-tau-95.vercel.app/)
+
+---
+
+<sub>Desenvolvido pela equipe IAGORA.</sub>
+
+</div>
