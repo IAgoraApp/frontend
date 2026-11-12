@@ -1,0 +1,12 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="78" height="72" viewBox="0 0 78 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Illustration / open book">
+<path id="Book / left page" d="M6 4H31C33.7614 4 36 6.23858 36 9V57C36 59.7614 33.7614 62 31 62H6C3.23858 62 1 59.7614 1 57V9C1 6.23858 3.23858 4 6 4Z" fill="white" stroke-width="2" stroke="#102A43"/>
+<path id="Book / right page" d="M45 4H70C72.7614 4 75 6.23858 75 9V57C75 59.7614 72.7614 62 70 62H45C42.2386 62 40 59.7614 40 57V9C40 6.23858 42.2386 4 45 4Z" fill="white" stroke-width="2" stroke="#102A43"/>
+<rect id="Book / spine" x="37" y="7" width="3" height="53" fill="#102A43"/>
+<rect id="Book / left text 1" x="7" y="18" width="22" height="2" fill="#D54C15"/>
+<rect id="Book / left text 2" x="7" y="27" width="20" height="2" fill="#3F7F91"/>
+<rect id="Book / right text 1" x="47" y="18" width="22" height="2" fill="#D54C15"/>
+<rect id="Book / right text 2" x="47" y="27" width="18" height="2" fill="#3F7F91"/>
+<circle id="Book / orange dot" cx="63.5" cy="46.5" r="4.5" fill="#D54C15"/>
+</g>
+</svg>

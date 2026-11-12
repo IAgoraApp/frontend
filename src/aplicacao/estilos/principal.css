@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+@import 'tailwindcss';
+
+@theme static {
+  --margem-pagina: 1rem;
+  --font-titulo: 'Bricolage Grotesque', sans-serif;
+  --font-corpo: 'DM Sans', sans-serif;
+
+  --laranja-principal: #e03b00;
+  --laranja-destaque: #d54c15;
+  --texto-apoio: #526579;
+  --texto-secundario: #617385;
+  --azul-principal: #12377d;
+
+  --azul-titulo: #102a43;
+  --azul-fundo: #f4f7fa;
+  --azul-escuro: #14213b;
+  --azul-profundo: #0e3655;
+
+  --laranja-fundo: #fce8dc;
+  --pessego-suave: #fdebdd;
+  --borda-suave: #dbe5ed;
+  --borda-divisoria: #d8e1e8;
+
+  --texto-claro: #526579;
+  --verde-sucesso: #18794e;
+  --vermelho-alerta: #b42318;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background-color: #ffffff;
+    color: var(--azul-titulo);
+    font-family: var(--font-corpo);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-titulo);
+  }
+}
+
+@keyframes quicarMoeda {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-7px) scale(1.06);
+  }
+}
+
+@keyframes pulsarSuave {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.animar-moeda {
+  animation: quicarMoeda 1.4s ease-in-out infinite;
+}
+
+.animar-pulsar {
+  animation: pulsarSuave 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animar-moeda,
+  .animar-pulsar {
+    animation: none;
+  }
+}
