@@ -1,0 +1,11 @@
+export { default as InicioEmpresa } from './companyHome';
+export { default as DashboardEmpresa } from './companyDashboard';
+export { default as ListaAnuncios } from './adsList';
+export { default as DetalheAnuncio } from './adDetail';
+export { default as EditorAnuncio } from './adEditor';
+export { default as EditorFotos } from './photoEditor';
+export { default as PreviaAnuncio } from './PreviaAnuncio';
+export { default as PerfilEmpresa } from './companyProfile';
+export { default as MidiasEmpresa } from './MidiasEmpresa';
+export { default as ContatosEmpresa } from './companyContacts';
+export { FaixaAvisoEmpresa } from './empresaUi';
