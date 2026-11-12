@@ -1,10 +1,10 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import './app/styles/main.css';
-import AppRoutes from './app/router';
+import './aplicacao/estilos/principal.css';
+import AplicacaoRotas from './aplicacao/rotas/indice';
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById('raiz')).render(
   <StrictMode>
-    <AppRoutes />
+    <AplicacaoRotas />
   </StrictMode>
 );

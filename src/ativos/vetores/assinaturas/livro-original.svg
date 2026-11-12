@@ -1,0 +1,12 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="136" height="125.538" viewBox="0 0 136 125.538" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Brand / Original book">
+<rect id="Book / left page" x="1.74359" y="6.97436" width="61.0256" height="101.128" rx="8.71795" fill="white" stroke-width="3.48718" stroke="#102A43"/>
+<rect id="Book / right page" x="69.7436" y="6.97436" width="61.0256" height="101.128" rx="8.71795" fill="white" stroke-width="3.48718" stroke="#102A43"/>
+<rect id="Book / spine" x="64.5128" y="12.2051" width="5.23077" height="92.4103" fill="#102A43"/>
+<rect id="Book / left text 1" x="12.2051" y="31.3846" width="38.359" height="3.48718" fill="#D54C15"/>
+<rect id="Book / left text 2" x="12.2051" y="47.0769" width="34.8718" height="3.48718" fill="#3F7F91"/>
+<rect id="Book / right text 1" x="81.9487" y="31.3846" width="38.359" height="3.48718" fill="#D54C15"/>
+<rect id="Book / right text 2" x="81.9487" y="47.0769" width="31.3846" height="3.48718" fill="#3F7F91"/>
+<circle id="Book / orange dot" cx="110.718" cy="81.0769" r="7.84615" fill="#D54C15"/>
+</g>
+</svg>
