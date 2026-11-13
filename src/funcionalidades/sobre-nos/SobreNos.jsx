@@ -66,7 +66,11 @@ export function SobreNos() {
                 <img
                   src={fotoEquipeCompleta}
                   alt='Equipe completa do projeto IAgora reunida'
-                  className='relative z-10 aspect-[16/10] w-full rounded-[20px] object-cover object-[center_22%] shadow-[0_14px_30px_rgba(0,0,0,0.22)]'
+                  width='1017'
+                  height='718'
+                  loading='lazy'
+                  decoding='async'
+                  className='relative z-10 h-auto w-full rounded-[20px] shadow-[0_14px_30px_rgba(0,0,0,0.22)]'
                 />
               </div>
             </div>
