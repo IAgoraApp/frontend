@@ -1,3 +1,4 @@
+import { IconeConcluido } from '../../../compartilhado/interface/IndicadoresFuncionais';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -28,10 +29,10 @@ export function VisaoMetas({
         aoVoltar={aoVoltar}
         rotuloVoltar='Voltar'
         selo='ANTES DAS CHAVES'
-        titulo='Suas metas têm espaço aqui.'
+        titulo='Suas metas têm espaço aqui'
         subtitulo='Pequenas conquistas para a sua mudança.'
         assinatura='chave'
-        etiquetaAssinatura='DO SEU JEITO ↗'
+        etiquetaAssinatura="DO SEU JEITO"
       />
 
       <div className='space-y-3 rounded-xl bg-(--azul-fundo) p-4 sm:p-6'>
@@ -54,7 +55,7 @@ export function VisaoMetas({
                     aria-hidden='true'
                     className='text-lg font-bold text-(--laranja-principal)'
                   >
-                    {meta.concluida ? '✓' : '↗'}
+                    {meta.concluida && <IconeConcluido />}
                   </span>
                   <div className='min-w-0'>
                     <strong className='block text-base font-bold text-(--azul-titulo)'>
@@ -72,7 +73,7 @@ export function VisaoMetas({
                     onClick={() => aoAbrirDetalheMeta(meta.id)}
                     className='min-h-11 text-sm font-bold text-(--laranja-principal) hover:underline'
                   >
-                    Abrir meta ↗
+                    Abrir meta
                   </button>
                   <button
                     type='button'
@@ -83,7 +84,7 @@ export function VisaoMetas({
                     }
                     className='min-h-11 text-sm font-bold text-(--azul-titulo) hover:text-(--laranja-principal)'
                   >
-                    {expandida ? 'Fechar ↑' : 'Ver detalhes ↗'}
+                    {expandida ? "Fechar" : "Ver detalhes"}
                   </button>
                 </div>
               </div>
@@ -152,9 +153,9 @@ export function VisaoDetalheMeta({
       <section className='space-y-6 py-4'>
         <CabecalhoSubpagina
           aoVoltar={aoVoltar}
-          rotuloVoltar='← Voltar'
+          rotuloVoltar=" Voltar"
           selo='ANTES DAS CHAVES'
-          titulo='Meta não encontrada.'
+          titulo='Meta não encontrada'
           subtitulo='Volte para a lista de metas e escolha um objetivo ativo.'
           assinatura='chave'
         />
@@ -164,7 +165,7 @@ export function VisaoDetalheMeta({
 
   const ehVisita = /visita|imóv|studio|apê|casa/i.test(meta.titulo);
   const textoRegistro = meta.concluida
-    ? 'Meta concluída ✓'
+    ? "Meta concluída"
     : ehVisita
       ? 'Registrar visita'
       : 'Registrar avanço';
@@ -173,14 +174,14 @@ export function VisaoDetalheMeta({
     <section className='space-y-8 py-4'>
       <CabecalhoSubpagina
         aoVoltar={aoVoltar}
-        rotuloVoltar='← Voltar'
+        rotuloVoltar=" Voltar"
         selo='ANTES DAS CHAVES'
         titulo={meta.titulo}
         subtitulo={
           meta.observacoes || 'Compare possibilidades antes de escolher.'
         }
         assinatura='chave'
-        etiquetaAssinatura='DO SEU JEITO ↗'
+        etiquetaAssinatura="DO SEU JEITO"
       />
 
       <div className='space-y-1.5 rounded-xl bg-(--azul-fundo) p-5 sm:p-6'>
@@ -235,9 +236,9 @@ export function VisaoEditarMeta({ meta, aoVoltar, aoVerMetas, aoSalvar }) {
       <section className='space-y-6 py-4'>
         <CabecalhoSubpagina
           aoVoltar={aoVerMetas}
-          rotuloVoltar='← Voltar'
+          rotuloVoltar=" Voltar"
           selo='ANTES DAS CHAVES'
-          titulo='Meta não encontrada.'
+          titulo='Meta não encontrada'
           subtitulo='Escolha uma meta existente para ajustar.'
           assinatura='chave'
         />
@@ -249,9 +250,9 @@ export function VisaoEditarMeta({ meta, aoVoltar, aoVerMetas, aoSalvar }) {
     <section className='space-y-6 py-4'>
       <CabecalhoSubpagina
         aoVoltar={aoVoltar}
-        rotuloVoltar='← Voltar'
+        rotuloVoltar=" Voltar"
         selo='ANTES DAS CHAVES'
-        titulo='Ajustar sua meta.'
+        titulo='Ajustar sua meta'
         subtitulo='Você pode mudar o plano quando precisar.'
         assinatura=''
       />
@@ -348,7 +349,7 @@ export function VisaoEditarMeta({ meta, aoVoltar, aoVerMetas, aoSalvar }) {
             AJUSTE O PRÓXIMO PASSO
           </p>
           <Titulo classe='text-2xl leading-tight font-extrabold'>
-            Seu plano pode mudar.
+            Seu plano pode mudar
           </Titulo>
           <div className='space-y-1 text-sm'>
             <strong className='block text-(--azul-titulo)'>
@@ -393,7 +394,7 @@ export function VisaoNovaMeta({ aoVoltar, aoSalvar }) {
         aoVoltar={aoVoltar}
         rotuloVoltar='Voltar'
         selo='ANTES DAS CHAVES'
-        titulo='Um próximo passo possível.'
+        titulo='Um próximo passo possível'
         subtitulo='Você pode mudar o plano quando precisar.'
       />
 
@@ -489,7 +490,7 @@ export function VisaoNovaMeta({ aoVoltar, aoSalvar }) {
             SEU PRÓXIMO PASSO
           </p>
           <Titulo classe='text-2xl leading-tight font-extrabold'>
-            Uma meta pequena já move o plano.
+            Uma meta pequena já move o plano
           </Titulo>
           <div className='space-y-1 text-sm'>
             <strong className='block text-(--azul-titulo)'>
@@ -535,7 +536,7 @@ export function VisaoPendencias({
         titulo='O que falta para o próximo passo?'
         subtitulo='Documentos, finanças e tarefas práticas em um só lugar.'
         assinatura='chave'
-        etiquetaAssinatura='DO SEU JEITO ↗'
+        etiquetaAssinatura="DO SEU JEITO"
       />
 
       <div className='space-y-3 rounded-xl bg-(--azul-fundo) p-4 sm:p-6'>
@@ -554,7 +555,7 @@ export function VisaoPendencias({
                     : 'text-(--laranja-principal)')
                 }
               >
-                {item.feito ? '✓' : '↗'}
+                {item.feito && <IconeConcluido />}
               </span>
               <div className='min-w-0'>
                 <strong
@@ -578,7 +579,7 @@ export function VisaoPendencias({
               onClick={() => aoAlternarPendencia(item.id)}
               className='min-h-11 shrink-0 text-sm font-bold text-(--azul-titulo) hover:text-(--laranja-principal)'
             >
-              {item.feito ? 'Reabrir ↗' : 'Marcar como feita ↗'}
+              {item.feito ? "Reabrir" : "Marcar como feita"}
             </button>
           </div>
         ))}
@@ -598,10 +599,10 @@ export function VisaoDocumentos({
         aoVoltar={aoVoltar}
         rotuloVoltar='Voltar'
         selo='ANTES DAS CHAVES'
-        titulo='Uma pasta para os próximos passos.'
+        titulo='Uma pasta para os próximos passos'
         subtitulo='Checklist de organização. As exigências dependem da negociação e do imóvel.'
         assinatura='chave'
-        etiquetaAssinatura='DO SEU JEITO ↗'
+        etiquetaAssinatura="DO SEU JEITO"
       />
 
       <div className='space-y-3 rounded-xl bg-(--azul-fundo) p-4 sm:p-6'>
@@ -689,10 +690,10 @@ export function VisaoHistorico({
         aoVoltar={aoVoltar}
         rotuloVoltar='Voltar'
         selo='ANTES DAS CHAVES'
-        titulo='O caminho que você já percorreu.'
+        titulo='O caminho que você já percorreu'
         subtitulo='Suas etapas e metas concluídas.'
         assinatura='chave'
-        etiquetaAssinatura='DO SEU JEITO ↗'
+        etiquetaAssinatura="DO SEU JEITO"
       />
 
       <div className='space-y-3 rounded-xl bg-(--azul-fundo) p-4 sm:p-6'>
@@ -706,7 +707,7 @@ export function VisaoHistorico({
                 aria-hidden='true'
                 className='text-lg font-bold text-(--laranja-principal)'
               >
-                ✓
+                <IconeConcluido />
               </span>
               <div className='min-w-0'>
                 <strong className='block text-base font-bold text-(--azul-titulo)'>
@@ -726,7 +727,7 @@ export function VisaoHistorico({
               }
               className='min-h-11 shrink-0 text-sm font-bold text-(--azul-titulo) hover:text-(--laranja-principal)'
             >
-              Consultar ↗
+              Consultar
             </button>
           </div>
         ))}

@@ -1,3 +1,4 @@
+import { IconeFavorito } from '../../../compartilhado/interface/IndicadoresFuncionais';
 import { Titulo } from '../../../compartilhado/interface/indice';
 import { possuiIngrediente } from '../conteudo';
 import imgBolo1 from '../../../ativos/imagens/fotografias/receita-bolo-1.png';
@@ -83,7 +84,7 @@ export default function CartoesReceita({
                 </p>
               )}
               <span className='inline-block text-sm font-bold text-(--laranja-principal)'>
-                Ver receita →
+                Ver receita
               </span>
             </div>
           </button>
@@ -98,7 +99,7 @@ export default function CartoesReceita({
             onClick={() => aoFavoritar(receita.id)}
             className='absolute right-3 bottom-3 flex size-11 items-center justify-center rounded-full border border-[#dbe5ed] bg-white text-xl text-(--laranja-principal)'
           >
-            {favoritas.includes(receita.id) ? '♥' : '♡'}
+            <IconeFavorito ativo={favoritas.includes(receita.id)} />
           </button>
         </article>
       ))}

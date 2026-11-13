@@ -32,7 +32,7 @@ export default function InicioEmpresa({ dados }) {
             <h1 className='font-titulo text-[clamp(2.5rem,5.4vw,4.5rem)] leading-[1.03] font-extrabold text-(--azul-titulo)'>
               Seu trabalho.
               <span className='block text-(--laranja-principal)'>
-                Faz acontecer.
+                Faz acontecer
               </span>
             </h1>
             <p className='max-w-[540px] text-base leading-relaxed text-(--texto-apoio) sm:text-lg'>
@@ -41,13 +41,13 @@ export default function InicioEmpresa({ dados }) {
             </p>
             <div className='flex flex-wrap items-center gap-4 pt-1'>
               <span className='inline-block rotate-2 bg-(--azul-titulo) px-5 py-2.5 text-xs font-bold tracking-[0.7px] text-white uppercase'>
-                DO SEU JEITO. NO SEU TEMPO. ↗
+                DO SEU JEITO. NO SEU TEMPO
               </span>
               <Link
                 to='/empresa/dashboard'
                 className='text-sm font-bold text-(--azul-titulo) underline-offset-4 hover:text-(--laranja-principal) hover:underline'
               >
-                Ver desempenho completo ↗
+                Ver desempenho completo
               </Link>
             </div>
           </div>
@@ -67,7 +67,7 @@ export default function InicioEmpresa({ dados }) {
               classe='text-3xl leading-[1.1] font-extrabold text-white! sm:text-4xl'
             >
               Seu próximo serviço
-              <span className='block'>começa com uma boa apresentação.</span>
+              <span className='block'>começa com uma boa apresentação</span>
             </Titulo>
             <p className='max-w-[540px] text-base leading-relaxed text-white/85'>
               Descreva com clareza o que está incluído, sua região de atendimento
@@ -80,7 +80,7 @@ export default function InicioEmpresa({ dados }) {
                 cor='laranja'
                 classe='px-7!'
               >
-                Publicar um novo serviço ↗
+                Publicar um novo serviço
               </Botao>
               <Botao
                 como={Link}
@@ -114,14 +114,14 @@ export default function InicioEmpresa({ dados }) {
                 como='h2'
                 classe='mt-1.5 text-2xl font-extrabold sm:text-3xl'
               >
-                Como sua empresa aparece hoje.
+                Como sua empresa aparece hoje
               </Titulo>
             </div>
             <Link
               to='/empresa/dashboard'
               className='text-sm font-bold text-(--laranja-principal) hover:underline'
             >
-              Abrir painel detalhado ↗
+              Abrir painel detalhado
             </Link>
           </div>
 
@@ -160,7 +160,7 @@ export default function InicioEmpresa({ dados }) {
                 como='h2'
                 classe='mt-1.5 text-2xl font-extrabold sm:text-3xl'
               >
-                O que sua empresa oferece.
+                O que sua empresa oferece
               </Titulo>
             </div>
             <div className='flex flex-wrap gap-3'>
@@ -194,7 +194,7 @@ export default function InicioEmpresa({ dados }) {
               como='h2'
               classe='text-2xl font-extrabold text-white! sm:text-3xl'
             >
-              Seu perfil também vende confiança.
+              Seu perfil também vende confiança
             </Titulo>
             <p className='max-w-[560px] text-sm leading-relaxed text-white/85 sm:text-base'>
               Conte sobre a história da empresa, adicione fotos do portfólio e
@@ -207,7 +207,7 @@ export default function InicioEmpresa({ dados }) {
             cor='laranja'
             classe='shrink-0 px-7!'
           >
-            Editar perfil da empresa ↗
+            Editar perfil da empresa
           </Botao>
         </Container>
       </section>

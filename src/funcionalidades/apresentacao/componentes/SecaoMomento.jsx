@@ -1,4 +1,3 @@
-import { ArrowUpRight } from 'lucide-react';
 
 export default function SecaoMomento() {
   return (
@@ -9,7 +8,7 @@ export default function SecaoMomento() {
       <div className='mx-auto flex h-full max-w-[1296px] flex-col justify-center gap-[18px]'>
         <div className='flex flex-col justify-center gap-[6px] lg:h-[66px]'>
           <span className='font-corpo text-[14px] font-bold tracking-[1px] sm:text-base'>
-            CADA CONQUISTA TEM SEU JEITO.
+            CADA CONQUISTA TEM SEU JEITO
           </span>
           <h2 className='font-titulo text-[30px] leading-tight font-extrabold sm:text-[34px] lg:text-[38px] lg:leading-[44px]'>
             Em que momento você está?
@@ -33,7 +32,7 @@ export default function SecaoMomento() {
             </p>
             <span className='font-corpo text-lg font-bold sm:text-[20px]'>
               Planejar minha mudança{' '}
-              <ArrowUpRight className='ml-1 inline' size={18} />
+
             </span>
           </a>
 
@@ -53,7 +52,7 @@ export default function SecaoMomento() {
             </p>
             <span className='font-corpo text-lg font-bold sm:text-[20px]'>
               Cuidar da minha rotina{' '}
-              <ArrowUpRight className='ml-1 inline' size={18} />
+
             </span>
           </a>
         </div>

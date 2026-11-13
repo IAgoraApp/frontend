@@ -12,7 +12,7 @@ export const imoveisExemplo = [
   {
     id: 'imovel-1',
     seloHub: 'APARTAMENTO · SÃO PAULO, SP',
-    tituloHub: 'Um começo compacto e acolhedor.',
+    tituloHub: 'Um começo compacto e acolhedor',
     detalheHub: '38 m² · 1 quarto · cozinha integrada',
     titulo: 'Apartamento na Vila Mariana',
     bairro: 'Vila Mariana',
@@ -40,7 +40,7 @@ export const imoveisExemplo = [
   {
     id: 'imovel-2',
     seloHub: 'STUDIO · SÃO PAULO, SP',
-    tituloHub: 'Praticidade perto de tudo.',
+    tituloHub: 'Praticidade perto de tudo',
     detalheHub: '32 m² · 1 quarto · próximo ao metrô',
     titulo: 'Studio em Pinheiros',
     bairro: 'Pinheiros',
@@ -63,7 +63,7 @@ export const imoveisExemplo = [
   {
     id: 'imovel-3',
     seloHub: 'APARTAMENTO · SÃO PAULO, SP',
-    tituloHub: 'Equilíbrio no orçamento.',
+    tituloHub: 'Equilíbrio no orçamento',
     detalheHub: '32 m² · 1 quarto · bairro tranquilo',
     titulo: 'Apartamento na Saúde',
     bairro: 'Saúde',
@@ -86,7 +86,7 @@ export const imoveisExemplo = [
   {
     id: 'imovel-4',
     seloHub: 'CASA · REGIÃO METROPOLITANA',
-    tituloHub: 'Mais espaço para chamar de seu.',
+    tituloHub: 'Mais espaço para chamar de seu',
     detalheHub: '2 quartos · quintal · espaço para dividir',
     titulo: 'Casa com quintal na Zona Sul',
     bairro: 'Jabaquara',

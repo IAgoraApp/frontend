@@ -1,6 +1,7 @@
+import { IconeConcluido } from '../../../compartilhado/interface/IndicadoresFuncionais';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowUpRight, Check, Upload } from 'lucide-react';
+import { Check, Upload } from 'lucide-react';
 import {
   Botao,
   CabecalhoSubpagina,
@@ -25,7 +26,7 @@ export function VisaoControleConta({
       <CabecalhoSubpagina
         aoVoltar={aoVoltar}
         selo='SUA CONTA'
-        titulo='Sua conta, sob seu controle.'
+        titulo='Sua conta, sob seu controle'
         subtitulo='Escolha o que deseja revisar.'
         assinatura='chave'
       />
@@ -40,12 +41,7 @@ export function VisaoControleConta({
               className='flex w-full cursor-pointer items-center justify-between gap-4 rounded-xl bg-white px-5 py-4 text-left transition-colors hover:bg-[#fcfdfe]'
             >
               <div className='flex min-w-0 items-center gap-4'>
-                <span
-                  aria-hidden='true'
-                  className='inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-base font-bold text-(--laranja-principal)'
-                >
-                  ↗
-                </span>
+
                 <div className='min-w-0'>
                   <p className='text-base font-bold text-(--azul-titulo) sm:text-lg'>
                     {item.titulo}
@@ -56,7 +52,7 @@ export function VisaoControleConta({
                 </div>
               </div>
               <span className='shrink-0 text-sm font-bold text-(--azul-titulo)'>
-                Ver detalhes ↗
+                Ver detalhes
               </span>
             </button>
           ))}
@@ -117,7 +113,7 @@ export function VisaoInformacoesPessoais({
       <CabecalhoSubpagina
         aoVoltar={aoVoltar}
         selo='SUA CONTA'
-        titulo='Informações pessoais.'
+        titulo='Informações pessoais'
         subtitulo='Revise seus dados e preferências.'
         assinatura={null}
       />
@@ -254,7 +250,7 @@ export function VisaoFotoPerfil({ perfil, aoSalvar, aoVoltar }) {
       <CabecalhoSubpagina
         aoVoltar={aoVoltar}
         selo='SUA CONTA'
-        titulo='Foto de perfil.'
+        titulo='Foto de perfil'
         subtitulo='Revise seus dados e preferências.'
         assinatura={null}
       />
@@ -349,7 +345,7 @@ export function VisaoFotoPerfil({ perfil, aoSalvar, aoVoltar }) {
             SUA CONTA, DO SEU JEITO
           </p>
           <h2 className='font-titulo mt-4 text-2xl font-extrabold text-(--azul-titulo)'>
-            Sua presença, sem complicação.
+            Sua presença, sem complicação
           </h2>
           <p className='mt-3 text-base leading-relaxed text-(--texto-apoio)'>
             Uma foto que te represente ou suas iniciais: seu perfil já ganha a
@@ -400,7 +396,7 @@ export function VisaoSegurancaPerfil({ aoVoltar }) {
       <CabecalhoSubpagina
         aoVoltar={aoVoltar}
         selo='SUA CONTA'
-        titulo='Segurança.'
+        titulo='Segurança'
         subtitulo='Revise seus dados e preferências.'
         assinatura={null}
       />
@@ -467,7 +463,7 @@ export function VisaoSegurancaPerfil({ aoVoltar }) {
               SUA CONTA, DO SEU JEITO
             </p>
             <h2 className='font-titulo mt-4 text-2xl font-extrabold text-(--azul-titulo)'>
-              Uma senha só para o Iagora.
+              Uma senha só para o Iagora
             </h2>
 
             <ul className='mt-5 space-y-4'>
@@ -531,7 +527,7 @@ export function VisaoAlterarMomento({ aoSelecionarMomento, aoVoltar }) {
       <CabecalhoSubpagina
         aoVoltar={aoVoltar}
         selo='SUA CONTA'
-        titulo='Seu momento pode mudar.'
+        titulo='Seu momento pode mudar'
         subtitulo='Escolha a experiência que combina com sua fase atual.'
         assinatura='chave'
       />
@@ -591,7 +587,7 @@ export function VisaoNotificacoesPerfil({ perfil, aoSalvar, aoVoltar }) {
       <CabecalhoSubpagina
         aoVoltar={aoVoltar}
         selo='SUA CONTA'
-        titulo='Notificações.'
+        titulo='Notificações'
         subtitulo='Revise seus dados e preferências.'
         assinatura={null}
       />
@@ -620,7 +616,7 @@ export function VisaoNotificacoesPerfil({ perfil, aoSalvar, aoVoltar }) {
                       : 'border-(--borda-suave) bg-white text-transparent'
                   }`}
                 >
-                  ✓
+                  <IconeConcluido />
                 </span>
                 <span>
                   <span className='block text-lg font-bold text-(--azul-titulo)'>
@@ -660,7 +656,7 @@ export function VisaoNotificacoesPerfil({ perfil, aoSalvar, aoVoltar }) {
             SUA CONTA, DO SEU JEITO
           </p>
           <h2 className='font-titulo mt-4 text-2xl font-extrabold text-(--azul-titulo)'>
-            Um lembrete que ajuda.
+            Um lembrete que ajuda
           </h2>
           <div className='mt-5 rounded-xl bg-(--laranja-fundo) p-5 text-(--azul-titulo)'>
             <p className='text-xs font-bold'>Hoje · 13h45</p>
@@ -706,7 +702,7 @@ export function VisaoPrivacidadePerfil({ perfil, aoSalvar, aoVoltar }) {
       <CabecalhoSubpagina
         aoVoltar={aoVoltar}
         selo='SUA CONTA'
-        titulo='Privacidade.'
+        titulo='Privacidade'
         subtitulo='Revise seus dados e preferências.'
         assinatura={null}
       />
@@ -735,7 +731,7 @@ export function VisaoPrivacidadePerfil({ perfil, aoSalvar, aoVoltar }) {
                       : 'border-(--borda-suave) bg-white text-transparent'
                   }`}
                 >
-                  ✓
+                  <IconeConcluido />
                 </span>
                 <span>
                   <span className='block text-lg font-bold text-(--azul-titulo)'>
@@ -775,7 +771,7 @@ export function VisaoPrivacidadePerfil({ perfil, aoSalvar, aoVoltar }) {
             SUA CONTA, DO SEU JEITO
           </p>
           <h2 className='font-titulo mt-4 text-2xl font-extrabold text-(--azul-titulo)'>
-            Você escolhe o que personalizar.
+            Você escolhe o que personalizar
           </h2>
           <p className='mt-3 text-base leading-relaxed text-(--texto-apoio)'>
             Seu momento e suas preferências ajudam a organizar sugestões. Revise
@@ -827,7 +823,7 @@ export function VisaoMoradiaPerfil({
       <CabecalhoSubpagina
         aoVoltar={aoVoltar}
         selo='SUA CONTA'
-        titulo='Moradia.'
+        titulo='Moradia'
         subtitulo='Revise seus dados e preferências.'
         assinatura={null}
       />
@@ -884,7 +880,7 @@ export function VisaoMoradiaPerfil({
             SUA CONTA, DO SEU JEITO
           </p>
           <h2 className='font-titulo mt-4 text-2xl font-extrabold text-(--azul-titulo)'>
-            Uma casa conectada à sua rotina.
+            Uma casa conectada à sua rotina
           </h2>
           <div className='mt-5'>
             <p className='text-sm font-bold text-(--azul-titulo)'>
@@ -917,7 +913,7 @@ export function VisaoDocumentosPerfil({
     <div className='mx-auto max-w-[720px] rounded-2xl border border-(--borda-suave) bg-white p-6 shadow-xs sm:p-8'>
       <SeloEditorial texto='IAGORA · UM PASSO DE CADA VEZ' />
       <h1 className='font-titulo mt-4 text-3xl font-extrabold text-(--azul-titulo) sm:text-4xl'>
-        Seus dados, suas escolhas.
+        Seus dados, suas escolhas
       </h1>
       <p className='mt-2 text-base text-(--texto-apoio) sm:text-lg'>
         Escolha o que deseja abrir.
@@ -981,7 +977,7 @@ export function VisaoExcluirConta({ aoConfirmarExclusao, aoVoltar }) {
       <CabecalhoSubpagina
         aoVoltar={aoVoltar}
         selo='SUA CONTA'
-        titulo='Antes de excluir sua conta.'
+        titulo='Antes de excluir sua conta'
         subtitulo='Revise a decisão com cuidado.'
         assinatura='chave'
       />
@@ -1073,7 +1069,7 @@ export function CartaoMomento({
           </h3>
           {selecionado && (
             <span className='inline-flex items-center gap-1 rounded-full bg-(--laranja-principal) px-3 py-1 text-xs font-bold text-white'>
-              Atual <ArrowUpRight size={13} aria-hidden='true' />
+              Atual
             </span>
           )}
         </div>

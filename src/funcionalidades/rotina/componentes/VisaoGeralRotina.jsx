@@ -63,7 +63,7 @@ export default function VisaoGeralRotina({
               className={classesRotina.acaoTexto}
               onClick={() => aoAcao('lista')}
             >
-              Ver todas <span aria-hidden='true'>→</span>
+              Ver todas
             </button>
           </div>
           {proximas.length ? (
@@ -109,14 +109,14 @@ export default function VisaoGeralRotina({
               classe={classesRotina.tituloCartaoIa}
             >
               Crie sua rotina <br />
-              em minutos.
+              em minutos
             </Titulo>
             <p>
               Receba sugestões personalizadas de tarefas com base no seu momento
               e estilo de vida.
             </p>
             <BotaoRotina onClick={() => aoAcao('assistente')}>
-              Quero ajuda da IA <span aria-hidden='true'>→</span>
+              Quero ajuda da IA
             </BotaoRotina>
           </div>
           <img

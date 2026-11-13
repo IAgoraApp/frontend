@@ -34,7 +34,7 @@ export default function DetalheTarefa({
       />
       <AvisoRotina
         titulo={
-          tarefa.completed ? 'Mais uma tarefa feita.' : 'Uma tarefa possível'
+          tarefa.completed ? 'Mais uma tarefa feita' : 'Uma tarefa possível'
         }
       >
         {tarefa.notes ||

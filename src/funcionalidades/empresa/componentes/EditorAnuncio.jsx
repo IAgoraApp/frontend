@@ -245,7 +245,7 @@ export default function EditorAnuncio({ anuncio, empresa, aoSalvar }) {
 
           <div className='flex flex-wrap gap-3 pt-2'>
             <Botao type='submit' cor='laranja' classe='px-7!'>
-              {anuncio ? 'Salvar alterações' : 'Publicar serviço ↗'}
+              {anuncio ? 'Salvar alterações' : "Publicar serviço"}
             </Botao>
             <Botao
               type='button'
@@ -300,11 +300,11 @@ export default function EditorAnuncio({ anuncio, empresa, aoSalvar }) {
           <div className='mt-5'>
             <Botao
               como={Link}
-              to={`/empresas/${empresa.id}`}
+              to={`/empresa/empresas/${empresa.id}`}
               variante='secundario'
               classe='w-full'
             >
-              Ver perfil público ↗
+              Ver perfil público
             </Botao>
           </div>
         </CartaoEmpresa>

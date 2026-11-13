@@ -1,10 +1,8 @@
-import { useState } from 'react';
-import {
-  Link,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from 'react-router-dom';
+import { IconeFavorito, IconeEstrela } from '../../../compartilhado/interface/IndicadoresFuncionais';
+import { useEffect, useState } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { LinkNavegacao as Link } from '../../../compartilhado/interface/LinkNavegacao';
+import { useNavegacaoMercado as useNavigate } from '../../../aplicacao/utilitarios/navegacao';
 import {
   Botao,
   CampoFormulario,
@@ -55,7 +53,7 @@ function CartaoServico({
                 : 'border-[#dbe5ed] bg-white/95 text-(--azul-titulo) hover:border-(--laranja-principal)'
             }`}
           >
-            {ehFavorito ? '♥' : '♡'}
+            <IconeFavorito ativo={ehFavorito} />
           </button>
         </div>
 
@@ -65,7 +63,7 @@ function CartaoServico({
               {servico.categoria} · {servico.subcategoria}
             </span>
             <span className='rounded-full bg-[#fce8dc] px-2.5 py-0.5 text-(--azul-titulo)'>
-              ★ {servico.nota} ({servico.totalAvaliacoes})
+              <IconeEstrela /> {servico.nota} ({servico.totalAvaliacoes})
             </span>
           </div>
 
@@ -102,7 +100,7 @@ function CartaoServico({
             cor='laranja'
             classe='min-h-[42px]! flex-1 px-4! text-sm!'
           >
-            Ver detalhes ↗
+            Ver detalhes
           </Botao>
           <Botao
             como={Link}
@@ -179,7 +177,7 @@ export function VisaoPrincipalMercado({
             <h1 className='font-titulo text-[clamp(2.5rem,5.4vw,4.6rem)] leading-[1.03] font-extrabold text-(--azul-titulo)'>
               Deu ruim?
               <span className='block text-(--laranja-principal)'>
-                Tem quem faça.
+                Tem quem faça
               </span>
             </h1>
             <p className='max-w-[560px] text-base leading-relaxed text-(--texto-apoio) sm:text-lg'>
@@ -196,8 +194,8 @@ export function VisaoPrincipalMercado({
                 classe='px-7!'
               >
                 {dentroDaEmpresa
-                  ? 'Publicar meu serviço ↗'
-                  : 'Buscar serviços perto de você ↗'}
+                  ? "Publicar meu serviço"
+                  : "Buscar serviços perto de você"}
               </Botao>
               {!dentroDaEmpresa && (
                 <>
@@ -207,7 +205,7 @@ export function VisaoPrincipalMercado({
                     variante='secundario'
                     classe='px-5!'
                   >
-                    ♡ Meus favoritos ({favoritos.length})
+ Meus favoritos ({favoritos.length})
                   </Botao>
                   <Botao
                     como={Link}
@@ -223,7 +221,7 @@ export function VisaoPrincipalMercado({
 
             <div className='pt-2'>
               <span className='inline-block rotate-2 bg-(--azul-titulo) px-5 py-2.5 text-xs font-bold tracking-[0.7px] text-white uppercase'>
-                INDEPENDÊNCIA NA VIDA REAL ↗
+                INDEPENDÊNCIA NA VIDA REAL
               </span>
             </div>
           </div>
@@ -253,7 +251,7 @@ export function VisaoPrincipalMercado({
               <CaixaIlustradaEmpresa />
             </div>
             <span className='font-titulo absolute top-[478px] left-[201px] -rotate-4 bg-(--laranja-principal) px-5 py-3 text-sm font-bold text-white shadow-sm'>
-              seu canto ganha vida ↗
+              seu canto ganha vida
             </span>
             <img
               src={tracoCaminho}
@@ -301,7 +299,7 @@ export function VisaoPrincipalMercado({
                 placeholder='Cidade ou bairro'
               />
               <Botao type='submit' cor='laranja' classe='min-h-[52px]! px-6!'>
-                Buscar empresas ↗
+                Buscar empresas
               </Botao>
             </form>
 
@@ -338,7 +336,7 @@ export function VisaoPrincipalMercado({
                 >
                   <div>
                     <img
-                      src={empresa.imagem}
+                      src={empresa.imagem || undefined}
                       alt={empresa.nome}
                       className='mb-4 aspect-[16/10] w-full rounded-xl object-cover'
                     />
@@ -364,7 +362,7 @@ export function VisaoPrincipalMercado({
                     cor='laranja'
                     classe='mt-5 w-full'
                   >
-                    Conhecer a empresa ↗
+                    Conhecer a empresa
                   </Botao>
                 </article>
               ))}
@@ -393,7 +391,7 @@ export function VisaoPrincipalMercado({
                 placeholder='Ex: Vila Mariana, São Paulo'
               />
               <Botao type='submit' cor='laranja' classe='min-h-[52px]! px-7!'>
-                Buscar agora ↗
+                Buscar agora
               </Botao>
             </form>
 
@@ -412,7 +410,7 @@ export function VisaoPrincipalMercado({
                   to='/marketplace/filtros'
                   className='text-sm font-bold text-(--laranja-principal) hover:underline'
                 >
-                  Filtros avançados ↗
+                  Filtros avançados
                 </Link>
               </div>
 
@@ -452,7 +450,7 @@ export function VisaoPrincipalMercado({
                   como='h2'
                   classe='mt-1.5 text-2xl font-extrabold sm:text-3xl'
                 >
-                  Profissionais bem avaliados no Iagora.
+                  Profissionais bem avaliados no Iagora
                 </Titulo>
               </div>
               <div className='flex flex-wrap gap-3'>
@@ -460,13 +458,13 @@ export function VisaoPrincipalMercado({
                   to='/buscar/mapa'
                   className='text-sm font-bold text-(--azul-titulo) hover:text-(--laranja-principal) hover:underline'
                 >
-                  Ver no mapa ↗
+                  Ver no mapa
                 </Link>
                 <Link
                   to='/buscar'
                   className='text-sm font-bold text-(--laranja-principal) hover:underline'
                 >
-                  Ver todos os serviços ↗
+                  Ver todos os serviços
                 </Link>
               </div>
             </div>
@@ -495,7 +493,7 @@ export function VisaoPrincipalMercado({
                   como='h2'
                   classe='text-3xl font-extrabold text-white! sm:text-4xl'
                 >
-                  Sua casa em boas mãos.
+                  Sua casa em boas mãos
                 </Titulo>
                 <p className='max-w-[560px] text-base leading-relaxed text-white/85'>
                   Compare serviços da sua região, tire dúvidas antes de fechar e
@@ -504,7 +502,7 @@ export function VisaoPrincipalMercado({
               </div>
               <div className='flex flex-wrap gap-3'>
                 <Botao como={Link} to='/buscar' cor='laranja' classe='px-7!'>
-                  Explorar catálogo ↗
+                  Explorar catálogo
                 </Botao>
                 <Botao
                   como={Link}
@@ -532,6 +530,24 @@ export function VisaoBuscarServicos({
   const [parametros, setParametros] = useSearchParams();
   const [busca, setBusca] = useState(parametros.get('busca') || '');
   const [regiao, setRegiao] = useState(parametros.get('regiao') || '');
+
+  useEffect(() => {
+    let temporizador;
+    const restaurarHistorico = () => {
+      window.clearTimeout(temporizador);
+      // O navegador restaura valores de formulários depois do evento popstate.
+      temporizador = window.setTimeout(() => {
+        const consulta = new URLSearchParams(window.location.search);
+        setBusca(consulta.get('busca') || '');
+        setRegiao(consulta.get('regiao') || '');
+      }, 0);
+    };
+    window.addEventListener('popstate', restaurarHistorico);
+    return () => {
+      window.removeEventListener('popstate', restaurarHistorico);
+      window.clearTimeout(temporizador);
+    };
+  }, []);
 
   const carregando = parametros.get('carregando') === '1';
   const erroSimulado = parametros.get('erro') === '1';
@@ -578,7 +594,7 @@ export function VisaoBuscarServicos({
             to='/marketplace'
             className='text-sm font-bold text-(--texto-apoio) hover:text-(--laranja-principal)'
           >
-            ← Voltar ao início do Marketplace
+ Voltar ao início do Marketplace
           </Link>
           <div className='flex flex-wrap gap-2'>
             <Botao
@@ -587,7 +603,7 @@ export function VisaoBuscarServicos({
               variante='secundario'
               classe='min-h-[40px]! px-4! text-xs!'
             >
-              ♡ Meus favoritos ({favoritos.length})
+ Meus favoritos ({favoritos.length})
             </Botao>
             <Botao
               como={Link}
@@ -613,7 +629,7 @@ export function VisaoBuscarServicos({
           como='h1'
           classe='text-[clamp(2rem,3.6vw,3rem)] leading-[1.1] font-extrabold'
         >
-          Serviços perto de você.
+          Serviços perto de você
         </Titulo>
       </header>
 
@@ -647,11 +663,11 @@ export function VisaoBuscarServicos({
         />
         <div className='flex flex-wrap gap-2'>
           <Botao type='submit' cor='laranja' classe='min-h-[52px]! px-6!'>
-            Filtrar ↗
+            Filtrar
           </Botao>
           <Botao
             como={Link}
-            to='/marketplace/filtros'
+            to={`/marketplace/filtros?${parametros.toString()}`}
             variante='secundario'
             classe='min-h-[52px]! px-5!'
           >
@@ -701,7 +717,7 @@ export function VisaoBuscarServicos({
       ) : erroSimulado ? (
         <EstadoVazio
           varianteAlerta='erro'
-          titulo='Não foi possível carregar os serviços agora.'
+          titulo='Não foi possível carregar os serviços agora'
           descricao='Houve uma instabilidade temporária ao consultar os filtros selecionados. Tente novamente em instantes.'
           textoAcao='Recarregar busca'
           aoClicar={limparFiltros}
@@ -730,7 +746,7 @@ export function VisaoBuscarServicos({
               </div>
             ) : (
               <EstadoVazio
-                titulo='Nenhum serviço com esses filtros.'
+                titulo='Nenhum serviço com esses filtros'
                 descricao='Tente ajustar a região, limpar a busca ou explorar outras categorias disponíveis na plataforma.'
                 textoAcao='Limpar filtros'
                 aoClicar={limparFiltros}
@@ -763,7 +779,7 @@ export function VisaoBuscarServicos({
                 cor='laranja'
                 classe='w-full'
               >
-                Abrir visualização em mapa ↗
+                Abrir visualização em mapa
               </Botao>
             </div>
           </aside>
@@ -792,7 +808,10 @@ export function VisaoFiltrosMercado() {
 
   function aplicarFiltros(evento) {
     evento.preventDefault();
-    const consulta = new URLSearchParams();
+    const consulta = new URLSearchParams(parametros);
+    for (const chave of ['categoria', 'atendimento', 'notaMinima', 'precoMaximo', 'regiao']) {
+      consulta.delete(chave);
+    }
     if (categoria && categoria !== 'Todas') consulta.set('categoria', categoria);
     if (atendimento && atendimento !== 'Todos') {
       consulta.set('atendimento', atendimento);
@@ -810,14 +829,14 @@ export function VisaoFiltrosMercado() {
           to='/buscar'
           className='inline-flex items-center text-sm font-bold text-(--texto-apoio) hover:text-(--laranja-principal)'
         >
-          ← Voltar para a busca
+ Voltar para a busca
         </Link>
         <SeloEditorial texto='FILTRAR RESULTADOS' />
         <Titulo
           como='h1'
           classe='text-[clamp(2rem,3.6vw,3rem)] leading-[1.1] font-extrabold'
         >
-          O serviço certo para seu momento.
+          O serviço certo para seu momento
         </Titulo>
         <p className='max-w-[680px] text-base text-(--texto-apoio)'>
           Combine categoria, região, tipo de atendimento e faixa de orçamento
@@ -886,9 +905,9 @@ export function VisaoFiltrosMercado() {
                 className='h-[52px] w-full rounded-lg border border-[#dbe5ed] bg-white px-4 text-base text-(--azul-titulo)'
               >
                 <option value=''>Qualquer avaliação</option>
-                <option value='4.5'>Acima de 4.5 ★</option>
-                <option value='4.8'>Acima de 4.8 ★</option>
-                <option value='4.9'>Somente 4.9 ★</option>
+                <option value='4.5'>Acima de 4.5 </option>
+                <option value='4.8'>Acima de 4.8 </option>
+                <option value='4.9'>Somente 4.9 </option>
               </select>
             </div>
           </div>
@@ -914,7 +933,7 @@ export function VisaoFiltrosMercado() {
 
           <div className='flex flex-wrap gap-3 pt-2'>
             <Botao type='submit' cor='laranja' classe='px-7!'>
-              Aplicar filtros e buscar ↗
+              Aplicar filtros e buscar
             </Botao>
             <Botao
               type='button'
@@ -940,7 +959,7 @@ export function VisaoFiltrosMercado() {
             como='h2'
             classe='text-2xl font-extrabold text-(--azul-titulo)'
           >
-            Combine detalhes sem compromisso antes de contratar.
+            Combine detalhes sem compromisso antes de contratar
           </Titulo>
           <p className='text-sm leading-relaxed text-(--texto-apoio)'>
             Os valores exibidos são faixas iniciais para ajudar no seu
@@ -985,18 +1004,18 @@ export function VisaoMapaServicos({ pinos = [], servicos = [], empresas = [] }) 
             to='/buscar'
             className='text-sm font-bold text-(--texto-apoio) hover:text-(--laranja-principal)'
           >
-            ← Voltar para a busca
+ Voltar para a busca
           </Link>
           <SeloEditorial texto='MAPA DE ATENDIMENTO' />
           <Titulo
             como='h1'
             classe='text-[clamp(2rem,3.6vw,3rem)] leading-[1.1] font-extrabold'
           >
-            Serviços na sua região.
+            Serviços na sua região
           </Titulo>
         </div>
         <Botao como={Link} to='/buscar' variante='secundario'>
-          Ver em lista ↗
+          Ver em lista
         </Botao>
       </header>
 
@@ -1046,7 +1065,7 @@ export function VisaoMapaServicos({ pinos = [], servicos = [], empresas = [] }) 
                   {empresaSelecionada?.nome || servicoSelecionado.titulo}
                 </Titulo>
                 <p className='text-sm font-bold text-(--texto-apoio)'>
-                  {servicoSelecionado.titulo} · ★ {servicoSelecionado.nota}
+                  {servicoSelecionado.titulo} · <IconeEstrela /> {servicoSelecionado.nota}
                 </p>
                 <p className='text-sm leading-relaxed text-(--texto-apoio)'>
                   {servicoSelecionado.descricao}
@@ -1062,7 +1081,7 @@ export function VisaoMapaServicos({ pinos = [], servicos = [], empresas = [] }) 
                   cor='laranja'
                   classe='flex-1'
                 >
-                  Ver serviço ↗
+                  Ver serviço
                 </Botao>
                 <Botao
                   como={Link}
@@ -1116,7 +1135,7 @@ export function VisaoCategoriaServicos({
           to='/marketplace'
           className='inline-flex items-center text-sm font-bold text-(--texto-apoio) hover:text-(--laranja-principal)'
         >
-          ← Voltar ao Marketplace
+ Voltar ao Marketplace
         </Link>
 
         <div className='flex flex-wrap items-center gap-4'>
@@ -1184,7 +1203,7 @@ export function VisaoCategoriaServicos({
                       {servico.categoria} · {servico.subcategoria}
                     </span>
                     <span className='rounded-full bg-[#fce8dc] px-2.5 py-0.5 text-(--azul-titulo)'>
-                      ★ {servico.nota} ({servico.totalAvaliacoes})
+                      <IconeEstrela /> {servico.nota} ({servico.totalAvaliacoes})
                     </span>
                   </div>
                   <Titulo
@@ -1212,7 +1231,7 @@ export function VisaoCategoriaServicos({
                     to={`/servicos/${servico.id}`}
                     cor='laranja'
                   >
-                    Ver detalhes ↗
+                    Ver detalhes
                   </Botao>
                   <button
                     type='button'
@@ -1223,7 +1242,7 @@ export function VisaoCategoriaServicos({
                         : 'border-[#dbe5ed] bg-white text-(--azul-titulo)'
                     }`}
                   >
-                    {ehFavorito ? '♥ Salvo' : '♡ Favoritar'}
+                    {ehFavorito ? "Salvo" : " Favoritar"}
                   </button>
                 </div>
               </article>
@@ -1232,7 +1251,7 @@ export function VisaoCategoriaServicos({
         </div>
       ) : (
         <EstadoVazio
-          titulo='Nenhum serviço encontrado nesta subcategoria.'
+          titulo='Nenhum serviço encontrado nesta subcategoria'
           descricao='Você pode visualizar todas as subcategorias disponíveis ou ampliar a busca no catálogo completo.'
           textoAcao='Ver todos desta categoria'
           aoClicar={() => setSubcategoriaAtiva('Todas')}

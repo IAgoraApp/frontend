@@ -22,7 +22,7 @@ export default function TelaErro() {
             como='h1'
             classe='text-[clamp(2rem,4vw,3rem)] leading-[1.1] font-extrabold'
           >
-            Algo saiu do caminho.
+            Algo saiu do caminho
           </Titulo>
           <p className='text-base leading-relaxed text-(--texto-apoio)'>
             Não se preocupe: seus dados salvos no navegador continuam
@@ -35,12 +35,16 @@ export default function TelaErro() {
           )}
           <div className='flex flex-wrap justify-center gap-3 pt-2'>
             <Botao como={Link} to='/' cor='laranja' classe='px-7!'>
-              Voltar ao início ↗
+              Voltar ao início
             </Botao>
             <Botao
               type='button'
               variante='secundario'
-              onClick={() => navegar(-1)}
+              onClick={() =>
+                window.history.state?.idx > 0
+                  ? navegar(-1)
+                  : navegar('/', { replace: true })
+              }
             >
               Tentar voltar
             </Botao>

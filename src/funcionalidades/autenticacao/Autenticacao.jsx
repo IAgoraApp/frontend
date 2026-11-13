@@ -1,5 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import {
+  Link,
+  Navigate,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from 'react-router-dom';
+import {
+  destinoAposAcesso,
+  iniciarSessao,
+} from '../../aplicacao/utilitarios/sessao';
 import { Check, Eye, EyeOff, Mail } from 'lucide-react';
 import logoLaranja from '../../ativos/imagens/marcas/logo-iagora-laranja.png';
 import iconeGoogle from '../../ativos/imagens/marcas/icone-google.png';
@@ -49,14 +59,17 @@ function mapearModoParametro(modoParam) {
   return 'login';
 }
 
-export function Autenticacao() {
+function FluxoAutenticacao() {
   const navegar = useNavigate();
+  const localizacao = useLocation();
   const [parametros, setParametros] = useSearchParams();
   const tipoPerfil =
     parametros.get('perfil') === 'empresa' ? 'empresa' : 'pessoal';
   const modo = mapearModoParametro(parametros.get('modo'));
 
-  const [origemFluxo, setOrigemFluxo] = useState('cadastro');
+  const [origemFluxo, setOrigemFluxo] = useState(() =>
+    parametros.get('origem') === 'recuperar' ? 'recuperar' : 'cadastro'
+  );
   const [nomeCompleto, setNomeCompleto] = useState('');
   const [email, setEmail] = useState(() => lerEmailLembrado(tipoPerfil));
   const [senha, setSenha] = useState('');
@@ -85,7 +98,7 @@ export function Autenticacao() {
     modo === 'login' && tipoPerfil === 'empresa' ? 'loginEmpresa' : modo;
   const cabecalhoAtual = etapasAutenticacao[chaveTexto];
 
-  const atualizarUrl = (proximoModo, proximoPerfil = tipoPerfil) => {
+  const atualizarUrl = (proximoModo, proximoPerfil = tipoPerfil, proximaOrigem = origemFluxo) => {
     setErroFormulario('');
     setParametros(
       anterior => {
@@ -96,37 +109,44 @@ export function Autenticacao() {
         if (proximoModo === 'login') proximo.delete('modo');
         else if (proximoModo === 'novaSenha') proximo.set('modo', 'nova-senha');
         else proximo.set('modo', proximoModo);
+        if (['verificar', 'novaSenha', 'sucesso'].includes(proximoModo) && proximaOrigem === 'recuperar') {
+          proximo.set('origem', 'recuperar');
+        } else {
+          proximo.delete('origem');
+        }
         return proximo;
       },
-      { replace: true }
+      { replace: true, state: localizacao.state }
     );
   };
 
   const concluirAcesso = (destinoEspecifico = '') => {
+    iniciarSessao(tipoPerfil);
     gravarEmailLembrado(email, lembrar, tipoPerfil);
-    const estadoAtual = lerEstadoPlataforma();
-    const primeiroNome = nomeCompleto.trim().split(' ')[0] || estadoAtual.perfil.nome;
-    salvarEstadoPlataforma({
-      ...estadoAtual,
-      perfil: {
-        ...estadoAtual.perfil,
-        nome: primeiroNome,
-        nomeCompleto: nomeCompleto.trim() || estadoAtual.perfil.nomeCompleto,
-        email: email.trim() || estadoAtual.perfil.email,
-      },
-    });
+    if (tipoPerfil === 'pessoal') {
+      const estadoAtual = lerEstadoPlataforma();
+      const primeiroNome = nomeCompleto.trim().split(' ')[0] || estadoAtual.perfil.nome;
+      salvarEstadoPlataforma({
+        ...estadoAtual,
+        perfil: {
+          ...estadoAtual.perfil,
+          nome: primeiroNome,
+          nomeCompleto: nomeCompleto.trim() || estadoAtual.perfil.nomeCompleto,
+          email: email.trim() || estadoAtual.perfil.email,
+        },
+      });
+    }
     if (destinoEspecifico) {
-      navegar(destinoEspecifico);
+      navegar(destinoEspecifico, { replace: true, state: localizacao.state });
       return;
     }
     if (tipoPerfil === 'empresa') {
-      navegar('/empresa');
+      navegar(destinoAposAcesso(localizacao.state?.destino, '/empresa', tipoPerfil), {
+        replace: true,
+      });
       return;
     }
-    const momentoSalvo = localStorage.getItem('iagora:situacao-moradia');
-    navegar(
-      ['planning', 'preparacao'].includes(momentoSalvo) ? '/home-b' : '/home'
-    );
+    navegar('/onboarding', { replace: true, state: localizacao.state });
   };
 
   const lidarLogin = evento => {
@@ -166,7 +186,7 @@ export function Autenticacao() {
     }
     setOrigemFluxo('cadastro');
     setSegundosReenvio(59);
-    atualizarUrl('verificar');
+    atualizarUrl('verificar', tipoPerfil, 'cadastro');
   };
 
   const lidarRecuperar = evento => {
@@ -303,7 +323,9 @@ export function Autenticacao() {
                     aria-pressed={tipoPerfil === item.id}
                     onClick={() => {
                       if (item.id === 'empresa' && modo === 'cadastro') {
-                        navegar('/empresa/cadastro');
+                        navegar('/empresa/cadastro', {
+                          state: localizacao.state,
+                        });
                         return;
                       }
                       atualizarUrl(modo, item.id);
@@ -420,8 +442,8 @@ export function Autenticacao() {
 
                   <Botao type='submit' cor='laranja' classe='w-full! min-h-[52px]!'>
                     {tipoPerfil === 'empresa'
-                      ? 'Entrar no painel →'
-                      : 'Entrar no meu cantinho →'}
+                      ? "Entrar no painel"
+                      : "Entrar no meu cantinho"}
                   </Botao>
                 </form>
 
@@ -432,9 +454,10 @@ export function Autenticacao() {
                   {tipoPerfil === 'empresa' ? (
                     <Link
                       to='/empresa/cadastro'
+                      state={localizacao.state}
                       className='font-bold text-(--laranja-principal) hover:underline'
                     >
-                      Cadastrar empresa →
+                      Cadastrar empresa
                     </Link>
                   ) : (
                     <button
@@ -442,7 +465,7 @@ export function Autenticacao() {
                       onClick={() => atualizarUrl('cadastro')}
                       className='cursor-pointer font-bold text-(--laranja-principal) hover:underline'
                     >
-                      Criar conta →
+                      Criar conta
                     </button>
                   )}
                 </p>
@@ -577,7 +600,7 @@ export function Autenticacao() {
                 )}
 
                 <Botao type='submit' cor='laranja' classe='w-full! min-h-[52px]!'>
-                  Criar minha conta →
+                  Criar minha conta
                 </Botao>
 
                 <p className='text-center text-sm text-(--texto-apoio)'>
@@ -587,7 +610,7 @@ export function Autenticacao() {
                     onClick={() => atualizarUrl('login')}
                     className='cursor-pointer font-bold text-(--laranja-principal) hover:underline'
                   >
-                    Entrar agora →
+                    Entrar agora
                   </button>
                 </p>
               </form>
@@ -626,7 +649,7 @@ export function Autenticacao() {
                 )}
 
                 <Botao type='submit' cor='laranja' classe='w-full! min-h-[52px]!'>
-                  Enviar instruções →
+                  Enviar instruções
                 </Botao>
 
                 <button
@@ -634,7 +657,7 @@ export function Autenticacao() {
                   onClick={() => atualizarUrl('login')}
                   className='inline-flex cursor-pointer items-center gap-2 text-sm font-bold text-(--azul-titulo) hover:text-(--laranja-principal)'
                 >
-                  ← Voltar para o login
+ Voltar para o login
                 </button>
               </form>
             )}
@@ -727,7 +750,7 @@ export function Autenticacao() {
                 )}
 
                 <Botao type='submit' cor='laranja' classe='w-full! min-h-[52px]!'>
-                  Confirmar e continuar →
+                  Confirmar e continuar
                 </Botao>
 
                 <button
@@ -739,7 +762,7 @@ export function Autenticacao() {
                   }
                   className='inline-flex cursor-pointer items-center gap-2 text-sm font-bold text-(--azul-titulo) hover:text-(--laranja-principal)'
                 >
-                  ← Voltar
+ Voltar
                 </button>
               </form>
             )}
@@ -844,7 +867,7 @@ export function Autenticacao() {
                 )}
 
                 <Botao type='submit' cor='laranja' classe='w-full! min-h-[52px]!'>
-                  Salvar nova senha →
+                  Salvar nova senha
                 </Botao>
 
                 <button
@@ -852,7 +875,7 @@ export function Autenticacao() {
                   onClick={() => atualizarUrl('login')}
                   className='inline-flex cursor-pointer items-center gap-2 text-sm font-bold text-(--azul-titulo) hover:text-(--laranja-principal)'
                 >
-                  ← Voltar
+ Voltar
                 </button>
               </form>
             )}
@@ -877,7 +900,7 @@ export function Autenticacao() {
               id='titulo-modal-email'
               className='font-titulo mt-5 text-3xl font-extrabold text-(--azul-titulo) sm:text-4xl'
             >
-              Confira seu e-mail.
+              Confira seu e-mail
             </h2>
             <p className='mt-3 max-w-[540px] text-lg leading-relaxed text-(--texto-apoio)'>
               Se o endereço estiver cadastrado, você receberá instruções para
@@ -902,4 +925,24 @@ export function Autenticacao() {
       )}
     </div>
   );
+}
+
+export function Autenticacao() {
+  const localizacao = useLocation();
+  const [parametros] = useSearchParams();
+  const perfil = parametros.get('perfil') === 'empresa' ? 'empresa' : 'pessoal';
+  if (perfil === 'empresa' && parametros.get('modo') === 'cadastro') {
+    const consulta = new URLSearchParams(parametros);
+    consulta.delete('perfil');
+    consulta.delete('modo');
+    const busca = consulta.toString();
+    return (
+      <Navigate
+        to={'/empresa/cadastro' + (busca ? '?' + busca : '') + localizacao.hash}
+        replace
+        state={localizacao.state}
+      />
+    );
+  }
+  return <FluxoAutenticacao key={perfil} />;
 }

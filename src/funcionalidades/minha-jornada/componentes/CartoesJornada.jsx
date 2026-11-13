@@ -9,19 +9,19 @@ export default function CartoesJornada() {
       imagem: fotoApartamento,
       alt: 'Sala e cozinha integrada de um studio mobiliado e bem iluminado',
       eyebrow: '01 / ENCONTRE SEU LUGAR',
-      titulo: 'Um endereço para o seu agora.',
+      titulo: 'Um endereço para o seu agora',
       descricao:
         'Compare o espaço, a região e o gasto total antes de escolher.',
-      acao: 'Encontrar casa ↗',
+      acao: "Encontrar casa",
       rota: '/encontrar-casa',
     },
     {
       imagem: fotoEssenciais,
       alt: 'Utensílios básicos de cozinha e limpeza organizados sobre mesa de madeira',
       eyebrow: '02 / APRENDA O BÁSICO',
-      titulo: 'Chegar com mais repertório.',
+      titulo: 'Chegar com mais repertório',
       descricao: 'O essencial para cuidar da casa desde os primeiros dias.',
-      acao: 'Aprender a morar ↗',
+      acao: "Aprender a morar",
       rota: '/aprendendo',
     },
   ];

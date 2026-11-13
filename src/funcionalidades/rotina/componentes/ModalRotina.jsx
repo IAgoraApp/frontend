@@ -93,7 +93,7 @@ export default function ModalRotina({
             className={classesRotina.voltarModal}
             onClick={aoVoltar}
           >
-            ← Voltar
+ Voltar
           </button>
         )}
         <BotaoFecharRotina aoClicar={aoFechar} />

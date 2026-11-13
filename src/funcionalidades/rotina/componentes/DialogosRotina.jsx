@@ -124,7 +124,7 @@ export function DialogoTarefasDia({
       <CabecalhoModalRotina
         editorial
         id={idTitulo}
-        titulo='Tarefas deste dia.'
+        titulo='Tarefas deste dia'
         descricao={formatarData(dia, {
           weekday: 'long',
           day: 'numeric',

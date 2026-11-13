@@ -103,7 +103,7 @@ export default function AjustesTarefa({
       <div className={classesRotina.espacoAjustes}>
         <form className={classesRotina.painelFormulario} onSubmit={enviar} noValidate>
           {erro && (
-            <AvisoRotina erro titulo='Confira este detalhe.'>
+            <AvisoRotina erro titulo='Confira este detalhe'>
               {erro}
             </AvisoRotina>
           )}

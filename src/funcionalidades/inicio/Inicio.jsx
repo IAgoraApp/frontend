@@ -54,7 +54,7 @@ export default function Inicio() {
               to='/onboarding'
               className='inline-flex min-h-11 shrink-0 items-center font-bold text-(--laranja-principal)'
             >
-              Alterar ↗
+              Alterar
             </Link>
           </div>
         </div>
@@ -106,8 +106,8 @@ export default function Inicio() {
                   ? `${tarefas.hoje.length} pendentes`
                   : 'Seu dia, no seu ritmo'}
                 {tarefas.proximas.length > 0
-                  ? ` e ${tarefas.proximas.length} próximas.`
-                  : '.'}
+                  ? ` e ${tarefas.proximas.length} próximas`
+                  : ''}
               </Titulo>
               <p className='mt-4 text-base leading-relaxed text-white/90 sm:text-lg'>
                 {tarefas.hoje.length

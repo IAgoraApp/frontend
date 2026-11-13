@@ -143,7 +143,7 @@ export function ArteListaRotina({ assinatura = false }) {
         height='92.7273'
         alt=''
       />
-      <span className={classesRotina.notaAssinatura}>DO SEU JEITO ↗</span>
+      <span className={classesRotina.notaAssinatura}>DO SEU JEITO</span>
       <img
         className={classesRotina.raiosAssinatura}
         src={AssinaturaRaios}
@@ -192,7 +192,7 @@ export function AvisoRotina({ titulo, children, erro = false }) {
 }
 
 export function EstadoVazioRotina({
-  titulo = 'Seu dia está livre por aqui.',
+  titulo = 'Seu dia está livre por aqui',
   descricao = 'Crie sua primeira tarefa ou peça uma sugestão.',
   aoCriar,
   aoAssistente,

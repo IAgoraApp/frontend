@@ -35,16 +35,16 @@ function VisaoCentralAjuda() {
     <Container como='main' classe='space-y-10 py-8 pb-16 sm:py-10'>
       <CabecalhoSubpagina
         voltarPara='/'
-        rotuloVoltar='← Voltar ao início'
+        rotuloVoltar=" Voltar ao início"
         selo='CENTRAL DE AJUDA'
-        titulo='Conte com um próximo passo.'
+        titulo='Conte com um próximo passo'
         subtitulo='Encontre uma orientação ou envie sua dúvida no exemplo.'
         assinatura='livro'
-        etiquetaAssinatura='ORIENTAÇÕES PRÁTICAS ↗'
+        etiquetaAssinatura="ORIENTAÇÕES PRÁTICAS"
         acoes={
           <>
             <Botao como={Link} to='/ajuda/faq' cor='laranja'>
-              Perguntas frequentes ↗
+              Perguntas frequentes
             </Botao>
             <Botao como={Link} to='/ajuda/contato' variante='secundario'>
               Falar com suporte
@@ -87,7 +87,7 @@ function VisaoCentralAjuda() {
                 </p>
               </div>
               <span className='text-sm font-bold text-(--laranja-principal)'>
-                Ver orientação ↗
+                Ver orientação
               </span>
             </Link>
           ))}
@@ -109,12 +109,12 @@ function VisaoPerguntasFrequentes() {
     <Container como='main' classe='space-y-10 py-8 pb-16 sm:py-10'>
       <CabecalhoSubpagina
         voltarPara='/ajuda'
-        rotuloVoltar='← Central de ajuda'
+        rotuloVoltar=" Central de ajuda"
         selo='PERGUNTAS FREQUENTES'
-        titulo='Antes de começar.'
+        titulo='Antes de começar'
         subtitulo='Respostas para explorar a plataforma.'
         assinatura='livro'
-        etiquetaAssinatura='RESPOSTAS CLARAS ↗'
+        etiquetaAssinatura="RESPOSTAS CLARAS"
       />
 
       <div className='flex flex-wrap gap-2'>
@@ -160,7 +160,7 @@ function VisaoPerguntasFrequentes() {
               className='flex items-center justify-between gap-3 rounded-xl border border-[#dbe5ed] bg-white px-4 py-3 text-sm font-bold text-(--azul-titulo) hover:border-(--laranja-principal) hover:text-(--laranja-principal)'
             >
               <span>{item.pergunta}</span>
-              <span>↗</span>
+
             </Link>
           ))}
         </div>
@@ -179,12 +179,12 @@ function VisaoRespostaFaq() {
     <Container como='main' classe='space-y-8 py-8 pb-16 sm:py-10'>
       <CabecalhoSubpagina
         voltarPara='/ajuda/faq'
-        rotuloVoltar='← Perguntas frequentes'
+        rotuloVoltar=" Perguntas frequentes"
         selo='ORIENTAÇÃO DETALHADA'
         titulo={item.pergunta}
         subtitulo='Explicação passo a passo para aproveitar melhor este recurso.'
         assinatura='livro'
-        etiquetaAssinatura='AJUDA IAGORA ↗'
+        etiquetaAssinatura="AJUDA IAGORA"
       />
 
       <article className='space-y-6 rounded-2xl border border-[#dbe5ed] bg-white p-6 sm:p-8'>
@@ -205,7 +205,7 @@ function VisaoRespostaFaq() {
 
         <div className='flex flex-wrap gap-3'>
           <Botao como={Link} to='/ajuda/contato' cor='laranja'>
-            Ainda tenho dúvida ↗
+            Ainda tenho dúvida
           </Botao>
           <Botao como={Link} to='/ajuda/faq' variante='secundario'>
             Ver outras perguntas
@@ -242,12 +242,12 @@ function VisaoContatoAjuda() {
     <Container como='main' classe='space-y-10 py-8 pb-16 sm:py-10'>
       <CabecalhoSubpagina
         voltarPara='/ajuda'
-        rotuloVoltar='← Central de ajuda'
+        rotuloVoltar=" Central de ajuda"
         selo='FALAR COM SUPORTE'
-        titulo='Vamos entender sua dúvida.'
+        titulo='Vamos entender sua dúvida'
         subtitulo='Formulário demonstrativo. Nenhuma mensagem será enviada.'
         assinatura='livro'
-        etiquetaAssinatura='SUPORTE IAGORA ↗'
+        etiquetaAssinatura="SUPORTE IAGORA"
       />
 
       <div className='grid items-start gap-8 lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)]'>
@@ -261,7 +261,7 @@ function VisaoContatoAjuda() {
                 como='h2'
                 classe='text-2xl font-extrabold text-(--azul-titulo)'
               >
-                Registro demonstrativo concluído.
+                Registro demonstrativo concluído
               </Titulo>
               <p className='text-sm leading-relaxed text-(--azul-titulo)'>
                 Nenhuma mensagem externa foi disparada. Em produção, nossa
@@ -348,7 +348,7 @@ function VisaoContatoAjuda() {
               )}
 
               <Botao type='submit' cor='laranja' classe='px-7!'>
-                Registrar solicitação ↗
+                Registrar solicitação
               </Botao>
             </form>
           )}
@@ -362,7 +362,7 @@ function VisaoContatoAjuda() {
             como='h2'
             classe='text-2xl font-extrabold text-(--azul-titulo)'
           >
-            Conte o que aconteceu.
+            Conte o que aconteceu
           </Titulo>
           <div className='space-y-3 text-sm leading-relaxed text-(--azul-titulo)'>
             <div className='rounded-xl bg-white/80 p-4'>
@@ -391,15 +391,15 @@ function VisaoComoFunciona() {
     <Container como='main' classe='space-y-12 py-8 pb-16 sm:py-10'>
       <CabecalhoSubpagina
         voltarPara='/'
-        rotuloVoltar='← Voltar ao início'
+        rotuloVoltar=" Voltar ao início"
         selo='COMO FUNCIONA'
-        titulo='Da primeira chave ao seu dia a dia.'
+        titulo='Da primeira chave ao seu dia a dia'
         subtitulo='Escolha seu momento e use as ferramentas que fazem sentido.'
         assinatura='chave'
-        etiquetaAssinatura='DO SEU JEITO ↗'
+        etiquetaAssinatura="DO SEU JEITO"
         acoes={
           <Botao como={Link} to='/onboarding' cor='laranja' classe='px-7!'>
-            Escolher meu momento ↗
+            Escolher meu momento
           </Botao>
         }
       />
@@ -442,7 +442,7 @@ function VisaoComoFunciona() {
           </p>
         </div>
         <Botao como={Link} to='/onboarding' cor='laranja' classe='shrink-0 px-7!'>
-          Escolher meu momento ↗
+          Escolher meu momento
         </Botao>
       </section>
     </Container>
@@ -468,12 +468,12 @@ function VisaoNotificacoes() {
     <Container como='main' classe='space-y-8 py-8 pb-16 sm:py-10'>
       <CabecalhoSubpagina
         voltarPara='/home'
-        rotuloVoltar='← Voltar ao início'
+        rotuloVoltar=" Voltar ao início"
         selo='NOTIFICAÇÕES'
-        titulo='O que pede sua atenção.'
+        titulo='O que pede sua atenção'
         subtitulo='Lembretes e novidades da sua experiência.'
         assinatura='raios'
-        etiquetaAssinatura='TUDO SOB CONTROLE ↗'
+        etiquetaAssinatura="TUDO SOB CONTROLE"
         acoes={
           <>
             <Botao
@@ -488,7 +488,7 @@ function VisaoNotificacoes() {
               to='/perfil?visao=notificacoes'
               cor='laranja'
             >
-              Ajustar notificações ↗
+              Ajustar notificações
             </Botao>
           </>
         }
@@ -533,7 +533,7 @@ function VisaoNotificacoes() {
                 cor='laranja'
                 classe='min-h-[42px]! px-4! text-sm!'
               >
-                {item.textoAcao} ↗
+                {item.textoAcao}
               </Botao>
               <button
                 type='button'
@@ -555,16 +555,16 @@ function VisaoSeguranca() {
     <Container como='main' classe='space-y-8 py-8 pb-16 sm:py-10'>
       <CabecalhoSubpagina
         voltarPara='/casa'
-        rotuloVoltar='← Voltar para Casa'
+        rotuloVoltar=" Voltar para Casa"
         selo='GUIAS DE SEGURANÇA'
-        titulo='Cuidado também é saber pedir ajuda.'
+        titulo='Cuidado também é saber pedir ajuda'
         subtitulo='Orientações gerais para prevenir problemas em casa.'
         assinatura='planta'
-        etiquetaAssinatura='CASA SEGURA ↗'
+        etiquetaAssinatura="CASA SEGURA"
         acoes={
           <>
             <Botao como={Link} to='/buscar' cor='laranja'>
-              Encontrar profissionais ↗
+              Encontrar profissionais
             </Botao>
             <Botao como={Link} to='/casa' variante='secundario'>
               Ver guias da casa
@@ -662,12 +662,12 @@ function VisaoChecklists() {
     <Container como='main' classe='space-y-8 py-8 pb-16 sm:py-10'>
       <CabecalhoSubpagina
         voltarPara='/home'
-        rotuloVoltar='← Voltar ao início'
+        rotuloVoltar=" Voltar ao início"
         selo='MEUS CHECKLISTS'
-        titulo='Um passo marcado, um cuidado a menos.'
+        titulo='Um passo marcado, um cuidado a menos'
         subtitulo='Organize limpeza, mudança e rotina.'
         assinatura='checklist'
-        etiquetaAssinatura='PASSO A PASSO ↗'
+        etiquetaAssinatura="PASSO A PASSO"
       />
 
       <div className='grid gap-4 md:grid-cols-3'>
@@ -752,7 +752,7 @@ function VisaoChecklists() {
           </ul>
         ) : (
           <EstadoVazio
-            titulo='Lista vazia no momento.'
+            titulo='Lista vazia no momento'
             descricao='Adicione o primeiro item acima para começar a acompanhar esta etapa.'
           />
         )}
@@ -762,17 +762,21 @@ function VisaoChecklists() {
 }
 
 function VisaoLegal({ tipo }) {
+  const navegar = useNavigate();
+  const voltar = () => window.history.state?.idx > 0
+    ? navegar(-1)
+    : navegar('/login?modo=cadastro', { replace: true });
   const ehPrivacidade = tipo === 'privacidade';
   return (
     <Container como='main' classe='space-y-8 py-8 pb-16 sm:py-10'>
       <CabecalhoSubpagina
-        voltarPara='/login?modo=cadastro'
-        rotuloVoltar='← Voltar ao cadastro'
+        aoVoltar={voltar}
+        rotuloVoltar=" Voltar"
         selo='DOCUMENTAÇÃO LEGAL'
-        titulo={ehPrivacidade ? 'Política de Privacidade.' : 'Termos de Uso.'}
+        titulo={ehPrivacidade ? 'Política de Privacidade' : 'Termos de Uso'}
         subtitulo='Documento de produto pendente de revisão jurídica.'
         assinatura='livro'
-        etiquetaAssinatura='TRANSPARÊNCIA IAGORA ↗'
+        etiquetaAssinatura="TRANSPARÊNCIA IAGORA"
       />
 
       <article className='space-y-5 rounded-2xl border border-[#f8ccb4] bg-[#fce8dc]/60 p-6 sm:p-8'>
@@ -785,8 +789,8 @@ function VisaoLegal({ tipo }) {
             : 'O conteúdo definitivo dos Termos de Uso do Iagora aguarda revisão jurídica final antes do lançamento público. Todas as ferramentas disponíveis nesta entrega funcionam exclusivamente em modo demonstrativo.'}
         </p>
         <div className='pt-2'>
-          <Botao como={Link} to='/login?modo=cadastro' cor='laranja'>
-            Voltar ao cadastro ↗
+          <Botao type='button' onClick={voltar} cor='laranja'>
+            Voltar
           </Botao>
         </div>
       </article>
@@ -800,10 +804,10 @@ function VisaoSistema({ tipo }) {
   const ehManutencao = tipo === 'manutencao';
 
   const titulo = ehOffline
-    ? 'Não foi possível conectar.'
+    ? 'Não foi possível conectar'
     : ehManutencao
-      ? 'Plataforma em manutenção.'
-      : 'Esse caminho não está disponível.';
+      ? 'Plataforma em manutenção'
+      : 'Esse caminho não está disponível';
 
   const descricao = ehOffline
     ? 'Confira sua conexão e tente novamente.'
@@ -834,12 +838,16 @@ function VisaoSistema({ tipo }) {
         </p>
         <div className='flex flex-wrap justify-center gap-3 pt-2'>
           <Botao como={Link} to='/' cor='laranja' classe='px-7!'>
-            Voltar ao início ↗
+            Voltar ao início
           </Botao>
           <Botao
             type='button'
             variante='secundario'
-            onClick={() => navegar(-1)}
+            onClick={() =>
+              window.history.state?.idx > 0
+                ? navegar(-1)
+                : navegar('/', { replace: true })
+            }
           >
             Voltar
           </Botao>
@@ -854,12 +862,12 @@ function VisaoIndicePlataforma() {
     <Container como='main' classe='space-y-8 py-8 pb-16 sm:py-10'>
       <CabecalhoSubpagina
         voltarPara='/'
-        rotuloVoltar='← Voltar ao início'
+        rotuloVoltar=" Voltar ao início"
         selo='00 / ÍNDICE DA PLATAFORMA'
-        titulo='Todas as rotas e experiências do Iagora.'
+        titulo='Todas as rotas e experiências do Iagora'
         subtitulo='Acesso direto às telas públicas, jornadas do consumidor, Marketplace e painel da empresa.'
         assinatura='chave'
-        etiquetaAssinatura='MAPA COMPLETO ↗'
+        etiquetaAssinatura="MAPA COMPLETO"
       />
 
       <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
@@ -882,7 +890,7 @@ function VisaoIndicePlataforma() {
                     className='flex items-center justify-between rounded-lg px-2.5 py-2 text-sm font-semibold text-(--azul-titulo) transition-colors hover:bg-[#fce8dc] hover:text-(--laranja-principal)'
                   >
                     <span>{item.nome}</span>
-                    <span className='text-xs text-(--texto-apoio)'>↗</span>
+
                   </Link>
                 </li>
               ))}
@@ -899,12 +907,12 @@ function VisaoEstadosValidacoes() {
     <Container como='main' classe='space-y-8 py-8 pb-16 sm:py-10'>
       <CabecalhoSubpagina
         voltarPara='/indice'
-        rotuloVoltar='← Índice da plataforma'
+        rotuloVoltar=" Índice da plataforma"
         selo='00 / ESTADOS E VALIDAÇÕES'
-        titulo='Estados de carregamento, vazios e falhas.'
+        titulo='Estados de carregamento, vazios e falhas'
         subtitulo='Atalhos para inspecionar os comportamentos de sistema previstos no projeto.'
         assinatura='checklist'
-        etiquetaAssinatura='TESTES VISUAIS ↗'
+        etiquetaAssinatura="TESTES VISUAIS"
       />
 
       <div className='grid gap-5 md:grid-cols-2'>
@@ -924,7 +932,7 @@ function VisaoEstadosValidacoes() {
               <p className='text-sm text-(--texto-apoio)'>{item.descricao}</p>
             </div>
             <span className='text-sm font-bold text-(--laranja-principal)'>
-              Abrir estado ↗
+              Abrir estado
             </span>
           </Link>
         ))}

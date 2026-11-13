@@ -28,7 +28,7 @@ export default function MercadoServicos({
   dentroDaEmpresa = false,
   visao = 'hub',
 }) {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   const { dados, erro } = useEmpresa();
   const [estadoPlataforma, setEstadoPlataforma] = useState(lerEstadoPlataforma);
 
@@ -97,13 +97,14 @@ export default function MercadoServicos({
         )}
         {visao === 'buscar' && (
           <VisaoBuscarServicos
+            key={search}
             empresas={empresas}
             servicos={servicos}
             favoritos={favoritos}
             aoAlternarFavorito={alternarFavorito}
           />
         )}
-        {visao === 'filtros' && <VisaoFiltrosMercado />}
+        {visao === 'filtros' && <VisaoFiltrosMercado key={search} />}
         {visao === 'mapa' && (
           <VisaoMapaServicos
             pinos={pinosMapaSaoPaulo}

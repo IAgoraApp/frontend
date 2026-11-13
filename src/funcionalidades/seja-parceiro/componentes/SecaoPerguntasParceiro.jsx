@@ -14,7 +14,7 @@ export default function SecaoPerguntasParceiro() {
           sobretitulo='DÚVIDAS FREQUENTES'
           classe='lg:h-[60px] lg:justify-center'
         >
-          Tudo o que você precisa saber.
+          Tudo o que você precisa saber
         </CabecalhoSecao>
         <div className='mt-4 grid items-start gap-[18px] lg:min-h-[138px] lg:grid-cols-2'>
           <Acordeao itens={duvidasFrequentesParceiro.slice(0, 2)} />

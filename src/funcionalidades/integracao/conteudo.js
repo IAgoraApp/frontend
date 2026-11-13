@@ -18,7 +18,7 @@ export const opcoesMomento = [
     momento: 'morando',
     momentoRotulo: 'Já moro sozinho',
     rotaDestino: '/home',
-    titulo: 'Já moro sozinho.',
+    titulo: 'Já moro sozinho',
     descricao:
       'Manter a casa, organizar a rotina e resolver problemas do dia a dia.',
     imagem: jaMoroImg,

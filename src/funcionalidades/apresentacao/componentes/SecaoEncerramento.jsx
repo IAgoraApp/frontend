@@ -4,10 +4,10 @@ export default function SecaoEncerramento() {
       <div className='mx-auto flex h-full max-w-[1296px] flex-col items-center justify-center gap-6 md:flex-row md:justify-between'>
         <div className='flex max-w-[940px] flex-col gap-1 text-center md:text-left lg:h-[100px] lg:justify-center'>
           <span className='font-corpo text-[14px] font-bold tracking-[1px] sm:text-base'>
-            SEU PRÓXIMO CAPÍTULO.
+            SEU PRÓXIMO CAPÍTULO
           </span>
           <h2 className='font-titulo text-2xl leading-[36px] font-extrabold sm:text-[32px]'>
-            O seu agora começa aqui.
+            O seu agora começa aqui
           </h2>
           <p className='font-corpo text-base leading-[22px] sm:text-[20px]'>
             Independência é uma grande conquista. Você pode aprender um pouco

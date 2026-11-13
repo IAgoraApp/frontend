@@ -20,7 +20,7 @@ export default function SecaoPerguntas() {
             SEM COMPLICAÇÃO
           </span>
           <h2 className='font-titulo text-2xl leading-[35px] font-extrabold text-(--azul-titulo) sm:text-[30px]'>
-            Antes de começar.
+            Antes de começar
           </h2>
         </div>
 

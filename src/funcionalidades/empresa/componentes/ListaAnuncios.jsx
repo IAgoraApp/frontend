@@ -152,7 +152,7 @@ export default function ListaAnuncios({ dados, compacto = false }) {
                   variante='secundario'
                   classe='min-h-[42px]! px-4! text-sm!'
                 >
-                  Gerenciar ↗
+                  Gerenciar
                 </Botao>
                 <Botao
                   como={Link}
@@ -161,8 +161,8 @@ export default function ListaAnuncios({ dados, compacto = false }) {
                   classe='min-h-[42px]! px-4! text-sm!'
                 >
                   {anuncio.situacao === 'expirado'
-                    ? 'Renovar anúncio ↗'
-                    : 'Editar anúncio ↗'}
+                    ? "Renovar anúncio"
+                    : "Editar anúncio"}
                 </Botao>
               </div>
             </li>

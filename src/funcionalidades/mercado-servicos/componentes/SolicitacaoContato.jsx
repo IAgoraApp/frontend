@@ -1,5 +1,8 @@
+import { IconeEstrela } from '../../../compartilhado/interface/IndicadoresFuncionais';
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { LinkNavegacao as Link } from '../../../compartilhado/interface/LinkNavegacao';
+
 import {
   Botao,
   CampoFormulario,
@@ -149,14 +152,14 @@ export default function SolicitacaoContato({
           to={`/servicos/${servico.id}`}
           className='inline-flex items-center text-sm font-bold text-(--texto-apoio) hover:text-(--laranja-principal)'
         >
-          ← Voltar para o serviço
+ Voltar para o serviço
         </Link>
         <SeloEditorial texto='COMBINAR ATENDIMENTO' />
         <Titulo
           como='h1'
           classe='text-[clamp(2rem,3.6vw,3rem)] leading-[1.1] font-extrabold'
         >
-          Entrar em contato com {empresa.nome}.
+          Entrar em contato com {empresa.nome}
         </Titulo>
         <p className='max-w-[680px] text-base text-(--texto-apoio)'>
           Descreva o tamanho do espaço, o que precisa resolver e seus melhores
@@ -175,7 +178,7 @@ export default function SolicitacaoContato({
                 como='h2'
                 classe='text-2xl font-extrabold text-(--azul-titulo)'
               >
-                Solicitação enviada com sucesso.
+                Solicitação enviada com sucesso
               </Titulo>
               <p className='text-sm leading-relaxed text-(--azul-titulo)'>
                 Seu pedido já foi registrado no histórico de conversas deste
@@ -188,7 +191,7 @@ export default function SolicitacaoContato({
                   to={`/meus-contatos/${idGerado}`}
                   cor='laranja'
                 >
-                  Abrir conversa em Meus contatos ↗
+                  Abrir conversa em Meus contatos
                 </Botao>
                 <Botao
                   como={Link}
@@ -269,7 +272,7 @@ export default function SolicitacaoContato({
               )}
 
               <Botao type='submit' cor='laranja' classe='px-7!'>
-                Enviar solicitação ↗
+                Enviar solicitação
               </Botao>
             </form>
           )}
@@ -291,7 +294,7 @@ export default function SolicitacaoContato({
             {servico.titulo}
           </Titulo>
           <p className='text-sm font-bold text-(--texto-apoio)'>
-            {empresa.nome} · ★ {servico.nota}
+            {empresa.nome} · <IconeEstrela /> {servico.nota}
           </p>
           <dl className='space-y-2 border-t border-[#f3bfa1] pt-3 text-sm'>
             <div className='flex justify-between gap-2'>

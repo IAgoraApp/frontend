@@ -124,15 +124,15 @@ export const abasLimpeza = [
 
 export const cabecalhosLimpeza = {
   biblioteca: [
-    'Um cuidado de cada vez.',
+    'Um cuidado de cada vez',
     'Guias práticos para facilitar a rotina da sua casa.',
   ],
   checklist: [
-    'Pequenas ações, grandes resultados.',
+    'Pequenas ações, grandes resultados',
     'Acompanhe os cuidados do dia e personalize sua lista.',
   ],
   materiais: [
-    'Seu primeiro kit de limpeza.',
+    'Seu primeiro kit de limpeza',
     'Poucos itens bem escolhidos resolvem boa parte do básico.',
   ],
 };

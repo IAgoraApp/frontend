@@ -39,8 +39,8 @@ export default function DetalheReceita({
               onClick={() => aoFavoritar(receita.id)}
             >
               {dados.favorites.includes(receita.id)
-                ? 'Receita salva ♥'
-                : 'Salvar receita ♡'}
+                ? "Receita salva"
+                : "Salvar receita"}
             </BotaoCasa>
             <BotaoCasa onClick={() => aoPlanejarRefeicao(receita, porcoes)}>
               Adicionar ao plano

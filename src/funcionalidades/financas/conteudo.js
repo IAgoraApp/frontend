@@ -1,18 +1,18 @@
 export const visoesFinancas = {
-  geral: ['Meu mês.', 'Acompanhe seus ganhos, gastos e mantenha o controle.'],
-  lancamentos: ['Lançamentos.', 'Acompanhe todas as suas entradas e saídas.'],
-  categorias: ['Categorias.', 'Organize seus gastos e receitas em categorias.'],
-  metas: ['Metas.', 'Defina seus objetivos e acompanhe seu progresso.'],
+  geral: ['Meu mês', 'Acompanhe seus ganhos, gastos e mantenha o controle.'],
+  lancamentos: ['Lançamentos', 'Acompanhe todas as suas entradas e saídas.'],
+  categorias: ['Categorias', 'Organize seus gastos e receitas em categorias.'],
+  metas: ['Metas', 'Defina seus objetivos e acompanhe seu progresso.'],
   contas: [
-    'Contas e boletos.',
+    'Contas e boletos',
     'Gerencie suas contas e não perca vencimentos.',
   ],
   relatorios: [
-    'Relatórios.',
+    'Relatórios',
     'Veja um resumo da sua vida financeira ao longo do tempo.',
   ],
-  configuracoes: ['Configurações.', 'Personalize sua experiência financeira.'],
-  orcamento: ['Meu orçamento.', 'Um plano possível para o seu mês.'],
+  configuracoes: ['Configurações', 'Personalize sua experiência financeira.'],
+  orcamento: ['Meu orçamento', 'Um plano possível para o seu mês'],
 };
 
 export const abasFinancas = [

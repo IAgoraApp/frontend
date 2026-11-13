@@ -37,14 +37,14 @@ function CampoSelecao({ nome, rotulo, valor, aoAlterar, children }) {
 
 const titulosFormulario = {
   transaction: [
-    'Cada movimento, no seu lugar.',
+    'Cada movimento, no seu lugar',
     'Registre uma entrada ou saída para acompanhar seu mês.',
   ],
-  category: ['Nova categoria.', 'Uma organização que faz sentido para você.'],
-  bill: ['Nova conta.', 'Um vencimento no radar.'],
-  goal: ['Nova meta.', 'Um objetivo com próximos passos.'],
+  category: ['Nova categoria', 'Uma organização que faz sentido para você.'],
+  bill: ['Nova conta', 'Um vencimento no radar.'],
+  goal: ['Nova meta', 'Um objetivo com próximos passos.'],
   budget: [
-    'Um plano possível para o seu mês.',
+    'Um plano possível para o seu mês',
     'Defina limites que façam sentido para sua realidade.',
   ],
 };
@@ -240,7 +240,7 @@ export default function FormularioFinancas({
         onClick={aoVoltar}
         className='min-h-11 text-sm font-bold text-(--texto-apoio) hover:text-(--laranja-principal)'
       >
-        ← Voltar
+ Voltar
       </button>
       <div>
         <span className='inline-block rotate-[1.4deg] bg-(--laranja-principal) px-3 py-1.5 text-xs font-bold text-white'>
@@ -253,11 +253,11 @@ export default function FormularioFinancas({
           {registro
             ? 'Editar ' +
               ({
-                transaction: 'lançamento.',
-                category: 'categoria.',
-                bill: 'conta.',
-                goal: 'meta.',
-              }[tipo] ?? 'orçamento.')
+                transaction: 'lançamento',
+                category: 'categoria',
+                bill: 'conta',
+                goal: 'meta',
+              }[tipo] ?? 'orçamento')
             : titulosFormulario[tipo][0]}
         </Titulo>
         <p className='mt-3 text-(--texto-apoio)'>{titulosFormulario[tipo][1]}</p>
@@ -472,7 +472,7 @@ export default function FormularioFinancas({
                 ? formatarMoeda(renda - alocacoes)
                 : tipo === 'transaction'
                   ? formatarMoeda(saldoPrevisto)
-                  : valores.nome || 'Um passo de cada vez.'}
+                  : valores.nome || 'Um passo de cada vez'}
             </Titulo>
             <p className='mt-3 text-sm text-(--texto-apoio)'>
               {tipo === 'budget'

@@ -15,7 +15,7 @@ function respostaPara(pergunta) {
     return 'Use “Adicionar lançamento”, selecione Entrada, preencha descrição, valor, data e categoria e salve. O resumo do mês será atualizado.';
   }
   if (/conta|vencimento|boleto/.test(texto)) {
-    return 'Abra Ferramentas → Contas e boletos para cadastrar vencimentos. Ao confirmar um pagamento, uma saída é registrada e o saldo do mês é atualizado.';
+    return "Abra Contas e boletos em Ferramentas para cadastrar vencimentos. Ao confirmar um pagamento, uma saída é registrada e o saldo do mês é atualizado.";
   }
   if (/banco|agenda|conectar|sincroniz/.test(texto)) {
     return 'As integrações bancária e com Google Agenda ainda não estão disponíveis. Por enquanto, você pode registrar os movimentos manualmente e exportar os vencimentos para sua agenda.';
@@ -100,9 +100,7 @@ export default function AssistenteFinancas() {
             classe='relative size-11 shrink-0 px-0'
           >
             <IconeFinancas nome='BotaoEnviar' classe='size-9' />
-            <span aria-hidden='true' className='absolute text-xl'>
-              →
-            </span>
+
           </AcaoFinancas>
         </form>
         <p className='text-xs leading-relaxed text-(--texto-apoio)'>

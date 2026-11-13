@@ -26,7 +26,7 @@ export default function SecaoChamada() {
             classeTitulo='text-[clamp(1.75rem,2.6vw,2.375rem)]! leading-[43px]'
           >
             Seu serviço pode transformar
-            <br className='hidden lg:block' /> novos começos.
+            <br className='hidden lg:block' /> novos começos
           </CabecalhoSecao>
           <p className='max-w-[680px] text-base leading-[23px] text-white'>
             Conte com uma plataforma feita para conectar bons profissionais a

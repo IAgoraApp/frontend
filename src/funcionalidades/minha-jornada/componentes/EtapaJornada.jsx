@@ -95,7 +95,7 @@ export default function EtapaJornada({
               onClick={() => aoConcluirEtapa(etapa.chave, etapa.tarefas)}
             >
               {etapaEstado?.situacao === 'concluida'
-                ? 'Etapa concluída ✓'
+                ? "Etapa concluída"
                 : 'Concluir etapa'}
             </Botao>
             <Botao

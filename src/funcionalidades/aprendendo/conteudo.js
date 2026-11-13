@@ -13,10 +13,10 @@ export const cartoesAutonomia = [
   {
     numero: '01',
     categoria: 'COZINHA',
-    titulo: 'Cozinhar sem se perder.',
+    titulo: 'Cozinhar sem se perder',
     descricao:
       'Utensílios essenciais, compras e refeições simples para o dia a dia.',
-    acao: 'Aprender na cozinha ↗',
+    acao: "Aprender na cozinha",
     rota: '/cozinha',
     imagem: editorialCozinha,
     alt: 'Homem cozinhando em cozinha compacta e iluminada',
@@ -25,10 +25,10 @@ export const cartoesAutonomia = [
   {
     numero: '02',
     categoria: 'CUIDADOS',
-    titulo: 'Limpeza que cabe na rotina.',
+    titulo: 'Limpeza que cabe na rotina',
     descricao:
       'Aprenda a organizar os cuidados e escolher o que precisa ter.',
-    acao: 'Cuidar da casa ↗',
+    acao: "Cuidar da casa",
     rota: '/limpeza',
     imagem: equipeServicos,
     alt: 'Profissionais sorridentes com itens de cuidado doméstico',
@@ -37,9 +37,9 @@ export const cartoesAutonomia = [
   {
     numero: '03',
     categoria: 'PLANEJAMENTO',
-    titulo: 'Do aluguel às contas fixas.',
+    titulo: 'Do aluguel às contas fixas',
     descricao: 'Entenda os gastos que vão acompanhar seu novo endereço.',
-    acao: 'Planejar minhas contas ↗',
+    acao: "Planejar minhas contas",
     rota: '/planejamento',
     imagem: chavesCasaNova,
     alt: 'Pessoa segurando chaves ao lado de maquete de casa',

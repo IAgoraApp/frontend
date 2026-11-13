@@ -87,19 +87,19 @@ export const perguntasFrequentes = [
 export const passosComoFunciona = [
   {
     numero: '01 / Seu momento',
-    titulo: 'Comece pela fase em que você realmente está.',
+    titulo: 'Comece pela fase em que você realmente está',
     descricao:
       'Se você já tem a chave na mão, o foco vai para casa, cozinha, limpeza, rotina e orçamento mensal. Se ainda está se preparando, ganha planos de mudança, simuladores de reserva e guias para visitar imóveis.',
   },
   {
     numero: '02 / Suas prioridades',
-    titulo: 'Use apenas as ferramentas que fazem sentido.',
+    titulo: 'Use apenas as ferramentas que fazem sentido',
     descricao:
       'Cada módulo resolve uma necessidade prática sem excesso de menus: listas de compras, receitas acessíveis, contas a pagar, metas financeiras, rotinas leves e busca de prestadores.',
   },
   {
     numero: '03 / Seu próximo passo',
-    titulo: 'Avance no seu ritmo com lembretes reais.',
+    titulo: 'Avance no seu ritmo com lembretes reais',
     descricao:
       'Checklist por checklist, o Iagora transforma grandes mudanças em pequenas ações acompanháveis, mantendo seu histórico organizado em um só lugar.',
   },
@@ -211,7 +211,7 @@ export const catalogoIndicePlataforma = [
   {
     grupo: 'Área da empresa',
     itens: [
-      { nome: 'Acesso / cadastro da empresa', rota: '/cadastro-empresa' },
+      { nome: 'Acesso / cadastro da empresa', rota: '/empresa/cadastro' },
       { nome: 'Início da empresa', rota: '/empresa' },
       { nome: 'Dashboard de métricas', rota: '/empresa/dashboard' },
       { nome: 'Meus anúncios', rota: '/empresa/anuncios' },

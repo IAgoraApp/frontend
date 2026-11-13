@@ -1,5 +1,8 @@
+import { IconeEstrela, EstrelasAvaliacao } from '../../../compartilhado/interface/IndicadoresFuncionais';
 import { useState } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { LinkNavegacao as Link } from '../../../compartilhado/interface/LinkNavegacao';
+
 import {
   Botao,
   CampoFormulario,
@@ -76,7 +79,7 @@ export default function AvaliacoesServico({
           to={`/servicos/${servico.id}`}
           className='inline-flex items-center text-sm font-bold text-(--texto-apoio) hover:text-(--laranja-principal)'
         >
-          ← Voltar para o serviço
+ Voltar para o serviço
         </Link>
         <SeloEditorial texto='AVALIAÇÕES DE QUEM JÁ CONTRATOU' />
         <Titulo
@@ -86,7 +89,7 @@ export default function AvaliacoesServico({
           {servico.titulo}
         </Titulo>
         <p className='text-base text-(--texto-apoio)'>
-          {empresa?.nome} · Média ★ {servico.nota} com base nas avaliações do
+          {empresa?.nome} · Média <IconeEstrela /> {servico.nota} com base nas avaliações do
           catálogo demonstrativo.
         </p>
       </header>
@@ -104,7 +107,7 @@ export default function AvaliacoesServico({
                     {item.autor}
                   </h2>
                   <span className='rounded-full bg-[#fce8dc] px-3 py-1 text-xs font-extrabold text-(--laranja-principal)'>
-                    {'★'.repeat(item.nota)} ({item.nota}.0)
+                    <EstrelasAvaliacao nota={item.nota} /> ({item.nota}.0)
                   </span>
                 </div>
                 <p className='mt-3 text-sm leading-relaxed text-(--texto-apoio)'>
@@ -117,7 +120,7 @@ export default function AvaliacoesServico({
             ))
           ) : (
             <EstadoVazio
-              titulo='Ainda não há avaliações registradas.'
+              titulo='Ainda não há avaliações registradas'
               descricao='Este serviço ainda não recebeu comentários públicos. Publique a primeira impressão ao lado.'
               textoAcao='Ver avaliações de exemplo'
               aoClicar={() => setParametros({})}
@@ -194,7 +197,7 @@ export default function AvaliacoesServico({
               </p>
             )}
             <Botao type='submit' cor='laranja' classe='w-full'>
-              Publicar avaliação ↗
+              Publicar avaliação
             </Botao>
           </form>
         </aside>

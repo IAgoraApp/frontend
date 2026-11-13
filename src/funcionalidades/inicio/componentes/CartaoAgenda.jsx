@@ -265,7 +265,7 @@ export default function CartaoAgenda() {
                   to='/rotina?visao=lista'
                   className='mt-2 inline-block text-xs font-bold text-(--laranja-principal)'
                 >
-                  Adicionar na rotina →
+                  Adicionar na rotina
                 </Link>
               )}
             </div>

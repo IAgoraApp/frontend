@@ -1,5 +1,8 @@
+import { IconeEstrela } from '../../../compartilhado/interface/IndicadoresFuncionais';
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { LinkNavegacao as Link } from '../../../compartilhado/interface/LinkNavegacao';
+
 import {
   Botao,
   Container,
@@ -34,18 +37,18 @@ export function VisaoFavoritosMercado({
             to='/buscar'
             className='text-sm font-bold text-(--texto-apoio) hover:text-(--laranja-principal)'
           >
-            ← Voltar para a busca
+ Voltar para a busca
           </Link>
           <SeloEditorial texto='SERVIÇOS SALVOS' />
           <Titulo
             como='h1'
             classe='text-[clamp(2rem,3.6vw,3rem)] leading-[1.1] font-extrabold'
           >
-            Meus favoritos.
+            Meus favoritos
           </Titulo>
         </div>
         <Botao como={Link} to='/meus-contatos' variante='secundario'>
-          Ver meus contatos ↗
+          Ver meus contatos
         </Botao>
       </header>
 
@@ -68,7 +71,7 @@ export function VisaoFavoritosMercado({
                   />
                   <div className='space-y-2 p-5'>
                     <p className='text-xs font-bold text-(--laranja-principal) uppercase'>
-                      {servico.categoria} · ★ {servico.nota}
+                      {servico.categoria} · <IconeEstrela /> {servico.nota}
                     </p>
                     <Titulo
                       como='h2'
@@ -91,7 +94,7 @@ export function VisaoFavoritosMercado({
                     cor='laranja'
                     classe='min-h-[42px]! flex-1 px-4! text-sm!'
                   >
-                    Ver serviço ↗
+                    Ver serviço
                   </Botao>
                   <button
                     type='button'
@@ -107,7 +110,7 @@ export function VisaoFavoritosMercado({
         </div>
       ) : (
         <EstadoVazio
-          titulo='Seus próximos favoritos começam na busca.'
+          titulo='Seus próximos favoritos começam na busca'
           descricao='Salve serviços e empresas que chamarem sua atenção para comparar preços, avaliações e chamar quando precisar.'
           textoAcao='Explorar serviços'
           rotaAcao='/buscar'
@@ -210,7 +213,7 @@ export function VisaoMeusContatosMercado({ contatos = [] }) {
       <Container como='main' classe='py-10 pb-16'>
         <EstadoVazio
           varianteAlerta='erro'
-          titulo='Conversa não encontrada.'
+          titulo='Conversa não encontrada'
           descricao='Este histórico de atendimento não foi localizado neste navegador.'
           textoAcao='Voltar para meus contatos'
           rotaAcao='/meus-contatos'
@@ -231,7 +234,7 @@ export function VisaoMeusContatosMercado({ contatos = [] }) {
             to='/meus-contatos'
             className='inline-flex items-center text-sm font-bold text-(--texto-apoio) hover:text-(--laranja-principal)'
           >
-            ← Voltar para Meus contatos
+ Voltar para Meus contatos
           </Link>
           <SeloEditorial texto='HISTÓRICO DA CONVERSA' />
           <div className='flex flex-wrap items-center gap-3'>
@@ -303,7 +306,7 @@ export function VisaoMeusContatosMercado({ contatos = [] }) {
                 </p>
               )}
               <Botao type='submit' cor='laranja'>
-                Enviar mensagem ↗
+                Enviar mensagem
               </Botao>
             </form>
           </section>
@@ -338,7 +341,7 @@ export function VisaoMeusContatosMercado({ contatos = [] }) {
                 to={`/servicos/${conversaAtiva.anuncioId}`}
                 variante='secundario'
               >
-                Ver anúncio do serviço ↗
+                Ver anúncio do serviço
               </Botao>
               <Botao
                 como={Link}
@@ -367,18 +370,18 @@ export function VisaoMeusContatosMercado({ contatos = [] }) {
             to='/marketplace'
             className='text-sm font-bold text-(--texto-apoio) hover:text-(--laranja-principal)'
           >
-            ← Voltar para empresas e serviços
+ Voltar para empresas e serviços
           </Link>
           <SeloEditorial texto='ACOMPANHAMENTO DE PEDIDOS' />
           <Titulo
             como='h1'
             classe='text-[clamp(2rem,3.6vw,3rem)] leading-[1.1] font-extrabold'
           >
-            Meus contatos.
+            Meus contatos
           </Titulo>
         </div>
         <Botao como={Link} to='/buscar' cor='laranja'>
-          Buscar novos serviços ↗
+          Buscar novos serviços
         </Botao>
       </header>
 
@@ -434,14 +437,14 @@ export function VisaoMeusContatosMercado({ contatos = [] }) {
                 cor='laranja'
                 classe='shrink-0'
               >
-                Abrir conversa ↗
+                Abrir conversa
               </Botao>
             </article>
           ))}
         </div>
       ) : (
         <EstadoVazio
-          titulo='Nenhum contato nesta situação.'
+          titulo='Nenhum contato nesta situação'
           descricao='Envie uma mensagem para prestadores do Marketplace para acompanhar propostas e horários aqui.'
           textoAcao='Explorar serviços'
           rotaAcao='/buscar'

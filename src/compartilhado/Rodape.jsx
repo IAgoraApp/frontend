@@ -1,10 +1,17 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import logoMarca from '../ativos/imagens/marcas/logo-iagora.png';
 import { Container } from './interface/indice';
+import { lerEstadoPlataforma } from '../aplicacao/estado/estadoPlataforma';
+import { tipoUsuarioDaRota } from '../aplicacao/utilitarios/navegacao';
+import { inicioDaSessao, perfilDaSessao, temSessao } from '../aplicacao/utilitarios/sessao';
 
 export default function Rodape({ variante = 'padrao' }) {
-  const ehEmpresa = variante === 'empresa';
+  const logado = temSessao();
+  const ehEmpresa = variante === 'empresa' || (logado && perfilDaSessao() === 'empresa');
   const ehInicial = variante === 'inicial';
+  const { pathname } = useLocation();
+  const ehPreparacao = tipoUsuarioDaRota(pathname, lerEstadoPlataforma().perfil.momento) === 'consumidorB';
+  const rotaInicio = logado ? inicioDaSessao(lerEstadoPlataforma().perfil.momento) : '/';
 
   const grupos = [
     {
@@ -14,7 +21,7 @@ export default function Rodape({ variante = 'padrao' }) {
           rotulo: 'Funcionalidades',
           rota: ehEmpresa
             ? '/sejaparceiro#categorias'
-            : ehInicial
+            : ehInicial && !logado
               ? '/#funcionalidades'
               : '/como-funciona',
         },
@@ -30,7 +37,7 @@ export default function Rodape({ variante = 'padrao' }) {
       links: [
         {
           rotulo: ehEmpresa ? 'Área da empresa' : 'Meu perfil',
-          rota: ehEmpresa ? '/empresa/login' : '/perfil',
+          rota: ehEmpresa ? '/empresa' : ehPreparacao ? '/perfil-b' : '/perfil',
         },
         { rotulo: 'Suporte', rota: '/ajuda' },
         { rotulo: 'Perguntas frequentes', rota: '/ajuda/faq' },
@@ -47,7 +54,7 @@ export default function Rodape({ variante = 'padrao' }) {
       <div className='grid gap-10 lg:gap-16 [@media(1024px<=width<1400px)]:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] min-[1400px]:grid-cols-[360px_minmax(0,1fr)]'>
         <div>
           <Link
-            to='/'
+            to={rotaInicio}
             aria-label='Página inicial Iagora'
             className='inline-block rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--laranja-principal)'
           >

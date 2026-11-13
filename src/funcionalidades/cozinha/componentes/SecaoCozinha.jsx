@@ -312,7 +312,7 @@ export default function SecaoCozinha() {
                   }
                   className='mb-4 min-h-11 text-sm font-bold text-(--texto-apoio)'
                 >
-                  ← Voltar
+ Voltar
                 </button>
                 <p className='text-xs font-bold text-(--laranja-principal)'>
                   HOJE TEM EU QUE FIZ
@@ -477,7 +477,7 @@ export default function SecaoCozinha() {
 
               {visao === 'basico' && (
                 <div className='space-y-6'>
-                  <CartaoCasa titulo='Uma refeição de cada vez.'>
+                  <CartaoCasa titulo='Uma refeição de cada vez'>
                     <ul className='list-inside list-disc space-y-3 text-(--texto-apoio)'>
                       <li>
                         Leia a receita inteira e separe os ingredientes antes de
@@ -501,7 +501,7 @@ export default function SecaoCozinha() {
                     como={Link}
                     to='/limpeza?visao=guia&guia=cozinha'
                   >
-                    Aprender a limpar a cozinha ↗
+                    Aprender a limpar a cozinha
                   </BotaoCasa>
                 </div>
               )}
@@ -512,14 +512,14 @@ export default function SecaoCozinha() {
           <Container classe='flex flex-wrap items-center justify-between gap-6'>
             <div>
               <Titulo classe='text-3xl font-extrabold text-white!'>
-                Aprender a cozinhar também é se cuidar.
+                Aprender a cozinhar também é se cuidar
               </Titulo>
               <p className='mt-2 text-sm text-white/90'>
                 Um repertório simples já muda a sua semana.
               </p>
             </div>
             <BotaoCasa onClick={() => navegar('basico')}>
-              Aprender o básico ↗
+              Aprender o básico
             </BotaoCasa>
           </Container>
         </section>
@@ -547,7 +547,7 @@ export default function SecaoCozinha() {
             dialogo.tipo === 'refeicao'
               ? dialogo.item?.id
                 ? 'Editar refeição'
-                : 'Uma receita no seu plano.'
+                : 'Uma receita no seu plano'
               : dialogo.tipo === 'compras'
                 ? dialogo.item
                   ? 'Editar item'

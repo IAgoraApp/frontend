@@ -41,72 +41,72 @@ import { Botao } from '../../compartilhado/interface/indice';
 const cabecalhosVisao = {
   painel: {
     selo: 'PAINEL DA EMPRESA',
-    titulo: 'Desempenho dos seus anúncios.',
+    titulo: 'Desempenho dos seus anúncios',
     subtitulo:
       'Acompanhe visualizações, contatos recebidos e resultados por serviço.',
     assinatura: 'caixa',
-    etiqueta: 'BORA CRESCER ↗',
+    etiqueta: "BORA CRESCER",
   },
   anuncios: {
     selo: 'SEU NEGÓCIO NO IAGORA',
-    titulo: 'Seus anúncios.',
+    titulo: 'Seus anúncios',
     subtitulo:
       'Acompanhe status, visualizações e atualize os serviços oferecidos.',
     assinatura: 'checklist',
-    etiqueta: 'TUDO EM DIA ↗',
+    etiqueta: "TUDO EM DIA",
   },
   novo: {
     selo: 'ANUNCIAR SERVIÇO',
-    titulo: 'Você faz bem. Conta pra geral.',
+    titulo: 'Você faz bem. Conta pra geral',
     subtitulo:
       'Apresente o serviço com clareza e revise como ele aparece no Marketplace.',
     assinatura: 'caixa',
-    etiqueta: 'MOSTRE SEU TRABALHO ↗',
+    etiqueta: "MOSTRE SEU TRABALHO",
   },
   editar: {
     selo: 'EDITAR ANÚNCIO',
-    titulo: 'Ajuste o que seu serviço precisa mostrar.',
+    titulo: 'Ajuste o que seu serviço precisa mostrar',
     subtitulo: 'Revise título, atendimento, valores e fotos antes de salvar.',
     assinatura: 'prancheta',
-    etiqueta: 'DO SEU JEITO ↗',
+    etiqueta: "DO SEU JEITO",
   },
   fotos: {
     selo: 'FOTOS DO ANÚNCIO',
-    titulo: 'Mostre seu trabalho.',
+    titulo: 'Mostre seu trabalho',
     subtitulo: 'Adicione imagens reais do atendimento ou da equipe.',
     assinatura: 'planta',
-    etiqueta: 'SEU CAPRICHO ↗',
+    etiqueta: "SEU CAPRICHO",
   },
   previa: {
     selo: 'PRÉVIA PÚBLICA',
-    titulo: 'Assim seu serviço será apresentado.',
+    titulo: 'Assim seu serviço será apresentado',
     subtitulo:
       'Confira título, descrição, preço e contato antes de enviar para análise.',
     assinatura: 'chave',
-    etiqueta: 'VITRINE IAGORA ↗',
+    etiqueta: "VITRINE IAGORA",
   },
   perfil: {
     selo: 'PERFIL DA EMPRESA',
-    titulo: 'Cuide da presença da sua marca.',
+    titulo: 'Cuide da presença da sua marca',
     subtitulo:
       'Seu perfil ajuda novos moradores a confiar no seu trabalho desde o início.',
     assinatura: 'planta',
-    etiqueta: 'SUA ASSINATURA ↗',
+    etiqueta: "SUA ASSINATURA",
   },
   midias: {
     selo: 'LOGO E PORTFÓLIO',
-    titulo: 'Logo, foto comercial e portfólio.',
+    titulo: 'Logo, foto comercial e portfólio',
     subtitulo:
       'Personalize as imagens que identificam sua empresa no Marketplace.',
     assinatura: 'planta',
-    etiqueta: 'MARCA PRÓPRIA ↗',
+    etiqueta: "MARCA PRÓPRIA",
   },
   contatos: {
     selo: 'ATENDIMENTO',
-    titulo: 'Meus contatos.',
+    titulo: 'Meus contatos',
     subtitulo: 'Veja os moradores que entraram em contato e responda por aqui.',
     assinatura: 'livro',
-    etiqueta: 'CONVERSA ABERTA ↗',
+    etiqueta: "CONVERSA ABERTA",
   },
 };
 
@@ -297,7 +297,7 @@ function EmpresaConteudo({ visao }) {
     visao === 'detalhe'
       ? anuncio?.titulo || 'Rascunho sem título'
       : visao === 'conversa'
-        ? `Conversa com ${contato?.nome || 'cliente'}.`
+        ? `Conversa com ${contato?.nome || 'cliente'}`
         : cabecalhoAtual.titulo;
   const subtituloPagina =
     visao === 'conversa'
@@ -357,7 +357,7 @@ function EmpresaConteudo({ visao }) {
             <>
               <CabecalhoSubpagina
                 voltarPara={rotaVoltar}
-                rotuloVoltar='← Voltar'
+                rotuloVoltar=" Voltar"
                 selo={cabecalhoAtual.selo}
                 titulo={tituloPagina}
                 subtitulo={subtituloPagina}

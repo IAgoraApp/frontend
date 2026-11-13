@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { LinkNavegacao as Link } from './LinkNavegacao';
 import { Botao } from './Botoes';
 
 export function EstadoVazio({

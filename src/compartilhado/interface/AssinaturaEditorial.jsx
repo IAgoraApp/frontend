@@ -17,7 +17,7 @@ import plantaVaso from '../../ativos/vetores/assinaturas/planta-vaso.svg';
 
 export function AssinaturaEditorial({
   tipo = 'chave',
-  etiqueta = 'DO SEU JEITO ↗',
+  etiqueta = "DO SEU JEITO",
   classe = '',
 }) {
   return (

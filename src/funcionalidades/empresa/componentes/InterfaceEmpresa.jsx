@@ -224,10 +224,10 @@ export function FaixaAvisoEmpresa({
           imagens e conversas ficam salvos neste navegador.
         </p>
         <Link
-          to='/empresas/casa-em-dia'
+          to='/empresa/empresas/casa-em-dia'
           className='font-bold text-(--laranja-principal) hover:underline'
         >
-          Ver vitrine pública ↗
+          Ver vitrine pública
         </Link>
       </div>
 

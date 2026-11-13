@@ -1,4 +1,3 @@
-import { ArrowUpRight } from 'lucide-react';
 
 const variantes = {
   solido: 'rounded-full px-7 py-3 min-h-[48px] font-bold',
@@ -59,7 +58,6 @@ export function Botao({
       {...propriedades}
     >
       {children}
-      {variante === 'link' && <ArrowUpRight size={18} aria-hidden='true' />}
     </Etiqueta>
   );
 }

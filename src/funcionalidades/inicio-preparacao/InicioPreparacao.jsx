@@ -60,7 +60,7 @@ export default function InicioPreparacao() {
               to='/onboarding'
               className='inline-flex min-h-11 shrink-0 items-center font-bold text-[#e13b00]'
             >
-              Alterar ↗
+              Alterar
             </Link>
           </div>
         </div>
@@ -108,7 +108,7 @@ export default function InicioPreparacao() {
                 id='preparacao-jornada'
                 classe='text-3xl leading-tight font-extrabold sm:text-[34px]'
               >
-                Seu progresso rumo à independência.
+                Seu progresso rumo à independência
               </Titulo>
               <p className='leading-relaxed text-[#62717d]'>
                 {progresso}% concluído · {metasAtivas} metas ativas ·{' '}
@@ -189,7 +189,7 @@ export default function InicioPreparacao() {
                 id='preparacao-recomendacoes'
                 classe='text-2xl leading-tight font-extrabold sm:text-[32px]'
               >
-                Recomendações feitas para a sua fase.
+                Recomendações feitas para a sua fase
               </Titulo>
               <p className='leading-relaxed text-[#6b7582]'>
                 Veja lembretes de metas, atividades e conteúdos personalizados
@@ -200,13 +200,13 @@ export default function InicioPreparacao() {
                   to='/planejamento'
                   className='inline-flex min-h-11 items-center text-sm font-bold text-(--laranja-principal)'
                 >
-                  Simular orçamento →
+                  Simular orçamento
                 </Link>
                 <Link
                   to='/encontrar-casa'
                   className='inline-flex min-h-11 items-center text-sm font-bold text-(--laranja-principal)'
                 >
-                  Comparar imóveis →
+                  Comparar imóveis
                 </Link>
               </div>
             </div>

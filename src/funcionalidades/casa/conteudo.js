@@ -19,31 +19,31 @@ export const comodosCasa = [
 
 export const visoesCasa = {
   residencia: [
-    'Meu canto, organizado.',
+    'Meu canto, organizado',
     'As informações da sua residência e os cuidados que merecem atenção.',
   ],
   cadastrar: [
-    'Cadastrar residência.',
+    'Cadastrar residência',
     'Informe o essencial para organizar os cuidados da sua casa.',
   ],
   editar: [
-    'Editar minha casa.',
+    'Editar minha casa',
     'Atualize as informações da sua residência.',
   ],
   manutencoes: [
-    'Tudo em dia, sem imprevistos.',
+    'Tudo em dia, sem imprevistos',
     'Acompanhe os cuidados da sua residência.',
   ],
   historico: [
-    'Cada cuidado faz diferença.',
+    'Cada cuidado faz diferença',
     'Consulte as manutenções que você já resolveu.',
   ],
   despesas: [
-    'As contas do seu canto.',
+    'As contas do seu canto',
     'Consulte as despesas da casa sem duplicar o controle financeiro.',
   ],
   servicos: [
-    'Uma mão extra para sua casa.',
+    'Uma mão extra para sua casa',
     'Encontre ajuda para limpeza, manutenção e mudança.',
   ],
 };

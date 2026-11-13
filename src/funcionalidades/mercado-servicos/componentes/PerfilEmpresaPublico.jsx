@@ -1,5 +1,8 @@
+import { IconeEstrela, EstrelasAvaliacao } from '../../../compartilhado/interface/IndicadoresFuncionais';
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { LinkNavegacao as Link } from '../../../compartilhado/interface/LinkNavegacao';
+
 import {
   Botao,
   ColagemEditorial,
@@ -37,7 +40,7 @@ export default function PerfilEmpresaPublico({
       <Container como='main' classe='space-y-6 py-10 pb-16'>
         <EstadoVazio
           varianteAlerta='erro'
-          titulo='Empresa não encontrada.'
+          titulo='Empresa não encontrada'
           descricao='Este perfil comercial não está ativo ou não faz mais parte do catálogo.'
           textoAcao='Explorar empresas e serviços'
           rotaAcao='/marketplace'
@@ -66,7 +69,7 @@ export default function PerfilEmpresaPublico({
           to='/marketplace'
           className='inline-flex min-h-11 items-center text-sm font-bold text-(--texto-apoio) hover:text-(--laranja-principal)'
         >
-          ← Voltar para empresas e serviços
+ Voltar para empresas e serviços
         </Link>
       </div>
 
@@ -89,7 +92,7 @@ export default function PerfilEmpresaPublico({
             {empresa.nome}
           </Titulo>
           <p className='text-base font-bold text-(--texto-apoio)'>
-            ★ {empresa.nota || 4.8} ({empresa.totalAvaliacoes || 42} avaliações)
+            <IconeEstrela /> {empresa.nota || 4.8} ({empresa.totalAvaliacoes || 42} avaliações)
             · {empresa.regiao}
           </p>
           <p className='text-base leading-relaxed text-(--texto-apoio)'>
@@ -103,7 +106,7 @@ export default function PerfilEmpresaPublico({
                 cor='laranja'
                 classe='px-7!'
               >
-                Solicitar orçamento ↗
+                Solicitar orçamento
               </Botao>
             )}
             <Botao
@@ -116,7 +119,7 @@ export default function PerfilEmpresaPublico({
           </div>
           <div className='pt-2'>
             <span className='inline-block rotate-2 bg-(--azul-titulo) px-5 py-2.5 text-xs font-bold tracking-[0.7px] text-white uppercase'>
-              INDEPENDÊNCIA NA VIDA REAL ↗
+              INDEPENDÊNCIA NA VIDA REAL
             </span>
           </div>
         </div>
@@ -146,7 +149,7 @@ export default function PerfilEmpresaPublico({
             <PlantaIlustradaEmpresa />
           </div>
           <span className='font-titulo absolute top-[478px] left-[201px] -rotate-4 bg-(--laranja-principal) px-5 py-3 text-sm font-bold text-white shadow-sm'>
-            cuidado que dá confiança ↗
+            cuidado que dá confiança
           </span>
           <img
             src={tracoCaminho}
@@ -189,7 +192,7 @@ export default function PerfilEmpresaPublico({
               como='h2'
               classe='text-2xl font-extrabold text-(--azul-titulo)'
             >
-              Cuidado de verdade com o seu espaço.
+              Cuidado de verdade com o seu espaço
             </Titulo>
             <p className='leading-relaxed whitespace-pre-wrap text-(--texto-apoio)'>
               {empresa.sobre}
@@ -229,7 +232,7 @@ export default function PerfilEmpresaPublico({
                 rel='noreferrer'
                 className='inline-flex items-center text-sm font-bold text-(--laranja-principal) hover:underline'
               >
-                Site ou portfólio externo ↗
+                Site ou portfólio externo
               </a>
             )}
           </section>
@@ -267,7 +270,7 @@ export default function PerfilEmpresaPublico({
                 cor='laranja'
                 classe='w-full'
               >
-                Enviar mensagem direta ↗
+                Enviar mensagem direta
               </Botao>
             )}
           </aside>
@@ -315,7 +318,7 @@ export default function PerfilEmpresaPublico({
                       cor='laranja'
                       classe='min-h-[42px]! px-4! text-sm!'
                     >
-                      Combinar atendimento ↗
+                      Combinar atendimento
                     </Botao>
                   </div>
                 </article>
@@ -323,7 +326,7 @@ export default function PerfilEmpresaPublico({
             </div>
           ) : (
             <EstadoVazio
-              titulo='Sem anúncios ativos no momento.'
+              titulo='Sem anúncios ativos no momento'
               descricao='Esta empresa ainda não publicou anúncios específicos nesta vitrine.'
               textoAcao='Explorar outros serviços'
               rotaAcao='/buscar'
@@ -344,7 +347,7 @@ export default function PerfilEmpresaPublico({
                   <div className='flex items-center justify-between text-xs font-bold'>
                     <span className='text-(--azul-titulo)'>{item.autor}</span>
                     <span className='text-(--laranja-principal)'>
-                      {'★'.repeat(item.nota)}
+                      <EstrelasAvaliacao nota={item.nota} />
                     </span>
                   </div>
                   <p className='mt-2 text-sm leading-relaxed text-(--texto-apoio)'>
@@ -356,7 +359,7 @@ export default function PerfilEmpresaPublico({
             </div>
           ) : (
             <EstadoVazio
-              titulo='Sem avaliações cadastradas ainda.'
+              titulo='Sem avaliações cadastradas ainda'
               descricao='Quando houver novas avaliações nos serviços desta empresa, elas aparecerão aqui.'
               textoAcao='Voltar à visão geral'
               aoClicar={() => setAbaAtiva('geral')}
@@ -397,7 +400,7 @@ export default function PerfilEmpresaPublico({
             </Titulo>
             <p className='text-base text-(--texto-apoio)'>{empresa.regiao}</p>
             <Botao como={Link} to='/buscar/mapa' variante='secundario'>
-              Ver regiões no mapa ↗
+              Ver regiões no mapa
             </Botao>
           </div>
           <img

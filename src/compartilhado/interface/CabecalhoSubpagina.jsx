@@ -1,4 +1,5 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { LinkNavegacao as Link } from './LinkNavegacao';
 import { Botao } from './Botoes';
 import { SeloEditorial } from './SeloEditorial';
 import { AssinaturaEditorial } from './AssinaturaEditorial';
@@ -6,15 +7,16 @@ import { AssinaturaEditorial } from './AssinaturaEditorial';
 export function CabecalhoSubpagina({
   voltarPara = '',
   aoVoltar = null,
-  rotuloVoltar = '← Voltar',
+  rotuloVoltar = " Voltar",
   selo = '',
   titulo,
   subtitulo = '',
   assinatura = 'chave',
-  etiquetaAssinatura = 'DO SEU JEITO ↗',
+  etiquetaAssinatura = "DO SEU JEITO",
   acoes = null,
 }) {
   const navegar = useNavigate();
+  const { pathname, search } = useLocation();
 
   return (
     <header className='flex flex-col justify-between gap-6 border-b border-[#e6edf2] pb-8 md:flex-row md:items-center'>
@@ -31,7 +33,13 @@ export function CabecalhoSubpagina({
         ) : (
           <Botao
             type='button'
-            onClick={aoVoltar || (() => navegar(-1))}
+            onClick={
+              aoVoltar ||
+              (() => {
+                if (window.history.state?.idx > 0) navegar(-1);
+                else navegar(search ? pathname : '/ajuda', { replace: true });
+              })
+            }
             variante='fantasma'
             classe='px-4! min-h-[44px]! border border-[#dbe5ed] text-sm!'
           >

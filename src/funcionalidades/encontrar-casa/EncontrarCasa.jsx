@@ -88,7 +88,7 @@ export default function EncontrarCasa() {
   const imovelAtual =
     imoveisExemplo.find(item => item.id === idImovelParam) || null;
 
-  const visao = [
+  const visaoSolicitada = [
     'buscar',
     'resultados',
     'favoritos',
@@ -101,6 +101,8 @@ export default function EncontrarCasa() {
   ].includes(visaoParam)
     ? visaoParam
     : 'hub';
+  const exigeImovel = ['detalhe', 'galeria', 'impacto', 'contato'].includes(visaoSolicitada);
+  const visao = exigeImovel && !imovelAtual ? 'detalhe' : visaoSolicitada;
 
   function abrirVisao(proxima, idImovel = null) {
     definirParametros(
@@ -174,11 +176,11 @@ export default function EncontrarCasa() {
                   <h1 className='font-titulo text-[clamp(2.5rem,5.4vw,4.3rem)] leading-[1.04] font-extrabold text-(--azul-titulo)'>
                     Abre a porta.
                     <span className='block text-(--laranja-principal)'>
-                      Pro seu agora.
+                      Pro seu agora
                     </span>
                   </h1>
                   <span className='inline-block -rotate-2 bg-(--azul-titulo) px-5 py-2 text-xs font-bold tracking-wider text-white uppercase'>
-                    DO SEU JEITO. NO SEU TEMPO. ↗
+                    DO SEU JEITO. NO SEU TEMPO
                   </span>
                 </div>
                 <ChaveiroHeroiCasa />
@@ -212,7 +214,7 @@ export default function EncontrarCasa() {
                   cor='laranja'
                   classe='rounded-full px-8 min-h-[50px]'
                 >
-                  Buscar meu canto ↗
+                  Buscar meu canto
                 </Botao>
               </form>
 
@@ -222,7 +224,7 @@ export default function EncontrarCasa() {
                     DO SEU JEITO
                   </p>
                   <Titulo classe='text-xl font-extrabold'>
-                    Refine sua busca.
+                    Refine sua busca
                   </Titulo>
 
                   <CampoFormulario
@@ -261,7 +263,7 @@ export default function EncontrarCasa() {
                     cor='marinho'
                     classe='w-full rounded-full'
                   >
-                    Simular meu orçamento ↗
+                    Simular meu orçamento
                   </Botao>
                 </aside>
 
@@ -283,7 +285,7 @@ export default function EncontrarCasa() {
                         onClick={() => abrirVisao('resultados')}
                         className='min-h-11 text-(--laranja-principal) hover:underline'
                       >
-                        Ver todos ↗
+                        Ver todos
                       </button>
                     </div>
                   </div>
@@ -329,8 +331,8 @@ export default function EncontrarCasa() {
                                 onClick={() => alternarFavorito(imovel.id)}
                               >
                                 {salvo
-                                  ? 'Salvo na minha jornada ✓'
-                                  : 'Salvar na minha jornada ↗'}
+                                  ? "Salvo na minha jornada"
+                                  : "Salvar na minha jornada"}
                               </Botao>
                               <Botao
                                 type='button'
@@ -434,7 +436,7 @@ export default function EncontrarCasa() {
                   como='h2'
                   classe='text-2xl font-extrabold text-white! sm:text-3xl'
                 >
-                  Gostou do espaço? Olhe além da foto.
+                  Gostou do espaço? Olhe além da foto
                 </Titulo>
                 <p className='mt-1 text-sm text-white/80'>
                   Liste suas perguntas e compare cada opção com o seu orçamento.
@@ -446,7 +448,7 @@ export default function EncontrarCasa() {
                 cor='laranja'
                 classe='shrink-0 rounded-full px-7'
               >
-                Organizar minha jornada ↗
+                Organizar minha jornada
               </Botao>
             </Container>
           </section>

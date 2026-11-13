@@ -25,17 +25,17 @@ export default function HeroiLimpeza({ aoRotina }) {
           Menos caos.
           <br />
           <span className='mt-4 inline-block rotate-2 bg-(--laranja-principal) px-3 pb-2 text-white'>
-            Mais casa.
+            Mais casa
           </span>
         </Titulo>
         <p className='max-w-xl text-lg leading-relaxed'>
           Não precisa fazer tudo de uma vez. Monte uma rotina que cabe na sua
           semana.
         </p>
-        <BotaoCasa onClick={aoRotina}>Levar para minha rotina ↗</BotaoCasa>
+        <BotaoCasa onClick={aoRotina}>Levar para minha rotina</BotaoCasa>
         <div className='pt-8 sm:pt-14'>
           <span className='inline-block rotate-2 bg-(--azul-titulo) px-8 py-3 text-xs text-white'>
-            INDEPENDÊNCIA NA VIDA REAL ↗
+            INDEPENDÊNCIA NA VIDA REAL
           </span>
         </div>
       </div>
@@ -76,7 +76,7 @@ export default function HeroiLimpeza({ aoRotina }) {
           />
         </div>
         <span className='absolute top-[478px] left-[185px] -rotate-4 bg-(--laranja-principal) px-5 py-3 text-sm text-white'>
-          seu canto ganha vida ↗
+          seu canto ganha vida
         </span>
         <img
           src={vetorTracoCanto}

@@ -1,3 +1,4 @@
+import { IconeAnterior, IconeProximo } from '../../../compartilhado/interface/IndicadoresFuncionais';
 import { useEffect, useRef, useState } from 'react';
 import { Container, CabecalhoSecao, Titulo } from '../../../compartilhado/indice';
 import { categoriasDestaque } from '../conteudo';
@@ -51,7 +52,7 @@ export default function SecaoCategorias() {
             sobretitulo='CATEGORIAS EM DESTAQUE'
             classe='min-w-[min(100%,20rem)] flex-1 lg:min-h-[72px]'
           >
-            Encontre seu público em várias áreas.
+            Encontre seu público em várias áreas
           </CabecalhoSecao>
           <div className='flex shrink-0 items-center text-[22px] font-bold'>
             <button
@@ -61,9 +62,7 @@ export default function SecaoCategorias() {
               aria-label='Categorias anteriores'
               aria-controls='lista-categorias'
               className='flex size-11 cursor-pointer items-center justify-center rounded-lg text-(--laranja-principal) hover:bg-(--azul-fundo) disabled:cursor-default disabled:opacity-40'
-            >
-              ←
-            </button>
+            ><IconeAnterior /></button>
             <button
               type='button'
               onClick={() => rolar(1)}
@@ -71,9 +70,7 @@ export default function SecaoCategorias() {
               aria-label='Próximas categorias'
               aria-controls='lista-categorias'
               className='flex size-11 cursor-pointer items-center justify-center rounded-lg text-(--laranja-principal) hover:bg-(--azul-fundo) disabled:cursor-default disabled:opacity-40'
-            >
-              →
-            </button>
+            ><IconeProximo /></button>
           </div>
         </div>
 

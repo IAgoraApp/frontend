@@ -41,7 +41,7 @@ function EmblemaCarteiraSubpagina() {
       </div>
       <div className='absolute bottom-2 left-8 rotate-2 bg-(--azul-titulo) px-3 py-1'>
         <span className='text-[10px] font-bold tracking-wider text-white uppercase'>
-          DO SEU JEITO ↗
+          DO SEU JEITO
         </span>
       </div>
     </div>
@@ -69,9 +69,9 @@ export function VisaoRealidade({
     <div className='space-y-6'>
       <CabecalhoSubpagina
         aoVoltar={aoVoltar}
-        rotuloVoltar='← Voltar'
+        rotuloVoltar=" Voltar"
         selo='PLANEJAR SUA INDEPENDÊNCIA'
-        titulo='Seu próximo passo começa nos números.'
+        titulo='Seu próximo passo começa nos números'
         subtitulo='Informe estimativas. Você poderá ajustar tudo depois.'
         assinatura=''
       />
@@ -170,7 +170,7 @@ export function VisaoCenario({ realidade, aoAbrirVisao, aoVoltar }) {
             variante='fantasma'
             classe='px-4! min-h-[44px]! border border-[#dbe5ed] text-sm!'
           >
-            ← Voltar
+ Voltar
           </Botao>
           <div>
             <span className='inline-block rotate-[1.4deg] bg-(--laranja-principal) px-3 py-1 text-[11px] font-bold tracking-wider text-white uppercase'>
@@ -181,7 +181,7 @@ export function VisaoCenario({ realidade, aoAbrirVisao, aoVoltar }) {
             como='h1'
             classe='text-3xl leading-tight font-extrabold sm:text-5xl'
           >
-            Seu plano, em perspectiva.
+            Seu plano, em perspectiva
           </Titulo>
           <p className='text-base text-(--texto-apoio) sm:text-lg'>
             Estimativa educativa com os valores informados.
@@ -257,12 +257,7 @@ export function VisaoCenario({ realidade, aoAbrirVisao, aoVoltar }) {
             className='flex items-center justify-between gap-4 rounded-[10px] bg-white p-4 sm:px-6'
           >
             <div className='flex items-center gap-4'>
-              <span
-                aria-hidden='true'
-                className='font-bold text-(--laranja-principal)'
-              >
-                ↗
-              </span>
+
               <div>
                 <strong className='block text-base font-bold text-(--azul-titulo)'>
                   {rotulo}
@@ -277,7 +272,7 @@ export function VisaoCenario({ realidade, aoAbrirVisao, aoVoltar }) {
               onClick={() => aoAbrirVisao('realidade')}
               className='min-h-11 text-sm font-bold text-(--azul-titulo) hover:text-(--laranja-principal)'
             >
-              Ajustar ↗
+              Ajustar
             </button>
           </div>
         ))}
@@ -305,9 +300,9 @@ export function VisaoCustosIniciais({
     <div className='space-y-6'>
       <CabecalhoSubpagina
         aoVoltar={aoVoltar}
-        rotuloVoltar='← Voltar'
+        rotuloVoltar=" Voltar"
         selo='PLANEJAR SUA INDEPENDÊNCIA'
-        titulo='Antes das chaves, os primeiros custos.'
+        titulo='Antes das chaves, os primeiros custos'
         subtitulo='Separe o que você paga uma vez do que se repete todo mês.'
         assinatura=''
       />
@@ -445,7 +440,7 @@ export function VisaoCompararCenarios({
             variante='fantasma'
             classe='px-4! min-h-[44px]! border border-[#dbe5ed] text-sm!'
           >
-            ← Voltar
+ Voltar
           </Botao>
           <div>
             <span className='inline-block rotate-[1.4deg] bg-(--laranja-principal) px-3 py-1 text-[11px] font-bold tracking-wider text-white uppercase'>
@@ -456,7 +451,7 @@ export function VisaoCompararCenarios({
             como='h1'
             classe='text-3xl leading-tight font-extrabold sm:text-5xl'
           >
-            Dois caminhos, lado a lado.
+            Dois caminhos, lado a lado
           </Titulo>
           <p className='text-base text-(--texto-apoio) sm:text-lg'>
             Compare estimativas antes de escolher.
@@ -545,9 +540,9 @@ export function VisaoMetaEconomia({
     <div className='space-y-6'>
       <CabecalhoSubpagina
         aoVoltar={aoVoltar}
-        rotuloVoltar='← Voltar'
+        rotuloVoltar=" Voltar"
         selo='PLANEJAR SUA INDEPENDÊNCIA'
-        titulo='Um pouco por mês, um passo mais perto.'
+        titulo='Um pouco por mês, um passo mais perto'
         subtitulo='Defina uma meta possível para os custos iniciais.'
         assinatura=''
       />
@@ -655,7 +650,7 @@ export function VisaoCustoDeVida({ aoAbrirVisao, aoVoltar }) {
             variante='fantasma'
             classe='px-4! min-h-[44px]! border border-[#dbe5ed] text-sm!'
           >
-            ← Voltar
+ Voltar
           </Botao>
           <div>
             <span className='inline-block rotate-[1.4deg] bg-(--laranja-principal) px-3 py-1 text-[11px] font-bold tracking-wider text-white uppercase'>
@@ -666,7 +661,7 @@ export function VisaoCustoDeVida({ aoAbrirVisao, aoVoltar }) {
             como='h1'
             classe='text-3xl leading-tight font-extrabold sm:text-5xl'
           >
-            O mês tem mais que aluguel.
+            O mês tem mais que aluguel
           </Titulo>
           <p className='text-base text-(--texto-apoio) sm:text-lg'>
             Uma visão das despesas para começar sua estimativa.

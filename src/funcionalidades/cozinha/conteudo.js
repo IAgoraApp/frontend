@@ -104,7 +104,7 @@ export const receitasCozinha = [
     portions: 2,
     level: 'Tô começando',
     tags: ['Rápida', 'Econômica'],
-    description: 'Uma panela, um almoço resolvido.',
+    description: 'Uma panela, um almoço resolvido',
     ingredients: [
       criarIngrediente('Macarrão', 200, 'g'),
       criarIngrediente('Tomate', 2, 'unidade', 'Frescos'),
@@ -224,19 +224,19 @@ export const cabecalhosCozinha = {
     'Adicione os ingredientes disponíveis e encontre ideias.',
   ],
   plano: [
-    'Meu plano de refeições.',
+    'Meu plano de refeições',
     'Organize sua semana de forma simples e prática.',
   ],
   compras: [
-    'Sua lista de compras.',
+    'Sua lista de compras',
     'Planeje o que falta a partir das receitas e do que você já tem.',
   ],
   favoritas: [
-    'Suas receitas favoritas.',
+    'Suas receitas favoritas',
     'Guarde as receitas que você quer fazer de novo.',
   ],
   basico: [
-    'Um repertório para começar.',
+    'Um repertório para começar',
     'Poucos passos e receitas possíveis no seu ritmo.',
   ],
 };

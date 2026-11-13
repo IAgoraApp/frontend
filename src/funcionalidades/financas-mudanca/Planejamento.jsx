@@ -360,7 +360,7 @@ export default function Planejamento() {
                   <h1 className='font-titulo text-[clamp(2.5rem,5vw,4.25rem)] leading-[1.06] font-extrabold text-(--azul-titulo)'>
                     Sua mudança.
                     <span className='mt-2 inline-block -rotate-1 bg-(--laranja-principal) px-4 py-1 text-white'>
-                      No seu plano.
+                      No seu plano
                     </span>
                   </h1>
                   <p className='max-w-lg text-lg text-(--texto-apoio)'>
@@ -372,7 +372,7 @@ export default function Planejamento() {
                     classe='rounded-full px-8 min-h-[52px]'
                     onClick={() => abrirVisao('realidade')}
                   >
-                    Começar tutorial <span className='ml-2'>→</span>
+                    Começar tutorial
                   </Botao>
                 </div>
 
@@ -415,7 +415,7 @@ export default function Planejamento() {
                   </div>
                   <div className='absolute right-6 bottom-0 -rotate-3 bg-(--laranja-principal) px-4 py-1.5 shadow-xs'>
                     <span className='text-[11px] font-bold tracking-wider text-white uppercase'>
-                      um respiro pro seu bolso ↗
+                      um respiro pro seu bolso
                     </span>
                   </div>
                 </div>
@@ -426,7 +426,7 @@ export default function Planejamento() {
                   TRÊS PASSOS PRA SAIR DO ZERO
                 </p>
                 <Titulo classe='mt-2 text-2xl font-extrabold sm:text-3xl'>
-                  Seu caminho para organizar melhor suas finanças.
+                  Seu caminho para organizar melhor suas finanças
                 </Titulo>
                 <p className='mt-2 text-sm text-(--texto-apoio) sm:text-base'>
                   Um passo a passo simples para aprender e aplicar no seu dia.
@@ -476,7 +476,7 @@ export default function Planejamento() {
                       como='h2'
                       classe='mt-1 text-3xl font-extrabold sm:text-4xl'
                     >
-                      Minha mudança.
+                      Minha mudança
                     </Titulo>
                     <p className='mt-1 text-sm text-(--texto-apoio) sm:text-base'>
                       Veja o que já separou e os gastos previstos para começar.
@@ -607,7 +607,7 @@ export default function Planejamento() {
                   <span className='pb-2 text-xs text-(--texto-apoio)'>
                     {dados.exemplo
                       ? 'ⓘ Dados de exemplo'
-                      : '✓ Salvo neste navegador'}
+                      : " Salvo neste navegador"}
                   </span>
                 </div>
 
@@ -825,7 +825,7 @@ export default function Planejamento() {
                   classe='rounded-full px-8 min-h-[52px]'
                   onClick={() => abrirVisao('realidade')}
                 >
-                  Montar meu orçamento <span className='ml-3'>→</span>
+                  Montar meu orçamento
                 </Botao>
                 <span className='relative inline-flex h-20 w-20 shrink-0 items-center justify-center'>
                   <IconeFinancas nome='MoedaEconomia' />

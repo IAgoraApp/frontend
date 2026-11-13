@@ -1,3 +1,4 @@
+import { IconeConcluido } from '../../compartilhado/interface/IndicadoresFuncionais';
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import {
@@ -97,12 +98,12 @@ export default function Aprendendo() {
             <>
               <section className='mx-auto flex max-w-3xl flex-col items-center pt-2 text-center'>
                 <p className='text-[11px] font-bold tracking-[0.12em] text-(--laranja-principal) uppercase'>
-                  APRENDE. TENTA. FAZ DO SEU JEITO.
+                  APRENDE. TENTA. FAZ DO SEU JEITO
                 </p>
                 <h1 className='font-titulo mt-3 text-[clamp(2.5rem,5.5vw,4.5rem)] leading-[1.04] font-extrabold text-(--azul-titulo)'>
                   Ninguém nasce
                   <span className='mx-auto mt-3 block w-fit -rotate-2 bg-(--laranja-principal) px-7 py-2 text-white'>
-                    sabendo.
+                    sabendo
                   </span>
                 </h1>
                 <p className='mt-5 max-w-md text-base leading-relaxed text-(--texto-apoio)'>
@@ -116,7 +117,7 @@ export default function Aprendendo() {
                     cor='laranja'
                     classe='rounded-full px-8 min-h-[50px]'
                   >
-                    Ver minha jornada ↗
+                    Ver minha jornada
                   </Botao>
                   <Botao
                     type='button'
@@ -155,7 +156,7 @@ export default function Aprendendo() {
                       onClick={() => abrirVisao('simulacao')}
                       className='rotate-1 bg-(--azul-titulo) px-4 py-1.5 text-[11px] font-bold tracking-wider text-white uppercase hover:bg-(--laranja-principal)'
                     >
-                      UM PASSO DE CADA VEZ ↗
+                      UM PASSO DE CADA VEZ
                     </button>
                   </div>
 
@@ -166,7 +167,7 @@ export default function Aprendendo() {
                       className='aspect-4/3 w-full rounded object-cover'
                     />
                     <span className='absolute right-3 -bottom-3 -rotate-2 bg-(--laranja-principal) px-3 py-1 text-[10px] font-bold tracking-wider text-white uppercase shadow-xs'>
-                      seu canto ganha vida ↗
+                      seu canto ganha vida
                     </span>
                   </div>
                 </div>
@@ -179,7 +180,7 @@ export default function Aprendendo() {
                       COMECE PELO QUE VOCÊ PRECISA
                     </p>
                     <Titulo classe='mt-1 text-2xl font-extrabold sm:text-3xl'>
-                      O básico que dá autonomia.
+                      O básico que dá autonomia
                     </Titulo>
                   </div>
                   <button
@@ -187,7 +188,7 @@ export default function Aprendendo() {
                     onClick={() => abrirVisao('biblioteca')}
                     className='min-h-11 text-sm font-bold text-(--laranja-principal) hover:underline'
                   >
-                    Ver todos os guias ↗
+                    Ver todos os guias
                   </button>
                 </div>
 
@@ -235,7 +236,7 @@ export default function Aprendendo() {
                       GUIA RÁPIDO
                     </p>
                     <Titulo classe='mt-1 text-2xl font-extrabold sm:text-3xl'>
-                      A primeira semana no seu canto.
+                      A primeira semana no seu canto
                     </Titulo>
                   </div>
                   <button
@@ -243,7 +244,7 @@ export default function Aprendendo() {
                     onClick={() => abrirVisao('simulacao')}
                     className='min-h-11 text-sm font-bold text-(--azul-titulo) hover:text-(--laranja-principal)'
                   >
-                    Praticar em uma simulação ↗
+                    Praticar em uma simulação
                   </button>
                 </div>
 
@@ -270,7 +271,7 @@ export default function Aprendendo() {
                               : 'border-[#c4d0da] bg-white text-transparent')
                           }
                         >
-                          ✓
+                          <IconeConcluido />
                         </span>
                         <span>
                           <strong
@@ -299,12 +300,12 @@ export default function Aprendendo() {
             <div className='space-y-8'>
               <CabecalhoSubpagina
                 aoVoltar={() => abrirVisao('hub')}
-                rotuloVoltar='← Voltar'
+                rotuloVoltar=" Voltar"
                 selo='UM PASSO DE CADA VEZ'
-                titulo='O que ninguém te ensinou, aos poucos.'
+                titulo='O que ninguém te ensinou, aos poucos'
                 subtitulo='Guias para ganhar autonomia no seu ritmo.'
                 assinatura='livro'
-                etiquetaAssinatura='DO SEU JEITO ↗'
+                etiquetaAssinatura="DO SEU JEITO"
               />
 
               <div className='grid gap-8 md:grid-cols-2 lg:grid-cols-3'>
@@ -328,7 +329,7 @@ export default function Aprendendo() {
                             </span>
                             {lido && (
                               <span className='rounded-full bg-[#e6f5ec] px-2.5 py-0.5 text-[11px] font-bold text-(--verde-sucesso)'>
-                                Lido ✓
+                                Lido
                               </span>
                             )}
                           </div>
@@ -345,7 +346,7 @@ export default function Aprendendo() {
                           classe='mt-5 w-full rounded-full'
                           onClick={() => abrirVisao('guia', guia.slug)}
                         >
-                          Ver guia ↗
+                          Ver guia
                         </Botao>
                       </div>
                     </article>
@@ -382,9 +383,9 @@ export default function Aprendendo() {
                 <div className='space-y-8'>
                   <CabecalhoSubpagina
                     aoVoltar={() => abrirVisao('biblioteca')}
-                    rotuloVoltar='← Voltar'
+                    rotuloVoltar=" Voltar"
                     selo='UM PASSO DE CADA VEZ'
-                    titulo={`${guiaSelecionado.titulo}.`}
+                    titulo={`${guiaSelecionado.titulo}`}
                     subtitulo={guiaSelecionado.subtitulo}
                     assinatura=''
                   />
@@ -397,7 +398,7 @@ export default function Aprendendo() {
 
                       <div className='space-y-4'>
                         <Titulo classe='text-2xl font-extrabold'>
-                          Teste assim, no seu ritmo.
+                          Teste assim, no seu ritmo
                         </Titulo>
                         <div className='space-y-4'>
                           {guiaSelecionado.passos.map(passo => (
@@ -429,7 +430,7 @@ export default function Aprendendo() {
                           onClick={() => alternarGuiaLido(guiaSelecionado.slug)}
                         >
                           {estado.lidos.includes(guiaSelecionado.slug)
-                            ? 'Lido ✓'
+                            ? "Lido"
                             : 'Marcar como lido'}
                         </Botao>
                         <Botao
@@ -484,12 +485,12 @@ export default function Aprendendo() {
             <div className='space-y-6'>
               <CabecalhoSubpagina
                 aoVoltar={() => abrirVisao('biblioteca')}
-                rotuloVoltar='← Voltar'
+                rotuloVoltar=" Voltar"
                 selo='UM PASSO DE CADA VEZ'
-                titulo='Uma semana no seu primeiro canto.'
+                titulo='Uma semana no seu primeiro canto'
                 subtitulo='Experiência educativa com escolhas e consequências demonstrativas.'
                 assinatura='livro'
-                etiquetaAssinatura='DO SEU JEITO ↗'
+                etiquetaAssinatura="DO SEU JEITO"
               />
               <div className='rounded-xl bg-(--azul-fundo) p-5 sm:p-6'>
                 <strong className='block text-base font-bold text-(--azul-titulo)'>
@@ -531,12 +532,12 @@ export default function Aprendendo() {
             <div className='space-y-6'>
               <CabecalhoSubpagina
                 aoVoltar={() => abrirVisao('simulacao')}
-                rotuloVoltar='← Voltar'
+                rotuloVoltar=" Voltar"
                 selo='UM PASSO DE CADA VEZ'
-                titulo='Você reservou um tempo para organizar.'
+                titulo='Você reservou um tempo para organizar'
                 subtitulo='Experiência educativa com escolhas e consequências demonstrativas.'
                 assinatura='livro'
-                etiquetaAssinatura='DO SEU JEITO ↗'
+                etiquetaAssinatura="DO SEU JEITO"
               />
               <div className='rounded-xl bg-(--azul-fundo) p-5 sm:p-6'>
                 <strong className='block text-base font-bold text-(--azul-titulo)'>
@@ -571,12 +572,12 @@ export default function Aprendendo() {
             <div className='space-y-6'>
               <CabecalhoSubpagina
                 aoVoltar={() => abrirVisao('simulacao')}
-                rotuloVoltar='← Voltar'
+                rotuloVoltar=" Voltar"
                 selo='UM PASSO DE CADA VEZ'
                 titulo='E se a conta ficar para depois?'
                 subtitulo='Experiência educativa com escolhas e consequências demonstrativas.'
                 assinatura='livro'
-                etiquetaAssinatura='DO SEU JEITO ↗'
+                etiquetaAssinatura="DO SEU JEITO"
               />
               <div className='rounded-xl bg-(--laranja-fundo) p-5 sm:p-6'>
                 <strong className='block text-base font-bold text-(--azul-titulo)'>
@@ -619,12 +620,12 @@ export default function Aprendendo() {
             <div className='space-y-6'>
               <CabecalhoSubpagina
                 aoVoltar={() => abrirVisao('biblioteca')}
-                rotuloVoltar='← Voltar'
+                rotuloVoltar=" Voltar"
                 selo='UM PASSO DE CADA VEZ'
-                titulo='Uma decisão de cada vez.'
+                titulo='Uma decisão de cada vez'
                 subtitulo='Experiência educativa com escolhas e consequências demonstrativas.'
                 assinatura='livro'
-                etiquetaAssinatura='DO SEU JEITO ↗'
+                etiquetaAssinatura="DO SEU JEITO"
               />
               <div className='rounded-xl bg-(--azul-fundo) p-5 sm:p-6'>
                 <strong className='block text-base font-bold text-(--azul-titulo)'>
@@ -660,12 +661,12 @@ export default function Aprendendo() {
             <div className='space-y-6'>
               <CabecalhoSubpagina
                 aoVoltar={() => abrirVisao('biblioteca')}
-                rotuloVoltar='← Voltar'
+                rotuloVoltar=" Voltar"
                 selo='UM PASSO DE CADA VEZ'
-                titulo='Sua experiência continua aqui.'
+                titulo='Sua experiência continua aqui'
                 subtitulo='Experiência educativa com escolhas e consequências demonstrativas.'
                 assinatura='livro'
-                etiquetaAssinatura='DO SEU JEITO ↗'
+                etiquetaAssinatura="DO SEU JEITO"
               />
               <div className='rounded-xl bg-(--azul-fundo) p-5 sm:p-6'>
                 <strong className='block text-base font-bold text-(--azul-titulo)'>
@@ -695,7 +696,7 @@ export default function Aprendendo() {
                   como='h2'
                   classe='text-2xl font-extrabold text-white! sm:text-3xl'
                 >
-                  Autonomia também é saber pedir ajuda.
+                  Autonomia também é saber pedir ajuda
                 </Titulo>
                 <p className='mt-1 text-sm text-white/80'>
                   Encontre empresas para o que precisa de cuidado especializado.
@@ -707,7 +708,7 @@ export default function Aprendendo() {
                 cor='laranja'
                 classe='shrink-0 rounded-full px-7'
               >
-                Encontrar uma empresa ↗
+                Encontrar uma empresa
               </Botao>
             </Container>
           </section>

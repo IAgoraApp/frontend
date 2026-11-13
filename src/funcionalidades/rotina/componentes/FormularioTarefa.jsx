@@ -345,7 +345,7 @@ export default function FormularioTarefa({
               : tarefa
                 ? 'Salvar alterações'
                 : 'Salvar tarefa'}{' '}
-            <span aria-hidden='true'>→</span>
+
           </BotaoRotina>
         </div>
       </form>

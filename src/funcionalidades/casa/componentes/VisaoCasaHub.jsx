@@ -1,3 +1,4 @@
+import { IconeConcluido } from '../../../compartilhado/interface/IndicadoresFuncionais';
 import { Link } from 'react-router-dom';
 import { Container, Titulo } from '../../../compartilhado/interface/indice';
 import { dicasCuidadoCasa } from '../conteudo';
@@ -14,7 +15,7 @@ export default function VisaoCasaHub({ aoNavegar, marcacoes, aoMarcar }) {
           <ArteCasa />
           <div className='min-w-0 space-y-6'>
             <p className='text-xs font-bold tracking-[0.08em] text-(--laranja-principal)'>
-              SEU CANTO. SEU JEITO DE CUIDAR.
+              SEU CANTO. SEU JEITO DE CUIDAR
             </p>
             <Titulo
               como='h1'
@@ -31,7 +32,7 @@ export default function VisaoCasaHub({ aoNavegar, marcacoes, aoMarcar }) {
               quando precisar.
             </p>
             <BotaoCasa como={Link} to='/rotina' classe='px-8'>
-              Organizar minha rotina ↗
+              Organizar minha rotina
             </BotaoCasa>
           </div>
         </section>
@@ -42,7 +43,7 @@ export default function VisaoCasaHub({ aoNavegar, marcacoes, aoMarcar }) {
               imagem: fotoLimpeza,
               alt: 'Profissionais de serviços domésticos e manutenção prontos para ajudar em casa',
               subtitulo: '01 / LIMPEZA',
-              titulo: 'Casa limpa, sem complicação.',
+              titulo: 'Casa limpa, sem complicação',
               descricao:
                 'Uma rotina possível, os produtos certos e um cômodo de cada vez.',
               acao: 'Cuidar da limpeza',
@@ -53,7 +54,7 @@ export default function VisaoCasaHub({ aoNavegar, marcacoes, aoMarcar }) {
               imagem: fotoCozinha,
               alt: 'Bancada de cozinha organizada com pratos de macarrão preparados na hora',
               subtitulo: '02 / COZINHA',
-              titulo: 'Comida boa no seu ritmo.',
+              titulo: 'Comida boa no seu ritmo',
               descricao:
                 'Receitas simples e ideias para aproveitar o que já tem em casa.',
               acao: 'Explorar a cozinha',
@@ -84,7 +85,7 @@ export default function VisaoCasaHub({ aoNavegar, marcacoes, aoMarcar }) {
                   {item.descricao}
                 </p>
                 <BotaoCasa como={Link} to={item.rota} classe='w-full'>
-                  {item.acao} ↗
+                  {item.acao}
                 </BotaoCasa>
               </div>
             </section>
@@ -96,7 +97,7 @@ export default function VisaoCasaHub({ aoNavegar, marcacoes, aoMarcar }) {
             PEQUENOS CUIDADOS
           </p>
           <Titulo classe='mt-2 text-3xl font-extrabold sm:text-4xl'>
-            O básico que faz diferença.
+            O básico que faz diferença
           </Titulo>
           <div className='mt-6 rounded-lg bg-(--azul-fundo) p-5 sm:p-7'>
             {dicasCuidadoCasa.map(([titulo, descricao], indice) => {
@@ -125,7 +126,7 @@ export default function VisaoCasaHub({ aoNavegar, marcacoes, aoMarcar }) {
                         : 'border-(--azul-titulo) bg-transparent text-transparent')
                     }
                   >
-                    ✓
+                    <IconeConcluido />
                   </span>
                   <span>
                     <strong className='block font-bold text-(--azul-titulo)'>
@@ -146,14 +147,14 @@ export default function VisaoCasaHub({ aoNavegar, marcacoes, aoMarcar }) {
         <Container classe='flex flex-wrap items-center justify-between gap-6'>
           <div>
             <Titulo classe='text-3xl font-extrabold text-white!'>
-              Tem coisa que pede uma mão extra.
+              Tem coisa que pede uma mão extra
             </Titulo>
             <p className='mt-2 text-sm text-white/90'>
               Encontre empresas de limpeza, manutenção e mudança.
             </p>
           </div>
           <BotaoCasa onClick={() => aoNavegar('servicos')}>
-            Encontrar empresas ↗
+            Encontrar empresas
           </BotaoCasa>
         </Container>
       </section>

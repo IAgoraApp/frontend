@@ -16,7 +16,7 @@ export default function SecaoPassosParceiro() {
           inverso
           classe='gap-1 lg:h-16 lg:justify-center'
         >
-          Anunciar é simples.
+          Anunciar é simples
         </CabecalhoSecao>
         <div className='mt-[18px] grid gap-[17px] lg:grid-cols-3'>
           {passosParceiro.map((passo, indice) => (

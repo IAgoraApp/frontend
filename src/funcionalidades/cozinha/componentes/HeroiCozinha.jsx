@@ -1,3 +1,4 @@
+import { IconeConcluido } from '../../../compartilhado/interface/IndicadoresFuncionais';
 import { Link } from 'react-router-dom';
 import { Titulo } from '../../../compartilhado/interface/indice';
 import ColagemEditorial from '../../../compartilhado/interface/ColagemEditorial';
@@ -22,7 +23,7 @@ export default function HeroiCozinha({ navegar, marcacoes, aoMarcar }) {
             Hoje tem
             <br />
             <span className='mt-4 inline-block -rotate-2 bg-(--laranja-principal) px-3 pb-2 text-white'>
-              eu que fiz.
+              eu que fiz
             </span>
           </Titulo>
           <p className='max-w-xl text-lg leading-relaxed'>
@@ -30,11 +31,11 @@ export default function HeroiCozinha({ navegar, marcacoes, aoMarcar }) {
             vontade de comer bem.
           </p>
           <BotaoCasa onClick={() => navegar('compras')}>
-            Organizar minhas compras ↗
+            Organizar minhas compras
           </BotaoCasa>
           <div className='pt-8 sm:pt-14'>
             <span className='inline-block rotate-2 bg-(--azul-titulo) px-8 py-3 text-xs text-white'>
-              UM PASSO DE CADA VEZ ↗
+              UM PASSO DE CADA VEZ
             </span>
           </div>
         </div>
@@ -55,7 +56,7 @@ export default function HeroiCozinha({ navegar, marcacoes, aoMarcar }) {
             <PlantaEditorial />
           </div>
           <span className='absolute top-[544px] left-[275px] -rotate-4 bg-(--laranja-principal) px-5 py-3 text-sm text-white'>
-            seu canto ganha vida ↗
+            seu canto ganha vida
           </span>
           <img
             src={vetorTracoCanto}
@@ -75,7 +76,7 @@ export default function HeroiCozinha({ navegar, marcacoes, aoMarcar }) {
           RECEITA PRA HOJE
         </p>
         <Titulo classe='mt-3 text-3xl font-extrabold sm:text-4xl'>
-          Poucos ingredientes. Muito sabor.
+          Poucos ingredientes. Muito sabor
         </Titulo>
         <div className='mt-6 grid items-center gap-6 rounded-xl bg-(--azul-fundo) p-5 lg:grid-cols-2 lg:gap-10'>
           <img
@@ -90,7 +91,7 @@ export default function HeroiCozinha({ navegar, marcacoes, aoMarcar }) {
             <Titulo classe='text-3xl font-extrabold'>
               Uma panela,
               <br />
-              um almoço resolvido.
+              um almoço resolvido
             </Titulo>
             <p className='text-xs font-bold text-(--texto-apoio)'>
               25 MIN · 2 PORÇÕES · NÍVEL: TÔ COMEÇANDO
@@ -102,7 +103,7 @@ export default function HeroiCozinha({ navegar, marcacoes, aoMarcar }) {
               <li>Cozinhe até ficar no ponto e finalize.</li>
             </ol>
             <BotaoCasa onClick={() => navegar('receita', 'macarrao')}>
-              Ver receita completa →
+              Ver receita completa
             </BotaoCasa>
           </div>
         </div>
@@ -113,7 +114,7 @@ export default function HeroiCozinha({ navegar, marcacoes, aoMarcar }) {
           ANTES DO MERCADO
         </p>
         <Titulo classe='mt-3 text-3xl font-extrabold sm:text-4xl'>
-          Abra a geladeira. Depois, a lista.
+          Abra a geladeira. Depois, a lista
         </Titulo>
         <div className='mt-6 rounded-xl bg-(--azul-fundo) p-5'>
           {[
@@ -155,7 +156,7 @@ export default function HeroiCozinha({ navegar, marcacoes, aoMarcar }) {
                       : 'border-(--azul-titulo) bg-transparent text-transparent')
                   }
                 >
-                  ✓
+                  <IconeConcluido />
                 </span>
                 <span>
                   <strong className='block font-bold text-(--azul-titulo)'>
@@ -181,7 +182,7 @@ export default function HeroiCozinha({ navegar, marcacoes, aoMarcar }) {
             como={Link}
             to='/limpeza?visao=biblioteca&guia=cozinha'
           >
-            Cuidar da cozinha ↗
+            Cuidar da cozinha
           </BotaoCasa>
         </div>
       </section>

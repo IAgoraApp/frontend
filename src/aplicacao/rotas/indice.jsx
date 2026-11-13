@@ -1,6 +1,5 @@
 import {
   createBrowserRouter,
-  Navigate,
   RouterProvider,
 } from 'react-router-dom';
 import { RotaPrivada, RotaPublica } from '../utilitarios/autenticacao';
@@ -11,6 +10,7 @@ import {
   LayoutUsuario,
 } from '../layouts/indice';
 import TelaErro from './componentes/TelaErro';
+import Redirecionamento from './componentes/Redirecionamento';
 import { Funcionalidades } from '../../funcionalidades/indice';
 
 const rotas = createBrowserRouter([
@@ -20,6 +20,7 @@ const rotas = createBrowserRouter([
       {
         element: <RotaPrivada />,
         children: [
+          { path: '/onboarding', element: <Funcionalidades.Integracao /> },
           {
             element: <LayoutUsuario tipoUsuario='consumidorA' />,
             children: [
@@ -128,7 +129,7 @@ const rotas = createBrowserRouter([
               },
               {
                 path: '/financas-b',
-                element: <Navigate to='/planejamento' replace />,
+                element: <Redirecionamento para='/planejamento' />,
               },
               {
                 path: '/planejamento',
@@ -238,6 +239,114 @@ const rotas = createBrowserRouter([
                 element: <Funcionalidades.Empresa visao='conversa' />,
               },
               {
+                path: '/empresa/buscar/mapa',
+                element: (
+                  <Funcionalidades.MercadoServicos
+                    dentroDaEmpresa
+                    visao='mapa'
+                  />
+                ),
+              },
+              {
+                path: '/empresa/marketplace/filtros',
+                element: (
+                  <Funcionalidades.MercadoServicos
+                    dentroDaEmpresa
+                    visao='filtros'
+                  />
+                ),
+              },
+              {
+                path: '/empresa/categoria/:slug',
+                element: (
+                  <Funcionalidades.MercadoServicos
+                    dentroDaEmpresa
+                    visao='categoria'
+                  />
+                ),
+              },
+              {
+                path: '/empresa/categorias/:slug',
+                element: (
+                  <Funcionalidades.MercadoServicos
+                    dentroDaEmpresa
+                    visao='categoria'
+                  />
+                ),
+              },
+              {
+                path: '/empresa/servicos/indisponivel',
+                element: (
+                  <Funcionalidades.MercadoServicos
+                    dentroDaEmpresa
+                    visao='indisponivel'
+                  />
+                ),
+              },
+              {
+                path: '/empresa/servicos/:id',
+                element: (
+                  <Funcionalidades.MercadoServicos
+                    dentroDaEmpresa
+                    visao='servico'
+                  />
+                ),
+              },
+              {
+                path: '/empresa/servicos/:id/avaliacoes',
+                element: (
+                  <Funcionalidades.MercadoServicos
+                    dentroDaEmpresa
+                    visao='avaliacoes'
+                  />
+                ),
+              },
+              {
+                path: '/empresa/servicos/:id/contato',
+                element: (
+                  <Funcionalidades.MercadoServicos
+                    dentroDaEmpresa
+                    visao='contato'
+                  />
+                ),
+              },
+              {
+                path: '/empresa/empresas/:id',
+                element: (
+                  <Funcionalidades.MercadoServicos
+                    dentroDaEmpresa
+                    visao='perfil'
+                  />
+                ),
+              },
+              {
+                path: '/empresa/favoritos',
+                element: (
+                  <Funcionalidades.MercadoServicos
+                    dentroDaEmpresa
+                    visao='favoritos'
+                  />
+                ),
+              },
+              {
+                path: '/empresa/meus-contatos',
+                element: (
+                  <Funcionalidades.MercadoServicos
+                    dentroDaEmpresa
+                    visao='contatos'
+                  />
+                ),
+              },
+              {
+                path: '/empresa/meus-contatos/:id',
+                element: (
+                  <Funcionalidades.MercadoServicos
+                    dentroDaEmpresa
+                    visao='contatos'
+                  />
+                ),
+              },
+              {
                 path: '/empresa/marketplace',
                 element: (
                   <Funcionalidades.MercadoServicos
@@ -263,7 +372,6 @@ const rotas = createBrowserRouter([
         element: <RotaPublica />,
         children: [
           { path: '/login', element: <Funcionalidades.Autenticacao /> },
-          { path: '/onboarding', element: <Funcionalidades.Integracao /> },
           {
             element: <LayoutPublico />,
             children: [

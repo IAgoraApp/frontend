@@ -1,20 +1,28 @@
 import { useState } from 'react';
-import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import {
-  ArteResponsiva,
+  Link,
+  Navigate,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from 'react-router-dom';
+import {
+  destinoAposAcesso,
+  iniciarSessao,
+} from '../../aplicacao/utilitarios/sessao';
+import {
   Botao,
   CampoFormulario,
   Container,
   Rodape,
   SeloEditorial,
-  Titulo,
 } from '../../compartilhado/indice';
-import EquipeServicos from '../../ativos/imagens/fotografias/equipe-servicos.png';
 import { atualizarEmpresa } from '../../aplicacao/estado/estadoEmpresa';
 import { camposEmpresa } from './conteudo';
 
-export function EmpresaAcesso({ modoInicial = 'divisao' }) {
+export function EmpresaAcesso({ modoInicial = 'cadastro' }) {
   const navegar = useNavigate();
+  const localizacao = useLocation();
   const [parametros] = useSearchParams();
   const entrarQuery = parametros.get('modo') === 'entrar';
   const [valores, setValores] = useState({
@@ -25,8 +33,14 @@ export function EmpresaAcesso({ modoInicial = 'divisao' }) {
   const [aceitouTermos, setAceitouTermos] = useState(false);
   const [erro, setErro] = useState('');
 
-  if (modoInicial === 'divisao' && entrarQuery) {
-    return <Navigate to='/login?perfil=empresa' replace />;
+  if (modoInicial === 'divisao') {
+    return (
+      <Navigate
+        to={entrarQuery ? '/login?perfil=empresa' : '/empresa/cadastro' + localizacao.search + localizacao.hash}
+        replace
+        state={localizacao.state}
+      />
+    );
   }
 
   const enviarCadastro = evento => {
@@ -51,7 +65,10 @@ export function EmpresaAcesso({ modoInicial = 'divisao' }) {
           email: valores.email.trim(),
         },
       }));
-      navegar('/empresa');
+      iniciarSessao('empresa');
+      navegar(destinoAposAcesso(localizacao.state?.destino, '/empresa', 'empresa'), {
+        replace: true,
+      });
     } catch (falha) {
       setErro(falha.message);
     }
@@ -66,7 +83,10 @@ export function EmpresaAcesso({ modoInicial = 'divisao' }) {
       setErro('Informe seu e-mail comercial e senha para acessar o painel.');
       return;
     }
-    navegar('/empresa');
+    iniciarSessao('empresa');
+    navegar(destinoAposAcesso(localizacao.state?.destino, '/empresa', 'empresa'), {
+      replace: true,
+    });
   };
 
   if (modoInicial === 'cadastro' || modoInicial === 'login') {
@@ -83,7 +103,7 @@ export function EmpresaAcesso({ modoInicial = 'divisao' }) {
               to='/sejaparceiro'
               className='inline-flex items-center gap-2 text-sm font-bold text-(--azul-titulo) hover:text-(--laranja-principal)'
             >
-              ← Voltar
+ Voltar
             </Link>
 
             <div className='mt-4'>
@@ -155,6 +175,7 @@ export function EmpresaAcesso({ modoInicial = 'divisao' }) {
                 <Botao
                   como={Link}
                   to='/login?modo=recuperar&perfil=empresa'
+                  state={localizacao.state}
                   variante='secundario'
                 >
                   Recuperar senha
@@ -168,145 +189,5 @@ export function EmpresaAcesso({ modoInicial = 'divisao' }) {
     );
   }
 
-  return (
-    <>
-      <main
-        className='bg-white py-6 wrap-anywhere sm:py-8 lg:pt-8 lg:pb-12'
-        aria-labelledby='titulo-empresa-acesso'
-      >
-        <Container classe='grid items-center gap-6 lg:grid-cols-[minmax(0,632fr)_minmax(0,552fr)] lg:gap-[clamp(2rem,7.917vw,7.125rem)]'>
-          <section
-            aria-label='Área da empresa prestadora'
-            className='grid min-w-0 grid-cols-2 items-center gap-x-4 gap-y-3 rounded-xl bg-(--azul-escuro) p-5 text-white lg:flex lg:flex-col lg:items-start lg:justify-center lg:gap-6 lg:p-8'
-          >
-            <p className='col-span-2 text-xs leading-4 font-bold lg:text-[15px] lg:leading-[18px]'>
-              ÁREA DA EMPRESA PRESTADORA
-            </p>
-            <Titulo
-              como='h1'
-              id='titulo-empresa-acesso'
-              classe='text-[clamp(1.75rem,4.25vw,4.5rem)] leading-[1.06] font-extrabold tracking-[-0.035em] text-white'
-            >
-              Quem faz.
-              <br />
-              Acontece.
-            </Titulo>
-            <ArteResponsiva largura={584.492} altura={359.275}>
-              <img
-                src={EquipeServicos}
-                alt='Equipe de profissionais com materiais de limpeza e ferramentas'
-                width='568'
-                height='330'
-                className='absolute top-1/2 left-1/2 h-[330px] w-[568px] max-w-none -translate-1/2 rotate-3 object-cover'
-              />
-            </ArteResponsiva>
-            <p className='col-span-2 text-sm leading-6 text-white/95 lg:text-xl lg:leading-7'>
-              Uma conta para divulgar serviços, cuidar do perfil da empresa e
-              organizar seus anúncios.
-            </p>
-          </section>
-
-          <form
-            id='cadastro-empresa'
-            noValidate
-            onSubmit={enviarCadastro}
-            aria-labelledby='titulo-formulario-empresa'
-            className='flex min-w-0 flex-col justify-center gap-4 rounded-xl py-4 lg:py-8'
-          >
-            <p className='text-xs leading-4 font-bold text-(--laranja-destaque) lg:text-[15px]'>
-              VAMOS COLOCAR SUA EMPRESA NO MAPA
-            </p>
-            <Titulo
-              como='h2'
-              id='titulo-formulario-empresa'
-              classe='text-[clamp(1.5rem,2.36vw,2.125rem)] leading-[1.2] font-extrabold text-(--azul-titulo)'
-            >
-              Comece pela sua conta.
-            </Titulo>
-
-            {camposEmpresa.map(campo => (
-              <CampoFormulario
-                key={campo.id}
-                id={campo.id}
-                rotulo={campo.rotulo}
-                type={campo.type}
-                placeholder={campo.placeholder}
-                value={valores[campo.nome]}
-                onChange={e =>
-                  setValores({ ...valores, [campo.nome]: e.target.value })
-                }
-              />
-            ))}
-
-            <label className='inline-flex min-h-11 cursor-pointer items-center gap-2.5 text-sm text-(--texto-apoio)'>
-              <input
-                name='aceitouTermos'
-                type='checkbox'
-                checked={aceitouTermos}
-                onChange={e => setAceitouTermos(e.target.checked)}
-                className='size-4 shrink-0 cursor-pointer accent-(--laranja-principal)'
-              />
-              <span>
-                Li e aceito os{' '}
-                <Link
-                  to='/termos'
-                  className='font-semibold underline hover:text-(--azul-titulo)'
-                >
-                  Termos de Uso
-                </Link>{' '}
-                e a{' '}
-                <Link
-                  to='/privacidade'
-                  className='font-semibold underline hover:text-(--azul-titulo)'
-                >
-                  Política de Privacidade
-                </Link>
-                .
-              </span>
-            </label>
-
-            <Botao
-              type='submit'
-              cor='laranja'
-              classe='min-h-[52px]! w-full text-base!'
-            >
-              Criar conta da empresa ↗
-            </Botao>
-
-            {erro && (
-              <p
-                role='alert'
-                className='text-sm font-semibold text-(--vermelho-alerta)'
-              >
-                {erro}
-              </p>
-            )}
-
-            <p className='text-sm font-bold text-(--azul-titulo)'>
-              Já tem uma conta? Entre com seu e-mail e senha.
-            </p>
-            <Botao
-              como={Link}
-              to='/empresa/login'
-              cor='marinho'
-              classe='min-h-[52px]! w-full text-[15px]!'
-            >
-              Entrar no painel ↗
-            </Botao>
-
-            <p className='text-sm text-(--texto-apoio)'>
-              Quer cuidar da sua própria casa?{' '}
-              <Link
-                to='/login'
-                className='font-bold text-(--laranja-principal) underline-offset-2 hover:underline'
-              >
-                Acesse como consumidor.
-              </Link>
-            </p>
-          </form>
-        </Container>
-      </main>
-      <Rodape variante='empresa' />
-    </>
-  );
+  return <Navigate to='/empresa/cadastro' replace state={localizacao.state} />;
 }

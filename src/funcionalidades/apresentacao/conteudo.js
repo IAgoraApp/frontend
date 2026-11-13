@@ -10,7 +10,7 @@ export const categoriasRecursos = [
     id: 'guias',
     rotulo: 'Guias e dicas',
     selo: '01 / GUIAS E DICAS',
-    titulo: 'Aprenda o que ninguém te ensinou.',
+    titulo: 'Aprenda o que ninguém te ensinou',
     descricao:
       'Lavar roupa, limpar a casa e montar sua primeira cozinha. Dicas, tutoriais e explicações sem complicação.',
     chamada: 'Explorar guias',
@@ -21,7 +21,7 @@ export const categoriasRecursos = [
     id: 'checklists',
     rotulo: 'Checklists',
     selo: '02 / CHECKLISTS PRÁTICOS',
-    titulo: 'Não esqueça nada importante na mudança.',
+    titulo: 'Não esqueça nada importante na mudança',
     descricao:
       'Listas completas de itens essenciais para cada cômodo, vistoria de contrato e compras do mês.',
     chamada: 'Ver checklists',
@@ -32,7 +32,7 @@ export const categoriasRecursos = [
     id: 'calculadoras',
     rotulo: 'Calculadoras',
     selo: '03 / PLANEJAMENTO FINANCEIRO',
-    titulo: 'Descubra quanto custa seu canto.',
+    titulo: 'Descubra quanto custa seu canto',
     descricao:
       'Simule o custo real do aluguel, condomínio, contas de consumo e alimentação antes de assinar contrato.',
     chamada: 'Calcular custos',
@@ -43,7 +43,7 @@ export const categoriasRecursos = [
     id: 'cozinha',
     rotulo: 'Cozinha',
     selo: '04 / COZINHA SEM MISTÉRIO',
-    titulo: 'Coma bem gastando pouco tempo.',
+    titulo: 'Coma bem gastando pouco tempo',
     descricao:
       'Receitas rápidas com ingredientes básicos, conservação de alimentos e utensílios que realmente valem a pena.',
     chamada: 'Acessar receitas',
@@ -54,7 +54,7 @@ export const categoriasRecursos = [
     id: 'seguranca',
     rotulo: 'Segurança',
     selo: '05 / SEGURANÇA E MANUTENÇÃO',
-    titulo: 'Cuide do seu cantinho com tranquilidade.',
+    titulo: 'Cuide do seu cantinho com tranquilidade',
     descricao:
       'Dicas sobre fechaduras, extintores, quadro de luz e direitos fundamentais do inquilino.',
     chamada: 'Dicas de segurança',
@@ -65,7 +65,7 @@ export const categoriasRecursos = [
     id: 'financas',
     rotulo: 'Finanças',
     selo: '06 / ORGANIZAÇÃO DA CARTEIRA',
-    titulo: 'Suas contas em dia sem sufoco.',
+    titulo: 'Suas contas em dia sem sufoco',
     descricao:
       'Métodos simples para controlar boletos, criar reserva de emergência e evitar o cheque especial.',
     chamada: 'Organizar finanças',

@@ -108,7 +108,7 @@ export default function MidiasEmpresa({ empresa, aoSalvar }) {
 
             <div className='mt-6 flex flex-col gap-3'>
               <Botao type='button' cor='laranja' onClick={lidarSalvar}>
-                Salvar imagens ↗
+                Salvar imagens
               </Botao>
               <Botao
                 como={Link}

@@ -1,3 +1,4 @@
+import { IconeConcluido } from '../../../compartilhado/interface/IndicadoresFuncionais';
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Container, Titulo } from '../../../compartilhado/interface/indice';
@@ -162,7 +163,7 @@ export default function SecaoLimpeza() {
               : 'border-(--azul-titulo) bg-transparent text-transparent')
           }
         >
-          ✓
+          <IconeConcluido />
         </span>
         <span>
           <strong className='block font-bold text-(--azul-titulo)'>
@@ -201,7 +202,7 @@ export default function SecaoLimpeza() {
                   UM POUCO A CADA DIA
                 </p>
                 <Titulo classe='mt-3 text-3xl font-extrabold sm:text-4xl'>
-                  O combinado da semana.
+                  O combinado da semana
                 </Titulo>
                 <p className='mt-3 text-(--texto-apoio)'>
                   Comece pelo que faz mais diferença no seu dia a dia.
@@ -252,10 +253,10 @@ export default function SecaoLimpeza() {
                   {
                     foto: fotoEssenciais,
                     eyebrow: '01 / COMECE PELO ESSENCIAL',
-                    titulo: 'Seu primeiro kit de limpeza.',
+                    titulo: 'Seu primeiro kit de limpeza',
                     descricao:
                       'Poucos itens bem escolhidos resolvem boa parte do básico.',
-                    acao: 'Ver o que vale ter ↗',
+                    acao: "Ver o que vale ter",
                     visao: 'materiais',
                   },
                   {
@@ -264,7 +265,7 @@ export default function SecaoLimpeza() {
                     titulo: 'Precisou de uma limpeza maior?',
                     descricao:
                       'Conheça empresas e converse sobre a necessidade da sua casa.',
-                    acao: 'Encontrar uma prestadora ↗',
+                    acao: "Encontrar uma prestadora",
                     rota: '/casa?visao=servicos&categoria=limpeza',
                   },
                 ].map((item, indice) => (
@@ -325,7 +326,7 @@ export default function SecaoLimpeza() {
                   }
                   className='mb-4 min-h-11 text-sm font-bold text-(--texto-apoio)'
                 >
-                  ← Voltar
+ Voltar
                 </button>
                 <p className='text-xs font-bold text-(--laranja-principal)'>
                   CUIDADOS COM A CASA
@@ -392,7 +393,7 @@ export default function SecaoLimpeza() {
                             {item.description}
                           </p>
                           <span className='inline-block text-sm font-bold text-(--laranja-principal)'>
-                            Ver guia →
+                            Ver guia
                           </span>
                         </div>
                       </button>
@@ -419,12 +420,12 @@ export default function SecaoLimpeza() {
                     <CartaoCasa titulo='Você vai precisar de:'>
                       <ul className='space-y-3 text-sm'>
                         <li>
-                          ✓ Produto adequado para a superfície, conforme o
+ Produto adequado para a superfície, conforme o
                           rótulo
                         </li>
-                        <li>✓ Panos separados para cada área</li>
+                        <li> Panos separados para cada área</li>
                         <li>
-                          ✓ Utensílios e proteção indicados pelo fabricante
+ Utensílios e proteção indicados pelo fabricante
                         </li>
                       </ul>
                       <p className='mt-6 rounded-lg bg-(--laranja-fundo) p-4 text-sm'>
@@ -591,7 +592,7 @@ export default function SecaoLimpeza() {
               ? 'Levar este cuidado para a rotina?'
               : dialogo.tipo === 'remover'
                 ? 'Remover tarefa?'
-                : 'Seu checklist, do seu jeito.'
+                : 'Seu checklist, do seu jeito'
           }
           aoFechar={() => setDialogo(null)}
         >

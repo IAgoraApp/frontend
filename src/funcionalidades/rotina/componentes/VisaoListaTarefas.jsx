@@ -76,7 +76,7 @@ function gruposOuVazio(
     return (
       <EstadoVazioRotina
         titulo={
-          categoria === 'todas' ? undefined : 'Tudo em dia nesta categoria.'
+          categoria === 'todas' ? undefined : 'Tudo em dia nesta categoria'
         }
         descricao={
           categoria === 'todas'

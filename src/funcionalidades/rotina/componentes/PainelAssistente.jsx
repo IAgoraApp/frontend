@@ -54,7 +54,7 @@ export default function PainelAssistente({
         <CabecalhoModalRotina
           id={idTitulo}
           como={apresentacao === 'pagina' ? 'h1' : 'h2'}
-          titulo='Organizando as informações.'
+          titulo='Organizando as informações'
           descricao='Aguarde enquanto preparamos suas sugestões.'
           arte
         />
@@ -79,7 +79,7 @@ export default function PainelAssistente({
         <CabecalhoModalRotina
           id={idTitulo}
           como={apresentacao === 'pagina' ? 'h1' : 'h2'}
-          titulo='Não foi possível gerar sugestões.'
+          titulo='Não foi possível gerar sugestões'
           descricao='Tente novamente ou crie sua tarefa manualmente.'
           arte
         />
@@ -101,7 +101,7 @@ export default function PainelAssistente({
         <CabecalhoModalRotina
           id={idTitulo}
           como={apresentacao === 'pagina' ? 'h1' : 'h2'}
-          titulo='Uma semana com espaço para respirar.'
+          titulo='Uma semana com espaço para respirar'
           descricao='Sugestão de organização para revisar antes de adicionar.'
           arte
         />
@@ -198,13 +198,7 @@ export default function PainelAssistente({
             onChange={evento => setComando(evento.target.value)}
             required
           />
-          <button
-            type='submit'
-            aria-label='Gerar sugestões'
-            disabled={!comando.trim()}
-          >
-            ↗
-          </button>
+
         </form>
       </section>
       <p className={classesRotina.rotuloExemplos}>Ou escolha um exemplo:</p>

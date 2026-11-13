@@ -1,5 +1,7 @@
+import { IconeConcluido } from '../../compartilhado/interface/IndicadoresFuncionais';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { destinoAposAcesso } from '../../aplicacao/utilitarios/sessao';
 import logoLaranja from '../../ativos/imagens/marcas/logo-iagora-laranja.png';
 import caixaMudancaImg from '../../ativos/imagens/ilustracoes/caixa-mudanca-3d.png';
 import ondaDecorativa from '../../ativos/vetores/comuns/onda-integracao.svg';
@@ -18,6 +20,7 @@ import { opcoesMomento, opcoesPrioridades } from './conteudo';
 
 export function Integracao() {
   const navegar = useNavigate();
+  const localizacao = useLocation();
   const estadoInicial = lerEstadoPlataforma();
 
   const [etapa, setEtapa] = useState('momento');
@@ -65,11 +68,14 @@ export function Integracao() {
     });
   };
 
-  const irParaExperiencia = idMomentoForcado => {
-    const idFinal = idMomentoForcado || momentoSelecionado;
+  const irParaExperiencia = () => {
+    const idFinal = momentoSelecionado;
     persistirMomento(idFinal, false);
     const destino = idFinal === 'planning' ? '/home-b' : '/home';
-    navegar(destino);
+    const retorno = destinoAposAcesso(localizacao.state?.destino, destino);
+    navegar(retorno.split(/[?#]/)[0] === '/onboarding' ? destino : retorno, {
+      replace: true,
+    });
   };
 
   if (etapa === 'momento') {
@@ -142,7 +148,7 @@ export function Integracao() {
         </div>
 
         <div className='mx-auto flex w-full max-w-[1280px] items-center justify-center gap-2 text-center text-sm text-white/75'>
-          <span className='font-bold text-(--laranja-principal)'>↗</span>
+
           <p>Pode mudar de ideia depois. Seu momento também muda!</p>
         </div>
 
@@ -171,7 +177,7 @@ export function Integracao() {
                     onClick={() => setEtapa('momento')}
                     className='inline-flex cursor-pointer items-center gap-2 text-sm font-bold text-(--azul-titulo) hover:text-(--laranja-principal)'
                   >
-                    ← Voltar
+ Voltar
                   </button>
                   <div className='mt-4'>
                     <SeloEditorial texto='SEU AGORA COMEÇA AQUI' />
@@ -214,7 +220,7 @@ export function Integracao() {
                             : 'border-(--borda-suave) bg-white text-transparent'
                         }`}
                       >
-                        ✓
+                        <IconeConcluido />
                       </span>
                       <span>
                         <span className='block text-lg font-bold text-(--azul-titulo)'>
@@ -233,20 +239,13 @@ export function Integracao() {
                 <Botao
                   type='button'
                   cor='laranja'
-                  onClick={() => irParaExperiencia('living-alone')}
+                  onClick={() => irParaExperiencia()}
                 >
-                  Já moro sozinho
-                </Botao>
-                <Botao
-                  type='button'
-                  variante='secundario'
-                  onClick={() => irParaExperiencia('planning')}
-                >
-                  Vou morar sozinho
+                  Continuar
                 </Botao>
                 <Botao
                   como={Link}
-                  to='/cadastro-empresa'
+                  to='/empresa/cadastro'
                   variante='secundario'
                 >
                   Quero anunciar
@@ -257,7 +256,7 @@ export function Integracao() {
                   classe='border border-(--borda-suave)'
                   onClick={() => setEtapa('explorar')}
                 >
-                  Ver próximos passos →
+                  Ver próximos passos
                 </Botao>
               </div>
             </>
@@ -269,16 +268,16 @@ export function Integracao() {
                   onClick={() => setEtapa('prioridades')}
                   className='inline-flex cursor-pointer items-center gap-2 text-sm font-bold text-(--azul-titulo) hover:text-(--laranja-principal)'
                 >
-                  ← Voltar
+ Voltar
                 </button>
                 <div className='mt-4'>
                   <SeloEditorial texto='SEU AGORA COMEÇA AQUI' />
                 </div>
                 <h1 className='font-titulo mt-4 text-[clamp(2rem,3.6vw,3rem)] leading-[1.1] font-extrabold'>
-                  Conheça seu próximo passo.
+                  Conheça seu próximo passo
                 </h1>
                 <p className='mt-2 text-lg text-(--texto-apoio)'>
-                  Explore as áreas e escolha seu momento quando quiser.
+                  Explore as áreas de acordo com o momento que você escolheu.
                 </p>
 
                 <div className='mt-8 flex flex-wrap gap-3'>
@@ -294,7 +293,7 @@ export function Integracao() {
                     variante='secundario'
                     onClick={() => setEtapa('momento')}
                   >
-                    Escolher meu momento
+                    Alterar meu momento
                   </Botao>
                   <Botao como={Link} to='/sejaparceiro' variante='secundario'>
                     Sou prestador de serviço

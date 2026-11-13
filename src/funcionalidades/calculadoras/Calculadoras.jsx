@@ -102,7 +102,7 @@ function HubCalculadoras() {
             <h1 className='font-titulo text-[clamp(2.6rem,5.5vw,4.625rem)] leading-[1.03] font-extrabold text-(--azul-titulo)'>
               Faz as contas.
               <span className='block text-(--laranja-destaque)'>
-                Tira do papel.
+                Tira do papel
               </span>
             </h1>
           </div>
@@ -111,7 +111,7 @@ function HubCalculadoras() {
 
         <div className='mt-6 flex justify-end'>
           <span className='inline-block rotate-3 bg-(--azul-titulo) px-4 py-2 text-xs font-medium tracking-wider text-white uppercase'>
-            DO SEU JEITO. NO SEU TEMPO. ↗
+            DO SEU JEITO. NO SEU TEMPO
           </span>
         </div>
       </section>
@@ -129,7 +129,7 @@ function HubCalculadoras() {
             classe='text-3xl leading-[1.08] font-extrabold text-white! sm:text-[52px]'
           >
             Um plano pro bolso.
-            <span className='block'>Um respiro pra você.</span>
+            <span className='block'>Um respiro pra você</span>
           </Titulo>
           <p className='max-w-[508px] text-lg leading-relaxed text-white/95 sm:text-xl'>
             Da primeira mudança às contas do mês: faça as contas antes de
@@ -139,7 +139,7 @@ function HubCalculadoras() {
             href='#todas-calculadoras'
             className='inline-flex min-h-11 items-center text-base font-bold text-white hover:underline'
           >
-            Encontre outras calculadoras ↓
+            Encontre outras calculadoras
           </a>
         </div>
 
@@ -151,7 +151,7 @@ function HubCalculadoras() {
             ORÇAMENTO MENSAL
           </p>
           <Titulo classe='text-2xl font-extrabold sm:text-[28px]'>
-            Seu mês, na ponta do lápis.
+            Seu mês, na ponta do lápis
           </Titulo>
 
           <div className='grid gap-4 sm:grid-cols-2'>
@@ -176,7 +176,7 @@ function HubCalculadoras() {
             cor='marinho'
             classe='w-full rounded-full min-h-[52px] text-[15px]'
           >
-            Calcular meu orçamento ↗
+            Calcular meu orçamento
           </Botao>
 
           <div className='flex flex-wrap items-center justify-between gap-4 rounded-[8px] bg-(--azul-fundo) p-4'>
@@ -303,7 +303,7 @@ function HubCalculadoras() {
           />
           <div className='space-y-1.5'>
             <Titulo classe='text-2xl font-extrabold sm:text-[28px]'>
-              Antes de calcular, vale entender.
+              Antes de calcular, vale entender
             </Titulo>
             <p className='text-base text-(--texto-apoio)'>
               Aprenda o básico e cuide do seu dinheiro com mais confiança.
@@ -316,7 +316,7 @@ function HubCalculadoras() {
           cor='laranja'
           classe='shrink-0 rounded-full px-7 min-h-[52px]'
         >
-          Aprender sobre finanças ↗
+          Aprender sobre finanças
         </Botao>
       </section>
     </>
@@ -344,7 +344,7 @@ function DetalheCalculadora({ calculadora }) {
     <div className='space-y-6'>
       <CabecalhoSubpagina
         voltarPara='/calculadoras'
-        rotuloVoltar='← Voltar'
+        rotuloVoltar=" Voltar"
         selo='FERRAMENTAS PARA A VIDA REAL'
         titulo={calculadora.tituloPagina}
         subtitulo={

@@ -367,7 +367,7 @@ export default function SecaoFinancas() {
                   calcularTotais(
                     dados.transactions.filter(item =>
                       item.date.startsWith(
-                        registro?.date.slice(0, 7) ?? chaveMes()
+                        registro?.date?.slice(0, 7) ?? chaveMes()
                       )
                     )
                   ).saldo
@@ -548,7 +548,7 @@ export default function SecaoFinancas() {
                             className='min-h-11 text-sm font-bold text-(--laranja-principal)'
                             onClick={() => navegar('lancamentos')}
                           >
-                            Ver todos →
+                            Ver todos
                           </button>
                         }
                       >
@@ -572,7 +572,7 @@ export default function SecaoFinancas() {
                             {contasPendentes} conta(s) para acompanhar neste mês.
                           </span>
                           <strong className='text-(--laranja-principal)'>
-                            Ver contas →
+                            Ver contas
                           </strong>
                         </button>
                       )}
@@ -605,7 +605,7 @@ export default function SecaoFinancas() {
                               className='block min-h-12 w-full rounded-lg bg-amber-50 p-4 text-left text-sm'
                             >
                               {cat.name} chegou a 80% ou mais do limite.{' '}
-                              <strong>Revisar categoria →</strong>
+                              <strong>Revisar categoria</strong>
                             </button>
                           ))}
                     </div>
@@ -711,7 +711,7 @@ export default function SecaoFinancas() {
                             Baixe o arquivo do mês e importe no Google Agenda.
                           </span>
                         </span>
-                        <span className='ml-auto'>→</span>
+
                       </button>
                       <button
                         type='button'
@@ -725,7 +725,7 @@ export default function SecaoFinancas() {
                             Saiba mais sobre as conexões opcionais.
                           </span>
                         </span>
-                        <span className='ml-auto'>→</span>
+
                       </button>
                     </div>
                   </PainelFinancas>
@@ -756,7 +756,7 @@ export default function SecaoFinancas() {
                   marinho
                   classe='px-8'
                 >
-                  Montar meu orçamento <span className='ml-5'>→</span>
+                  Montar meu orçamento
                 </AcaoFinancas>
                 <span className='relative inline-flex h-20 w-20 shrink-0 items-center justify-center'>
                   <IconeFinancas nome='MoedaEconomia' />

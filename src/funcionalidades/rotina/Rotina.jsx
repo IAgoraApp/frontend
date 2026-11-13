@@ -31,6 +31,7 @@ import { useLembretes } from './hooks/useLembretes';
 import { useRotina } from './hooks/useRotina';
 import {
   adicionarDias,
+  analisarData,
   diasCalendario,
   chaveData,
   intervaloMes,
@@ -53,13 +54,21 @@ export default function Rotina() {
     Object.keys(mapaVisoes).find(
       chave => mapaVisoes[chave] === parametrosBusca.get('visao')
     ) ?? 'visaoGeral';
-  const [mes, setMes] = useState(() => new Date());
+  const dataSolicitada = parametrosBusca.get('data');
+  const diaSolicitado = analisarData(dataSolicitada) ? dataSolicitada : null;
+  const [mes, setMes] = useState(
+    () => analisarData(diaSolicitado) || new Date()
+  );
   const [hoje, setHoje] = useState(chaveData);
-  const [modais, setModais] = useState([]);
+  const [modais, setModais] = useState(() =>
+    diaSolicitado ? [{ type: 'dia', day: diaSolicitado, key: criarId() }] : []
+  );
   const [chaveNavegacao, setChaveNavegacao] = useState(localizacao.key);
   if (chaveNavegacao !== localizacao.key) {
     setChaveNavegacao(localizacao.key);
-    setModais([]);
+    setModais(
+      diaSolicitado ? [{ type: 'dia', day: diaSolicitado, key: criarId() }] : []
+    );
   }
   const indiceEspaco = modais.findLastIndex(entrada =>
     tiposEspaco.includes(entrada.type)
@@ -129,6 +138,7 @@ export default function Rotina() {
   function irPara(proxima) {
     setParametrosBusca(anterior => {
       const parametros = new URLSearchParams(anterior);
+      parametros.delete('data');
       if (mapaVisoes[proxima]) parametros.set('visao', mapaVisoes[proxima]);
       else parametros.delete('visao');
       return parametros;

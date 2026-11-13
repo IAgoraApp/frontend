@@ -1,8 +1,10 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { Menu, X } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logoLaranja from '../ativos/imagens/marcas/logo-iagora-laranja.png';
 import { Botao } from './interface/indice';
+import { lerEstadoPlataforma } from '../aplicacao/estado/estadoPlataforma';
+import { encerrarSessao, perfilDaSessao, temSessao } from '../aplicacao/utilitarios/sessao';
 import {
   variantesCabecalho,
   variantesCabecalhoUsuario,
@@ -15,13 +17,27 @@ export default function Cabecalho({
   classeBorda = '',
 }) {
   const localizacao = useLocation();
+  const navegar = useNavigate();
+  const sessaoAtiva = temSessao();
+  const publicoLogado = variante === 'publico' && sessaoAtiva;
+  const varianteAtual = publicoLogado
+    ? perfilDaSessao() === 'empresa' ? 'empresas' : 'usuario'
+    : variante;
+  const tipoAtual = publicoLogado
+    ? lerEstadoPlataforma().perfil.momento === 'preparacao' ? 'consumidorB' : 'consumidorA'
+    : tipoUsuario;
   const referenciaCabecalho = useRef(null);
   const referenciaBotao = useRef(null);
   const idMenu = useId();
-  const chaveNavegacao = `${variante}:${tipoUsuario}:${localizacao.key}`;
+  const chaveNavegacao = `${varianteAtual}:${tipoAtual}:${localizacao.key}`;
   const [abertoEm, setAbertoEm] = useState(null);
   const menuAberto = abertoEm === chaveNavegacao;
   const fecharMenu = () => setAbertoEm(null);
+  const sairDaConta = () => {
+    encerrarSessao();
+    fecharMenu();
+    navegar('/login', { replace: true });
+  };
 
   useEffect(() => {
     if (!menuAberto) return;
@@ -35,10 +51,10 @@ export default function Cabecalho({
   }, [menuAberto]);
 
   const { rotaLogo, linksNavegacao, botaoAcao } =
-    variante === 'usuario'
-      ? (variantesCabecalhoUsuario[tipoUsuario] ??
+    varianteAtual === 'usuario'
+      ? (variantesCabecalhoUsuario[tipoAtual] ??
         variantesCabecalhoUsuario.consumidorA)
-      : (variantesCabecalho[variante] ?? variantesCabecalho.publico);
+      : (variantesCabecalho[varianteAtual] ?? variantesCabecalho.publico);
 
   const ehRotaAtiva = rota => {
     const caminho = localizacao.pathname;
@@ -94,7 +110,9 @@ export default function Cabecalho({
     }
     if (
       rota === '/empresa/marketplace' &&
-      caminho.startsWith('/empresa/marketplace')
+      /^\/empresa\/(marketplace|buscar|categoria|categorias|servicos|empresas|favoritos|meus-contatos)(?:\/|$)/.test(
+        caminho
+      )
     ) {
       return true;
     }
@@ -163,9 +181,9 @@ export default function Cabecalho({
         }
       }}
     >
-      <div className='mx-auto flex max-w-[1440px] min-w-0 items-center justify-between gap-[clamp(1rem,2cqw,2rem)] py-4 @min-[58rem]/cabecalho:py-5'>
+      <div className='mx-auto flex max-w-[1440px] min-w-0 items-center justify-between gap-[clamp(1rem,2cqw,2rem)] py-4 @min-[68rem]/cabecalho:py-5'>
         <Link
-          className='min-w-0 @min-[58rem]/cabecalho:shrink-0'
+          className='min-w-0 @min-[68rem]/cabecalho:shrink-0'
           to={rotaLogo}
           aria-label='Página inicial Iagora'
           onClick={fecharMenu}
@@ -179,7 +197,7 @@ export default function Cabecalho({
 
         <nav
           aria-label='Navegação principal'
-          className='hidden min-w-0 flex-1 items-center justify-center gap-[clamp(1rem,3cqw,2.25rem)] @min-[58rem]/cabecalho:flex'
+          className='hidden min-w-0 flex-1 items-center justify-center gap-[clamp(1rem,3cqw,2.25rem)] @min-[68rem]/cabecalho:flex'
         >
           {renderizarLinks()}
         </nav>
@@ -190,10 +208,19 @@ export default function Cabecalho({
               {renderizarAcao()}
             </div>
           )}
+          {sessaoAtiva && (
+            <button
+              type='button'
+              onClick={sairDaConta}
+              className='min-h-11 cursor-pointer whitespace-nowrap rounded-lg px-2 text-sm font-bold text-(--azul-titulo) transition-colors hover:bg-(--azul-fundo) hover:text-(--laranja-principal)'
+            >
+              Sair da conta
+            </button>
+          )}
           <button
             ref={referenciaBotao}
             type='button'
-            className='grid size-11 shrink-0 cursor-pointer place-items-center rounded-lg text-(--azul-titulo) hover:bg-(--azul-fundo) @min-[58rem]/cabecalho:hidden'
+            className='grid size-11 shrink-0 cursor-pointer place-items-center rounded-lg text-(--azul-titulo) hover:bg-(--azul-fundo) @min-[68rem]/cabecalho:hidden'
             aria-label={menuAberto ? 'Fechar menu' : 'Abrir menu'}
             aria-expanded={menuAberto}
             aria-controls={idMenu}
@@ -207,7 +234,7 @@ export default function Cabecalho({
       <nav
         id={idMenu}
         aria-label='Navegação principal móvel'
-        className='absolute inset-x-(--margem-pagina) top-full z-40 flex max-h-[70dvh] flex-col gap-1 overflow-y-auto overscroll-contain rounded-xl border border-[#dbe5ed] bg-white p-3 shadow-[0_12px_32px_#102d491a] @min-[58rem]/cabecalho:hidden [&[hidden]]:hidden'
+        className='absolute inset-x-(--margem-pagina) top-full z-40 flex max-h-[70dvh] flex-col gap-1 overflow-y-auto overscroll-contain rounded-xl border border-[#dbe5ed] bg-white p-3 shadow-[0_12px_32px_#102d491a] @min-[68rem]/cabecalho:hidden [&[hidden]]:hidden'
         hidden={!menuAberto}
       >
         {renderizarLinks(true)}

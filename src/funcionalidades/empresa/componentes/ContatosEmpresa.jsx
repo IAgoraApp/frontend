@@ -110,7 +110,7 @@ export default function ContatosEmpresa({
 
             <div className='flex flex-wrap gap-3'>
               <Botao type='submit' cor='laranja' classe='px-7!'>
-                Enviar resposta ↗
+                Enviar resposta
               </Botao>
               <Botao
                 type='button'
@@ -164,7 +164,7 @@ export default function ContatosEmpresa({
               cor='laranja'
               classe='w-full'
             >
-              Consultar o anúncio ↗
+              Consultar o anúncio
             </Botao>
           )}
         </aside>
@@ -255,7 +255,7 @@ export default function ContatosEmpresa({
                 cor='laranja'
                 classe='min-h-[44px]! shrink-0 px-6!'
               >
-                Ver conversa ↗
+                Ver conversa
               </Botao>
             </article>
           ))}

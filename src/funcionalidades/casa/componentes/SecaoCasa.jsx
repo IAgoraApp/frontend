@@ -174,7 +174,7 @@ export default function SecaoCasa() {
               onClick={() => navegar(ehFormulario ? 'residencia' : 'hub')}
               className='mb-4 min-h-11 text-sm font-bold text-(--texto-apoio)'
             >
-              ← Voltar
+ Voltar
             </button>
             <div className='mb-7'>
               <span className='inline-block rotate-[1.4deg] bg-(--laranja-principal) px-3 py-1.5 text-xs font-bold text-white'>
@@ -283,7 +283,7 @@ export default function SecaoCasa() {
                   </div>
                 </div>
               ) : (
-                <CartaoCasa titulo='Seu canto começa aqui.'>
+                <CartaoCasa titulo='Seu canto começa aqui'>
                   <p className='mb-5 text-(--texto-apoio)'>
                     Cadastre sua residência para organizar seus cômodos e
                     cuidados.
@@ -533,7 +533,7 @@ export default function SecaoCasa() {
                 </p>
                 <div className='mt-5 flex flex-wrap gap-3'>
                   <BotaoCasa como={Link} to='/marketplace'>
-                    Explorar marketplace ↗
+                    Explorar marketplace
                   </BotaoCasa>
                   <BotaoCasa
                     secundario
@@ -570,7 +570,7 @@ export default function SecaoCasa() {
             dialogo.tipo === 'formulario'
               ? dialogo.item
                 ? 'Editar manutenção'
-                : 'Um cuidado para lembrar.'
+                : 'Um cuidado para lembrar'
               : dialogo.tipo === 'remover'
                 ? 'Remover residência?'
                 : dialogo.tipo === 'excluir'

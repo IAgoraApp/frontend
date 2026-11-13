@@ -1,5 +1,8 @@
+import { IconeEstrela, IconeConcluido, EstrelasAvaliacao } from '../../../compartilhado/interface/IndicadoresFuncionais';
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { LinkNavegacao as Link } from '../../../compartilhado/interface/LinkNavegacao';
+
 import {
   Botao,
   Container,
@@ -39,11 +42,11 @@ export default function DetalheServico({
           to='/buscar'
           className='inline-flex items-center text-sm font-bold text-(--texto-apoio) hover:text-(--laranja-principal)'
         >
-          ← Voltar para a busca
+ Voltar para a busca
         </Link>
         <EstadoVazio
           varianteAlerta='erro'
-          titulo='Este serviço não está disponível.'
+          titulo='Este serviço não está disponível'
           descricao='Esse anúncio foi pausado, está em revisão ou não faz mais parte do catálogo ativo.'
           textoAcao='Explorar serviços disponíveis'
           rotaAcao='/buscar'
@@ -78,7 +81,7 @@ export default function DetalheServico({
           to='/buscar'
           className='inline-flex items-center text-sm font-bold text-(--texto-apoio) hover:text-(--laranja-principal)'
         >
-          ← Voltar para serviços
+ Voltar para serviços
         </Link>
 
         <div className='grid items-start gap-8 lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)]'>
@@ -110,7 +113,7 @@ export default function DetalheServico({
                 cor='laranja'
                 classe='px-7!'
               >
-                Entrar em contato ↗
+                Entrar em contato
               </Botao>
               <Botao
                 type='button'
@@ -118,7 +121,7 @@ export default function DetalheServico({
                 aria-pressed={ehFavorito}
                 onClick={() => aoAlternarFavorito(servico.id)}
               >
-                {ehFavorito ? '♥ Salvo nos favoritos' : '♡ Salvar nos favoritos'}
+                {ehFavorito ? "Salvo nos favoritos" : " Salvar nos favoritos"}
               </Botao>
               <Botao
                 type='button'
@@ -146,7 +149,7 @@ export default function DetalheServico({
                 {servico.preco}
               </p>
               <span className='rounded-full bg-white px-3 py-1 text-xs font-extrabold text-(--azul-titulo)'>
-                ★ {servico.nota} ({servico.totalAvaliacoes})
+                <IconeEstrela /> {servico.nota} ({servico.totalAvaliacoes})
               </span>
             </div>
             <dl className='space-y-2 text-sm text-(--azul-titulo)'>
@@ -172,7 +175,7 @@ export default function DetalheServico({
                 to={`/servicos/${servico.id}/avaliacoes`}
                 className='text-sm font-bold text-(--laranja-principal) hover:underline'
               >
-                Ver todas as avaliações ↗
+                Ver todas as avaliações
               </Link>
             </div>
           </aside>
@@ -228,7 +231,7 @@ export default function DetalheServico({
                     className='flex items-start gap-2.5 text-sm text-(--azul-titulo)'
                   >
                     <span className='font-bold text-(--laranja-principal)'>
-                      ✓
+                      <IconeConcluido />
                     </span>
                     <span>{item}</span>
                   </li>
@@ -256,7 +259,7 @@ export default function DetalheServico({
               variante='secundario'
               classe='w-full'
             >
-              Ver perfil completo da empresa ↗
+              Ver perfil completo da empresa
             </Botao>
           </aside>
         </section>
@@ -320,7 +323,7 @@ export default function DetalheServico({
               to={`/servicos/${servico.id}/avaliacoes`}
               cor='laranja'
             >
-              Avaliar ou ver todas ↗
+              Avaliar ou ver todas
             </Botao>
           </div>
           {avaliacoesServico.length ? (
@@ -333,7 +336,7 @@ export default function DetalheServico({
                   <div className='flex items-center justify-between text-xs font-bold'>
                     <span className='text-(--azul-titulo)'>{item.autor}</span>
                     <span className='text-(--laranja-principal)'>
-                      {'★'.repeat(item.nota)}
+                      <EstrelasAvaliacao nota={item.nota} />
                     </span>
                   </div>
                   <p className='mt-2 text-sm leading-relaxed text-(--texto-apoio)'>
@@ -345,7 +348,7 @@ export default function DetalheServico({
             </div>
           ) : (
             <EstadoVazio
-              titulo='Ainda sem avaliações por aqui.'
+              titulo='Ainda sem avaliações por aqui'
               descricao='Seja a primeira pessoa a contar como foi o atendimento desta empresa.'
               textoAcao='Escrever avaliação'
               rotaAcao={`/servicos/${servico.id}/avaliacoes`}
@@ -385,7 +388,7 @@ export default function DetalheServico({
               to='/buscar/mapa'
               variante='secundario'
             >
-              Ver bairros no mapa ↗
+              Ver bairros no mapa
             </Botao>
           </div>
           <img

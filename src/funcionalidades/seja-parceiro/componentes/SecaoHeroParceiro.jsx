@@ -23,12 +23,12 @@ export default function SecaoHeroParceiro() {
             >
               Seu serviço.
               <br />
-              Mais pessoas.
+              Mais pessoas
             </Titulo>
             <div className='flex h-[clamp(5rem,8.5vw,7.5rem)] w-full max-w-[644px] items-center justify-center'>
               <div className='w-[calc(100%-4px)] rotate-[3.29deg] bg-(--laranja-principal) px-[14px] py-[5px]'>
                 <p className='font-titulo text-[clamp(2rem,4.7vw,4.25rem)] leading-[1.12] font-extrabold tracking-[-0.035em] text-white'>
-                  Mais histórias.
+                  Mais histórias
                 </p>
               </div>
             </div>
@@ -70,7 +70,7 @@ export default function SecaoHeroParceiro() {
             </div>
             <div className='absolute top-[43px] left-[270px] flex h-[124px] w-[198px] items-center justify-center'>
               <p className='flex h-[108px] w-[190px] -rotate-5 items-center rounded-[3px] bg-(--laranja-principal) px-[14px] py-3 font-titulo text-[17px] leading-5 font-extrabold text-white'>
-                Seu trabalho faz diferença em cada começo.
+                Seu trabalho faz diferença em cada começo
               </p>
             </div>
             <img

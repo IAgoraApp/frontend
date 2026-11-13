@@ -21,7 +21,7 @@ export default function SecaoRecursos() {
           </span>
           <h2 className='font-titulo text-[30px] leading-[1.1] font-extrabold text-(--azul-titulo) sm:text-[34px] lg:text-[38px] lg:leading-[42px]'>
             Sua casa tem muitas partes.
-            <br />A ajuda também.
+            <br />A ajuda também
           </h2>
         </div>
 

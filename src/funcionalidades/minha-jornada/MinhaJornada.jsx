@@ -141,9 +141,9 @@ export default function MinhaJornada() {
     const encontrada = (estado.etapasJornada || []).find(
       item => item.id === chaveEtapa
     );
-    if (encontrada?.situacao === 'concluida') return 'Concluída ✓';
-    if (encontrada?.situacao === 'andamento') return 'Em andamento ↗';
-    return 'Começar ↗';
+    if (encontrada?.situacao === 'concluida') return "Concluída";
+    if (encontrada?.situacao === 'andamento') return 'Em andamento';
+    return 'Começar';
   }
 
   return (
@@ -160,14 +160,14 @@ export default function MinhaJornada() {
                   como='h1'
                   classe='text-3xl leading-tight font-extrabold sm:text-5xl'
                 >
-                  Sua independência, passo a passo.
+                  Sua independência, passo a passo
                 </Titulo>
                 <p className='text-base text-(--texto-apoio) sm:text-lg'>
                   Retome de onde parou. Cada etapa pode ser ajustada ao seu
                   ritmo.
                 </p>
               </div>
-              <AssinaturaEditorial tipo='chave' etiqueta='DO SEU JEITO ↗' />
+              <AssinaturaEditorial tipo='chave' etiqueta="DO SEU JEITO" />
             </div>
 
             <section

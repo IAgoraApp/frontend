@@ -12,10 +12,10 @@ export default function SecaoPassos() {
       <div className='mx-auto flex h-full max-w-[1296px] flex-col justify-center gap-[15px]'>
         <div className='flex flex-col gap-1'>
           <span className='font-corpo text-[14px] font-bold tracking-[1px] sm:text-base'>
-            TRÊS PASSOS, UM NOVO COMEÇO.
+            TRÊS PASSOS, UM NOVO COMEÇO
           </span>
           <h2 className='font-titulo text-[28px] leading-[38px] font-extrabold sm:text-[34px]'>
-            Da primeira chave ao seu dia a dia.
+            Da primeira chave ao seu dia a dia
           </h2>
         </div>
 

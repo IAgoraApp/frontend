@@ -1,5 +1,11 @@
 import { useState } from 'react';
-import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { encerrarSessao } from '../../aplicacao/utilitarios/sessao';
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from 'react-router-dom';
 import fotoQueroMorar from '../../ativos/imagens/fotografias/onboarding-quero-morar-sozinho.jpg';
 import fotoJaMoro from '../../ativos/imagens/fotografias/onboarding-ja-moro-sozinho.jpg';
 import {
@@ -30,7 +36,10 @@ export function Perfil() {
   const localizacao = useLocation();
   const navegar = useNavigate();
   const [parametros, setParametros] = useSearchParams();
-  const visao = parametros.get('visao') || '';
+  const visaoSolicitada = parametros.get('visao');
+  const visao = ['controle', 'informacoes', 'foto', 'seguranca', 'momento', 'notificacoes', 'privacidade', 'moradia', 'documentos', 'excluir'].includes(visaoSolicitada)
+    ? visaoSolicitada
+    : '';
 
   const [estado, setEstado] = useState(lerEstadoPlataforma);
   const [nome, setNome] = useState(
@@ -90,18 +99,20 @@ export function Perfil() {
   };
 
   const sairDaConta = () => {
+    encerrarSessao();
     setModalSairAberto(false);
-    navegar('/login');
+    navegar('/login', { replace: true });
   };
 
   const excluirContaDemo = () => {
+    encerrarSessao();
     try {
       localStorage.removeItem('iagora_estado_plataforma_v1');
       localStorage.removeItem('iagora:situacao-moradia');
     } catch (erro) {
       void erro;
     }
-    navegar('/login?modo=cadastro');
+    navegar('/login?modo=cadastro', { replace: true });
   };
 
   const lidarSalvarResumo = evento => {
@@ -249,7 +260,7 @@ export function Perfil() {
                 onClick={() => abrirVisao('foto')}
                 className='inline-flex min-h-[50px] w-full cursor-pointer items-center justify-center rounded-full bg-[#254b68] px-6 text-sm font-bold text-white transition-colors hover:bg-[#2f5b7d]'
               >
-                Adicionar foto ↗
+                Adicionar foto
               </button>
             </div>
 
@@ -261,7 +272,7 @@ export function Perfil() {
                 SUAS INFORMAÇÕES
               </p>
               <h2 className='font-titulo mt-2 text-3xl leading-tight font-extrabold text-(--azul-titulo) sm:text-4xl'>
-                Tudo no seu jeito.
+                Tudo no seu jeito
               </h2>
               <p className='mt-2 text-base text-(--texto-apoio)'>
                 Atualize os dados que aparecem na sua conta Iagora.
@@ -307,12 +318,7 @@ export function Perfil() {
                       placeholder='seuemail@exemplo.com'
                       className='h-12 w-full rounded-lg border border-[#dce5ed] bg-white pr-10 pl-4 text-sm text-(--azul-titulo) placeholder:text-(--texto-apoio)'
                     />
-                    <span
-                      aria-hidden='true'
-                      className='pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 font-bold text-(--texto-apoio)'
-                    >
-                      ↗
-                    </span>
+
                   </div>
                 </div>
               </div>
@@ -323,7 +329,7 @@ export function Perfil() {
 
               <div className='mt-6 flex flex-wrap items-center gap-4'>
                 <Botao type='submit' cor='laranja' classe='px-8!'>
-                  Salvar alterações ↗
+                  Salvar alterações
                 </Botao>
                 <p className='text-xs text-(--texto-apoio)'>
                   {salvoResumo
@@ -390,7 +396,7 @@ export function Perfil() {
                 onClick={() => abrirVisao('controle')}
                 className='font-titulo cursor-pointer text-left text-3xl font-extrabold text-(--azul-titulo) hover:text-(--laranja-principal) sm:text-4xl'
               >
-                Sua conta, sob seu controle.
+                Sua conta, sob seu controle
               </button>
 
               <div className='flex flex-wrap items-center justify-between gap-4 rounded-xl bg-(--azul-fundo) px-6 py-5'>
@@ -407,7 +413,7 @@ export function Perfil() {
                   onClick={() => abrirVisao('controle')}
                   className='cursor-pointer text-sm font-bold text-(--laranja-destaque) hover:underline'
                 >
-                  Gerenciar acesso ↗
+                  Gerenciar acesso
                 </button>
               </div>
             </div>
@@ -433,7 +439,7 @@ export function Perfil() {
                   onClick={() => setModalSairAberto(true)}
                   className='cursor-pointer text-sm font-bold text-(--laranja-destaque) hover:underline'
                 >
-                  Sair da conta ↗
+                  Sair da conta
                 </button>
               </div>
             </div>

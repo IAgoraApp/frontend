@@ -329,7 +329,7 @@ export default function DashboardEmpresa({ dados }) {
             to='/empresa/anuncios'
             className='text-sm font-bold text-(--laranja-principal) hover:underline'
           >
-            Gerenciar em tela cheia ↗
+            Gerenciar em tela cheia
           </Link>
         </div>
         <ListaAnuncios dados={dados} />

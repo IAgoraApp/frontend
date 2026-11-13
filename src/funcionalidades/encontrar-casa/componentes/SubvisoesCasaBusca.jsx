@@ -52,7 +52,7 @@ function CartaoResultadoImovel({
             classe='rounded-full border border-[#dbe5ed] bg-white px-5'
             onClick={() => aoAlternarFavorito(imovel.id)}
           >
-            {favorito ? '♥ Salvo' : '♡ Salvar'}
+            {favorito ? "Salvo" : " Salvar"}
           </Botao>
           {aoAlternarComparar && (
             <Botao
@@ -61,7 +61,7 @@ function CartaoResultadoImovel({
               classe='rounded-full border border-[#dbe5ed] bg-white px-5'
               onClick={() => aoAlternarComparar(imovel.id)}
             >
-              {comparado ? '✓ Na comparação' : 'Comparar'}
+              {comparado ? " Na comparação" : 'Comparar'}
             </Botao>
           )}
         </div>
@@ -75,12 +75,12 @@ export function VisaoBuscar({ filtros, aoAlterarFiltro, aoAbrirVisao }) {
     <div className='space-y-6'>
       <CabecalhoSubpagina
         aoVoltar={() => aoAbrirVisao('hub')}
-        rotuloVoltar='← Voltar'
+        rotuloVoltar=" Voltar"
         selo='SEU PRÓXIMO ENDEREÇO'
-        titulo='Um lugar que cabe nos seus planos.'
+        titulo='Um lugar que cabe nos seus planos'
         subtitulo='Pesquise cidade, bairro e custo total. Dados ilustrativos.'
         assinatura='chave'
-        etiquetaAssinatura='DO SEU JEITO ↗'
+        etiquetaAssinatura="DO SEU JEITO"
       />
 
       <form
@@ -136,12 +136,12 @@ export function VisaoResultados({
     <div className='space-y-6'>
       <CabecalhoSubpagina
         aoVoltar={() => aoAbrirVisao('buscar')}
-        rotuloVoltar='← Voltar'
+        rotuloVoltar=" Voltar"
         selo='SEU PRÓXIMO ENDEREÇO'
-        titulo='Opções para o seu próximo canto.'
+        titulo='Opções para o seu próximo canto'
         subtitulo='Imóveis de exemplo · Valores e disponibilidade ilustrativos.'
         assinatura='chave'
-        etiquetaAssinatura='DO SEU JEITO ↗'
+        etiquetaAssinatura="DO SEU JEITO"
       />
 
       <div className='flex flex-wrap gap-3'>
@@ -200,12 +200,12 @@ export function VisaoFavoritos({
     <div className='space-y-6'>
       <CabecalhoSubpagina
         aoVoltar={() => aoAbrirVisao('hub')}
-        rotuloVoltar='← Voltar'
+        rotuloVoltar=" Voltar"
         selo='SEU PRÓXIMO ENDEREÇO'
-        titulo='Seus cantos favoritos.'
+        titulo='Seus cantos favoritos'
         subtitulo='Imóveis de exemplo · Valores e disponibilidade ilustrativos.'
         assinatura='chave'
-        etiquetaAssinatura='DO SEU JEITO ↗'
+        etiquetaAssinatura="DO SEU JEITO"
       />
 
       {salvos.length ? (
@@ -242,7 +242,7 @@ export function VisaoPreferencias({
     <div className='space-y-6'>
       <CabecalhoSubpagina
         aoVoltar={() => aoAbrirVisao('resultados')}
-        rotuloVoltar='← Voltar'
+        rotuloVoltar=" Voltar"
         selo='SEU PRÓXIMO ENDEREÇO'
         titulo='O que seu novo canto precisa ter?'
         subtitulo='Ajuste os critérios para comparar opções.'
@@ -348,7 +348,7 @@ export function VisaoPreferencias({
             ANTES DE ESCOLHER
           </p>
           <Titulo classe='text-2xl font-extrabold'>
-            Um filtro para a sua rotina.
+            Um filtro para a sua rotina
           </Titulo>
           <div>
             <strong className='block text-sm font-bold text-(--azul-titulo)'>
@@ -404,9 +404,9 @@ export function VisaoDetalhe({
     <div className='space-y-6'>
       <CabecalhoSubpagina
         aoVoltar={() => aoAbrirVisao('resultados')}
-        rotuloVoltar='← Voltar'
+        rotuloVoltar=" Voltar"
         selo='SEU PRÓXIMO ENDEREÇO'
-        titulo={`${imovel.titulo}.`}
+        titulo={`${imovel.titulo}`}
         subtitulo={`${imovel.cidade} · ${imovel.area} m² · ${imovel.quartos} ${imovel.quartos === 1 ? 'quarto' : 'quartos'}.`}
         assinatura=''
       />
@@ -434,7 +434,7 @@ export function VisaoDetalhe({
               classe='rounded-full border border-[#dbe5ed] bg-white px-7'
               onClick={() => aoAlternarFavorito(imovel.id)}
             >
-              {favorito ? '♥ Salvo' : '♡ Salvar'}
+              {favorito ? "Salvo" : " Salvar"}
             </Botao>
             <Botao
               type='button'
@@ -445,7 +445,7 @@ export function VisaoDetalhe({
                 aoAbrirVisao('comparar');
               }}
             >
-              {comparado ? '✓ Comparar' : 'Comparar'}
+              {comparado ? " Comparar" : 'Comparar'}
             </Botao>
           </div>
 
@@ -539,12 +539,12 @@ export function VisaoGaleria({ imovel, aoAbrirVisao }) {
     <div className='space-y-6'>
       <CabecalhoSubpagina
         aoVoltar={() => aoAbrirVisao('detalhe', alvo.id)}
-        rotuloVoltar='← Voltar'
+        rotuloVoltar=" Voltar"
         selo='SEU PRÓXIMO ENDEREÇO'
-        titulo='Um olhar por dentro.'
+        titulo='Um olhar por dentro'
         subtitulo='Fotos ilustrativas para explorar a composição.'
         assinatura='chave'
-        etiquetaAssinatura='DO SEU JEITO ↗'
+        etiquetaAssinatura="DO SEU JEITO"
       />
 
       <img
@@ -598,12 +598,12 @@ export function VisaoComparar({ comparados, aoAbrirVisao }) {
     <div className='space-y-6'>
       <CabecalhoSubpagina
         aoVoltar={() => aoAbrirVisao('resultados')}
-        rotuloVoltar='← Voltar'
+        rotuloVoltar=" Voltar"
         selo='SEU PRÓXIMO ENDEREÇO'
-        titulo='Compare antes de decidir.'
+        titulo='Compare antes de decidir'
         subtitulo='Os valores são demonstrativos e precisam ser confirmados.'
         assinatura='chave'
-        etiquetaAssinatura='DO SEU JEITO ↗'
+        etiquetaAssinatura="DO SEU JEITO"
       />
 
       <div className='grid gap-6 md:grid-cols-2'>
@@ -664,12 +664,12 @@ export function VisaoImpacto({ imovel, rendaMensal, aoAbrirVisao }) {
     <div className='space-y-6'>
       <CabecalhoSubpagina
         aoVoltar={() => aoAbrirVisao('detalhe', alvo.id)}
-        rotuloVoltar='← Voltar'
+        rotuloVoltar=" Voltar"
         selo='SEU PRÓXIMO ENDEREÇO'
         titulo='Como esse canto entra no seu mês?'
         subtitulo='Simulação a partir dos valores de exemplo.'
         assinatura='chave'
-        etiquetaAssinatura='DO SEU JEITO ↗'
+        etiquetaAssinatura="DO SEU JEITO"
       />
 
       <div className='grid gap-4 md:grid-cols-3'>
@@ -735,9 +735,9 @@ export function VisaoContato({ imovel, nomeUsuario, aoAbrirVisao }) {
     <div className='space-y-6'>
       <CabecalhoSubpagina
         aoVoltar={() => aoAbrirVisao('detalhe', alvo.id)}
-        rotuloVoltar='← Voltar'
+        rotuloVoltar=" Voltar"
         selo='SEU PRÓXIMO ENDEREÇO'
-        titulo='Uma conversa antes da decisão.'
+        titulo='Uma conversa antes da decisão'
         subtitulo='Confira os dados com o anunciante.'
         assinatura=''
       />

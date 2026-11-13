@@ -19,8 +19,8 @@ export default function PainelAgenda({
         id={idTitulo}
         titulo={
           agenda.connected
-            ? 'Agenda conectada no exemplo.'
-            : 'Sua rotina junto da sua agenda.'
+            ? 'Agenda conectada no exemplo'
+            : 'Sua rotina junto da sua agenda'
         }
         descricao={
           agenda.connected

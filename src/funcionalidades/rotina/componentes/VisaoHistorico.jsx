@@ -123,7 +123,7 @@ export default function VisaoHistorico({
           </div>
         ) : (
           <EstadoVazioRotina
-            titulo='Cada passo vai aparecer aqui.'
+            titulo='Cada passo vai aparecer aqui'
             descricao='Você ainda não concluiu tarefas neste período.'
           >
             <BotaoRotina tom='secundario' onClick={aoVoltar}>

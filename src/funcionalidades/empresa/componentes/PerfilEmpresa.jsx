@@ -69,7 +69,7 @@ export default function PerfilEmpresa({ empresa, aoSalvar }) {
           >
             Sua empresa.
             <span className='block text-(--laranja-principal)'>
-              Sua assinatura.
+              Sua assinatura
             </span>
           </Titulo>
         </div>
@@ -106,11 +106,11 @@ export default function PerfilEmpresa({ empresa, aoSalvar }) {
           <div className='mt-7 flex w-full flex-col gap-3'>
             <Botao
               como={Link}
-              to={`/empresas/${empresa.id}`}
+              to={`/empresa/empresas/${empresa.id}`}
               cor='laranja'
               classe='w-full'
             >
-              Ver perfil público ↗
+              Ver perfil público
             </Botao>
             <Botao
               como={Link}
@@ -118,7 +118,7 @@ export default function PerfilEmpresa({ empresa, aoSalvar }) {
               variante='fantasma'
               classe='w-full'
             >
-              Alterar logo e fotos ↗
+              Alterar logo e fotos
             </Botao>
           </div>
         </aside>
@@ -196,7 +196,7 @@ export default function PerfilEmpresa({ empresa, aoSalvar }) {
 
           <div className='mt-6 flex flex-wrap gap-3'>
             <Botao type='submit' cor='laranja' classe='px-7!'>
-              Salvar perfil da empresa ↗
+              Salvar perfil da empresa
             </Botao>
             <Botao
               como={Link}
@@ -220,7 +220,7 @@ export default function PerfilEmpresa({ empresa, aoSalvar }) {
               como='h2'
               classe='mt-1.5 text-2xl font-extrabold sm:text-3xl'
             >
-              Mostre quem faz acontecer.
+              Mostre quem faz acontecer
             </Titulo>
           </div>
           <Botao
@@ -229,7 +229,7 @@ export default function PerfilEmpresa({ empresa, aoSalvar }) {
             variante='secundario'
             classe='min-h-[44px]!'
           >
-            Atualizar galeria ↗
+            Atualizar galeria
           </Botao>
         </div>
 
@@ -274,7 +274,7 @@ export default function PerfilEmpresa({ empresa, aoSalvar }) {
           cor='laranja'
           classe='shrink-0 px-7!'
         >
-          Anunciar um serviço ↗
+          Anunciar um serviço
         </Botao>
       </section>
     </form>
