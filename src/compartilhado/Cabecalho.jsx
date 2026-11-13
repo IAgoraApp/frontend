@@ -4,7 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logoLaranja from '../ativos/imagens/marcas/logo-iagora-laranja.png';
 import { Botao } from './interface/indice';
 import { lerEstadoPlataforma } from '../aplicacao/estado/estadoPlataforma';
-import { encerrarSessao, perfilDaSessao, temSessao } from '../aplicacao/utilitarios/sessao';
+import { encerrarSessao, onboardingPendente, perfilDaSessao, temSessao } from '../aplicacao/utilitarios/sessao';
 import {
   variantesCabecalho,
   variantesCabecalhoUsuario,
@@ -23,7 +23,7 @@ export default function Cabecalho({
   const paginaEmpresa = ['/sejaparceiro', '/empresa/cadastro', '/empresa/login'].includes(
     localizacao.pathname.replace(/\/$/, '')
   );
-  const varianteAtual = publicoLogado
+  const varianteAtual = onboardingPendente() ? 'onboarding' : publicoLogado
     ? perfilDaSessao() === 'empresa' ? 'empresas' : 'usuario'
     : variante === 'publico' && paginaEmpresa ? 'parceiros' : variante;
   const tipoAtual = publicoLogado
@@ -37,7 +37,7 @@ export default function Cabecalho({
   const menuAberto = abertoEm === chaveNavegacao;
   const fecharMenu = () => setAbertoEm(null);
   const sairDaConta = () => {
-    const destino = perfilDaSessao() === 'empresa' ? '/empresa/login' : '/login';
+    const destino = onboardingPendente() ? '/' : perfilDaSessao() === 'empresa' ? '/empresa/login' : '/login';
     encerrarSessao();
     fecharMenu();
     navegar(destino, { replace: true });
@@ -216,12 +216,12 @@ export default function Cabecalho({
             <button
               type='button'
               onClick={sairDaConta}
-              className='min-h-11 cursor-pointer whitespace-nowrap rounded-lg px-2 text-sm font-bold text-(--azul-titulo) transition-colors hover:bg-(--azul-fundo) hover:text-(--laranja-principal)'
+              className={`min-h-12 cursor-pointer whitespace-nowrap rounded-lg text-sm font-bold text-(--azul-titulo) transition-colors hover:bg-(--azul-fundo) hover:text-(--laranja-principal) ${onboardingPendente() ? 'border border-(--borda-suave) px-4 py-3' : 'px-2'}`}
             >
-              Sair da conta
+              {onboardingPendente() ? 'Voltar ao início' : 'Sair da conta'}
             </button>
           )}
-          <button
+          {linksNavegacao.length > 0 && <button
             ref={referenciaBotao}
             type='button'
             className='grid size-11 shrink-0 cursor-pointer place-items-center rounded-lg text-(--azul-titulo) hover:bg-(--azul-fundo) @min-[68rem]/cabecalho:hidden'
@@ -231,7 +231,7 @@ export default function Cabecalho({
             onClick={() => setAbertoEm(menuAberto ? null : chaveNavegacao)}
           >
             {menuAberto ? <X aria-hidden='true' /> : <Menu aria-hidden='true' />}
-          </button>
+          </button>}
         </div>
       </div>
 

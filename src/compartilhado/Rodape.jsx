@@ -6,7 +6,7 @@ import iconeInstagram from '../ativos/vetores/redes-sociais/instagram.svg';
 import { Container } from './interface/indice';
 import { lerEstadoPlataforma } from '../aplicacao/estado/estadoPlataforma';
 import { tipoUsuarioDaRota } from '../aplicacao/utilitarios/navegacao';
-import { inicioDaSessao, perfilDaSessao, temSessao } from '../aplicacao/utilitarios/sessao';
+import { inicioDaSessao, onboardingPendente, perfilDaSessao, temSessao } from '../aplicacao/utilitarios/sessao';
 
 export default function Rodape({ variante = 'padrao' }) {
   const logado = temSessao();
@@ -39,8 +39,8 @@ export default function Rodape({ variante = 'padrao' }) {
       titulo: 'Sua conta',
       links: [
         {
-          rotulo: ehEmpresa ? 'Área da empresa' : 'Meu perfil',
-          rota: ehEmpresa ? '/empresa' : ehPreparacao ? '/perfil-b' : '/perfil',
+          rotulo: onboardingPendente() ? 'Concluir cadastro' : ehEmpresa ? 'Área da empresa' : 'Meu perfil',
+          rota: onboardingPendente() ? '/onboarding' : ehEmpresa ? '/empresa' : ehPreparacao ? '/perfil-b' : '/perfil',
         },
         { rotulo: 'Suporte', rota: '/ajuda' },
         { rotulo: 'Perguntas frequentes', rota: '/ajuda/faq' },

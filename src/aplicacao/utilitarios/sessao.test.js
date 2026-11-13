@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { destinoInterno, encerrarSessao, iniciarSessao, temSessao, inicioDaSessao, perfilDaRota, destinoAposAcesso } from './sessao.js';
+import { concluirOnboarding, onboardingPendente, destinoInterno, encerrarSessao, iniciarSessao, temSessao, inicioDaSessao, perfilDaRota, destinoAposAcesso } from './sessao.js';
 import { destinoMercado, tipoUsuarioDaRota, rotaPessoalDoMomento } from './navegacao.js';
 
 test('homes e perfis antigos retornam à variante correspondente ao momento escolhido', () => {
@@ -52,11 +52,49 @@ test('o acesso funciona na sessão atual mesmo sem armazenamento disponível', (
 
 test('a página inicial depois do acesso corresponde ao perfil A, B ou empresa', () => {
   iniciarSessao();
+  assert.equal(inicioDaSessao('morando'), '/onboarding');
+  concluirOnboarding();
   assert.equal(inicioDaSessao('morando'), '/home');
   assert.equal(inicioDaSessao('preparacao'), '/home-b');
   iniciarSessao('empresa');
   assert.equal(inicioDaSessao('morando'), '/empresa');
   assert.equal(inicioDaSessao('preparacao'), '/empresa');
+  encerrarSessao();
+});
+
+test('onboarding exige confirmação, persiste na sessão e reinicia no próximo login', async () => {
+  const dados = new Map();
+  globalThis.sessionStorage = {
+    getItem: chave => dados.get(chave) ?? null,
+    setItem: (chave, valor) => dados.set(chave, valor),
+    removeItem: chave => dados.delete(chave),
+  };
+  try {
+    iniciarSessao();
+    assert.equal(onboardingPendente(), true);
+    concluirOnboarding();
+    assert.equal(onboardingPendente(), false);
+    const sessaoRecarregada = await import('./sessao.js?recarregada');
+    assert.equal(sessaoRecarregada.onboardingPendente(), false);
+    iniciarSessao();
+    assert.equal(onboardingPendente(), true);
+    iniciarSessao('empresa');
+    assert.equal(onboardingPendente(), false);
+    assert.equal(inicioDaSessao(), '/empresa');
+  } finally {
+    encerrarSessao();
+    delete globalThis.sessionStorage;
+  }
+});
+
+test('confirmação do onboarding funciona sem armazenamento e é limpa ao sair', () => {
+  iniciarSessao();
+  assert.equal(onboardingPendente(), true);
+  concluirOnboarding();
+  assert.equal(onboardingPendente(), false);
+  encerrarSessao();
+  iniciarSessao();
+  assert.equal(onboardingPendente(), true);
   encerrarSessao();
 });
 

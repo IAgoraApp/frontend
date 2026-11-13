@@ -1,5 +1,5 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { inicioDaSessao, perfilDaRota, perfilDaSessao, temSessao } from './sessao';
+import { inicioDaSessao, onboardingPendente, perfilDaRota, perfilDaSessao, temSessao } from './sessao';
 import { lerEstadoPlataforma } from '../estado/estadoPlataforma';
 import { rotaPessoalDoMomento } from './navegacao';
 
@@ -16,6 +16,9 @@ export const RotaPrivada = () => {
         }}
       />
     );
+  }
+  if (onboardingPendente() && localizacao.pathname.replace(/\/+$/, '') !== '/onboarding') {
+    return <Navigate to='/onboarding' replace state={{ destino: localizacao.pathname + localizacao.search + localizacao.hash }} />;
   }
   const caminho = rotaPessoalDoMomento(localizacao.pathname, lerEstadoPlataforma().perfil.momento);
   if (caminho !== localizacao.pathname) {

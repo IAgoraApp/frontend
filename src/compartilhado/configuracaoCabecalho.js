@@ -79,6 +79,7 @@ export const variantesCabecalhoUsuario = {
 };
 
 export const variantesCabecalho = {
+  onboarding: { rotaLogo: '/onboarding', linksNavegacao: [], botaoAcao: null },
   empresas: dadosCabecalhoEmpresas,
   usuario: dadosCabecalhoConsumidorA,
   publico: dadosCabecalhoPublico,

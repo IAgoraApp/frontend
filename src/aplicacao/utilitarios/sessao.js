@@ -1,5 +1,7 @@
 const CHAVE_SESSAO = 'iagora:sessao-demo:v1';
 const CHAVE_PERFIL = 'iagora:sessao-demo:perfil';
+const CHAVE_ONBOARDING = 'iagora:sessao-demo:onboarding';
+let onboardingEmMemoria = false;
 let sessaoEmMemoria = false;
 let perfilEmMemoria = 'pessoal';
 
@@ -22,7 +24,27 @@ export function perfilDaSessao() {
 
 export function inicioDaSessao(momento) {
   if (perfilDaSessao() === 'empresa') return '/empresa';
+  if (onboardingPendente()) return '/onboarding';
   return momento === 'preparacao' ? '/home-b' : '/home';
+}
+
+export function onboardingPendente() {
+  if (!temSessao() || perfilDaSessao() !== 'pessoal') return false;
+  try {
+    return !(onboardingEmMemoria || sessionStorage.getItem(CHAVE_ONBOARDING) === 'concluido');
+  } catch {
+    return !onboardingEmMemoria;
+  }
+}
+
+export function concluirOnboarding() {
+  if (!temSessao() || perfilDaSessao() !== 'pessoal') return;
+  onboardingEmMemoria = true;
+  try {
+    sessionStorage.setItem(CHAVE_ONBOARDING, 'concluido');
+  } catch {
+    // Mantém a confirmação nesta sessão quando o armazenamento não está disponível.
+  }
 }
 
 export function perfilDaRota(caminho) {
@@ -37,22 +59,26 @@ export function destinoAposAcesso(destino, padrao, perfil = 'pessoal') {
 }
 
 export function iniciarSessao(perfil = 'pessoal') {
+  onboardingEmMemoria = false;
   sessaoEmMemoria = true;
   perfilEmMemoria = perfil === 'empresa' ? 'empresa' : 'pessoal';
   try {
     sessionStorage.setItem(CHAVE_SESSAO, 'ativa');
     sessionStorage.setItem(CHAVE_PERFIL, perfilEmMemoria);
+    sessionStorage.removeItem(CHAVE_ONBOARDING);
   } catch {
     // Ainda permite navegar quando o armazenamento estiver indisponível.
   }
 }
 
 export function encerrarSessao() {
+  onboardingEmMemoria = false;
   sessaoEmMemoria = false;
   perfilEmMemoria = 'pessoal';
   try {
     sessionStorage.removeItem(CHAVE_SESSAO);
     sessionStorage.removeItem(CHAVE_PERFIL);
+    sessionStorage.removeItem(CHAVE_ONBOARDING);
   } catch {
     // O estado em memória já foi encerrado.
   }
