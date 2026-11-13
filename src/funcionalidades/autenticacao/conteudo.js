@@ -5,12 +5,6 @@ export const etapasAutenticacao = {
     titulo: 'Que bom ter você de volta!',
     subtitulo: 'Seu cantinho no Iagora está te esperando.',
   },
-  loginEmpresa: {
-    migalha: 'IAGORA · LOGIN EMPRESA',
-    selo: 'SEU NEGÓCIO CONTINUA AQUI',
-    titulo: 'Que bom ter sua empresa aqui!',
-    subtitulo: 'Entre com seu e-mail comercial e senha para acessar o painel.',
-  },
   cadastro: {
     migalha: 'IAGORA · CRIAR CONTA',
     selo: 'BEM-VINDO(A) AO IAGORA!',

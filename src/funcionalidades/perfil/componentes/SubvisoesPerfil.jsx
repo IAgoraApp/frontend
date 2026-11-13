@@ -552,7 +552,7 @@ export function VisaoAlterarMomento({ aoSelecionarMomento, aoVoltar }) {
         <Botao
           type='button'
           variante='secundario'
-          onClick={() => navegar('/empresa')}
+          onClick={() => navegar('/empresa/cadastro')}
           classe='px-8!'
         >
           Quero anunciar meu serviço

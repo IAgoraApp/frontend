@@ -1,5 +1,8 @@
 import { Link, useLocation } from 'react-router-dom';
 import logoMarca from '../ativos/imagens/marcas/logo-iagora.png';
+import iconeGithub from '../ativos/vetores/sobre-nos/github.svg';
+import iconeLinkedin from '../ativos/vetores/sobre-nos/linkedin.svg';
+import iconeInstagram from '../ativos/vetores/redes-sociais/instagram.svg';
 import { Container } from './interface/indice';
 import { lerEstadoPlataforma } from '../aplicacao/estado/estadoPlataforma';
 import { tipoUsuarioDaRota } from '../aplicacao/utilitarios/navegacao';
@@ -112,9 +115,11 @@ export default function Rodape({ variante = 'padrao' }) {
             >
               Iagora@hotmail.com
             </a>
-            <p className='text-sm leading-[22px]'>
-              Instagram · GitHub · LinkedIn
-            </p>
+            <div className='flex items-center gap-4 py-1'>
+              <img src={iconeGithub} alt='GitHub' className='size-[22px]' />
+              <img src={iconeLinkedin} alt='LinkedIn' className='size-[22px]' />
+              <img src={iconeInstagram} alt='Instagram' className='size-[22px]' />
+            </div>
           </div>
         </div>
       </div>

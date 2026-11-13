@@ -20,9 +20,12 @@ export default function Cabecalho({
   const navegar = useNavigate();
   const sessaoAtiva = temSessao();
   const publicoLogado = variante === 'publico' && sessaoAtiva;
+  const paginaEmpresa = ['/sejaparceiro', '/empresa/cadastro', '/empresa/login'].includes(
+    localizacao.pathname.replace(/\/$/, '')
+  );
   const varianteAtual = publicoLogado
     ? perfilDaSessao() === 'empresa' ? 'empresas' : 'usuario'
-    : variante;
+    : variante === 'publico' && paginaEmpresa ? 'parceiros' : variante;
   const tipoAtual = publicoLogado
     ? lerEstadoPlataforma().perfil.momento === 'preparacao' ? 'consumidorB' : 'consumidorA'
     : tipoUsuario;
@@ -34,9 +37,10 @@ export default function Cabecalho({
   const menuAberto = abertoEm === chaveNavegacao;
   const fecharMenu = () => setAbertoEm(null);
   const sairDaConta = () => {
+    const destino = perfilDaSessao() === 'empresa' ? '/empresa/login' : '/login';
     encerrarSessao();
     fecharMenu();
-    navegar('/login', { replace: true });
+    navegar(destino, { replace: true });
   };
 
   useEffect(() => {

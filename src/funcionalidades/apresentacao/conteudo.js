@@ -4,6 +4,9 @@ import calculadorasImg from '../../ativos/imagens/ilustracoes/recurso-calculador
 import cozinhaImg from '../../ativos/imagens/ilustracoes/recurso-cozinha-3d.png';
 import segurancaImg from '../../ativos/imagens/ilustracoes/recurso-seguranca-3d.png';
 import financasImg from '../../ativos/imagens/ilustracoes/recurso-financas-3d.png';
+import caixaContaImg from '../../ativos/imagens/ilustracoes/passos/caixa-conta.png';
+import caixaMomentoImg from '../../ativos/imagens/ilustracoes/passos/caixa-momento.png';
+import caixaRotinaImg from '../../ativos/imagens/ilustracoes/passos/caixa-rotina.png';
 
 export const categoriasRecursos = [
   {
@@ -77,23 +80,18 @@ export const categoriasRecursos = [
 export const passosInicio = [
   {
     numero: '01',
-    aba: '01 Conta',
-    titulo: 'Crie sua conta',
-    descricao: 'Salve seus interesses e acompanhe o que já fez.',
+    titulo: 'Crie sua\nconta',
+    imagem: caixaContaImg,
   },
   {
     numero: '02',
-    aba: '02 Seu momento',
-    titulo: 'Escolha o seu momento',
-    descricao:
-      'Diga se está se preparando para sair de casa ou se já está no seu canto precisando de organização.',
+    titulo: 'Escolha\nseu momento',
+    imagem: caixaMomentoImg,
   },
   {
     numero: '03',
-    aba: '03 Seu dia',
-    titulo: 'Viva seu dia a dia com leveza',
-    descricao:
-      'Acesse roteiros prontos para cada semana: receitas práticas, listas de compras e controle financeiro.',
+    titulo: 'Viva\nseu canto',
+    imagem: caixaRotinaImg,
   },
 ];
 

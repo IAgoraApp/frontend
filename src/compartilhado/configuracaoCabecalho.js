@@ -61,6 +61,18 @@ const dadosCabecalhoPublico = {
   },
 };
 
+const dadosCabecalhoParceiros = {
+  ...dadosCabecalhoPublico,
+  linksNavegacao: dadosCabecalhoPublico.linksNavegacao.map(item =>
+    item.rota === '/login' ? { ...item, rota: '/empresa/login' } : item
+  ),
+  botaoAcao: {
+    rotulo: 'Cadastrar empresa',
+    rota: '/empresa/cadastro',
+    cor: 'laranja',
+  },
+};
+
 export const variantesCabecalhoUsuario = {
   consumidorA: dadosCabecalhoConsumidorA,
   consumidorB: dadosCabecalhoConsumidorB,
@@ -70,4 +82,5 @@ export const variantesCabecalho = {
   empresas: dadosCabecalhoEmpresas,
   usuario: dadosCabecalhoConsumidorA,
   publico: dadosCabecalhoPublico,
+  parceiros: dadosCabecalhoParceiros,
 };

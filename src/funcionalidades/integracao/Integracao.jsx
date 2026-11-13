@@ -16,7 +16,7 @@ import {
   lerEstadoPlataforma,
   salvarEstadoPlataforma,
 } from '../../aplicacao/estado/estadoPlataforma';
-import { opcoesMomento, opcoesPrioridades } from './conteudo';
+import { opcoesMomento, prioridadesPorMomento } from './conteudo';
 
 export function Integracao() {
   const navegar = useNavigate();
@@ -28,13 +28,18 @@ export function Integracao() {
     estadoInicial.perfil.momento === 'morando' ? 'living-alone' : 'planning'
   );
   const [prioridades, setPrioridades] = useState(
-    estadoInicial.perfil.prioridades || ['Planejar minha mudança']
+    Array.isArray(estadoInicial.perfil.prioridades) ? estadoInicial.perfil.prioridades : []
   );
+  const conteudoPrioridades = prioridadesPorMomento[momentoSelecionado];
 
   const persistirMomento = (idOpcao, avancar = true) => {
     const opcao =
       opcoesMomento.find(item => item.id === idOpcao) ?? opcoesMomento[0];
+    const prioridadesValidas = prioridades.filter(prioridade =>
+      prioridadesPorMomento[opcao.id].opcoes.some(item => item.titulo === prioridade)
+    );
     setMomentoSelecionado(opcao.id);
+    setPrioridades(prioridadesValidas);
     try {
       localStorage.setItem('iagora:situacao-moradia', opcao.id);
     } catch (erro) {
@@ -47,6 +52,7 @@ export function Integracao() {
         ...estadoAtual.perfil,
         momento: opcao.momento,
         momentoRotulo: opcao.momentoRotulo,
+        prioridades: prioridadesValidas,
       },
     });
     if (avancar) setEtapa('prioridades');
@@ -183,10 +189,10 @@ export function Integracao() {
                     <SeloEditorial texto='SEU AGORA COMEÇA AQUI' />
                   </div>
                   <h1 className='font-titulo mt-4 text-[clamp(2rem,3.6vw,3rem)] leading-[1.1] font-extrabold'>
-                    O que você quer organizar primeiro?
+                    {conteudoPrioridades.titulo}
                   </h1>
                   <p className='mt-2 text-lg text-(--texto-apoio)'>
-                    Você pode mudar essas escolhas depois.
+                    {conteudoPrioridades.descricao}
                   </p>
                 </div>
 
@@ -198,15 +204,15 @@ export function Integracao() {
               </div>
 
               <div className='mt-8 space-y-3'>
-                {opcoesPrioridades.map(item => {
-                  const marcada = prioridades.includes(item);
+                {conteudoPrioridades.opcoes.map(item => {
+                  const marcada = prioridades.includes(item.titulo);
                   return (
                     <button
-                      key={item}
+                      key={item.titulo}
                       type='button'
                       role='checkbox'
                       aria-checked={marcada}
-                      onClick={() => alternarPrioridade(item)}
+                      onClick={() => alternarPrioridade(item.titulo)}
                       className={`flex w-full cursor-pointer items-center gap-4 rounded-xl border p-5 text-left transition-colors ${
                         marcada
                           ? 'border-(--laranja-principal) bg-(--pessego-suave)/55'
@@ -224,10 +230,10 @@ export function Integracao() {
                       </span>
                       <span>
                         <span className='block text-lg font-bold text-(--azul-titulo)'>
-                          {item}
+                          {item.titulo}
                         </span>
                         <span className='mt-0.5 block text-sm text-(--texto-apoio)'>
-                          Escolha o que faz sentido agora.
+                          {item.descricao}
                         </span>
                       </span>
                     </button>
@@ -242,13 +248,6 @@ export function Integracao() {
                   onClick={() => irParaExperiencia()}
                 >
                   Continuar
-                </Botao>
-                <Botao
-                  como={Link}
-                  to='/empresa/cadastro'
-                  variante='secundario'
-                >
-                  Quero anunciar
                 </Botao>
                 <Botao
                   type='button'

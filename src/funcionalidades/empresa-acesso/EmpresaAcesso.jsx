@@ -24,7 +24,6 @@ export function EmpresaAcesso({ modoInicial = 'cadastro' }) {
   const navegar = useNavigate();
   const localizacao = useLocation();
   const [parametros] = useSearchParams();
-  const entrarQuery = parametros.get('modo') === 'entrar';
   const [valores, setValores] = useState({
     nomeEmpresa: '',
     email: '',
@@ -34,9 +33,15 @@ export function EmpresaAcesso({ modoInicial = 'cadastro' }) {
   const [erro, setErro] = useState('');
 
   if (modoInicial === 'divisao') {
+    const consulta = new URLSearchParams(parametros);
+    const destino = consulta.get('modo') === 'entrar'
+      ? '/empresa/login'
+      : '/empresa/cadastro';
+    consulta.delete('modo');
+    const busca = consulta.toString();
     return (
       <Navigate
-        to={entrarQuery ? '/login?perfil=empresa' : '/empresa/cadastro' + localizacao.search + localizacao.hash}
+        to={destino + (busca ? '?' + busca : '') + localizacao.hash}
         replace
         state={localizacao.state}
       />
@@ -170,18 +175,31 @@ export function EmpresaAcesso({ modoInicial = 'cadastro' }) {
 
               <div className='flex flex-wrap gap-3 pt-1'>
                 <Botao type='submit' cor='laranja' classe='px-8!'>
-                  Continuar
+                  {ehCadastro ? 'Criar conta da empresa' : 'Entrar no painel'}
                 </Botao>
                 <Botao
                   como={Link}
-                  to='/login?modo=recuperar&perfil=empresa'
+                  to={ehCadastro ? '/empresa/login' : '/login?modo=recuperar&perfil=empresa'}
                   state={localizacao.state}
                   variante='secundario'
                 >
-                  Recuperar senha
+                  {ehCadastro ? 'Já tenho uma conta' : 'Recuperar senha'}
                 </Botao>
               </div>
             </form>
+
+            {!ehCadastro && (
+              <p className='mt-5 text-sm text-(--texto-apoio)'>
+                Ainda não cadastrou sua empresa?{' '}
+                <Link
+                  to='/empresa/cadastro'
+                  state={localizacao.state}
+                  className='font-bold text-(--laranja-principal) hover:underline'
+                >
+                  Cadastrar empresa
+                </Link>
+              </p>
+            )}
           </Container>
         </main>
         <Rodape variante='empresa' />

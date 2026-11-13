@@ -94,9 +94,7 @@ function FluxoAutenticacao() {
     return () => clearInterval(temporizador);
   }, [modo, segundosReenvio]);
 
-  const chaveTexto =
-    modo === 'login' && tipoPerfil === 'empresa' ? 'loginEmpresa' : modo;
-  const cabecalhoAtual = etapasAutenticacao[chaveTexto];
+  const cabecalhoAtual = etapasAutenticacao[modo];
 
   const atualizarUrl = (proximoModo, proximoPerfil = tipoPerfil, proximaOrigem = origemFluxo) => {
     setErroFormulario('');
@@ -307,41 +305,6 @@ function FluxoAutenticacao() {
               {cabecalhoAtual.subtitulo}
             </p>
 
-            {(modo === 'login' || modo === 'cadastro') && (
-              <div
-                role='group'
-                aria-label='Tipo de perfil'
-                className='mt-6 grid grid-cols-2 gap-1 rounded-xl bg-(--azul-fundo) p-1'
-              >
-                {[
-                  { id: 'pessoal', rotulo: 'Pessoal' },
-                  { id: 'empresa', rotulo: 'Empresa' },
-                ].map(item => (
-                  <button
-                    key={item.id}
-                    type='button'
-                    aria-pressed={tipoPerfil === item.id}
-                    onClick={() => {
-                      if (item.id === 'empresa' && modo === 'cadastro') {
-                        navegar('/empresa/cadastro', {
-                          state: localizacao.state,
-                        });
-                        return;
-                      }
-                      atualizarUrl(modo, item.id);
-                    }}
-                    className={`min-h-10 cursor-pointer rounded-lg px-3 py-2 text-sm font-bold transition-colors ${
-                      tipoPerfil === item.id
-                        ? 'bg-(--azul-titulo) text-white'
-                        : 'text-(--texto-apoio) hover:bg-white'
-                    }`}
-                  >
-                    {item.rotulo}
-                  </button>
-                ))}
-              </div>
-            )}
-
             {modo === 'login' && (
               <div className='mt-6 space-y-5'>
                 <button
@@ -369,7 +332,7 @@ function FluxoAutenticacao() {
                       htmlFor='email-login'
                       className='text-sm font-bold text-(--azul-titulo)'
                     >
-                      {tipoPerfil === 'empresa' ? 'E-mail comercial' : 'E-mail'}
+                      E-mail
                     </label>
                     <input
                       id='email-login'
@@ -441,33 +404,19 @@ function FluxoAutenticacao() {
                   )}
 
                   <Botao type='submit' cor='laranja' classe='w-full! min-h-[52px]!'>
-                    {tipoPerfil === 'empresa'
-                      ? "Entrar no painel"
-                      : "Entrar no meu cantinho"}
+                    Entrar no meu cantinho
                   </Botao>
                 </form>
 
                 <p className='text-center text-sm text-(--texto-apoio)'>
-                  {tipoPerfil === 'empresa'
-                    ? 'Ainda não cadastrou sua empresa?'
-                    : 'Ainda não tem conta?'}{' '}
-                  {tipoPerfil === 'empresa' ? (
-                    <Link
-                      to='/empresa/cadastro'
-                      state={localizacao.state}
-                      className='font-bold text-(--laranja-principal) hover:underline'
-                    >
-                      Cadastrar empresa
-                    </Link>
-                  ) : (
-                    <button
-                      type='button'
-                      onClick={() => atualizarUrl('cadastro')}
-                      className='cursor-pointer font-bold text-(--laranja-principal) hover:underline'
-                    >
-                      Criar conta
-                    </button>
-                  )}
+                  Ainda não tem conta?{' '}
+                  <button
+                    type='button'
+                    onClick={() => atualizarUrl('cadastro')}
+                    className='cursor-pointer font-bold text-(--laranja-principal) hover:underline'
+                  >
+                    Criar conta
+                  </button>
                 </p>
               </div>
             )}
@@ -931,14 +880,22 @@ export function Autenticacao() {
   const localizacao = useLocation();
   const [parametros] = useSearchParams();
   const perfil = parametros.get('perfil') === 'empresa' ? 'empresa' : 'pessoal';
-  if (perfil === 'empresa' && parametros.get('modo') === 'cadastro') {
+  const modo = mapearModoParametro(parametros.get('modo'));
+  const recuperacaoEmpresa = modo === 'recuperar' || (
+    parametros.get('origem') === 'recuperar' &&
+    ['verificar', 'novaSenha', 'sucesso'].includes(modo)
+  );
+  if (perfil === 'empresa' && !recuperacaoEmpresa) {
     const consulta = new URLSearchParams(parametros);
     consulta.delete('perfil');
     consulta.delete('modo');
     const busca = consulta.toString();
     return (
       <Navigate
-        to={'/empresa/cadastro' + (busca ? '?' + busca : '') + localizacao.hash}
+        to={
+          (modo === 'login' ? '/empresa/login' : '/empresa/cadastro') +
+          (busca ? '?' + busca : '') + localizacao.hash
+        }
         replace
         state={localizacao.state}
       />

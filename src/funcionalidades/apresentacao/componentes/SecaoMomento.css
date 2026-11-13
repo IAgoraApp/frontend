@@ -1,0 +1,133 @@
+.momento-landing {
+  background: var(--azul-titulo);
+  color: white;
+  padding: 48px 24px 56px;
+  scroll-margin-top: 24px;
+}
+.momento-container {
+  max-width: 1296px;
+  margin-inline: auto;
+}
+.momento-cabecalho {
+  margin-bottom: 32px;
+  text-align: center;
+}
+.momento-cabecalho > span {
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.momento-cabecalho h2 {
+  margin-top: 12px;
+  font-size: clamp(2rem, 3.6vw, 3.5rem);
+  line-height: 1.1;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.momento-grade {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+}
+.momento-cartao {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 26px;
+  background: white;
+  color: var(--azul-titulo);
+  text-decoration: none;
+  transition: box-shadow 150ms ease-out;
+}
+.momento-cartao:hover {
+  box-shadow: 0 14px 36px #00000030;
+}
+.momento-cartao:focus-visible {
+  outline: 3px solid var(--laranja-principal);
+  outline-offset: 5px;
+}
+.momento-foto {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+.momento-foto img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transition: transform 200ms ease-out;
+}
+.momento-cartao:hover .momento-foto img,
+.momento-cartao:focus-visible .momento-foto img {
+  transform: scale(1.025);
+}
+.momento-conteudo {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 24px 20px 28px;
+  text-align: center;
+}
+.momento-conteudo h3 {
+  margin: 0;
+  font-size: clamp(1.75rem, 3.1vw, 2.75rem);
+  line-height: 1.12;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.momento-chamada {
+  display: flex;
+  width: 100%;
+  max-width: 460px;
+  min-height: 56px;
+  align-items: center;
+  justify-content: center;
+  margin-top: auto;
+  border-radius: 18px;
+  padding: 14px 12px;
+  background: var(--laranja-principal);
+  color: white;
+  font-size: clamp(1rem, 1.6vw, 1.375rem);
+  line-height: 1.3;
+  font-weight: 700;
+  transition: background-color 150ms ease-out;
+}
+.momento-cartao:hover .momento-chamada,
+.momento-cartao:focus-visible .momento-chamada {
+  background: #bf3300;
+}
+@media (min-width: 640px) {
+  .momento-landing {
+    padding-inline: 48px;
+  }
+  .momento-grade {
+    max-width: 660px;
+    margin-inline: auto;
+  }
+}
+@media (min-width: 1024px) {
+  .momento-landing {
+    padding: 56px 72px 64px;
+  }
+  .momento-cabecalho {
+    margin-bottom: 40px;
+  }
+  .momento-cabecalho > span {
+    font-size: 16px;
+  }
+  .momento-grade {
+    max-width: none;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .momento-conteudo {
+    padding: 26px 28px 32px;
+    gap: 24px;
+  }
+}

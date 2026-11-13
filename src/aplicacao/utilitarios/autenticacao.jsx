@@ -9,7 +9,7 @@ export const RotaPrivada = () => {
   if (!temSessao() || perfilDaSessao() !== perfilNecessario) {
     return (
       <Navigate
-        to={perfilNecessario === 'empresa' ? '/login?perfil=empresa' : '/login'}
+        to={perfilNecessario === 'empresa' ? '/empresa/login' : '/login'}
         replace
         state={{
           destino: localizacao.pathname + localizacao.search + localizacao.hash,
