@@ -1,0 +1,432 @@
+﻿.ia-pagina {
+  display: grid;
+  grid-template-columns: 272px minmax(0, 1fr);
+  flex: 1;
+  min-height: calc(100dvh - 90px);
+  color: var(--azul-titulo);
+}
+.ia-pagina button {
+  cursor: pointer;
+}
+.ia-pagina button:disabled {
+  cursor: not-allowed;
+}
+.ia-pagina :is(button, textarea):focus-visible {
+  outline: 2px solid var(--laranja-principal);
+  outline-offset: 4px;
+}
+.ia-historico {
+  display: flex;
+  flex-direction: column;
+  padding: 30px 20px;
+  background: var(--azul-fundo);
+  border-right: 1px solid var(--borda-suave);
+}
+.ia-marca {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.ia-marca h1 {
+  font-size: 23px;
+  font-weight: 800;
+}
+.ia-marca p {
+  font-size: 12px;
+  color: var(--texto-apoio);
+}
+.ia-simbolo {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--laranja-fundo);
+  color: var(--laranja-principal);
+}
+.ia-nova {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 46px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 9px;
+  background: white;
+  font-size: 14px;
+  font-weight: 700;
+}
+.ia-nova:hover {
+  border-color: var(--laranja-principal);
+}
+.ia-historico h2 {
+  margin: 30px 10px 12px;
+  font-family: var(--font-corpo);
+  font-size: 13px;
+  font-weight: 700;
+}
+.ia-lista {
+  flex: 1;
+}
+.ia-sem-historico {
+  padding: 8px 10px;
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--texto-apoio);
+}
+.ia-conversa-item {
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  margin-bottom: 5px;
+}
+.ia-conversa-item > button:first-child {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  flex: 1;
+  padding: 12px 8px;
+  text-align: left;
+  font-size: 13px;
+}
+.ia-conversa-item svg {
+  flex-shrink: 0;
+}
+.ia-conversa-item span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ia-conversa-ativa {
+  background: #e4ecf3;
+}
+.ia-excluir {
+  display: grid;
+  place-items: center;
+  min-width: 38px;
+  min-height: 44px;
+  color: var(--texto-apoio);
+}
+.ia-excluir:hover {
+  color: var(--vermelho-alerta);
+}
+.ia-nota-historico {
+  margin-top: 40px;
+  padding: 16px 8px 0;
+  border-top: 1px solid var(--borda-suave);
+  font-size: 11px;
+  line-height: 1.7;
+  color: var(--texto-apoio);
+}
+.ia-espaco {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  max-height: calc(100dvh - 90px);
+}
+.ia-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 22px 32px;
+  border-bottom: 1px solid #eef2f5;
+  font-size: 13px;
+}
+.ia-topo > span:first-child {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.ia-topo svg {
+  color: var(--laranja-principal);
+}
+.ia-demo {
+  border: 1px solid var(--borda-suave);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 11px;
+  color: var(--texto-apoio);
+}
+.ia-conteudo {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 32px;
+}
+.ia-boas-vindas {
+  max-width: 680px;
+  margin: clamp(16px, 5vh, 65px) auto 28px;
+  text-align: center;
+}
+.ia-emblema {
+  display: grid;
+  place-items: center;
+  background: var(--laranja-fundo);
+  color: var(--laranja-principal);
+  width: 72px;
+  height: 72px;
+  border-radius: 24px 24px 24px 8px;
+  margin: 0 auto 24px;
+}
+.ia-boas-vindas h2 {
+  font-size: clamp(28px, 3.1vw, 42px);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+  max-width: 550px;
+  margin: auto;
+}
+.ia-boas-vindas > p {
+  max-width: 430px;
+  margin: 18px auto 30px;
+  color: var(--texto-apoio);
+  font-size: 15px;
+  line-height: 1.7;
+}
+.ia-sugestoes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  text-align: left;
+}
+.ia-sugestoes button {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  column-gap: 12px;
+  row-gap: 5px;
+  align-content: start;
+  border: 1px solid var(--borda-suave);
+  border-radius: 12px;
+  padding: 18px;
+  background: white;
+  text-align: left;
+}
+.ia-sugestoes button:hover {
+  border-color: var(--laranja-principal);
+  background: #fffaf7;
+}
+.ia-sugestoes svg {
+  grid-row: span 2;
+  color: var(--laranja-principal);
+}
+.ia-sugestoes strong {
+  font-size: 14px;
+}
+.ia-sugestoes span {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--texto-apoio);
+}
+.ia-mensagens {
+  max-width: 740px;
+  margin: auto;
+}
+.ia-mensagem {
+  margin-bottom: 28px;
+  font-size: 14px;
+  line-height: 1.85;
+  overflow-wrap: anywhere;
+}
+.ia-autor {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+.ia-autor svg {
+  color: var(--laranja-principal);
+}
+.ia-mensagem p {
+  white-space: pre-wrap;
+}
+.ia-mensagem-usuario {
+  max-width: 85%;
+  width: fit-content;
+  margin-left: auto;
+  background: var(--azul-fundo);
+  border-radius: 16px 16px 4px 16px;
+  padding: 14px 20px;
+}
+.ia-mensagem-assistente {
+  padding: 8px 0;
+}
+.ia-copiar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 10px;
+  min-height: 36px;
+  font-size: 11px;
+  color: var(--texto-apoio);
+}
+.ia-compositor {
+  padding: 12px 32px 20px;
+  background: white;
+}
+.ia-compositor form {
+  max-width: 740px;
+  margin: auto;
+  border: 1px solid var(--borda-suave);
+  border-radius: 16px;
+  padding: 16px 16px 10px;
+  box-shadow: 0 4px 18px #102a4306;
+}
+.ia-compositor form:focus-within {
+  border-color: var(--laranja-principal);
+}
+.ia-compositor textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 55px;
+  max-height: 160px;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.6;
+  background: transparent;
+}
+.ia-compositor textarea:focus-visible {
+  outline-offset: 2px;
+}
+.ia-compositor-acoes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 6px;
+}
+.ia-compositor-acoes span {
+  font-size: 11px;
+  color: var(--texto-apoio);
+}
+.ia-compositor-acoes button {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: var(--laranja-principal);
+  color: white;
+}
+.ia-compositor-acoes button:disabled {
+  background: #e4eaf0;
+  color: #7b8a98;
+}
+.ia-aviso {
+  max-width: 740px;
+  margin: 10px auto 0;
+  text-align: center;
+  font-size: 10px;
+  line-height: 1.7;
+  color: var(--texto-apoio);
+}
+.ia-erro {
+  max-width: 740px;
+  margin: 0 auto 12px;
+  color: var(--vermelho-alerta);
+  font-size: 13px;
+}
+.ia-barra-mobile {
+  display: none;
+}
+.ia-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+@media (min-width: 1500px) {
+  .ia-historico {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+  .ia-pagina {
+    grid-template-columns: 300px minmax(0, 1fr);
+  }
+}
+@media (max-width: 767px) {
+  .ia-pagina {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100dvh - 75px);
+  }
+  .ia-barra-mobile {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--borda-suave);
+  }
+  .ia-barra-mobile button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .ia-historico {
+    display: none;
+  }
+  .ia-historico-aberto {
+    display: flex;
+    max-height: 50dvh;
+    overflow-y: auto;
+    border-bottom: 1px solid var(--borda-suave);
+    padding: 20px;
+  }
+  .ia-nota-historico {
+    margin-top: 20px;
+  }
+  .ia-espaco {
+    flex: 1;
+    max-height: none;
+  }
+  .ia-topo {
+    padding: 16px;
+    font-size: 11px;
+  }
+  .ia-conteudo {
+    padding: 24px 16px;
+  }
+  .ia-boas-vindas {
+    margin: 12px auto 20px;
+  }
+  .ia-boas-vindas h2 {
+    max-width: 340px;
+  }
+  .ia-emblema {
+    height: 60px;
+    width: 60px;
+    margin-bottom: 20px;
+  }
+  .ia-sugestoes {
+    gap: 8px;
+  }
+  .ia-sugestoes button {
+    display: flex;
+    flex-direction: column;
+    padding: 14px;
+    gap: 7px;
+  }
+  .ia-sugestoes strong {
+    font-size: 12px;
+  }
+  .ia-sugestoes span {
+    font-size: 11px;
+  }
+  .ia-compositor {
+    padding: 8px 16px 20px;
+  }
+  .ia-mensagem-usuario {
+    max-width: 95%;
+  }
+}

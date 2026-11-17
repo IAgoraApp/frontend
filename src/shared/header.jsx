@@ -1,12 +1,9 @@
-import { useEffect, useId, useRef, useState } from 'react';
+﻿import { useEffect, useId, useRef, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import logoLaranja from './assets/logoLaranja.png';
 import { Botao } from './ui/index';
-import {
-  variantesCabecalho,
-  variantesCabecalhoUsuario,
-} from './headerConfig';
+import { variantesCabecalho, variantesCabecalhoUsuario } from './headerConfig';
 
 export default function Cabecalho({
   variante = 'usuario',
@@ -163,9 +160,9 @@ export default function Cabecalho({
         }
       }}
     >
-      <div className='mx-auto flex max-w-[1440px] min-w-0 items-center justify-between gap-[clamp(1rem,2cqw,2rem)] py-4 @min-[58rem]/cabecalho:py-5'>
+      <div className='mx-auto flex max-w-[1440px] min-w-0 items-center justify-between gap-[clamp(1rem,2cqw,2rem)] py-4 @min-[72rem]/cabecalho:py-5'>
         <Link
-          className='min-w-0 @min-[58rem]/cabecalho:shrink-0'
+          className='min-w-0 @min-[72rem]/cabecalho:shrink-0'
           to={rotaLogo}
           aria-label='Página inicial Iagora'
           onClick={fecharMenu}
@@ -179,7 +176,7 @@ export default function Cabecalho({
 
         <nav
           aria-label='Navegação principal'
-          className='hidden min-w-0 flex-1 items-center justify-center gap-[clamp(1rem,3cqw,2.25rem)] @min-[58rem]/cabecalho:flex'
+          className='hidden min-w-0 flex-1 items-center justify-center gap-[clamp(1rem,3cqw,2.25rem)] @min-[72rem]/cabecalho:flex'
         >
           {renderizarLinks()}
         </nav>
@@ -193,13 +190,17 @@ export default function Cabecalho({
           <button
             ref={referenciaBotao}
             type='button'
-            className='grid size-11 shrink-0 cursor-pointer place-items-center rounded-lg text-(--azul-titulo) hover:bg-(--azul-fundo) @min-[58rem]/cabecalho:hidden'
+            className='grid size-11 shrink-0 cursor-pointer place-items-center rounded-lg text-(--azul-titulo) hover:bg-(--azul-fundo) @min-[72rem]/cabecalho:hidden'
             aria-label={menuAberto ? 'Fechar menu' : 'Abrir menu'}
             aria-expanded={menuAberto}
             aria-controls={idMenu}
             onClick={() => setAbertoEm(menuAberto ? null : chaveNavegacao)}
           >
-            {menuAberto ? <X aria-hidden='true' /> : <Menu aria-hidden='true' />}
+            {menuAberto ? (
+              <X aria-hidden='true' />
+            ) : (
+              <Menu aria-hidden='true' />
+            )}
           </button>
         </div>
       </div>
@@ -207,7 +208,7 @@ export default function Cabecalho({
       <nav
         id={idMenu}
         aria-label='Navegação principal móvel'
-        className='absolute inset-x-(--margem-pagina) top-full z-40 flex max-h-[70dvh] flex-col gap-1 overflow-y-auto overscroll-contain rounded-xl border border-[#dbe5ed] bg-white p-3 shadow-[0_12px_32px_#102d491a] @min-[58rem]/cabecalho:hidden [&[hidden]]:hidden'
+        className='absolute inset-x-(--margem-pagina) top-full z-40 flex max-h-[70dvh] flex-col gap-1 overflow-y-auto overscroll-contain rounded-xl border border-[#dbe5ed] bg-white p-3 shadow-[0_12px_32px_#102d491a] @min-[72rem]/cabecalho:hidden [&[hidden]]:hidden'
         hidden={!menuAberto}
       >
         {renderizarLinks(true)}

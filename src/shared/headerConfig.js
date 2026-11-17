@@ -1,4 +1,4 @@
-const dadosCabecalhoEmpresas = {
+﻿const dadosCabecalhoEmpresas = {
   rotaLogo: '/empresa',
   linksNavegacao: [
     { nome: 'Painel', rota: '/empresa/dashboard' },
@@ -6,6 +6,7 @@ const dadosCabecalhoEmpresas = {
     { nome: 'Perfil da empresa', rota: '/empresa/perfil' },
     { nome: 'Marketplace', rota: '/empresa/marketplace' },
     { nome: 'Contatos', rota: '/empresa/contatos' },
+    { nome: 'IA', rota: '/empresa/ia' },
   ],
   botaoAcao: {
     rotulo: '+ Anunciar serviço',
@@ -22,6 +23,7 @@ const dadosCabecalhoConsumidorA = {
     { nome: 'Rotina', rota: '/rotina' },
     { nome: 'Finanças', rota: '/financas' },
     { nome: 'Empresas e Serviços', rota: '/marketplace' },
+    { nome: 'IA', rota: '/ia' },
   ],
   botaoAcao: {
     rotulo: 'Meu perfil',
@@ -38,6 +40,7 @@ const dadosCabecalhoConsumidorB = {
     { nome: 'Finanças', rota: '/planejamento' },
     { nome: 'Aprendendo a morar', rota: '/aprendendo' },
     { nome: 'Encontrar casa', rota: '/encontrar-casa' },
+    { nome: 'IA', rota: '/ia-b' },
   ],
   botaoAcao: {
     rotulo: 'Meu perfil',
@@ -52,6 +55,7 @@ const dadosCabecalhoPublico = {
     { nome: 'Como funciona', rota: '/como-funciona' },
     { nome: 'Sobre nós', rota: '/sobrenos' },
     { nome: 'Para empresas', rota: '/sejaparceiro' },
+    { nome: 'IA', rota: '/ia' },
     { nome: 'Entrar', rota: '/login' },
   ],
   botaoAcao: {

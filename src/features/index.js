@@ -1,3 +1,4 @@
+import InteligenciaArtificial from './ia/ia';
 import AjudaSuporte from './ajuda-suporte/AjudaSuporte';
 import Aprendendo from './aprendendo/aprendendo';
 import { PaginaInicial } from './landing-page/landingPage';
@@ -35,6 +36,7 @@ export const Funcionalidades = {
   Inicio,
   InicioPreparacao,
   Integracao,
+  InteligenciaArtificial,
   Limpeza,
   MercadoServicos,
   MinhaJornada,
@@ -60,6 +62,7 @@ export {
   Inicio,
   InicioPreparacao,
   Integracao,
+  InteligenciaArtificial,
   Limpeza,
   MercadoServicos,
   MinhaJornada,

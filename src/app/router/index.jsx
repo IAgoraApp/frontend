@@ -1,4 +1,4 @@
-import {
+﻿import {
   createBrowserRouter,
   Navigate,
   RouterProvider,
@@ -24,6 +24,10 @@ const rotas = createBrowserRouter([
             element: <LayoutUsuario tipoUsuario='consumidorA' />,
             children: [
               { path: '/home', element: <Funcionalidades.Inicio /> },
+              {
+                path: '/ia',
+                element: <Funcionalidades.InteligenciaArtificial />,
+              },
               {
                 element: <LayoutCasa />,
                 children: [
@@ -140,11 +144,19 @@ const rotas = createBrowserRouter([
                 element: <Funcionalidades.EncontrarCasa />,
               },
               { path: '/perfil-b', element: <Funcionalidades.Perfil /> },
+              {
+                path: '/ia-b',
+                element: <Funcionalidades.InteligenciaArtificial />,
+              },
             ],
           },
           {
             element: <LayoutEmpresas />,
             children: [
+              {
+                path: '/empresa/ia',
+                element: <Funcionalidades.InteligenciaArtificial />,
+              },
               {
                 path: '/empresa',
                 element: <Funcionalidades.Empresa visao='inicio' />,
