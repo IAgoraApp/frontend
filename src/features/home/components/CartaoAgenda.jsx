@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { chaveData } from '../../rotina/utils/dates';
-import { obterEventosAgendaMes } from '../content';
 
 const diasSemana = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
 
@@ -13,12 +12,7 @@ function construirGradeDomingo(mes) {
   const totalCelulas = Math.ceil((primeiroDiaSemana + totalDiasMes) / 7) * 7;
 
   return Array.from({ length: totalCelulas }, (_, indice) => {
-    const data = new Date(
-      ano,
-      indiceMes,
-      1 - primeiroDiaSemana + indice,
-      12
-    );
+    const data = new Date(ano, indiceMes, 1 - primeiroDiaSemana + indice, 12);
     return {
       chave: chaveData(data),
       numero: data.getDate(),
@@ -39,7 +33,7 @@ function partesEtiquetaData(dataIso) {
   };
 }
 
-export default function CartaoAgenda() {
+export default function CartaoAgenda({ eventosDisponiveis = [] }) {
   const hoje = chaveData();
   const [mesReferencia, setMesReferencia] = useState(
     () => new Date(new Date().getFullYear(), new Date().getMonth(), 1, 12)
@@ -52,8 +46,13 @@ export default function CartaoAgenda() {
   );
 
   const eventos = useMemo(
-    () => obterEventosAgendaMes(mesReferencia),
-    [mesReferencia]
+    () =>
+      eventosDisponiveis.filter(evento =>
+        evento.data.startsWith(
+          `${mesReferencia.getFullYear()}-${String(mesReferencia.getMonth() + 1).padStart(2, '0')}`
+        )
+      ),
+    [mesReferencia, eventosDisponiveis]
   );
 
   const eventosPorDia = useMemo(() => {
@@ -73,13 +72,12 @@ export default function CartaoAgenda() {
   const nomeMes = mesReferencia.toLocaleDateString('pt-BR', {
     month: 'long',
   });
-  const nomeMesFormatado =
-    nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1);
+  const nomeMesFormatado = nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1);
 
   return (
-    <div className='rounded-xl border border-[#eef2f6] bg-white p-4 shadow-[0_2px_16px_rgba(16,42,67,0.05)] sm:p-5'>
-      <div className='grid gap-5 md:grid-cols-[1.15fr_1fr]'>
-        <div className='min-w-0'>
+    <div className='inicio-calendario rounded-xl border border-[#eef2f6] bg-white p-4 shadow-[0_2px_16px_rgba(16,42,67,0.05)] sm:p-5'>
+      <div className='inicio-calendario-grade grid gap-5 md:grid-cols-[1.15fr_1fr]'>
+        <div className='inicio-mes min-w-0'>
           <div className='mb-3 flex items-center justify-between gap-2'>
             <p className='text-lg font-extrabold text-(--azul-titulo)'>
               {nomeMesFormatado}{' '}
@@ -160,7 +158,9 @@ export default function CartaoAgenda() {
                       anterior === celula.chave ? '' : celula.chave
                     )
                   }
-                  aria-label={`${celula.numero}${
+                  aria-pressed={selecionado}
+                  aria-current={ehHoje ? 'date' : undefined}
+                  aria-label={`${new Date(`${celula.chave}T12:00:00`).toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' })}${
                     eventosCelula.length
                       ? `, ${eventosCelula.length} compromisso(s)`
                       : ''
@@ -196,7 +196,7 @@ export default function CartaoAgenda() {
           </div>
         </div>
 
-        <div className='min-w-0 border-t border-[#eef2f6] pt-4 md:border-t-0 md:border-l md:pt-0 md:pl-4'>
+        <div className='inicio-compromissos min-w-0 border-t border-[#eef2f6] pt-4 md:border-t-0 md:border-l md:pt-0 md:pl-4'>
           <div className='mb-3 flex items-center justify-between gap-2'>
             <span className='inline-flex items-center gap-1.5 text-[11px] font-bold tracking-wider text-(--laranja-principal)'>
               <span
@@ -212,8 +212,13 @@ export default function CartaoAgenda() {
           </div>
 
           {listaExibida.length ? (
-            <div className='max-h-[210px] space-y-2 overflow-y-auto pr-1'>
-              {listaExibida.slice(0, 6).map(evento => {
+            <div
+              className='inicio-eventos space-y-2 pr-1'
+              role='region'
+              aria-label='Lista de compromissos'
+              tabIndex={0}
+            >
+              {listaExibida.map(evento => {
                 const { dia, mes } = partesEtiquetaData(evento.data);
                 const destaqueLaranja = evento.tipo === 'financas';
                 return (

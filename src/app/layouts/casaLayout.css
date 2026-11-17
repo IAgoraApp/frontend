@@ -1,0 +1,53 @@
+[data-layout-aplicacao]:has(> .casa-shell) {
+  height: 100dvh;
+  min-height: 0;
+}
+[data-layout-aplicacao]:has(> .casa-shell) > header {
+  flex-shrink: 0;
+  z-index: 40;
+}
+.casa-shell {
+  min-height: 0;
+  overflow: hidden;
+  align-items: stretch;
+}
+.casa-shell > .casa-menu {
+  height: 100%;
+  min-height: 0;
+  max-height: none;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.casa-shell > .casa-conteudo {
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+.casa-menu .casa-menu-principal {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 12px;
+  font-size: 13px;
+  font-weight: 750;
+}
+@media (max-width: 600px) {
+  .casa-shell {
+    display: flex;
+    flex-direction: column;
+  }
+  .casa-shell > .casa-menu {
+    height: auto;
+    flex-shrink: 0;
+    overflow: visible;
+  }
+  .casa-shell > .casa-conteudo {
+    flex: 1;
+  }
+  .casa-menu .casa-menu-principal {
+    padding: 8px 6px;
+    font-size: 12px;
+  }
+}

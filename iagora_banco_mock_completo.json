@@ -1,0 +1,2368 @@
+{
+  "projeto": "IAgora",
+  "finalidade": "Dados fictícios para testes de frontend, protótipos e json-server; não são dados reais nem credenciais válidas.",
+  "observacoes": [
+    "Os identificadores grupo_id foram substituídos por user_id nas entidades que pertencem diretamente ao usuário.",
+    "Os IDs representam relações entre coleções; algumas entidades continuam ligadas indiretamente ao usuário por casa_id, perfil_id, etc.",
+    "Datas são fictícias e servem para testar estados de interface.",
+    "URLs /mock são caminhos ilustrativos; não há imagens hospedadas.",
+    "Senhas e tokens são placeholders inválidos; não usar em autenticação real.",
+    "Os nomes de coleções seguem as entidades de referência; endpoints reais podem diferir."
+  ],
+  "dados": {
+    "users": [
+      {
+        "id": 1,
+        "email": "ana@exemplo.test",
+        "senha": "HASH_FICTICIO_NAO_AUTENTICAVEL",
+        "tipo": 1
+      },
+      {
+        "id": 2,
+        "email": "bruno@exemplo.test",
+        "senha": "HASH_FICTICIO_NAO_AUTENTICAVEL",
+        "tipo": 2
+      },
+      {
+        "id": 3,
+        "email": "carla@exemplo.test",
+        "senha": "HASH_FICTICIO_NAO_AUTENTICAVEL",
+        "tipo": 1
+      },
+      {
+        "id": 4,
+        "email": "empresa.limpa@exemplo.test",
+        "senha": "HASH_FICTICIO_NAO_AUTENTICAVEL",
+        "tipo": 3
+      },
+      {
+        "id": 5,
+        "email": "empresa.reparos@exemplo.test",
+        "senha": "HASH_FICTICIO_NAO_AUTENTICAVEL",
+        "tipo": 3
+      },
+      {
+        "id": 6,
+        "email": "diego@exemplo.test",
+        "senha": "HASH_FICTICIO_NAO_AUTENTICAVEL",
+        "tipo": 2
+      }
+    ],
+    "endereco": [
+      {
+        "id": 1,
+        "estado": "SP",
+        "rua": "Rua das Flores",
+        "bairro": "Vila Mariana",
+        "pais": "Brasil",
+        "cep": "04101000",
+        "cidade": "São Paulo",
+        "numero": "120",
+        "complemento": "Apto 32"
+      },
+      {
+        "id": 2,
+        "estado": "SP",
+        "rua": "Rua do Sol",
+        "bairro": "Pinheiros",
+        "pais": "Brasil",
+        "cep": "05422000",
+        "cidade": "São Paulo",
+        "numero": "45",
+        "complemento": null
+      },
+      {
+        "id": 3,
+        "estado": "SP",
+        "rua": "Avenida Central",
+        "bairro": "Moema",
+        "pais": "Brasil",
+        "cep": "04077000",
+        "cidade": "São Paulo",
+        "numero": "810",
+        "complemento": "Bloco B"
+      },
+      {
+        "id": 4,
+        "estado": "SP",
+        "rua": "Rua das Acácias",
+        "bairro": "Centro",
+        "pais": "Brasil",
+        "cep": "01001000",
+        "cidade": "São Paulo",
+        "numero": "90",
+        "complemento": null
+      },
+      {
+        "id": 5,
+        "estado": "SP",
+        "rua": "Rua Horizonte",
+        "bairro": "Saúde",
+        "pais": "Brasil",
+        "cep": "04140000",
+        "cidade": "São Paulo",
+        "numero": "250",
+        "complemento": "Sala 4"
+      },
+      {
+        "id": 6,
+        "estado": "SP",
+        "rua": "Rua Esperança",
+        "bairro": "Tatuapé",
+        "pais": "Brasil",
+        "cep": "03305000",
+        "cidade": "São Paulo",
+        "numero": "100",
+        "complemento": "Apto 12"
+      },
+      {
+        "id": 7,
+        "estado": "SP",
+        "rua": "Rua Verde",
+        "bairro": "Ipiranga",
+        "pais": "Brasil",
+        "cep": "04210000",
+        "cidade": "São Paulo",
+        "numero": "77",
+        "complemento": null
+      },
+      {
+        "id": 8,
+        "estado": "SP",
+        "rua": "Rua Azul",
+        "bairro": "Brooklin",
+        "pais": "Brasil",
+        "cep": "04571000",
+        "cidade": "São Paulo",
+        "numero": "330",
+        "complemento": "Apto 41"
+      }
+    ],
+    "perfil": [
+      {
+        "id": 1,
+        "user_id": 1,
+        "endereco_id": 1,
+        "nome": "Ana Martins",
+        "foto": "/mock/avatars/1.jpg",
+        "tipo": 1
+      },
+      {
+        "id": 2,
+        "user_id": 2,
+        "endereco_id": 2,
+        "nome": "Bruno Lima",
+        "foto": null,
+        "tipo": 2
+      },
+      {
+        "id": 3,
+        "user_id": 3,
+        "endereco_id": 3,
+        "nome": "Carla Souza",
+        "foto": "/mock/avatars/3.jpg",
+        "tipo": 1
+      },
+      {
+        "id": 4,
+        "user_id": 6,
+        "endereco_id": 6,
+        "nome": "Diego Rocha",
+        "foto": "/mock/avatars/6.jpg",
+        "tipo": 2
+      }
+    ],
+    "casa": [
+      {
+        "id": 1,
+        "user_id": 1,
+        "nome": "Meu apartamento",
+        "tipo": "apartamento",
+        "endereco_id": 1
+      },
+      {
+        "id": 2,
+        "user_id": 3,
+        "nome": "Casa da Carla",
+        "tipo": "casa",
+        "endereco_id": 3
+      }
+    ],
+    "comodo": [
+      {
+        "id": 1,
+        "casa_id": 1,
+        "nome": "Cozinha",
+        "tipo": "cozinha",
+        "descricao": "Ambiente de cozinha"
+      },
+      {
+        "id": 2,
+        "casa_id": 1,
+        "nome": "Quarto",
+        "tipo": "quarto",
+        "descricao": "Ambiente de quarto"
+      },
+      {
+        "id": 3,
+        "casa_id": 1,
+        "nome": "Banheiro",
+        "tipo": "banheiro",
+        "descricao": "Ambiente de banheiro"
+      },
+      {
+        "id": 4,
+        "casa_id": 1,
+        "nome": "Sala",
+        "tipo": "sala",
+        "descricao": "Ambiente de sala"
+      },
+      {
+        "id": 5,
+        "casa_id": 1,
+        "nome": "Lavanderia",
+        "tipo": "lavanderia",
+        "descricao": "Ambiente de lavanderia"
+      },
+      {
+        "id": 6,
+        "casa_id": 2,
+        "nome": "Cozinha",
+        "tipo": "cozinha",
+        "descricao": "Ambiente de cozinha"
+      },
+      {
+        "id": 7,
+        "casa_id": 2,
+        "nome": "Quarto",
+        "tipo": "quarto",
+        "descricao": "Ambiente de quarto"
+      },
+      {
+        "id": 8,
+        "casa_id": 2,
+        "nome": "Banheiro",
+        "tipo": "banheiro",
+        "descricao": "Ambiente de banheiro"
+      }
+    ],
+    "produto": [
+      {
+        "id": 1,
+        "nome": "Arroz",
+        "marca": "Camil",
+        "tamanho": 1,
+        "unidade": "kg",
+        "imagem": "/mock/produtos/1.jpg"
+      },
+      {
+        "id": 2,
+        "nome": "Feijão",
+        "marca": "Kicaldo",
+        "tamanho": 1,
+        "unidade": "kg",
+        "imagem": "/mock/produtos/2.jpg"
+      },
+      {
+        "id": 3,
+        "nome": "Leite",
+        "marca": "Italac",
+        "tamanho": 1,
+        "unidade": "L",
+        "imagem": "/mock/produtos/3.jpg"
+      },
+      {
+        "id": 4,
+        "nome": "Ovos",
+        "marca": "Granja Boa",
+        "tamanho": 12,
+        "unidade": "un",
+        "imagem": "/mock/produtos/4.jpg"
+      },
+      {
+        "id": 5,
+        "nome": "Detergente",
+        "marca": "Ypê",
+        "tamanho": 500,
+        "unidade": "ml",
+        "imagem": "/mock/produtos/5.jpg"
+      },
+      {
+        "id": 6,
+        "nome": "Sabão em pó",
+        "marca": "Omo",
+        "tamanho": 800,
+        "unidade": "g",
+        "imagem": "/mock/produtos/6.jpg"
+      },
+      {
+        "id": 7,
+        "nome": "Macarrão",
+        "marca": "Renata",
+        "tamanho": 500,
+        "unidade": "g",
+        "imagem": "/mock/produtos/7.jpg"
+      },
+      {
+        "id": 8,
+        "nome": "Molho de tomate",
+        "marca": "Pomarola",
+        "tamanho": 300,
+        "unidade": "g",
+        "imagem": "/mock/produtos/8.jpg"
+      },
+      {
+        "id": 9,
+        "nome": "Café",
+        "marca": "Pilão",
+        "tamanho": 500,
+        "unidade": "g",
+        "imagem": "/mock/produtos/9.jpg"
+      },
+      {
+        "id": 10,
+        "nome": "Papel higiênico",
+        "marca": "Neve",
+        "tamanho": 12,
+        "unidade": "un",
+        "imagem": "/mock/produtos/10.jpg"
+      },
+      {
+        "id": 11,
+        "nome": "Banana",
+        "marca": null,
+        "tamanho": 1,
+        "unidade": "kg",
+        "imagem": "/mock/produtos/11.jpg"
+      },
+      {
+        "id": 12,
+        "nome": "Frango",
+        "marca": null,
+        "tamanho": 1,
+        "unidade": "kg",
+        "imagem": "/mock/produtos/12.jpg"
+      },
+      {
+        "id": 13,
+        "nome": "Azeite",
+        "marca": "Gallo",
+        "tamanho": 500,
+        "unidade": "ml",
+        "imagem": "/mock/produtos/13.jpg"
+      },
+      {
+        "id": 14,
+        "nome": "Sal",
+        "marca": "Cisne",
+        "tamanho": 1,
+        "unidade": "kg",
+        "imagem": "/mock/produtos/14.jpg"
+      },
+      {
+        "id": 15,
+        "nome": "Pão de forma",
+        "marca": "Pullman",
+        "tamanho": 500,
+        "unidade": "g",
+        "imagem": "/mock/produtos/15.jpg"
+      }
+    ],
+    "estoque_item": [
+      {
+        "id": 1,
+        "casa_id": 1,
+        "produto_id": 1,
+        "quantidade": 2
+      },
+      {
+        "id": 2,
+        "casa_id": 1,
+        "produto_id": 2,
+        "quantidade": 1
+      },
+      {
+        "id": 3,
+        "casa_id": 1,
+        "produto_id": 3,
+        "quantidade": 3
+      },
+      {
+        "id": 4,
+        "casa_id": 1,
+        "produto_id": 4,
+        "quantidade": 8
+      },
+      {
+        "id": 5,
+        "casa_id": 1,
+        "produto_id": 5,
+        "quantidade": 1
+      },
+      {
+        "id": 6,
+        "casa_id": 1,
+        "produto_id": 7,
+        "quantidade": 0
+      },
+      {
+        "id": 7,
+        "casa_id": 1,
+        "produto_id": 9,
+        "quantidade": 1
+      },
+      {
+        "id": 8,
+        "casa_id": 1,
+        "produto_id": 10,
+        "quantidade": 2
+      },
+      {
+        "id": 9,
+        "casa_id": 2,
+        "produto_id": 1,
+        "quantidade": 1
+      },
+      {
+        "id": 10,
+        "casa_id": 2,
+        "produto_id": 3,
+        "quantidade": 2
+      },
+      {
+        "id": 11,
+        "casa_id": 2,
+        "produto_id": 6,
+        "quantidade": 1
+      },
+      {
+        "id": 12,
+        "casa_id": 2,
+        "produto_id": 12,
+        "quantidade": 1
+      }
+    ],
+    "compras": [
+      {
+        "id": 1,
+        "casa_id": 1,
+        "nome": "Compras da semana",
+        "criacao": "2026-11-15"
+      },
+      {
+        "id": 2,
+        "casa_id": 1,
+        "nome": "Produtos de limpeza",
+        "criacao": "2026-11-12"
+      },
+      {
+        "id": 3,
+        "casa_id": 2,
+        "nome": "Mercado do mês",
+        "criacao": "2026-11-10"
+      },
+      {
+        "id": 4,
+        "casa_id": 1,
+        "nome": "Churrasco de domingo",
+        "criacao": "2026-11-16"
+      }
+    ],
+    "compra_item": [
+      {
+        "id": 1,
+        "compras_id": 1,
+        "produto_id": 1,
+        "nome_item": "Arroz",
+        "quantidade": 1,
+        "comprado": true,
+        "valor": 8.9
+      },
+      {
+        "id": 2,
+        "compras_id": 1,
+        "produto_id": 3,
+        "nome_item": "Leite",
+        "quantidade": 3,
+        "comprado": false,
+        "valor": 5.49
+      },
+      {
+        "id": 3,
+        "compras_id": 1,
+        "produto_id": 4,
+        "nome_item": "Ovos",
+        "quantidade": 1,
+        "comprado": false,
+        "valor": 14.9
+      },
+      {
+        "id": 4,
+        "compras_id": 1,
+        "produto_id": 11,
+        "nome_item": "Banana",
+        "quantidade": 2,
+        "comprado": true,
+        "valor": 6.99
+      },
+      {
+        "id": 5,
+        "compras_id": 2,
+        "produto_id": 5,
+        "nome_item": "Detergente",
+        "quantidade": 2,
+        "comprado": true,
+        "valor": 3.5
+      },
+      {
+        "id": 6,
+        "compras_id": 2,
+        "produto_id": 6,
+        "nome_item": "Sabão em pó",
+        "quantidade": 1,
+        "comprado": false,
+        "valor": 19.9
+      },
+      {
+        "id": 7,
+        "compras_id": 3,
+        "produto_id": 12,
+        "nome_item": "Frango",
+        "quantidade": 2,
+        "comprado": false,
+        "valor": 22.9
+      },
+      {
+        "id": 8,
+        "compras_id": 3,
+        "produto_id": 7,
+        "nome_item": "Macarrão",
+        "quantidade": 3,
+        "comprado": true,
+        "valor": 4.99
+      },
+      {
+        "id": 9,
+        "compras_id": 4,
+        "produto_id": null,
+        "nome_item": "Carvão",
+        "quantidade": 1,
+        "comprado": false,
+        "valor": 24.9
+      }
+    ],
+    "receitas": [
+      {
+        "id": 1,
+        "user_id": null,
+        "publica": true,
+        "nome": "Macarrão ao molho",
+        "descricao": "Receita simples para iniciantes",
+        "tipo": "almoco",
+        "preparo": "Cozinhe a massa e misture ao molho.",
+        "status": "publicada"
+      },
+      {
+        "id": 2,
+        "user_id": 1,
+        "publica": true,
+        "nome": "Omelete rápido",
+        "descricao": "Omelete para uma pessoa",
+        "tipo": "jantar",
+        "preparo": "Bata os ovos e doure na frigideira.",
+        "status": "publicada"
+      },
+      {
+        "id": 3,
+        "user_id": 3,
+        "publica": true,
+        "nome": "Frango grelhado",
+        "descricao": "Frango com temperos simples",
+        "tipo": "almoco",
+        "preparo": "Tempere e grelhe dos dois lados.",
+        "status": "publicada"
+      },
+      {
+        "id": 4,
+        "user_id": 1,
+        "publica": false,
+        "nome": "Bolo experimental",
+        "descricao": "Receita ainda em testes",
+        "tipo": "sobremesa",
+        "preparo": "Misture e asse.",
+        "status": "rascunho"
+      },
+      {
+        "id": 5,
+        "user_id": null,
+        "publica": true,
+        "nome": "Café da manhã básico",
+        "descricao": "Pão e café",
+        "tipo": "cafe_da_manha",
+        "preparo": "Prepare café e sirva com pão.",
+        "status": "publicada"
+      }
+    ],
+    "receita_item": [
+      {
+        "id": 1,
+        "receita_id": 1,
+        "produto_id": 7,
+        "nome_item": "Macarrão",
+        "quantidade": 0.5
+      },
+      {
+        "id": 2,
+        "receita_id": 1,
+        "produto_id": 8,
+        "nome_item": "Molho de tomate",
+        "quantidade": 1
+      },
+      {
+        "id": 3,
+        "receita_id": 1,
+        "produto_id": 14,
+        "nome_item": "Sal",
+        "quantidade": 0.01
+      },
+      {
+        "id": 4,
+        "receita_id": 2,
+        "produto_id": 4,
+        "nome_item": "Ovos",
+        "quantidade": 2
+      },
+      {
+        "id": 5,
+        "receita_id": 2,
+        "produto_id": 14,
+        "nome_item": "Sal",
+        "quantidade": 0.01
+      },
+      {
+        "id": 6,
+        "receita_id": 3,
+        "produto_id": 12,
+        "nome_item": "Frango",
+        "quantidade": 0.3
+      },
+      {
+        "id": 7,
+        "receita_id": 3,
+        "produto_id": 13,
+        "nome_item": "Azeite",
+        "quantidade": 0.02
+      },
+      {
+        "id": 8,
+        "receita_id": 4,
+        "produto_id": 3,
+        "nome_item": "Leite",
+        "quantidade": 0.2
+      },
+      {
+        "id": 9,
+        "receita_id": 5,
+        "produto_id": 9,
+        "nome_item": "Café",
+        "quantidade": 0.02
+      },
+      {
+        "id": 10,
+        "receita_id": 5,
+        "produto_id": 15,
+        "nome_item": "Pão de forma",
+        "quantidade": 2
+      }
+    ],
+    "receita_favorita": [
+      {
+        "id": 1,
+        "user_id": 1,
+        "receita_id": 1
+      },
+      {
+        "id": 2,
+        "user_id": 1,
+        "receita_id": 3
+      },
+      {
+        "id": 3,
+        "user_id": 2,
+        "receita_id": 1
+      },
+      {
+        "id": 4,
+        "user_id": 2,
+        "receita_id": 2
+      },
+      {
+        "id": 5,
+        "user_id": 3,
+        "receita_id": 5
+      },
+      {
+        "id": 6,
+        "user_id": 6,
+        "receita_id": 1
+      }
+    ],
+    "limpezas": [
+      {
+        "id": 1,
+        "comodo_id": 1,
+        "nome": "Limpar fogão",
+        "descricao": "Remover gordura",
+        "ultima_vez": "2026-11-13",
+        "proxima_vez": "2026-11-20"
+      },
+      {
+        "id": 2,
+        "comodo_id": 3,
+        "nome": "Lavar banheiro",
+        "descricao": "Lavar piso e box",
+        "ultima_vez": "2026-11-10",
+        "proxima_vez": "2026-11-17"
+      },
+      {
+        "id": 3,
+        "comodo_id": 2,
+        "nome": "Trocar roupa de cama",
+        "descricao": "Trocar lençóis",
+        "ultima_vez": "2026-11-15",
+        "proxima_vez": "2026-11-22"
+      },
+      {
+        "id": 4,
+        "comodo_id": 4,
+        "nome": "Aspirar sala",
+        "descricao": "Limpar sofá e chão",
+        "ultima_vez": null,
+        "proxima_vez": "2026-11-18"
+      },
+      {
+        "id": 5,
+        "comodo_id": 6,
+        "nome": "Limpar pia",
+        "descricao": "Lavar bancada",
+        "ultima_vez": "2026-11-16",
+        "proxima_vez": "2026-11-23"
+      },
+      {
+        "id": 6,
+        "comodo_id": 8,
+        "nome": "Lavar box",
+        "descricao": "Remover manchas",
+        "ultima_vez": null,
+        "proxima_vez": "2026-11-19"
+      }
+    ],
+    "execucao_limpeza": [
+      {
+        "id": 1,
+        "limpeza_id": 1,
+        "perfil_id": 1,
+        "realizada_em": "2026-11-13T14:00:00"
+      },
+      {
+        "id": 2,
+        "limpeza_id": 2,
+        "perfil_id": 1,
+        "realizada_em": "2026-11-10T10:30:00"
+      },
+      {
+        "id": 3,
+        "limpeza_id": 3,
+        "perfil_id": 1,
+        "realizada_em": "2026-11-15T09:00:00"
+      },
+      {
+        "id": 4,
+        "limpeza_id": 5,
+        "perfil_id": 3,
+        "realizada_em": "2026-11-16T11:00:00"
+      }
+    ],
+    "categoria_tarefa": [
+      {
+        "id": 1,
+        "user_id": 1,
+        "nome": "Limpeza",
+        "cor": "#22C55E",
+        "icone": "sparkles"
+      },
+      {
+        "id": 2,
+        "user_id": 1,
+        "nome": "Manutenção",
+        "cor": "#F59E0B",
+        "icone": "wrench"
+      },
+      {
+        "id": 3,
+        "user_id": 1,
+        "nome": "Organização",
+        "cor": "#3B82F6",
+        "icone": "list-check"
+      },
+      {
+        "id": 4,
+        "user_id": 3,
+        "nome": "Rotina",
+        "cor": "#8B5CF6",
+        "icone": "calendar"
+      },
+      {
+        "id": 5,
+        "user_id": 2,
+        "nome": "Preparação",
+        "cor": "#06B6D4",
+        "icone": "package"
+      }
+    ],
+    "tarefa": [
+      {
+        "id": 1,
+        "categoria_id": 1,
+        "nome": "Limpar geladeira",
+        "descricao": "Revisar alimentos",
+        "prazo": "2026-11-19T18:00:00"
+      },
+      {
+        "id": 2,
+        "categoria_id": 2,
+        "nome": "Trocar lâmpada",
+        "descricao": "Lâmpada da sala",
+        "prazo": "2026-11-12T19:00:00"
+      },
+      {
+        "id": 3,
+        "categoria_id": 3,
+        "nome": "Organizar armário",
+        "descricao": "Separar roupas",
+        "prazo": "2026-11-21T10:00:00"
+      },
+      {
+        "id": 4,
+        "categoria_id": 4,
+        "nome": "Regar plantas",
+        "descricao": "Regar vasos",
+        "prazo": "2026-11-18T08:00:00"
+      },
+      {
+        "id": 5,
+        "categoria_id": 5,
+        "nome": "Pesquisar móveis",
+        "descricao": "Comparar preços",
+        "prazo": "2026-11-24T20:00:00"
+      }
+    ],
+    "recorrencia_tarefa": [
+      {
+        "id": 1,
+        "tarefa_id": 1,
+        "frequencia": "semanal",
+        "intervalo": 1,
+        "dias_semana": [
+          "sabado"
+        ],
+        "dia_mes": null,
+        "inicio": "2026-11-01",
+        "fim": null
+      },
+      {
+        "id": 2,
+        "tarefa_id": 4,
+        "frequencia": "semanal",
+        "intervalo": 1,
+        "dias_semana": [
+          "segunda",
+          "quinta"
+        ],
+        "dia_mes": null,
+        "inicio": "2026-11-01",
+        "fim": null
+      }
+    ],
+    "execucao_tarefa": [
+      {
+        "id": 1,
+        "tarefa_id": 1,
+        "data_prevista": "2026-11-14T10:00:00",
+        "concluida_em": "2026-11-14T11:00:00",
+        "status": "concluida"
+      },
+      {
+        "id": 2,
+        "tarefa_id": 1,
+        "data_prevista": "2026-11-21T10:00:00",
+        "concluida_em": null,
+        "status": "pendente"
+      },
+      {
+        "id": 3,
+        "tarefa_id": 2,
+        "data_prevista": "2026-11-12T19:00:00",
+        "concluida_em": null,
+        "status": "atrasada"
+      },
+      {
+        "id": 4,
+        "tarefa_id": 3,
+        "data_prevista": "2026-11-21T10:00:00",
+        "concluida_em": null,
+        "status": "pendente"
+      },
+      {
+        "id": 5,
+        "tarefa_id": 4,
+        "data_prevista": "2026-11-16T08:00:00",
+        "concluida_em": "2026-11-16T08:30:00",
+        "status": "concluida"
+      },
+      {
+        "id": 6,
+        "tarefa_id": 5,
+        "data_prevista": "2026-11-24T20:00:00",
+        "concluida_em": null,
+        "status": "pendente"
+      }
+    ],
+    "categoria_financas": [
+      {
+        "id": 1,
+        "user_id": 1,
+        "nome": "Alimentação",
+        "cor": "#22C55E",
+        "icone": "shopping-cart"
+      },
+      {
+        "id": 2,
+        "user_id": 1,
+        "nome": "Moradia",
+        "cor": "#F59E0B",
+        "icone": "house"
+      },
+      {
+        "id": 3,
+        "user_id": 1,
+        "nome": "Transporte",
+        "cor": "#3B82F6",
+        "icone": "bus"
+      },
+      {
+        "id": 4,
+        "user_id": 1,
+        "nome": "Lazer",
+        "cor": "#A855F7",
+        "icone": "gamepad-2"
+      },
+      {
+        "id": 5,
+        "user_id": 1,
+        "nome": "Salário",
+        "cor": "#10B981",
+        "icone": "wallet"
+      },
+      {
+        "id": 6,
+        "user_id": 3,
+        "nome": "Alimentação",
+        "cor": "#22C55E",
+        "icone": "shopping-cart"
+      },
+      {
+        "id": 7,
+        "user_id": 2,
+        "nome": "Economias",
+        "cor": "#0EA5E9",
+        "icone": "piggy-bank"
+      }
+    ],
+    "conta_financeira": [
+      {
+        "id": 1,
+        "user_id": 1,
+        "nome": "Conta principal",
+        "tipo": "corrente",
+        "saldo_inicial": 2500
+      },
+      {
+        "id": 2,
+        "user_id": 1,
+        "nome": "Reserva",
+        "tipo": "poupanca",
+        "saldo_inicial": 5000
+      },
+      {
+        "id": 3,
+        "user_id": 1,
+        "nome": "Carteira",
+        "tipo": "dinheiro",
+        "saldo_inicial": 150
+      },
+      {
+        "id": 4,
+        "user_id": 3,
+        "nome": "Banco da Carla",
+        "tipo": "corrente",
+        "saldo_inicial": 3200
+      },
+      {
+        "id": 5,
+        "user_id": 2,
+        "nome": "Poupança Bruno",
+        "tipo": "poupanca",
+        "saldo_inicial": 1800
+      }
+    ],
+    "recorrencia_financeira": [
+      {
+        "id": 1,
+        "user_id": 1,
+        "descricao": "Aluguel",
+        "tipo": "despesa",
+        "valor_previsto": 1400,
+        "frequencia": "mensal",
+        "inicio_em": "2026-01-01",
+        "fim_em": null,
+        "ativa": true
+      },
+      {
+        "id": 2,
+        "user_id": 1,
+        "descricao": "Salário",
+        "tipo": "receita",
+        "valor_previsto": 4200,
+        "frequencia": "mensal",
+        "inicio_em": "2026-01-01",
+        "fim_em": null,
+        "ativa": true
+      },
+      {
+        "id": 3,
+        "user_id": 1,
+        "descricao": "Internet",
+        "tipo": "despesa",
+        "valor_previsto": 110,
+        "frequencia": "mensal",
+        "inicio_em": "2026-01-01",
+        "fim_em": null,
+        "ativa": true
+      },
+      {
+        "id": 4,
+        "user_id": 3,
+        "descricao": "Salário",
+        "tipo": "receita",
+        "valor_previsto": 5000,
+        "frequencia": "mensal",
+        "inicio_em": "2026-01-01",
+        "fim_em": null,
+        "ativa": true
+      },
+      {
+        "id": 5,
+        "user_id": 2,
+        "descricao": "Mesada",
+        "tipo": "receita",
+        "valor_previsto": 600,
+        "frequencia": "mensal",
+        "inicio_em": "2026-01-01",
+        "fim_em": null,
+        "ativa": false
+      }
+    ],
+    "transacao_financeira": [
+      {
+        "id": 1,
+        "user_id": 1,
+        "categoria_id": 5,
+        "conta_id": 1,
+        "recorrencia_id": 2,
+        "descricao": "Salário novembro",
+        "tipo": "receita",
+        "valor": 4200,
+        "competencia": "2026-11-01",
+        "vencimento": "2026-11-05",
+        "pago_em": "2026-11-05",
+        "status": "pago"
+      },
+      {
+        "id": 2,
+        "user_id": 1,
+        "categoria_id": 2,
+        "conta_id": 1,
+        "recorrencia_id": 1,
+        "descricao": "Aluguel novembro",
+        "tipo": "despesa",
+        "valor": 1400,
+        "competencia": "2026-11-01",
+        "vencimento": "2026-11-10",
+        "pago_em": "2026-11-10",
+        "status": "pago"
+      },
+      {
+        "id": 3,
+        "user_id": 1,
+        "categoria_id": 1,
+        "conta_id": 1,
+        "recorrencia_id": null,
+        "descricao": "Supermercado",
+        "tipo": "despesa",
+        "valor": 189.5,
+        "competencia": "2026-11-01",
+        "vencimento": "2026-11-14",
+        "pago_em": "2026-11-14",
+        "status": "pago"
+      },
+      {
+        "id": 4,
+        "user_id": 1,
+        "categoria_id": 3,
+        "conta_id": 1,
+        "recorrencia_id": null,
+        "descricao": "Transporte",
+        "tipo": "despesa",
+        "valor": 120,
+        "competencia": "2026-11-01",
+        "vencimento": "2026-11-18",
+        "pago_em": null,
+        "status": "pendente"
+      },
+      {
+        "id": 5,
+        "user_id": 1,
+        "categoria_id": 2,
+        "conta_id": 1,
+        "recorrencia_id": 3,
+        "descricao": "Internet novembro",
+        "tipo": "despesa",
+        "valor": 110,
+        "competencia": "2026-11-01",
+        "vencimento": "2026-11-15",
+        "pago_em": null,
+        "status": "pendente"
+      },
+      {
+        "id": 6,
+        "user_id": 1,
+        "categoria_id": 4,
+        "conta_id": 1,
+        "recorrencia_id": null,
+        "descricao": "Cinema",
+        "tipo": "despesa",
+        "valor": 45,
+        "competencia": "2026-11-01",
+        "vencimento": "2026-11-13",
+        "pago_em": "2026-11-13",
+        "status": "pago"
+      },
+      {
+        "id": 7,
+        "user_id": 3,
+        "categoria_id": 6,
+        "conta_id": 4,
+        "recorrencia_id": null,
+        "descricao": "Mercado Carla",
+        "tipo": "despesa",
+        "valor": 240,
+        "competencia": "2026-11-01",
+        "vencimento": "2026-11-12",
+        "pago_em": "2026-11-12",
+        "status": "pago"
+      },
+      {
+        "id": 8,
+        "user_id": 2,
+        "categoria_id": 7,
+        "conta_id": 5,
+        "recorrencia_id": null,
+        "descricao": "Depósito na reserva",
+        "tipo": "receita",
+        "valor": 200,
+        "competencia": "2026-11-01",
+        "vencimento": "2026-11-20",
+        "pago_em": null,
+        "status": "pendente"
+      }
+    ],
+    "orcamento": [
+      {
+        "id": 1,
+        "user_id": 1,
+        "categoria_id": 1,
+        "mes": "2026-11-01",
+        "limite": 600
+      },
+      {
+        "id": 2,
+        "user_id": 1,
+        "categoria_id": 2,
+        "mes": "2026-11-01",
+        "limite": 1800
+      },
+      {
+        "id": 3,
+        "user_id": 1,
+        "categoria_id": 3,
+        "mes": "2026-11-01",
+        "limite": 300
+      },
+      {
+        "id": 4,
+        "user_id": 1,
+        "categoria_id": 4,
+        "mes": "2026-11-01",
+        "limite": 200
+      },
+      {
+        "id": 5,
+        "user_id": 3,
+        "categoria_id": 6,
+        "mes": "2026-11-01",
+        "limite": 700
+      }
+    ],
+    "meta_financeira": [
+      {
+        "id": 1,
+        "user_id": 1,
+        "nome": "Reserva de emergência",
+        "valor_atual": 5000,
+        "valor_alvo": 12000,
+        "prazo": "2027-12-31",
+        "status": "ativa"
+      },
+      {
+        "id": 2,
+        "user_id": 1,
+        "nome": "Comprar notebook",
+        "valor_atual": 3000,
+        "valor_alvo": 3000,
+        "prazo": "2026-10-30",
+        "status": "concluida"
+      },
+      {
+        "id": 3,
+        "user_id": 2,
+        "nome": "Caução do aluguel",
+        "valor_atual": 1800,
+        "valor_alvo": 5000,
+        "prazo": "2027-06-01",
+        "status": "ativa"
+      },
+      {
+        "id": 4,
+        "user_id": 3,
+        "nome": "Reformar cozinha",
+        "valor_atual": 1200,
+        "valor_alvo": 8000,
+        "prazo": "2027-09-30",
+        "status": "ativa"
+      },
+      {
+        "id": 5,
+        "user_id": 6,
+        "nome": "Primeiro aluguel",
+        "valor_atual": 0,
+        "valor_alvo": 2500,
+        "prazo": "2027-04-01",
+        "status": "ativa"
+      }
+    ],
+    "jornada": [
+      {
+        "id": 1,
+        "user_id": 2,
+        "nome": "Minha independência",
+        "descricao": "Preparação para sair de casa",
+        "status": "em_andamento",
+        "criada_em": "2026-11-01T10:00:00"
+      },
+      {
+        "id": 2,
+        "user_id": 6,
+        "nome": "Morar sozinho em 2027",
+        "descricao": "Organizar mudança",
+        "status": "em_andamento",
+        "criada_em": "2026-11-01T10:00:00"
+      },
+      {
+        "id": 3,
+        "user_id": 1,
+        "nome": "Primeiros passos",
+        "descricao": "Adaptação à rotina",
+        "status": "concluida",
+        "criada_em": "2026-11-01T10:00:00"
+      }
+    ],
+    "etapa_jornada": [
+      {
+        "id": 1,
+        "jornada_id": 1,
+        "titulo": "Planejamento financeiro",
+        "descricao": "Definir orçamento",
+        "categoria": "financas",
+        "ordem": 1,
+        "status": "concluida",
+        "prazo": "2026-11-10",
+        "concluida_em": "2026-11-09T12:00:00"
+      },
+      {
+        "id": 2,
+        "jornada_id": 1,
+        "titulo": "Escolher moradia",
+        "descricao": "Pesquisar opções",
+        "categoria": "moradia",
+        "ordem": 2,
+        "status": "em_andamento",
+        "prazo": "2027-02-01",
+        "concluida_em": null
+      },
+      {
+        "id": 3,
+        "jornada_id": 1,
+        "titulo": "Organizar mudança",
+        "descricao": "Comprar itens essenciais",
+        "categoria": "mudanca",
+        "ordem": 3,
+        "status": "pendente",
+        "prazo": "2027-05-01",
+        "concluida_em": null
+      },
+      {
+        "id": 4,
+        "jornada_id": 2,
+        "titulo": "Guardar dinheiro",
+        "descricao": "Formar reserva",
+        "categoria": "financas",
+        "ordem": 1,
+        "status": "em_andamento",
+        "prazo": "2027-02-01",
+        "concluida_em": null
+      },
+      {
+        "id": 5,
+        "jornada_id": 3,
+        "titulo": "Organizar rotina",
+        "descricao": "Criar hábitos",
+        "categoria": "rotina",
+        "ordem": 1,
+        "status": "concluida",
+        "prazo": "2026-10-01",
+        "concluida_em": "2026-09-29T09:00:00"
+      }
+    ],
+    "tarefa_jornada": [
+      {
+        "id": 1,
+        "etapa_id": 1,
+        "titulo": "Calcular renda",
+        "concluida": true,
+        "ordem": 1
+      },
+      {
+        "id": 2,
+        "etapa_id": 1,
+        "titulo": "Estimar despesas",
+        "concluida": true,
+        "ordem": 2
+      },
+      {
+        "id": 3,
+        "etapa_id": 2,
+        "titulo": "Pesquisar bairros",
+        "concluida": true,
+        "ordem": 1
+      },
+      {
+        "id": 4,
+        "etapa_id": 2,
+        "titulo": "Visitar apartamentos",
+        "concluida": false,
+        "ordem": 2
+      },
+      {
+        "id": 5,
+        "etapa_id": 3,
+        "titulo": "Fazer lista de móveis",
+        "concluida": false,
+        "ordem": 1
+      },
+      {
+        "id": 6,
+        "etapa_id": 4,
+        "titulo": "Guardar R$ 500",
+        "concluida": false,
+        "ordem": 1
+      },
+      {
+        "id": 7,
+        "etapa_id": 5,
+        "titulo": "Montar calendário de limpeza",
+        "concluida": true,
+        "ordem": 1
+      }
+    ],
+    "plano_moradia": [
+      {
+        "id": 1,
+        "user_id": 2,
+        "nome": "Meu primeiro apartamento",
+        "renda_mensal": 3200,
+        "reserva_atual": 1800,
+        "mudanca_prevista": "2027-06-01",
+        "status": "ativo"
+      },
+      {
+        "id": 2,
+        "user_id": 6,
+        "nome": "Mudança do Diego",
+        "renda_mensal": 4000,
+        "reserva_atual": 500,
+        "mudanca_prevista": "2027-04-01",
+        "status": "ativo"
+      },
+      {
+        "id": 3,
+        "user_id": 1,
+        "nome": "Plano antigo",
+        "renda_mensal": 4200,
+        "reserva_atual": 4500,
+        "mudanca_prevista": "2026-02-01",
+        "status": "concluido"
+      }
+    ],
+    "custo_moradia": [
+      {
+        "id": 1,
+        "plano_id": 1,
+        "nome": "Aluguel",
+        "categoria": "moradia",
+        "tipo": "mensal",
+        "valor": 1250
+      },
+      {
+        "id": 2,
+        "plano_id": 1,
+        "nome": "Condomínio",
+        "categoria": "moradia",
+        "tipo": "mensal",
+        "valor": 320
+      },
+      {
+        "id": 3,
+        "plano_id": 1,
+        "nome": "Internet",
+        "categoria": "servicos",
+        "tipo": "mensal",
+        "valor": 110
+      },
+      {
+        "id": 4,
+        "plano_id": 1,
+        "nome": "Geladeira",
+        "categoria": "moveis",
+        "tipo": "inicial",
+        "valor": 2200
+      },
+      {
+        "id": 5,
+        "plano_id": 1,
+        "nome": "Caução",
+        "categoria": "moradia",
+        "tipo": "inicial",
+        "valor": 2500
+      },
+      {
+        "id": 6,
+        "plano_id": 2,
+        "nome": "Aluguel",
+        "categoria": "moradia",
+        "tipo": "mensal",
+        "valor": 1500
+      },
+      {
+        "id": 7,
+        "plano_id": 2,
+        "nome": "Mudança",
+        "categoria": "transporte",
+        "tipo": "inicial",
+        "valor": 900
+      },
+      {
+        "id": 8,
+        "plano_id": 3,
+        "nome": "Aluguel",
+        "categoria": "moradia",
+        "tipo": "mensal",
+        "valor": 1400
+      }
+    ],
+    "simulacao_moradia": [
+      {
+        "id": 1,
+        "plano_id": 1,
+        "nome": "Apartamento econômico",
+        "renda_mensal": 3200,
+        "reserva": 1800,
+        "criada_em": "2026-11-10T10:00:00"
+      },
+      {
+        "id": 2,
+        "plano_id": 1,
+        "nome": "Apartamento confortável",
+        "renda_mensal": 3800,
+        "reserva": 3000,
+        "criada_em": "2026-11-10T10:00:00"
+      },
+      {
+        "id": 3,
+        "plano_id": 2,
+        "nome": "Cenário inicial",
+        "renda_mensal": 4000,
+        "reserva": 500,
+        "criada_em": "2026-11-10T10:00:00"
+      }
+    ],
+    "simulacao_item": [
+      {
+        "id": 1,
+        "simulacao_id": 1,
+        "nome": "Aluguel",
+        "categoria": "moradia",
+        "tipo": "mensal",
+        "valor": 1100
+      },
+      {
+        "id": 2,
+        "simulacao_id": 1,
+        "nome": "Internet",
+        "categoria": "servicos",
+        "tipo": "mensal",
+        "valor": 100
+      },
+      {
+        "id": 3,
+        "simulacao_id": 1,
+        "nome": "Móveis",
+        "categoria": "moveis",
+        "tipo": "inicial",
+        "valor": 3000
+      },
+      {
+        "id": 4,
+        "simulacao_id": 2,
+        "nome": "Aluguel",
+        "categoria": "moradia",
+        "tipo": "mensal",
+        "valor": 1700
+      },
+      {
+        "id": 5,
+        "simulacao_id": 2,
+        "nome": "Condomínio",
+        "categoria": "moradia",
+        "tipo": "mensal",
+        "valor": 400
+      },
+      {
+        "id": 6,
+        "simulacao_id": 3,
+        "nome": "Aluguel",
+        "categoria": "moradia",
+        "tipo": "mensal",
+        "valor": 1500
+      },
+      {
+        "id": 7,
+        "simulacao_id": 3,
+        "nome": "Mudança",
+        "categoria": "transporte",
+        "tipo": "inicial",
+        "valor": 900
+      }
+    ],
+    "casa_desejada": [
+      {
+        "id": 1,
+        "user_id": 2,
+        "endereco_id": 7,
+        "titulo": "Kitnet perto do metrô",
+        "descricao": "Próximo ao transporte",
+        "tipo": "kitnet",
+        "valor": 1250
+      },
+      {
+        "id": 2,
+        "user_id": 2,
+        "endereco_id": 8,
+        "titulo": "Apartamento com varanda",
+        "descricao": "Boa iluminação",
+        "tipo": "apartamento",
+        "valor": 1900
+      },
+      {
+        "id": 3,
+        "user_id": 6,
+        "endereco_id": 2,
+        "titulo": "Studio compacto",
+        "descricao": "Perto do trabalho",
+        "tipo": "studio",
+        "valor": 1600
+      }
+    ],
+    "aula": [
+      {
+        "id": 1,
+        "titulo": "Como montar um orçamento",
+        "descricao": "Organize sua renda",
+        "conteudo": "Liste renda, despesas fixas e variáveis.",
+        "video_url": null,
+        "imagem": "/mock/aulas/1.jpg",
+        "categoria": "financas"
+      },
+      {
+        "id": 2,
+        "titulo": "Limpeza básica da casa",
+        "descricao": "Rotina de limpeza",
+        "conteudo": "Separe produtos adequados para cada superfície.",
+        "video_url": null,
+        "imagem": "/mock/aulas/2.jpg",
+        "categoria": "limpeza"
+      },
+      {
+        "id": 3,
+        "titulo": "Cozinha para iniciantes",
+        "descricao": "Prepare refeições simples",
+        "conteudo": "Planeje ingredientes e siga cuidados de higiene.",
+        "video_url": null,
+        "imagem": "/mock/aulas/3.jpg",
+        "categoria": "culinaria"
+      },
+      {
+        "id": 4,
+        "titulo": "Primeiro aluguel",
+        "descricao": "Entenda os custos",
+        "conteudo": "Considere aluguel, condomínio, caução e contas.",
+        "video_url": null,
+        "imagem": "/mock/aulas/4.jpg",
+        "categoria": "moradia"
+      },
+      {
+        "id": 5,
+        "titulo": "Segurança doméstica",
+        "descricao": "Cuidados essenciais",
+        "conteudo": "Identifique riscos elétricos e de gás.",
+        "video_url": null,
+        "imagem": "/mock/aulas/5.jpg",
+        "categoria": "manutencao"
+      }
+    ],
+    "quiz": [
+      {
+        "id": 1,
+        "aula_id": 1,
+        "titulo": "Quiz: Orçamento"
+      },
+      {
+        "id": 2,
+        "aula_id": 2,
+        "titulo": "Quiz: Limpeza"
+      },
+      {
+        "id": 3,
+        "aula_id": 3,
+        "titulo": "Quiz: Culinária"
+      },
+      {
+        "id": 4,
+        "aula_id": 4,
+        "titulo": "Quiz: Aluguel"
+      }
+    ],
+    "questao": [
+      {
+        "id": 1,
+        "quiz_id": 1,
+        "enunciado": "Qual gasto costuma ser fixo?"
+      },
+      {
+        "id": 2,
+        "quiz_id": 1,
+        "enunciado": "Para que serve uma reserva de emergência?"
+      },
+      {
+        "id": 3,
+        "quiz_id": 2,
+        "enunciado": "Qual produto é adequado para superfícies delicadas?"
+      },
+      {
+        "id": 4,
+        "quiz_id": 3,
+        "enunciado": "O que fazer antes de cozinhar?"
+      },
+      {
+        "id": 5,
+        "quiz_id": 4,
+        "enunciado": "Qual custo pode ser exigido no início da locação?"
+      }
+    ],
+    "alternativa": [
+      {
+        "id": 1,
+        "questao_id": 1,
+        "texto": "Aluguel",
+        "correta": true
+      },
+      {
+        "id": 2,
+        "questao_id": 1,
+        "texto": "Passeio eventual",
+        "correta": false
+      },
+      {
+        "id": 3,
+        "questao_id": 1,
+        "texto": "Presente de aniversário",
+        "correta": false
+      },
+      {
+        "id": 4,
+        "questao_id": 2,
+        "texto": "Cobrir imprevistos",
+        "correta": true
+      },
+      {
+        "id": 5,
+        "questao_id": 2,
+        "texto": "Comprar por impulso",
+        "correta": false
+      },
+      {
+        "id": 6,
+        "questao_id": 2,
+        "texto": "Evitar orçamento",
+        "correta": false
+      },
+      {
+        "id": 7,
+        "questao_id": 3,
+        "texto": "Produto indicado no rótulo",
+        "correta": true
+      },
+      {
+        "id": 8,
+        "questao_id": 3,
+        "texto": "Mistura aleatória de químicos",
+        "correta": false
+      },
+      {
+        "id": 9,
+        "questao_id": 3,
+        "texto": "Qualquer abrasivo",
+        "correta": false
+      },
+      {
+        "id": 10,
+        "questao_id": 4,
+        "texto": "Lavar as mãos",
+        "correta": true
+      },
+      {
+        "id": 11,
+        "questao_id": 4,
+        "texto": "Ignorar validade",
+        "correta": false
+      },
+      {
+        "id": 12,
+        "questao_id": 4,
+        "texto": "Usar utensílios sujos",
+        "correta": false
+      },
+      {
+        "id": 13,
+        "questao_id": 5,
+        "texto": "Caução",
+        "correta": true
+      },
+      {
+        "id": 14,
+        "questao_id": 5,
+        "texto": "Multa de trânsito",
+        "correta": false
+      },
+      {
+        "id": 15,
+        "questao_id": 5,
+        "texto": "Seguro de celular",
+        "correta": false
+      }
+    ],
+    "progresso_aula": [
+      {
+        "id": 1,
+        "user_id": 1,
+        "aula_id": 1,
+        "concluida": true
+      },
+      {
+        "id": 2,
+        "user_id": 1,
+        "aula_id": 2,
+        "concluida": true
+      },
+      {
+        "id": 3,
+        "user_id": 1,
+        "aula_id": 3,
+        "concluida": false
+      },
+      {
+        "id": 4,
+        "user_id": 2,
+        "aula_id": 1,
+        "concluida": true
+      },
+      {
+        "id": 5,
+        "user_id": 2,
+        "aula_id": 4,
+        "concluida": false
+      },
+      {
+        "id": 6,
+        "user_id": 3,
+        "aula_id": 2,
+        "concluida": true
+      },
+      {
+        "id": 7,
+        "user_id": 6,
+        "aula_id": 1,
+        "concluida": false
+      }
+    ],
+    "tentativa_quiz": [
+      {
+        "id": 1,
+        "user_id": 1,
+        "quiz_id": 1,
+        "pontuacao": 100
+      },
+      {
+        "id": 2,
+        "user_id": 2,
+        "quiz_id": 1,
+        "pontuacao": 50
+      },
+      {
+        "id": 3,
+        "user_id": 3,
+        "quiz_id": 2,
+        "pontuacao": 100
+      }
+    ],
+    "resposta_quiz": [
+      {
+        "id": 1,
+        "tentativa_id": 1,
+        "questao_id": 1,
+        "alternativa_id": 1
+      },
+      {
+        "id": 2,
+        "tentativa_id": 1,
+        "questao_id": 2,
+        "alternativa_id": 4
+      },
+      {
+        "id": 3,
+        "tentativa_id": 2,
+        "questao_id": 1,
+        "alternativa_id": 2
+      },
+      {
+        "id": 4,
+        "tentativa_id": 2,
+        "questao_id": 2,
+        "alternativa_id": 4
+      },
+      {
+        "id": 5,
+        "tentativa_id": 3,
+        "questao_id": 3,
+        "alternativa_id": 7
+      }
+    ],
+    "perfil_empresa": [
+      {
+        "id": 1,
+        "user_id": 4,
+        "endereco_id": 4,
+        "nome": "LimpaBem Serviços",
+        "cnpj": "12345678000190",
+        "descricao": "Limpeza residencial",
+        "categoria": "limpeza",
+        "logo": "/mock/empresas/4.jpg",
+        "banner": null,
+        "telefone": "11999990001",
+        "local_atendimento": [
+          "São Paulo - SP"
+        ],
+        "horario_atendimento": {
+          "segunda_sexta": "08:00-18:00"
+        },
+        "email_comercial": "contato@limpabem.exemplo.test",
+        "site": null,
+        "data_criacao": "2026-09-01T10:00:00",
+        "validado": true
+      },
+      {
+        "id": 2,
+        "user_id": 5,
+        "endereco_id": 5,
+        "nome": "ReparaJá",
+        "cnpj": "98765432000110",
+        "descricao": "Manutenção residencial",
+        "categoria": "manutencao",
+        "logo": "/mock/empresas/5.jpg",
+        "banner": null,
+        "telefone": "11999990002",
+        "local_atendimento": [
+          "São Paulo - SP"
+        ],
+        "horario_atendimento": {
+          "segunda_sexta": "08:00-18:00"
+        },
+        "email_comercial": "contato@reparaja.exemplo.test",
+        "site": null,
+        "data_criacao": "2026-09-01T10:00:00",
+        "validado": false
+      }
+    ],
+    "servico": [
+      {
+        "id": 1,
+        "empresa_id": 1,
+        "titulo": "Faxina residencial",
+        "descricao": "Limpeza geral de apartamentos",
+        "fotos": [
+          "/mock/servicos/1.jpg"
+        ],
+        "categoria": "limpeza",
+        "preco": 180,
+        "tipo_preco": "fixo",
+        "ativo": true,
+        "disponibilidade": {
+          "dias": [
+            "segunda",
+            "terca",
+            "quarta",
+            "quinta",
+            "sexta"
+          ]
+        },
+        "validado": true,
+        "nota": 4.8,
+        "status_publicacao": "publicado",
+        "publicado_em": "2026-11-01T10:00:00",
+        "expira_em": "2026-12-01T10:00:00"
+      },
+      {
+        "id": 2,
+        "empresa_id": 1,
+        "titulo": "Limpeza pós-obra",
+        "descricao": "Remoção de resíduos",
+        "fotos": [
+          "/mock/servicos/2.jpg"
+        ],
+        "categoria": "limpeza",
+        "preco": 450,
+        "tipo_preco": "fixo",
+        "ativo": true,
+        "disponibilidade": {
+          "dias": [
+            "segunda",
+            "terca",
+            "quarta",
+            "quinta",
+            "sexta"
+          ]
+        },
+        "validado": true,
+        "nota": null,
+        "status_publicacao": "rascunho",
+        "publicado_em": null,
+        "expira_em": null
+      },
+      {
+        "id": 3,
+        "empresa_id": 2,
+        "titulo": "Pequenos reparos",
+        "descricao": "Reparos hidráulicos e elétricos",
+        "fotos": [
+          "/mock/servicos/3.jpg"
+        ],
+        "categoria": "manutencao",
+        "preco": 150,
+        "tipo_preco": "fixo",
+        "ativo": true,
+        "disponibilidade": {
+          "dias": [
+            "segunda",
+            "terca",
+            "quarta",
+            "quinta",
+            "sexta"
+          ]
+        },
+        "validado": false,
+        "nota": null,
+        "status_publicacao": "pendente",
+        "publicado_em": null,
+        "expira_em": null
+      }
+    ],
+    "plano_publicacao": [
+      {
+        "id": 1,
+        "nome": "Básico",
+        "descricao": "Anúncio por 7 dias",
+        "preco": 29.9,
+        "duracao_dias": 7,
+        "ativo": true
+      },
+      {
+        "id": 2,
+        "nome": "Destaque",
+        "descricao": "Anúncio por 30 dias",
+        "preco": 99.9,
+        "duracao_dias": 30,
+        "ativo": true
+      },
+      {
+        "id": 3,
+        "nome": "Premium",
+        "descricao": "Destaque por 90 dias",
+        "preco": 249.9,
+        "duracao_dias": 90,
+        "ativo": true
+      }
+    ],
+    "publicacao_servico": [
+      {
+        "id": 1,
+        "servico_id": 1,
+        "plano_id": 2,
+        "inicio": "2026-11-01T10:00:00",
+        "fim": "2026-12-01T10:00:00",
+        "valor": 99.9,
+        "status": "ativa"
+      },
+      {
+        "id": 2,
+        "servico_id": 2,
+        "plano_id": 1,
+        "inicio": null,
+        "fim": null,
+        "valor": 29.9,
+        "status": "pendente"
+      },
+      {
+        "id": 3,
+        "servico_id": 3,
+        "plano_id": 1,
+        "inicio": null,
+        "fim": null,
+        "valor": 29.9,
+        "status": "pendente"
+      }
+    ],
+    "servico_contratado": [
+      {
+        "id": 1,
+        "servico_id": 1,
+        "perfil_id": 1,
+        "endereco_id": 1,
+        "descricao": "Faxina mensal",
+        "data_agendamento": "2026-11-14T09:00:00",
+        "valor": 180,
+        "status": "concluido",
+        "data_contratacao": "2026-11-10T10:00:00",
+        "data_conclusao": "2026-11-14T13:00:00"
+      },
+      {
+        "id": 2,
+        "servico_id": 1,
+        "perfil_id": 3,
+        "endereco_id": 3,
+        "descricao": "Limpeza geral",
+        "data_agendamento": "2026-11-25T09:00:00",
+        "valor": 180,
+        "status": "pendente",
+        "data_contratacao": "2026-11-16T14:00:00",
+        "data_conclusao": null
+      },
+      {
+        "id": 3,
+        "servico_id": 1,
+        "perfil_id": 1,
+        "endereco_id": 1,
+        "descricao": "Agendamento cancelado",
+        "data_agendamento": "2026-11-08T09:00:00",
+        "valor": 180,
+        "status": "cancelado",
+        "data_contratacao": "2026-11-01T10:00:00",
+        "data_conclusao": null
+      }
+    ],
+    "avaliacao_servico": [
+      {
+        "id": 1,
+        "contratado_id": 1,
+        "perfil_id": 1,
+        "nota": 5,
+        "comentario": "Atendimento pontual e caprichado.",
+        "data_avaliacao": "2026-11-15T12:00:00"
+      }
+    ],
+    "chat_servico": [
+      {
+        "id": 1,
+        "perfil_id": 1,
+        "empresa_id": 1,
+        "contratado_id": 1
+      },
+      {
+        "id": 2,
+        "perfil_id": 3,
+        "empresa_id": 1,
+        "contratado_id": 2
+      },
+      {
+        "id": 3,
+        "perfil_id": 1,
+        "empresa_id": 2,
+        "contratado_id": null
+      }
+    ],
+    "mensagem": [
+      {
+        "id": 1,
+        "chat_id": 1,
+        "user_id": 1,
+        "mensagem": "Olá, vocês atendem sábado?",
+        "data": "2026-11-10T09:00:00",
+        "lida_em": "2026-11-10T09:05:00"
+      },
+      {
+        "id": 2,
+        "chat_id": 1,
+        "user_id": 4,
+        "mensagem": "Sim, temos horários disponíveis.",
+        "data": "2026-11-10T09:05:00",
+        "lida_em": "2026-11-10T09:06:00"
+      },
+      {
+        "id": 3,
+        "chat_id": 2,
+        "user_id": 3,
+        "mensagem": "Gostaria de confirmar o horário.",
+        "data": "2026-11-16T14:00:00",
+        "lida_em": null
+      },
+      {
+        "id": 4,
+        "chat_id": 3,
+        "user_id": 1,
+        "mensagem": "Vocês fazem pequenos reparos?",
+        "data": "2026-11-16T15:00:00",
+        "lida_em": null
+      }
+    ],
+    "plano_assinatura": [
+      {
+        "id": 1,
+        "nome": "Gratuito",
+        "descricao": "Funcionalidades essenciais",
+        "preco": 0,
+        "beneficios": [
+          "Organização básica"
+        ],
+        "ativo": true
+      },
+      {
+        "id": 2,
+        "nome": "Plus",
+        "descricao": "Ferramentas avançadas",
+        "preco": 19.9,
+        "beneficios": [
+          "Relatórios",
+          "Mais simulações"
+        ],
+        "ativo": true
+      },
+      {
+        "id": 3,
+        "nome": "Premium",
+        "descricao": "Todos os recursos",
+        "preco": 39.9,
+        "beneficios": [
+          "Relatórios",
+          "Mais simulações",
+          "Benefícios exclusivos"
+        ],
+        "ativo": true
+      }
+    ],
+    "assinatura": [
+      {
+        "id": 1,
+        "user_id": 1,
+        "plano_id": 2,
+        "status": "ativa",
+        "inicio": "2026-11-01T00:00:00",
+        "proxima_cobranca": "2026-12-01T00:00:00",
+        "cancelada_em": null
+      },
+      {
+        "id": 2,
+        "user_id": 2,
+        "plano_id": 1,
+        "status": "ativa",
+        "inicio": "2026-10-01T00:00:00",
+        "proxima_cobranca": null,
+        "cancelada_em": null
+      },
+      {
+        "id": 3,
+        "user_id": 3,
+        "plano_id": 3,
+        "status": "cancelada",
+        "inicio": "2026-08-01T00:00:00",
+        "proxima_cobranca": null,
+        "cancelada_em": "2026-10-01T00:00:00"
+      },
+      {
+        "id": 4,
+        "user_id": 4,
+        "plano_id": 1,
+        "status": "ativa",
+        "inicio": "2026-09-01T00:00:00",
+        "proxima_cobranca": null,
+        "cancelada_em": null
+      }
+    ],
+    "metodo_pagamento": [
+      {
+        "id": 1,
+        "user_id": 1,
+        "tipo": "cartao",
+        "apelido": "Cartão principal",
+        "bandeira": "Visa",
+        "ultimos_digitos": "4242",
+        "token_gateway": "tok_mock_nao_utilizavel_1",
+        "validade_mes": 12,
+        "validade_ano": 2028,
+        "principal": true,
+        "ativo": true
+      },
+      {
+        "id": 2,
+        "user_id": 1,
+        "tipo": "cartao",
+        "apelido": "Cartão secundário",
+        "bandeira": "Mastercard",
+        "ultimos_digitos": "5555",
+        "token_gateway": "tok_mock_nao_utilizavel_2",
+        "validade_mes": 6,
+        "validade_ano": 2027,
+        "principal": false,
+        "ativo": true
+      },
+      {
+        "id": 3,
+        "user_id": 3,
+        "tipo": "cartao",
+        "apelido": "Cartão Carla",
+        "bandeira": "Visa",
+        "ultimos_digitos": "1111",
+        "token_gateway": "tok_mock_nao_utilizavel_3",
+        "validade_mes": 8,
+        "validade_ano": 2028,
+        "principal": true,
+        "ativo": false
+      },
+      {
+        "id": 4,
+        "user_id": 4,
+        "tipo": "cartao",
+        "apelido": "Cartão empresa",
+        "bandeira": "Mastercard",
+        "ultimos_digitos": "2222",
+        "token_gateway": "tok_mock_nao_utilizavel_4",
+        "validade_mes": 5,
+        "validade_ano": 2029,
+        "principal": true,
+        "ativo": true
+      }
+    ],
+    "pagamento": [
+      {
+        "id": 1,
+        "user_id": 1,
+        "metodo_id": 1,
+        "assinatura_id": 1,
+        "publicacao_id": null,
+        "valor": 19.9,
+        "status": "pago",
+        "gateway": "mock",
+        "transacao_externa_id": "fake_tx_0001",
+        "criado_em": "2026-11-01T10:00:00",
+        "pago_em": "2026-11-01T10:01:00"
+      },
+      {
+        "id": 2,
+        "user_id": 4,
+        "metodo_id": 4,
+        "assinatura_id": null,
+        "publicacao_id": 1,
+        "valor": 99.9,
+        "status": "pago",
+        "gateway": "mock",
+        "transacao_externa_id": "fake_tx_0002",
+        "criado_em": "2026-11-01T10:00:00",
+        "pago_em": "2026-11-01T10:02:00"
+      },
+      {
+        "id": 3,
+        "user_id": 3,
+        "metodo_id": 3,
+        "assinatura_id": 3,
+        "publicacao_id": null,
+        "valor": 39.9,
+        "status": "recusado",
+        "gateway": "mock",
+        "transacao_externa_id": "fake_tx_0003",
+        "criado_em": "2026-10-01T10:00:00",
+        "pago_em": null
+      },
+      {
+        "id": 4,
+        "user_id": 4,
+        "metodo_id": 4,
+        "assinatura_id": null,
+        "publicacao_id": 2,
+        "valor": 29.9,
+        "status": "pendente",
+        "gateway": "mock",
+        "transacao_externa_id": "fake_tx_0004",
+        "criado_em": "2026-11-16T10:00:00",
+        "pago_em": null
+      }
+    ]
+  }
+}

@@ -1,0 +1,617 @@
+.inicio-tela {
+  height: var(--inicio-altura, calc(100dvh - 90px));
+  flex: none;
+  min-height: 0;
+}
+
+/* O espaço da assinatura passa a pertencer ao calendário e aos compromissos. */
+.inicio-tarefas {
+  border-radius: 12px;
+}
+.inicio-tarefas > div > p:first-child {
+  color: #ff9568;
+}
+.inicio-eventos:focus-visible {
+  outline: 2px solid var(--laranja-principal);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+.inicio-tela .inicio-conteudo {
+  height: 100%;
+  max-width: none;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: clamp(14px, 2.7vh, 30px);
+  padding: clamp(16px, 3vh, 32px) clamp(20px, 4vw, 64px);
+}
+.inicio-boas-vindas {
+  min-width: 0;
+}
+.inicio-boas-vindas h1 {
+  font-size: clamp(24px, 2.5vw, 36px);
+}
+.inicio-ferramentas nav {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+.inicio-ferramentas nav a {
+  gap: 12px;
+  font-size: 14px;
+}
+.inicio-ferramentas nav a > span:first-child {
+  width: clamp(44px, 5vw, 70px);
+  height: clamp(44px, 5vw, 70px);
+}
+.inicio-paineis {
+  min-height: 0;
+  grid-template-columns: 1fr 1fr;
+}
+.inicio-tarefas {
+  padding: clamp(20px, 3vw, 44px);
+}
+.inicio-tarefas > div {
+  width: 100%;
+}
+.inicio-tarefas h2 {
+  font-size: clamp(25px, 2.5vw, 36px);
+  margin-top: 14px;
+}
+.inicio-tarefas h2 + p {
+  font-size: clamp(14px, 1.3vw, 18px);
+  margin-top: 14px;
+  max-width: 55ch;
+}
+.inicio-tarefas a {
+  margin-top: 20px;
+}
+.inicio-agenda {
+  min-height: 0;
+  gap: 12px;
+}
+.inicio-calendario {
+  min-height: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+.inicio-calendario-grade {
+  width: 100%;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 16px;
+  min-height: 0;
+}
+.inicio-compromissos {
+  border-top: 0;
+  border-left: 1px solid #eef2f6;
+  padding: 0 0 0 16px;
+  min-height: 0;
+}
+.inicio-eventos {
+  max-height: 210px;
+  overflow: auto;
+  scrollbar-width: thin;
+}
+@media (max-width: 1100px) {
+  .inicio-boas-vindas {
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+  }
+  .inicio-boas-vindas > div {
+    width: auto;
+    min-width: 260px;
+    padding: 10px 16px;
+  }
+  .inicio-boas-vindas > div a {
+    font-size: 13px;
+  }
+  .inicio-ferramentas nav a {
+    flex-direction: column;
+    gap: 6px;
+    padding: 0;
+    text-align: center;
+    font-size: 12px;
+  }
+  .inicio-calendario-grade {
+    gap: 10px;
+    grid-template-columns: 1fr 1fr;
+  }
+  .inicio-compromissos {
+    padding-left: 10px;
+  }
+  .inicio-calendario {
+    padding: 12px;
+  }
+  .inicio-mes > div:first-child p {
+    font-size: 14px;
+  }
+  .inicio-mes button {
+    width: 27px;
+    height: 27px;
+  }
+  .inicio-mes > div:first-child {
+    gap: 4px;
+  }
+  .inicio-compromissos > div:first-child {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .inicio-eventos {
+    max-height: 185px;
+  }
+}
+@media (max-width: 700px) {
+  .inicio-tela .inicio-conteudo {
+    padding: 14px 16px;
+    gap: 14px;
+  }
+  .inicio-boas-vindas {
+    gap: 12px;
+  }
+  .inicio-boas-vindas h1 {
+    font-size: 23px;
+    max-width: 240px;
+  }
+  .inicio-boas-vindas > div {
+    min-width: 0;
+    max-width: 190px;
+    padding: 8px 12px;
+    gap: 10px;
+  }
+  .inicio-boas-vindas > div p:first-child {
+    font-size: 9px;
+    letter-spacing: 0.7px;
+  }
+  .inicio-boas-vindas > div p:nth-child(2) {
+    font-size: 12px;
+  }
+  .inicio-boas-vindas > div a {
+    font-size: 11px;
+    min-height: 32px;
+  }
+  .inicio-ferramentas > p {
+    font-size: 10px;
+  }
+  .inicio-ferramentas nav {
+    gap: 8px;
+  }
+  .inicio-ferramentas nav a {
+    font-size: 10px;
+  }
+  .inicio-ferramentas nav a > span:first-child {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+  }
+  .inicio-ferramentas nav img {
+    max-width: 25px;
+    max-height: 25px;
+  }
+  .inicio-paineis {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(120px, 0.7fr) minmax(0, 1fr);
+    gap: 12px;
+  }
+  .inicio-tarefas {
+    padding: 16px 20px;
+  }
+  .inicio-tarefas > div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 12px;
+    align-items: center;
+    max-width: none;
+  }
+  .inicio-tarefas > div > p:first-child {
+    font-size: 9px;
+    grid-column: 1;
+  }
+  .inicio-tarefas h2 {
+    font-size: 24px;
+    margin-top: 6px;
+    grid-column: 1;
+  }
+  .inicio-tarefas h2 + p {
+    font-size: 12px;
+    line-height: 1.5;
+    margin-top: 6px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    grid-column: 1;
+  }
+  .inicio-tarefas a {
+    grid-column: 2;
+    grid-row: 1 / 4;
+    margin: 0;
+    padding: 10px 16px;
+    min-height: 42px;
+    font-size: 12px;
+  }
+  .inicio-agenda {
+    gap: 6px;
+  }
+  .inicio-mes button {
+    width: 28px;
+    height: 28px;
+  }
+  .inicio-mes > div:first-child {
+    margin-bottom: 6px;
+  }
+  .inicio-mes > div:first-child p {
+    font-size: 13px;
+  }
+  .inicio-compromissos > div:first-child {
+    margin-bottom: 6px;
+  }
+  .inicio-compromissos > div:first-child > span {
+    font-size: 9px;
+    letter-spacing: 0;
+  }
+  .inicio-eventos {
+    max-height: 160px;
+  }
+  .inicio-calendario-grade {
+    grid-template-columns: 1.1fr 1fr;
+  }
+  .inicio-eventos a {
+    padding: 5px;
+    gap: 5px;
+  }
+  .inicio-eventos a > span:first-child {
+    width: 28px;
+  }
+  .inicio-eventos a strong {
+    font-size: 10px;
+  }
+  .inicio-eventos a > span:nth-child(2) > span {
+    font-size: 9px;
+  }
+}
+@media (max-width: 430px) {
+  .inicio-boas-vindas {
+    align-items: flex-start;
+  }
+  .inicio-boas-vindas h1 {
+    font-size: 21px;
+  }
+  .inicio-boas-vindas > div {
+    padding: 7px 9px;
+    flex-direction: column;
+    gap: 0;
+    align-items: flex-start;
+    min-width: 128px;
+  }
+  .inicio-boas-vindas > div a {
+    min-height: 24px;
+  }
+  .inicio-ferramentas nav {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 8px;
+    margin-top: 8px;
+  }
+  .inicio-ferramentas nav a {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 7px;
+  }
+  .inicio-ferramentas nav a > span:first-child {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+  }
+  .inicio-ferramentas nav img {
+    max-width: 22px;
+    max-height: 22px;
+  }
+  .inicio-paineis {
+    grid-template-rows: minmax(110px, 0.65fr) minmax(0, 1fr);
+  }
+  .inicio-tarefas {
+    padding: 12px;
+  }
+  .inicio-tarefas h2 {
+    font-size: 21px;
+  }
+  .inicio-tarefas h2 + p {
+    font-size: 11px;
+  }
+  .inicio-tarefas a {
+    padding: 9px 12px;
+    font-size: 11px;
+  }
+  .inicio-calendario {
+    padding: 10px;
+  }
+  .inicio-mes button {
+    width: 24px;
+    height: 24px;
+  }
+  .inicio-mes > div:first-child > div {
+    gap: 3px;
+  }
+  .inicio-mes > div:first-child button {
+    width: 24px;
+    height: 24px;
+  }
+}
+@media (max-height: 700px) {
+  .inicio-tela .inicio-conteudo {
+    gap: 10px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  .inicio-ferramentas nav {
+    margin-top: 8px;
+  }
+  .inicio-ferramentas nav a > span:first-child {
+    width: 36px;
+    height: 36px;
+  }
+  .inicio-ferramentas nav img {
+    max-width: 24px;
+    max-height: 24px;
+  }
+  .inicio-tarefas h2 + p {
+    font-size: 12px;
+    margin-top: 8px;
+  }
+  .inicio-tarefas h2 {
+    font-size: 26px;
+  }
+  .inicio-tarefas a {
+    min-height: 40px;
+    margin-top: 14px;
+    padding: 8px 20px;
+  }
+  .inicio-eventos {
+    max-height: 150px;
+  }
+  .inicio-mes button {
+    height: 24px;
+    width: 24px;
+  }
+  .inicio-calendario-grade {
+    gap: 10px;
+  }
+  .inicio-mes > div:first-child {
+    margin-bottom: 4px;
+  }
+}
+@media (max-height: 700px) and (max-width: 700px) {
+  .inicio-tela .inicio-conteudo {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+  .inicio-boas-vindas h1 {
+    font-size: 19px;
+  }
+  .inicio-ferramentas nav a > span:first-child {
+    width: 28px;
+    height: 28px;
+  }
+  .inicio-ferramentas nav img {
+    max-width: 20px;
+    max-height: 20px;
+  }
+  .inicio-paineis {
+    grid-template-rows: 108px minmax(0, 1fr);
+    gap: 8px;
+  }
+  .inicio-tarefas {
+    padding: 10px 12px;
+  }
+  .inicio-tarefas h2 {
+    font-size: 20px;
+  }
+  .inicio-tarefas h2 + p {
+    font-size: 10px;
+    margin-top: 4px;
+    -webkit-line-clamp: 2;
+  }
+  .inicio-tarefas a {
+    margin: 0;
+    padding: 7px 10px;
+    font-size: 10px;
+  }
+  .inicio-calendario {
+    padding: 8px;
+  }
+  .inicio-mes button {
+    width: 21px;
+    height: 21px;
+    font-size: 10px;
+  }
+  .inicio-mes > div:nth-child(2) {
+    row-gap: 0;
+  }
+  .inicio-mes > div:nth-child(2) > span {
+    font-size: 8px;
+    padding: 2px 0;
+  }
+  .inicio-mes > div:first-child p {
+    font-size: 11px;
+  }
+  .inicio-mes > div:first-child button {
+    width: 22px;
+    height: 22px;
+  }
+  .inicio-eventos {
+    max-height: 130px;
+  }
+  .inicio-compromissos {
+    padding-left: 8px;
+  }
+  .inicio-compromissos > div:first-child > span {
+    font-size: 8px;
+  }
+  .inicio-calendario-grade {
+    gap: 8px;
+  }
+}
+@media (max-height: 650px) and (max-width: 430px) {
+  .inicio-boas-vindas h1 {
+    font-size: 18px;
+  }
+  .inicio-boas-vindas > div {
+    padding: 6px 8px;
+    min-width: 120px;
+  }
+  .inicio-boas-vindas > div p:first-child {
+    font-size: 8px;
+    line-height: 1.2;
+  }
+  .inicio-boas-vindas > div p:nth-child(2) {
+    font-size: 10px;
+    line-height: 1.2;
+    margin-top: 3px;
+  }
+  .inicio-boas-vindas > div a {
+    min-height: 20px;
+    font-size: 10px;
+  }
+  .inicio-ferramentas > p {
+    font-size: 9px;
+    line-height: 12px;
+  }
+  .inicio-ferramentas nav {
+    margin-top: 6px;
+    row-gap: 6px;
+  }
+  .inicio-ferramentas nav a {
+    font-size: 9px;
+    gap: 5px;
+  }
+  .inicio-ferramentas nav a > span:first-child {
+    width: 26px;
+    height: 26px;
+  }
+  .inicio-ferramentas nav a > span:nth-child(2) {
+    overflow-wrap: normal;
+  }
+  .inicio-paineis {
+    grid-template-rows: 112px minmax(0, 1fr);
+  }
+  .inicio-tarefas h2 {
+    font-size: 17px;
+    line-height: 1.2;
+    margin-top: 4px;
+  }
+  .inicio-tarefas > div > p:first-child {
+    font-size: 8px;
+    line-height: 12px;
+  }
+  .inicio-tarefas h2 + p {
+    font-size: 10px;
+    line-height: 1.4;
+  }
+  .inicio-mes button {
+    width: 20px;
+    height: 17px;
+    font-size: 9px;
+  }
+  .inicio-mes > div:first-child button {
+    width: 20px;
+    height: 20px;
+  }
+  .inicio-mes > div:first-child p {
+    font-size: 10px;
+  }
+  .inicio-mes > div:nth-child(2) > span {
+    font-size: 7px;
+    line-height: 10px;
+    padding: 1px 0;
+  }
+  .inicio-eventos {
+    max-height: 95px;
+  }
+  .inicio-eventos a {
+    padding: 4px;
+  }
+  .inicio-compromissos > div:first-child {
+    gap: 2px;
+    margin-bottom: 4px;
+  }
+}
+@media (min-width: 701px) {
+  .inicio-calendario {
+    align-items: stretch;
+    padding: clamp(16px, 2vw, 28px);
+  }
+  .inicio-calendario-grade {
+    align-items: stretch;
+    height: 100%;
+    gap: clamp(12px, 1.5vw, 24px);
+  }
+  .inicio-mes {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .inicio-mes > div:first-child {
+    margin-bottom: 16px;
+  }
+  .inicio-mes > div:nth-child(2) {
+    grid-auto-rows: minmax(0, 1fr);
+    align-items: center;
+    row-gap: 0;
+  }
+  .inicio-mes > div:nth-child(2) > button {
+    width: clamp(28px, 3.1vw, 44px);
+    height: clamp(28px, 4.5vh, 44px);
+    font-size: 13px;
+  }
+  .inicio-compromissos {
+    display: flex;
+    flex-direction: column;
+    padding-left: clamp(12px, 1.5vw, 24px);
+  }
+  .inicio-compromissos > div:first-child {
+    min-height: 32px;
+    margin-bottom: 16px;
+  }
+  .inicio-eventos {
+    max-height: none;
+    flex: 1;
+    min-height: 0;
+    padding-bottom: 3px;
+  }
+  .inicio-eventos a {
+    padding: 10px 8px;
+  }
+}
+@media (max-width: 700px) {
+  .inicio-eventos {
+    max-height: 205px;
+  }
+}
+@media (max-height: 700px) and (min-width: 701px) {
+  .inicio-calendario {
+    padding: 14px;
+  }
+  .inicio-mes > div:first-child {
+    margin-bottom: 8px;
+  }
+  .inicio-mes > div:nth-child(2) > button {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+  .inicio-eventos a {
+    padding: 7px;
+  }
+  .inicio-compromissos > div:first-child {
+    margin-bottom: 8px;
+  }
+}
+@media (max-height: 700px) and (max-width: 700px) {
+  .inicio-eventos {
+    max-height: 165px;
+  }
+}
+@media (max-height: 650px) and (max-width: 430px) {
+  .inicio-eventos {
+    max-height: 125px;
+  }
+}

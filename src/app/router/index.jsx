@@ -1,4 +1,12 @@
-﻿import {
+import Inicio from '../../features/home/home';
+import CasaA from '../../features/casa/casaA';
+import LimpezaA from '../../features/limpeza/limpezaA';
+import CozinhaA from '../../features/cozinha/cozinhaA';
+import RotinaA from '../../features/rotina/rotinaA';
+import FinancasA from '../../features/financas/financasA';
+import PerfilA from '../../features/perfil/perfilA';
+import MarketplaceA from '../../features/marketplace/marketplaceA';
+import {
   createBrowserRouter,
   Navigate,
   RouterProvider,
@@ -23,7 +31,7 @@ const rotas = createBrowserRouter([
           {
             element: <LayoutUsuario tipoUsuario='consumidorA' />,
             children: [
-              { path: '/home', element: <Funcionalidades.Inicio /> },
+              { path: '/home', element: <Inicio /> },
               {
                 path: '/ia',
                 element: <Funcionalidades.InteligenciaArtificial />,
@@ -31,91 +39,89 @@ const rotas = createBrowserRouter([
               {
                 element: <LayoutCasa />,
                 children: [
-                  { path: '/casa', element: <Funcionalidades.Casa /> },
-                  { path: '/limpeza', element: <Funcionalidades.Limpeza /> },
-                  { path: '/cozinha', element: <Funcionalidades.Cozinha /> },
+                  { path: '/casa', element: <CasaA /> },
+                  { path: '/limpeza', element: <LimpezaA /> },
+                  { path: '/cozinha', element: <CozinhaA /> },
                 ],
               },
-              { path: '/rotina', element: <Funcionalidades.Rotina /> },
-              { path: '/financas', element: <Funcionalidades.Financas /> },
+              { path: '/rotina', element: <RotinaA /> },
+              { path: '/financas', element: <FinancasA /> },
               {
                 path: '/calculadoras',
-                element: <Funcionalidades.Calculadoras />,
+                element: <Navigate to='/financas' replace />,
               },
               {
                 path: '/calculadoras/:tipo',
-                element: <Funcionalidades.Calculadoras />,
+                element: <Navigate to='/financas' replace />,
               },
-              { path: '/perfil', element: <Funcionalidades.Perfil /> },
+              { path: '/perfil', element: <PerfilA /> },
               {
                 path: '/checklists',
-                element: <Funcionalidades.AjudaSuporte visao='checklists' />,
+                element: <Navigate to='/rotina' replace />,
               },
               {
                 path: '/seguranca',
-                element: <Funcionalidades.AjudaSuporte visao='seguranca' />,
+                element: <Navigate to='/perfil' replace />,
               },
               {
                 path: '/notificacoes',
-                element: <Funcionalidades.AjudaSuporte visao='notificacoes' />,
+                element: <Navigate to='/home' replace />,
               },
               {
                 path: '/marketplace',
-                element: <Funcionalidades.MercadoServicos visao='hub' />,
+                element: <MarketplaceA />,
               },
               {
                 path: '/buscar',
-                element: <Funcionalidades.MercadoServicos visao='buscar' />,
+                element: <MarketplaceA />,
               },
               {
                 path: '/buscar/mapa',
-                element: <Funcionalidades.MercadoServicos visao='mapa' />,
+                element: <Navigate to='/marketplace' replace />,
               },
               {
                 path: '/marketplace/filtros',
-                element: <Funcionalidades.MercadoServicos visao='filtros' />,
+                element: <MarketplaceA />,
               },
               {
                 path: '/categoria/:slug',
-                element: <Funcionalidades.MercadoServicos visao='categoria' />,
+                element: <MarketplaceA />,
               },
               {
                 path: '/categorias/:slug',
-                element: <Funcionalidades.MercadoServicos visao='categoria' />,
+                element: <MarketplaceA />,
               },
               {
                 path: '/servicos/indisponivel',
-                element: (
-                  <Funcionalidades.MercadoServicos visao='indisponivel' />
-                ),
+                element: <MarketplaceA />,
               },
               {
                 path: '/servicos/:id',
-                element: <Funcionalidades.MercadoServicos visao='servico' />,
+                element: <MarketplaceA />,
               },
               {
                 path: '/servicos/:id/avaliacoes',
-                element: <Funcionalidades.MercadoServicos visao='avaliacoes' />,
+                element: <MarketplaceA />,
               },
               {
                 path: '/servicos/:id/contato',
-                element: <Funcionalidades.MercadoServicos visao='contato' />,
+                element: <MarketplaceA />,
               },
               {
                 path: '/empresas/:id',
-                element: <Funcionalidades.MercadoServicos visao='perfil' />,
+                element: <MarketplaceA />,
               },
               {
                 path: '/favoritos',
-                element: <Funcionalidades.MercadoServicos visao='favoritos' />,
+                element: <Navigate to='/marketplace' replace />,
               },
               {
                 path: '/meus-contatos',
-                element: <Funcionalidades.MercadoServicos visao='contatos' />,
+                element: <MarketplaceA />,
               },
               {
                 path: '/meus-contatos/:id',
-                element: <Funcionalidades.MercadoServicos visao='contatos' />,
+                element: <MarketplaceA />,
               },
             ],
           },

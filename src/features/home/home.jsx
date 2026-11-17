@@ -1,40 +1,22 @@
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Botao,
-  Container,
-  Titulo,
-} from '../../shared/ui/index';
-import Rodape from '../../shared/footer';
-import { lerEstadoPlataforma } from '../../app/estado/estadoPlataforma';
-import { atalhosInicio, obterResumoTarefas } from './content';
+import { Botao, Container, Titulo } from '../../shared/ui/index';
+import { atalhosInicio } from './content';
+import { useInicio } from './hooks/useInicio';
+import './home.css';
 import { CartaoAgenda } from './components/index';
 
 export default function Inicio() {
-  const [tarefas, setTarefas] = useState(obterResumoTarefas);
-  const [estadoPlataforma, setEstadoPlataforma] = useState(
-    lerEstadoPlataforma
-  );
-
-  useEffect(() => {
-    const atualizar = () => {
-      setEstadoPlataforma(lerEstadoPlataforma());
-      setTarefas(obterResumoTarefas());
-    };
-    window.addEventListener('iagora:estado', atualizar);
-    return () => window.removeEventListener('iagora:estado', atualizar);
-  }, []);
-
-  const momentoAtual =
-    estadoPlataforma.perfil?.momentoRotulo || 'Já moro sozinho';
+  const { referencia, tarefas, eventos } = useInicio();
+  const momentoAtual = 'Já moro sozinho';
 
   return (
     <div
+      ref={referencia}
       lang='pt-BR'
-      className='min-w-0 flex-1 bg-white font-corpo text-(--azul-titulo) [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-offset-4 [&_a:focus-visible]:outline-(--laranja-principal)'
+      className='inicio-tela min-w-0 bg-white font-corpo text-(--azul-titulo) [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-offset-4 [&_a:focus-visible]:outline-(--laranja-principal)'
     >
-      <Container como='main' classe='py-8 sm:py-12'>
-        <div className='flex flex-col justify-between gap-6 lg:flex-row lg:items-center'>
+      <Container como='main' classe='inicio-conteudo'>
+        <div className='inicio-boas-vindas flex flex-col justify-between gap-6 lg:flex-row lg:items-center'>
           <Titulo
             como='h1'
             classe='text-3xl leading-tight font-extrabold sm:text-4xl'
@@ -59,7 +41,10 @@ export default function Inicio() {
           </div>
         </div>
 
-        <section className='mt-10' aria-labelledby='inicio-ferramentas'>
+        <section
+          className='inicio-ferramentas'
+          aria-labelledby='inicio-ferramentas'
+        >
           <p
             id='inicio-ferramentas'
             className='text-xs font-bold tracking-[0.12em] text-(--laranja-principal)'
@@ -89,9 +74,9 @@ export default function Inicio() {
           </nav>
         </section>
 
-        <div className='mt-8 grid items-stretch gap-5 lg:grid-cols-2'>
+        <div className='inicio-paineis grid items-stretch gap-5 lg:grid-cols-2'>
           <section
-            className='flex min-w-0 items-center rounded-md bg-(--azul-escuro) p-7 sm:p-10 lg:min-h-[30rem]'
+            className='inicio-tarefas flex min-w-0 items-center rounded-md bg-(--azul-escuro) p-7 sm:p-10'
             aria-labelledby='inicio-tarefas'
           >
             <div className='min-w-0 max-w-lg'>
@@ -105,7 +90,7 @@ export default function Inicio() {
                 {tarefas.hoje.length
                   ? `${tarefas.hoje.length} pendentes`
                   : 'Seu dia, no seu ritmo'}
-                {tarefas.proximas.length > 0
+                {tarefas.hoje.length > 0 && tarefas.proximas.length > 0
                   ? ` e ${tarefas.proximas.length} próximas.`
                   : '.'}
               </Titulo>
@@ -131,25 +116,13 @@ export default function Inicio() {
           </section>
 
           <section
-            className='flex min-w-0 flex-col justify-between gap-6'
-            aria-labelledby='inicio-agenda'
+            className='inicio-agenda flex min-w-0 flex-col justify-between gap-6'
+            aria-label='Calendário e compromissos'
           >
-            <CartaoAgenda />
-            <div className='pt-2 text-center'>
-              <p className='text-sm font-bold text-[#e13b00]'>
-                PARA O SEU DIA A DIA
-              </p>
-              <Titulo
-                id='inicio-agenda'
-                classe='mt-1 text-[clamp(3.25rem,6vw,5.75rem)] leading-[1.05] font-extrabold tracking-[-0.5px]'
-              >
-                I Agenda
-              </Titulo>
-            </div>
+            <CartaoAgenda eventosDisponiveis={eventos} />
           </section>
         </div>
       </Container>
-      <Rodape />
     </div>
   );
 }
