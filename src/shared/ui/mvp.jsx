@@ -4,16 +4,24 @@ import { Link } from 'react-router-dom';
 import { removerRegistro, salvarRegistro } from '../../app/dados/bancoMvp';
 import './mvp.css';
 
-export function PaginaMvp({ titulo, descricao, acao, children }) {
+export function PaginaMvp({
+  titulo,
+  descricao,
+  acao,
+  children,
+  cabecalho = true,
+}) {
   return (
     <main className='mvp-pagina'>
-      <header className='mvp-cabecalho'>
-        <div>
-          <h1>{titulo}</h1>
-          {descricao && <p>{descricao}</p>}
-        </div>
-        {acao}
-      </header>
+      {cabecalho && (
+        <header className='mvp-cabecalho'>
+          <div>
+            <h1>{titulo}</h1>
+            {descricao && <p>{descricao}</p>}
+          </div>
+          {acao}
+        </header>
+      )}
       {children}
     </main>
   );

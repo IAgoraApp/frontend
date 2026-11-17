@@ -26,6 +26,28 @@ export default function CardsComodos({
 }) {
   return (
     <div className='limpeza-comodos'>
+      <button
+        type='button'
+        className='limpeza-comodo limpeza-comodo-geral'
+        aria-label='Ver todas as limpezas'
+        aria-pressed={!selecionado}
+        aria-controls='limpeza-lista'
+        onClick={() => aoSelecionar(null)}
+      >
+        <img src={fotoMateriais} alt='' />
+        <span className='limpeza-comodo-corpo'>
+          <span className='limpeza-comodo-nome'>
+            <strong>Todas as limpezas</strong>
+            <ArrowUpRight size={18} aria-hidden='true' />
+          </span>
+          <span>
+            {limpezas.length}{' '}
+            {limpezas.length === 1 ? 'atividade' : 'atividades'} em{' '}
+            {comodos.length} {comodos.length === 1 ? 'cômodo' : 'cômodos'}
+          </span>
+          <small>Acompanhar a casa inteira</small>
+        </span>
+      </button>
       {comodos.map(comodo => {
         const atividades = limpezas.filter(l => l.comodo_id === comodo.id);
         const pendentes = ordenarLimpezas(

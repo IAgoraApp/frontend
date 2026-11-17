@@ -32,43 +32,46 @@ export default function ListaLimpezas({
             >
               <Check size={17} aria-hidden='true' />
             </button>
-            <div className='limpeza-tarefa-texto'>
-              <strong>{l.nome}</strong>
-              <p>
+            <div className='limpeza-tarefa-corpo'>
+              <span className='limpeza-tarefa-comodo'>
                 {comodos.find(c => c.id === l.comodo_id)?.nome}
-                {l.descricao ? ` · ${l.descricao}` : ''}
-              </p>
+              </span>
+              <h3>{l.nome}</h3>
+              {l.descricao && <p>{l.descricao}</p>}
               <small>
-                Última limpeza:{' '}
-                {l.ultima_vez ? dataCurta(l.ultima_vez) : 'Não registrada'}
+                {l.ultima_vez
+                  ? `Última limpeza em ${dataCurta(l.ultima_vez)}`
+                  : 'Ainda não realizada'}
               </small>
             </div>
-            <div className='limpeza-tarefa-data'>
+            <div className='limpeza-tarefa-lateral'>
               <span
                 className={`limpeza-situacao limpeza-situacao-${situacao.classe}`}
               >
                 {situacao.nome}
               </span>
-              <span>
+              <span className='limpeza-tarefa-prazo'>
                 <CalendarDays size={13} aria-hidden='true' />
                 {l.proxima_vez ? dataCurta(l.proxima_vez) : 'Definir data'}
               </span>
-            </div>
-            <div className='limpeza-tarefa-acoes'>
-              <button
-                type='button'
-                aria-label={`Editar limpeza: ${l.nome}`}
-                onClick={() => aoEditar(l)}
-              >
-                <Pencil size={16} />
-              </button>
-              <button
-                type='button'
-                aria-label={`Excluir limpeza: ${l.nome}`}
-                onClick={() => aoExcluir(l)}
-              >
-                <Trash2 size={16} />
-              </button>
+              <div className='limpeza-tarefa-ferramentas'>
+                <button
+                  type='button'
+                  aria-label={`Editar limpeza: ${l.nome}`}
+                  title='Editar limpeza'
+                  onClick={() => aoEditar(l)}
+                >
+                  <Pencil size={16} />
+                </button>
+                <button
+                  type='button'
+                  aria-label={`Excluir limpeza: ${l.nome}`}
+                  title='Excluir limpeza'
+                  onClick={() => aoExcluir(l)}
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
             </div>
           </li>
         );

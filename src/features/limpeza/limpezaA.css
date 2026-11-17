@@ -1,6 +1,71 @@
 .limpeza-identidade .mvp-cabecalho {
   margin-bottom: 24px;
 }
+.limpeza-aviso {
+  position: fixed;
+  z-index: 60;
+  right: 24px;
+  bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: max-content;
+  max-width: min(430px, calc(100vw - 32px));
+  padding: 14px 12px 14px 18px;
+  border: 1px solid #254864;
+  border-radius: 12px;
+  color: white;
+  background: var(--azul-titulo);
+  box-shadow: 0 8px 28px #102a4324;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.limpeza-aviso > svg {
+  color: #a9dfc2;
+  flex-shrink: 0;
+}
+.limpeza-aviso > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.limpeza-aviso > button {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 7px;
+  cursor: pointer;
+}
+.limpeza-aviso > button:hover {
+  background: #ffffff16;
+}
+.limpeza-aviso > button:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .limpeza-aviso {
+    animation: entrada-aviso-limpeza 160ms ease-out;
+  }
+  @keyframes entrada-aviso-limpeza {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+@media (max-width: 600px) {
+  .limpeza-aviso {
+    right: 16px;
+    bottom: 16px;
+    font-size: 12px;
+  }
+}
 .limpeza-identidade .mvp-primario {
   border-radius: 999px;
   padding-inline: 20px;
@@ -12,6 +77,12 @@
 .limpeza-espacos {
   margin-bottom: 28px;
 }
+.limpeza-rolagem-comodos:focus-visible,
+.limpeza-rolagem-tarefas:focus-visible {
+  outline: 2px solid var(--laranja-principal);
+  outline-offset: -2px;
+  border-radius: 10px;
+}
 .limpeza-secao-topo {
   display: flex;
   align-items: center;
@@ -19,10 +90,31 @@
   gap: 16px;
   margin-bottom: 16px;
 }
-.limpeza-secao-topo h2 {
+.limpeza-secao-topo :is(h1, h2) {
   font-size: 22px;
   font-weight: 800;
   line-height: 1.2;
+}
+.limpeza-agenda > .limpeza-secao-topo {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+.limpeza-agenda-acoes {
+  width: 100%;
+  flex-shrink: 0;
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.limpeza-agenda-acoes > .mvp-primario {
+  font-size: 12px;
+}
+.limpeza-agenda-acoes > .mvp-link {
+  font-size: 11px;
 }
 .limpeza-secao-topo p {
   font-size: 12px;
@@ -50,6 +142,9 @@
 }
 .limpeza-comodo:hover {
   border-color: var(--laranja-principal);
+}
+.limpeza-comodo-geral {
+  grid-column: 1 / -1;
 }
 .limpeza-comodo[aria-pressed='true'] {
   border-color: var(--laranja-principal);
@@ -182,6 +277,10 @@
   border-top: 0;
   border-radius: 0 0 10px 10px;
   overflow: hidden;
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  background: var(--azul-fundo);
 }
 .limpeza-tarefa {
   display: flex;
@@ -345,7 +444,7 @@
   .limpeza-identidade .mvp-cabecalho h1 {
     font-size: 28px;
   }
-  .limpeza-secao-topo h2 {
+  .limpeza-secao-topo :is(h1, h2) {
     font-size: 20px;
   }
   .limpeza-comodos {
@@ -425,5 +524,276 @@
     transition:
       border-color 0.15s ease,
       box-shadow 0.15s ease;
+  }
+}
+@media (min-width: 1000px) {
+  .limpeza-identidade-painel {
+    height: 100%;
+    min-height: 0;
+  }
+  .limpeza-identidade-painel > .mvp-pagina {
+    height: 100%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 24px;
+  }
+  .limpeza-identidade-painel .mvp-cabecalho,
+  .limpeza-identidade-painel .mvp-sucesso {
+    flex-shrink: 0;
+  }
+  .limpeza-paineis {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: 24px;
+    min-height: 0;
+    flex: 1;
+  }
+  .limpeza-paineis > section {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+  }
+  .limpeza-paineis .limpeza-secao-topo {
+    flex-shrink: 0;
+    align-items: flex-start;
+    min-height: 70px;
+    margin-bottom: 12px;
+    gap: 10px;
+  }
+  .limpeza-paineis .limpeza-secao-topo :is(h1, h2) {
+    font-size: 21px;
+  }
+  .limpeza-paineis .limpeza-secao-topo p {
+    font-size: 11px;
+  }
+  .limpeza-agenda > .limpeza-secao-topo > .mvp-link {
+    font-size: 11px;
+    white-space: nowrap;
+    padding-top: 3px;
+  }
+  .limpeza-rolagem-comodos,
+  .limpeza-rolagem-tarefas {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-gutter: stable;
+  }
+  .limpeza-rolagem-comodos {
+    padding: 2px 6px 8px 2px;
+  }
+  .limpeza-comodos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .limpeza-comodo > img {
+    height: 120px;
+  }
+  .limpeza-comodo-corpo {
+    padding: 12px;
+  }
+  .limpeza-comodo-nome strong {
+    font-size: 19px;
+  }
+  .limpeza-comodo-corpo > span:nth-child(2),
+  .limpeza-comodo-corpo small {
+    font-size: 10px;
+  }
+  .limpeza-filtros {
+    flex-shrink: 0;
+    padding: 10px;
+    gap: 8px;
+  }
+  .limpeza-filtros > button {
+    font-size: 11px;
+    padding-inline: 9px;
+  }
+  .limpeza-filtros label {
+    font-size: 10px;
+  }
+  .limpeza-tarefa {
+    display: grid;
+    grid-template-columns: 30px minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 8px 10px;
+    padding: 14px 12px;
+  }
+  .limpeza-concluir {
+    width: 30px;
+    height: 30px;
+    grid-row: span 2;
+  }
+  .limpeza-tarefa-texto {
+    grid-column: 2;
+  }
+  .limpeza-tarefa-texto > strong {
+    font-size: 13px;
+  }
+  .limpeza-tarefa-texto > p {
+    font-size: 11px;
+  }
+  .limpeza-tarefa-data {
+    grid-column: 2;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
+  .limpeza-tarefa-acoes {
+    grid-column: 3;
+    grid-row: 1 / 3;
+    flex-direction: column;
+  }
+}
+
+/* A lista distingue cada atividade sem alterar os painéis da página. */
+.limpeza-lista-tarefas > .limpeza-tarefa {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 12px;
+  padding: 15px 12px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 10px;
+  background: white;
+}
+.limpeza-lista-tarefas > .limpeza-tarefa-hoje {
+  border-left: 3px solid var(--laranja-principal);
+  padding-left: 10px;
+}
+.limpeza-lista-tarefas > .limpeza-tarefa-atrasada {
+  border-left: 3px solid var(--vermelho-alerta);
+  padding-left: 10px;
+}
+.limpeza-lista-tarefas > .limpeza-tarefa-feita {
+  background: #f5faf7;
+  border-color: #d7e7dd;
+}
+.limpeza-lista-tarefas .limpeza-concluir {
+  grid-row: auto;
+  width: 32px;
+  height: 32px;
+  margin-top: 3px;
+  border-radius: 10px;
+  color: #aabdc9;
+  background: white;
+}
+.limpeza-lista-tarefas .limpeza-concluir:hover {
+  color: var(--laranja-principal);
+  background: var(--laranja-fundo);
+}
+.limpeza-lista-tarefas .limpeza-concluir:disabled {
+  color: var(--verde-sucesso);
+  border-color: #b2d4bf;
+  background: #e4f3e9;
+}
+.limpeza-tarefa-corpo {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.limpeza-tarefa-comodo {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--texto-apoio);
+  background: #eef3f6;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+.limpeza-tarefa-corpo h3 {
+  font-family: var(--font-corpo);
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 750;
+  margin-top: 7px;
+}
+.limpeza-tarefa-corpo p {
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--texto-apoio);
+  margin-top: 4px;
+}
+.limpeza-tarefa-corpo small {
+  display: block;
+  font-size: 10px;
+  line-height: 1.5;
+  color: var(--texto-apoio);
+  margin-top: 9px;
+}
+.limpeza-tarefa-feita .limpeza-tarefa-corpo h3 {
+  text-decoration: line-through;
+  color: var(--texto-apoio);
+}
+.limpeza-tarefa-lateral {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 7px;
+}
+.limpeza-tarefa-prazo {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  color: var(--texto-apoio);
+  white-space: nowrap;
+}
+.limpeza-tarefa-ferramentas {
+  display: flex;
+  gap: 2px;
+  margin-top: 7px;
+}
+.limpeza-tarefa-ferramentas > button {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 34px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  color: var(--texto-apoio);
+}
+.limpeza-tarefa-ferramentas > button:hover {
+  border-color: var(--borda-suave);
+  background: var(--azul-fundo);
+  color: var(--azul-titulo);
+}
+.limpeza-tarefa-ferramentas > button:last-child:hover {
+  color: var(--vermelho-alerta);
+  border-color: #f3ceca;
+  background: #fff3f1;
+}
+@media (max-width: 600px) {
+  .limpeza-lista-tarefas {
+    padding: 9px;
+    gap: 9px;
+  }
+  .limpeza-lista-tarefas > .limpeza-tarefa {
+    grid-template-columns: 28px minmax(0, 1fr) auto;
+    gap: 9px;
+    padding: 13px 10px;
+  }
+  .limpeza-lista-tarefas > .limpeza-tarefa-hoje,
+  .limpeza-lista-tarefas > .limpeza-tarefa-atrasada {
+    padding-left: 8px;
+  }
+  .limpeza-lista-tarefas .limpeza-concluir {
+    width: 28px;
+    height: 30px;
+  }
+  .limpeza-tarefa-corpo h3 {
+    font-size: 13px;
+  }
+  .limpeza-tarefa-corpo p {
+    font-size: 11px;
+  }
+  .limpeza-tarefa-corpo small {
+    font-size: 9px;
+  }
+  .limpeza-tarefa-prazo {
+    font-size: 9px;
+    gap: 3px;
   }
 }
