@@ -187,11 +187,11 @@ export function ColecaoMvp({
   campos,
   padrao = {},
   detalhe,
-  imagem,
   acoes,
   podeEditar = true,
   podeExcluir = true,
   onSave,
+  onSuccess,
 }) {
   const [editor, setEditor] = useState(null);
   const [exclusao, setExclusao] = useState(null);
@@ -218,9 +218,13 @@ export function ColecaoMvp({
           }
           campos={campos}
           inicial={editor}
-          onSave={valores =>
-            onSave ? onSave(valores) : salvarRegistro(colecao, valores)
-          }
+          onSave={valores => {
+            if (onSave) onSave(valores);
+            else salvarRegistro(colecao, valores);
+            onSuccess?.(
+              valores.id ? 'Alterações salvas.' : 'Registro adicionado.'
+            );
+          }}
           onClose={() => setEditor(null)}
         />
       )}
@@ -238,6 +242,7 @@ export function ColecaoMvp({
             onClick={() => {
               removerRegistro(colecao, exclusao.id);
               setExclusao(null);
+              onSuccess?.('Registro excluído.');
             }}
           >
             Excluir
@@ -247,14 +252,9 @@ export function ColecaoMvp({
       {!registros.length ? (
         <VazioMvp />
       ) : (
-        <div
-          className={
-            imagem ? 'mvp-registros mvp-registros-ilustrados' : 'mvp-registros'
-          }
-        >
+        <div className='mvp-registros'>
           {registros.map(item => (
             <div className='mvp-registro' key={item.id}>
-              {imagem?.(item)}
               <div className='mvp-registro-corpo'>
                 <strong>{item.nome || item.descricao || item.nome_item}</strong>
                 <div className='mvp-detalhe'>{detalhe?.(item)}</div>

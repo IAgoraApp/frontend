@@ -3,7 +3,7 @@ import EstatisticaConcluido from '../assets/stat-check.svg';
 import EstatisticaGrafico from '../assets/stat-chart.svg';
 import EstatisticaSequencia from '../assets/stat-flame.svg';
 import { useCategoriasRotina } from '../hooks/useRotinaBanco';
-import { adicionarDias, chaveData } from '../utils/dates';
+import { adicionarDias, chaveData, formatarData } from '../utils/dates';
 import { CabecalhoRotina } from './routineUi';
 import ExtratoRotina from './routineStatement';
 import classesRotina from '../routineClasses';
@@ -59,21 +59,30 @@ export default function VisaoHistorico({ conclusoes, pendentes, aoAbrir }) {
     },
   ];
 
-  const registros = concluidas.map(tarefa => ({
-    id: tarefa.id,
-    data: chaveData(new Date(tarefa.completedAt)),
-    tipo: 'tarefa',
-    titulo: tarefa.title,
-    categoria: categorias.find(c => c.id === tarefa.category)?.rotulo,
-    detalhe: new Date(tarefa.completedAt).toLocaleTimeString('pt-BR', {
-      hour: '2-digit',
-      minute: '2-digit',
-    }),
-    situacao: 'Concluída',
-    estado: 'concluida',
-    icone: tarefa.icon,
-    aoAbrir: () => aoAbrir(tarefa),
-  }));
+  const registros = concluidas.map(tarefa => {
+    const conclusao = new Date(tarefa.completedAt);
+    const data = chaveData(conclusao);
+    const atrasada = tarefa.occurrenceDate && data > tarefa.occurrenceDate;
+
+    return {
+      id: tarefa.id,
+      data,
+      tipo: 'tarefa',
+      titulo: tarefa.title,
+      categoria: categorias.find(c => c.id === tarefa.category)?.rotulo,
+      nota: atrasada
+        ? `Prevista para ${formatarData(tarefa.occurrenceDate, { dateStyle: 'short' })}`
+        : undefined,
+      detalhe: conclusao.toLocaleTimeString('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+      situacao: atrasada ? 'Concluída com atraso' : 'Concluída',
+      estado: atrasada ? 'concluida-atrasada' : 'concluida',
+      icone: tarefa.icon,
+      aoAbrir: () => aoAbrir(tarefa),
+    };
+  });
 
   return (
     <div className='rotina-extrato'>

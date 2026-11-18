@@ -88,8 +88,8 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  flex: 1 1 265px;
-  max-width: 520px;
+  flex: 0 0 100%;
+  min-width: 0;
   padding-inline: 12px;
   border: 1px solid var(--borda-suave);
   border-radius: 8px;
@@ -410,6 +410,7 @@
     font-size: 0.75rem;
   }
   .receitas-listagem .receitas-busca {
+    grid-column: 1 / -1;
     gap: 5px;
     padding-inline: 6px;
   }

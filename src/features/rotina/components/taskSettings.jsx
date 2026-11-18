@@ -1,3 +1,4 @@
+import { Bell, BellOff, Check, Clock } from 'lucide-react';
 import { useCategoriasRotina } from '../hooks/useRotinaBanco';
 import { useState } from 'react';
 import {
@@ -17,7 +18,6 @@ import classesRotina from '../routineClasses';
 
 const titulosAjustes = {
   reagendar: 'Um novo horário para sua tarefa.',
-  lembrete: 'Um aviso na hora certa.',
   repeticao: 'Uma frequência que funciona.',
 };
 
@@ -94,6 +94,95 @@ export default function AjustesTarefa({
     .map(dia => dia.rotulo.replace('-feira', '').toLowerCase())
     .join(', ');
 
+  if (tipo === 'lembrete') {
+    const ativo = valores.reminder !== 'none';
+    const horario = new Date(
+      new Date(`${tarefa.occurrenceDate}T${tarefa.time}:00`).getTime() -
+        Number(valores.reminder) * 60_000
+    );
+    return (
+      <form className='rotina-lembrete' onSubmit={enviar}>
+        <header className='rotina-detalhe-cabecalho'>
+          <span className='rotina-lembrete-icone'>
+            <Bell size={22} aria-hidden='true' />
+          </span>
+          <div className='min-w-0 flex-1'>
+            <h2
+              id={idTitulo}
+              tabIndex={-1}
+              className='font-titulo text-2xl leading-tight font-extrabold'
+            >
+              Ajustar lembrete
+            </h2>
+            <p className='mt-1 text-sm text-(--texto-apoio)'>
+              {tarefa.title} · {diaRelativo(tarefa.occurrenceDate)} às{' '}
+              {tarefa.time}
+            </p>
+          </div>
+        </header>
+        <fieldset className='min-w-0'>
+          <legend className='mb-2 text-sm font-bold'>Quando avisar?</legend>
+          <div className='rotina-lembrete-opcoes'>
+            {opcoesLembrete.map(({ valor, rotulo }) => (
+              <label key={valor} className='rotina-lembrete-opcao'>
+                <input
+                  type='radio'
+                  name='reminder'
+                  value={valor}
+                  checked={valores.reminder === valor}
+                  onChange={alterar}
+                  className='sr-only'
+                />
+                <span>
+                  {valor === 'none' ? (
+                    <BellOff size={16} aria-hidden='true' />
+                  ) : (
+                    <Clock size={16} aria-hidden='true' />
+                  )}
+                  {rotulo}
+                  {valores.reminder === valor && (
+                    <Check
+                      size={16}
+                      className='ml-auto shrink-0'
+                      aria-hidden='true'
+                    />
+                  )}
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+        <div role='status' className='rotina-lembrete-previa'>
+          {ativo && !Number.isNaN(horario.getTime()) ? (
+            <>
+              <strong>
+                Aviso em{' '}
+                {horario.toLocaleString('pt-BR', {
+                  day: 'numeric',
+                  month: 'short',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+              </strong>
+              <p>
+                O aviso aparece na plataforma enquanto esta aba estiver aberta.
+              </p>
+            </>
+          ) : (
+            <p>
+              {ativo
+                ? 'A tarefa precisa de data e horário para exibir o aviso.'
+                : 'Você não receberá aviso para esta tarefa.'}
+            </p>
+          )}
+        </div>
+        <div className='rotina-lembrete-acoes'>
+          <BotaoRotina type='submit'>Salvar lembrete</BotaoRotina>
+        </div>
+      </form>
+    );
+  }
+
   return (
     <div className={classesRotina.conteudoModal}>
       <CabecalhoModalRotina
@@ -102,7 +191,11 @@ export default function AjustesTarefa({
         descricao={tarefa.title}
       />
       <div className={classesRotina.espacoAjustes}>
-        <form className={classesRotina.painelFormulario} onSubmit={enviar} noValidate>
+        <form
+          className={classesRotina.painelFormulario}
+          onSubmit={enviar}
+          noValidate
+        >
           {erro && (
             <AvisoRotina erro titulo='Confira este detalhe.'>
               {erro}
@@ -110,7 +203,10 @@ export default function AjustesTarefa({
           )}
           {tipo === 'reagendar' && (
             <>
-              <div className={classesRotina.camposRelacionados} data-relacionados>
+              <div
+                className={classesRotina.camposRelacionados}
+                data-relacionados
+              >
                 <CampoRotina
                   id='reagendar-data'
                   rotulo='Data'
@@ -142,43 +238,6 @@ export default function AjustesTarefa({
                   <option value='series'>Toda a repetição</option>
                 )}
               </SelecaoRotina>
-            </>
-          )}
-          {tipo === 'lembrete' && (
-            <>
-              <SelecaoRotina
-                id='lembrete-antes'
-                name='reminder'
-                rotulo='Avisar'
-                value={valores.reminder}
-                onChange={alterar}
-              >
-                {opcoesLembrete.map(item => (
-                  <option key={item.valor} value={item.valor}>
-                    {item.rotulo}
-                  </option>
-                ))}
-              </SelecaoRotina>
-              <SelecaoRotina
-                id='lembrete-canal'
-                rotulo='Canal'
-                value='plataforma'
-                onChange={() => {}}
-              >
-                <option value='plataforma'>Na plataforma</option>
-              </SelecaoRotina>
-              <CampoRotina
-                id='lembrete-repeticao'
-                rotulo='Repetição'
-                value={
-                  frequenciasRotina.find(item => item.id === tarefa.frequency)
-                    ?.rotulo ?? ''
-                }
-                readOnly
-              />
-              <p className={classesRotina.notaPequena}>
-                Os avisos aparecem enquanto esta aba estiver aberta.
-              </p>
             </>
           )}
           {tipo === 'repeticao' && (
@@ -246,10 +305,7 @@ export default function AjustesTarefa({
           <p className={classesRotina.sobrescrito}>VOCÊ ESTÁ AJUSTANDO</p>
           <h3>{tarefa.title}</h3>
           <p>
-            {
-              categoriasRotina.find(item => item.id === tarefa.category)
-                ?.rotulo
-            }{' '}
+            {categoriasRotina.find(item => item.id === tarefa.category)?.rotulo}{' '}
             ·{' '}
             {frequenciasRotina
               .find(item => item.id === tarefa.frequency)
@@ -274,23 +330,6 @@ export default function AjustesTarefa({
               </div>
               <p>
                 Ajuste uma ocorrência ou a repetição inteira no campo ao lado.
-              </p>
-            </>
-          )}
-          {tipo === 'lembrete' && (
-            <>
-              <div>
-                <strong>Como o aviso aparece</strong>
-                <p>
-                  {tarefa.title} ·{' '}
-                  {opcoesLembrete
-                    .find(item => item.valor === valores.reminder)
-                    ?.rotulo.toLowerCase()}
-                </p>
-              </div>
-              <p>
-                O aviso escolhido acompanha o horário da tarefa. Você pode mudar
-                a antecedência depois.
               </p>
             </>
           )}

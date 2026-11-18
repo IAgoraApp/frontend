@@ -1,6 +1,5 @@
 .ia-pagina {
   display: grid;
-  grid-template-columns: var(--largura-menu-lateral) minmax(0, 1fr);
   flex: 1;
   min-height: calc(100dvh - 90px);
   color: var(--azul-titulo);
@@ -11,7 +10,7 @@
 .ia-pagina button:disabled {
   cursor: not-allowed;
 }
-.ia-pagina :is(button, textarea):focus-visible {
+.ia-pagina :is(button, textarea, summary, a):focus-visible {
   outline: 2px solid var(--laranja-principal);
   outline-offset: 4px;
 }
@@ -302,7 +301,7 @@
   font-size: 11px;
   color: var(--texto-apoio);
 }
-.ia-compositor-acoes button {
+.ia-compositor-acoes .ia-enviar {
   display: grid;
   place-items: center;
   width: 42px;
@@ -311,7 +310,7 @@
   background: var(--laranja-principal);
   color: white;
 }
-.ia-compositor-acoes button:disabled {
+.ia-compositor-acoes .ia-enviar:disabled {
   background: #e4eaf0;
   color: #7b8a98;
 }
@@ -419,5 +418,194 @@
   }
   .ia-mensagem-usuario {
     max-width: 95%;
+  }
+}
+
+.ia-criar {
+  position: relative;
+}
+
+.ia-criar summary {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  gap: 7px;
+  padding: 0 10px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 10px;
+  color: var(--azul-titulo);
+  font-size: 0.875rem;
+  font-weight: 750;
+  list-style: none;
+  cursor: pointer;
+}
+
+.ia-criar summary::-webkit-details-marker {
+  display: none;
+}
+
+.ia-criar summary:hover,
+.ia-criar[open] summary {
+  background: var(--azul-fundo);
+}
+
+.ia-criar ul {
+  position: absolute;
+  z-index: 5;
+  bottom: calc(100% + 8px);
+  left: 0;
+  width: min(15rem, 75vw);
+  padding: 6px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 8px 24px #102a431f;
+}
+
+.ia-criar li button {
+  display: flex;
+  width: 100%;
+  min-height: 42px;
+  align-items: center;
+  gap: 9px;
+  padding: 0 9px;
+  border-radius: 7px;
+  text-align: left;
+  font-size: 0.875rem;
+}
+
+.ia-criar li button:hover,
+.ia-criar li button[aria-pressed='true'] {
+  background: var(--azul-fundo);
+}
+
+.ia-anexo,
+.ia-mensagem-area {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+  padding: 4px 8px;
+  border-radius: 7px;
+  background: var(--laranja-fundo);
+  color: #9d2c08;
+  font-size: 0.8125rem;
+  font-weight: 750;
+}
+
+.ia-anexo button {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border-radius: 6px;
+}
+
+.ia-anexo button:hover {
+  background: white;
+}
+
+.ia-ver-registro {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  color: #9d2c08;
+  font-size: 0.875rem;
+  font-weight: 750;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.ia-criar-selecionada {
+  margin-left: auto;
+  color: var(--laranja-principal);
+}
+
+.ia-pagina:not(.layout-menu-lateral) {
+  grid-template-columns: var(--largura-menu-lateral) minmax(0, 1fr);
+}
+
+.ia-menu-topo .menu-lateral-alternar {
+  display: none;
+}
+
+.ia-conversas {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .ia-pagina.layout-menu-lateral :is(.ia-topo, .ia-conteudo, .ia-compositor) {
+    padding-inline: max(32px, var(--limite-conteudo-inicio))
+      max(32px, var(--limite-conteudo-fim));
+  }
+
+  .ia-pagina.layout-menu-lateral .ia-historico {
+    min-width: 0;
+    overflow: hidden auto;
+    padding-inline: 9px;
+  }
+
+  .ia-pagina.layout-menu-lateral .ia-historico > * {
+    margin-inline: max(
+      0px,
+      min(var(--recuo-menu-lateral) - 9px, (100% - 44px) / 2)
+    );
+  }
+
+  .ia-pagina.layout-menu-lateral .ia-menu-topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+
+  .ia-pagina.layout-menu-lateral .ia-marca {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .ia-menu-topo .menu-lateral-alternar {
+    display: grid;
+  }
+
+  .ia-simbolo,
+  .ia-nova svg {
+    flex-shrink: 0;
+  }
+
+  .ia-nova {
+    position: relative;
+    white-space: nowrap;
+  }
+
+  .ia-pagina[data-menu-recolhido='true'] .ia-menu-topo {
+    position: relative;
+    justify-content: center;
+  }
+
+  .ia-pagina[data-menu-recolhido='true'] .ia-marca,
+  .ia-pagina[data-menu-recolhido='true'] .ia-nova .menu-lateral-rotulo {
+    position: absolute;
+    left: 100%;
+    pointer-events: none;
+  }
+
+  .ia-pagina[data-menu-recolhido='true'] .ia-marca {
+    visibility: hidden;
+  }
+
+  .ia-pagina[data-menu-recolhido='true'] .ia-conversas {
+    display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .ia-pagina[data-menu-recolhido='true'] .menu-lateral-rotulo {
+    opacity: 1;
   }
 }

@@ -1,4 +1,5 @@
-import { useCallback, useState } from 'react';
+import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
+import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ClipboardList, Plus, Sparkles, Trash2 } from 'lucide-react';
 import {
@@ -14,7 +15,6 @@ import { DialogoCasa } from '../casa/components/casaUi';
 import CardsComodos from './components/cardsComodos';
 import { imagemComodo } from './utils/imagemComodo';
 import ListaLimpezas from './components/listaLimpezas';
-import AvisoLimpeza from './components/avisoLimpeza';
 import ExtratoLimpeza from './components/extratoLimpeza';
 import { ordenarLimpezas } from './utils/agendaLimpeza';
 import './limpezaA.css';
@@ -24,11 +24,7 @@ export default function LimpezaA() {
   const [params, setParams] = useSearchParams();
   const [modal, setModal] = useState(null);
   const [confirmarExclusao, setConfirmarExclusao] = useState(false);
-  const [aviso, setAviso] = useState(null);
-  const dispensarAviso = useCallback(() => setAviso(null), []);
-  function notificar(mensagem) {
-    setAviso({ id: crypto.randomUUID(), mensagem });
-  }
+  const notificar = useAvisoPerfilA();
   const dia = hoje();
   const ehHistorico = params.get('visao') === 'historico';
   const comodo = ehHistorico
@@ -280,9 +276,6 @@ export default function LimpezaA() {
                       </div>
                     </div>
                   </div>
-                  <p className='sr-only' role='status'>
-                    {aviso?.mensagem}
-                  </p>
                   {tarefasComodo.length ? (
                     <ListaLimpezas
                       registros={tarefasComodo}
@@ -442,9 +435,6 @@ export default function LimpezaA() {
           </DialogoCasa>
         )}
       </PaginaMvp>
-      {aviso && (
-        <AvisoLimpeza key={aviso.id} aviso={aviso} aoFechar={dispensarAviso} />
-      )}
     </div>
   );
 }

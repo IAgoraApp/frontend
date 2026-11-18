@@ -1,3 +1,4 @@
+import { useAvisoPerfilA } from '../../../app/avisos/avisosPerfilA';
 import { useState } from 'react';
 import { CalendarDays, Pencil, Plus, Repeat2, Trash2 } from 'lucide-react';
 import {
@@ -206,7 +207,7 @@ function EditorRecorrencia({ regra, tarefas, aoSalvar, aoFechar, aoExcluir }) {
 
 export default function RecorrenciasRotina({ regras, tarefas, execucoes }) {
   const [editor, setEditor] = useState(null);
-  const [aviso, setAviso] = useState('');
+  const notificar = useAvisoPerfilA();
   const comRegra = new Set(regras.map(item => item.tarefa_id));
   const novasTarefas = tarefas.filter(tarefa => !comRegra.has(tarefa.id));
 
@@ -232,7 +233,7 @@ export default function RecorrenciasRotina({ regras, tarefas, execucoes }) {
         db
       );
     });
-    setAviso(
+    notificar(
       proxima
         ? `Ocorrência adicionada à agenda para ${dataCurta(proxima)}.`
         : 'Nenhuma nova ocorrência neste período.'
@@ -255,7 +256,7 @@ export default function RecorrenciasRotina({ regras, tarefas, execucoes }) {
       } else inserir('recorrencia_tarefa', regra, db);
     });
     setEditor(null);
-    setAviso('Repetição salva.');
+    notificar('Repetição salva.');
   }
 
   return (
@@ -271,9 +272,6 @@ export default function RecorrenciasRotina({ regras, tarefas, execucoes }) {
           <Plus size={17} aria-hidden='true' /> Nova recorrência
         </BotaoRotina>
       </CabecalhoRotina>
-      <p role='status' className={aviso ? 'mvp-sucesso' : 'sr-only'}>
-        {aviso}
-      </p>
       {regras.length ? (
         <ul className='rotina-recorrencia-lista'>
           {regras.map(regra => {
@@ -346,7 +344,7 @@ export default function RecorrenciasRotina({ regras, tarefas, execucoes }) {
           aoExcluir={() => {
             removerRegistro('recorrencia_tarefa', editor.id);
             setEditor(null);
-            setAviso('Repetição removida.');
+            notificar('Repetição removida.');
           }}
         />
       )}

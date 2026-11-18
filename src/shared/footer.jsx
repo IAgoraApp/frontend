@@ -6,6 +6,33 @@ export default function Rodape({ variante = 'padrao' }) {
   const ehEmpresa = variante === 'empresa';
   const ehInicial = variante === 'inicial';
 
+  if (variante === 'compacto') {
+    return (
+      <footer
+        id='contato'
+        className='border-t border-(--borda-suave) bg-white text-(--texto-apoio)'
+      >
+        <Container classe='flex flex-wrap items-center justify-between gap-x-4 gap-y-0 py-1.5'>
+          <p className='py-1.5 text-sm'>© IAgora</p>
+          <nav className='flex flex-wrap gap-x-4' aria-label='Links do rodapé'>
+            <Link
+              to='/ajuda'
+              className='inline-flex min-h-11 items-center text-sm font-semibold hover:text-(--azul-titulo) hover:underline'
+            >
+              Ajuda
+            </Link>
+            <Link
+              to='/privacidade'
+              className='inline-flex min-h-11 items-center text-sm font-semibold hover:text-(--azul-titulo) hover:underline'
+            >
+              Privacidade
+            </Link>
+          </nav>
+        </Container>
+      </footer>
+    );
+  }
+
   const grupos = [
     {
       titulo: 'Conheça o Iagora',

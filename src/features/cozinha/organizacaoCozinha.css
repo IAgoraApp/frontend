@@ -48,8 +48,7 @@
 .cozinha-voltar:hover {
   text-decoration: underline;
 }
-.cozinha-icone,
-.despensa-quantidade button {
+.cozinha-icone {
   display: grid;
   place-items: center;
   width: 44px;
@@ -58,8 +57,7 @@
   border-radius: 8px;
   color: var(--azul-principal);
 }
-.cozinha-icone:hover,
-.despensa-quantidade button:hover:enabled {
+.cozinha-icone:hover {
   background: var(--laranja-fundo);
   color: var(--azul-titulo);
 }
@@ -76,8 +74,7 @@
 }
 .cozinha-busca {
   display: flex;
-  flex: 1 1 250px;
-  max-width: 530px;
+  flex: 0 0 100%;
   min-width: 0;
   align-items: center;
   gap: 9px;
@@ -162,27 +159,8 @@
   color: var(--azul-titulo);
   font-weight: 750;
 }
-.despensa-quantidade {
-  display: flex;
-  align-items: center;
-  min-width: 0;
-  border-radius: 8px;
-  background: var(--azul-fundo);
-}
-.despensa-quantidade output {
-  min-width: 24px;
-  text-align: center;
-  color: var(--azul-titulo);
-  font-size: 0.85rem;
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-  overflow-wrap: anywhere;
-}
-.despensa-quantidade button:disabled {
-  opacity: 0.4;
-  cursor: default;
-}
 .compras-grade {
+  grid-auto-rows: 1fr;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 265px), 1fr));
   gap: clamp(12px, 1.8vw, 20px);
 }
@@ -202,7 +180,7 @@
   border-color: var(--azul-principal);
 }
 .compras-cartao-topo {
-  min-height: 3.15rem;
+  min-height: 2.5rem;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
@@ -230,96 +208,87 @@
   color: white;
 }
 .compras-cartao h2 {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   font-size: clamp(1.15rem, 1.8vw, 1.38rem);
   line-height: 1.12;
 }
-.compras-previa {
-  display: grid;
-  align-content: start;
-  min-height: 124px;
-  margin-block: 14px;
-  padding: 3px 12px;
-  border-radius: 8px;
-  background: var(--azul-fundo);
+.compras-previa,
+.compras-previa-vazia {
+  margin-top: 12px;
+  border-top: 1px solid var(--borda-suave);
+  padding-top: 9px;
   color: var(--texto-apoio);
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   overflow-wrap: anywhere;
 }
 .compras-previa li {
   display: flex;
-  align-items: center;
+  min-height: 24px;
+  align-items: baseline;
   gap: 8px;
-  min-height: 29px;
   padding-block: 3px;
 }
-.compras-previa li + li {
-  border-top: 1px solid var(--borda-suave);
-}
 .compras-previa li > span {
-  display: grid;
-  place-items: center;
-  width: 17px;
-  height: 17px;
-  flex-shrink: 0;
-  border: 1px solid var(--borda-divisoria);
-  border-radius: 4px;
-  color: var(--azul-principal);
-  background: white;
-}
-.compras-previa li[data-comprado='true'] {
-  text-decoration: line-through;
-}
-.compras-cartao-rodape {
-  display: grid;
-  gap: 7px;
-  margin-top: auto;
-  color: var(--texto-apoio);
-  font-size: 0.78rem;
-  font-weight: 700;
-}
-.compras-cartao-progresso {
-  display: block;
-  height: 5px;
+  min-width: 0;
   overflow: hidden;
-  border-radius: 999px;
-  background: var(--borda-suave);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.compras-cartao-progresso > span {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: var(--laranja-principal);
+.compras-previa li:not(.compras-previa-mais)::before {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  flex: none;
+  align-self: center;
+  border-radius: 50%;
+  background: var(--laranja-destaque);
+  content: '';
+}
+.compras-previa .compras-previa-mais {
+  color: var(--azul-principal);
+  font-size: 0.8125rem;
+  font-weight: 700;
 }
 .compras-checklist {
   display: grid;
-  gap: 12px;
-  max-width: 990px;
-}
-.compras-checklist-resumo,
-.compras-checklist-formas {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 10px;
+  gap: 14px;
+  min-width: 0;
+  padding: clamp(12px, 2vw, 20px);
+  border: 1px solid var(--borda-suave);
+  border-radius: 14px;
+  background: white;
 }
 .compras-checklist-resumo {
-  align-items: center;
-  padding: 12px 16px;
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  padding: 12px;
   border-radius: 10px;
   background: var(--azul-fundo);
 }
-.compras-checklist-resumo > div {
-  display: grid;
-  gap: 4px;
-  font-size: 0.85rem;
+.compras-progresso-texto {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 0.875rem;
 }
-.compras-checklist-resumo > div:first-child {
-  flex: 1 1 150px;
-  max-width: 285px;
+.compras-progresso-texto span {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.compras-checklist-formas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px;
 }
 .compras-checklist-resumo progress {
   width: 100%;
-  height: 7px;
+  height: 9px;
   appearance: none;
   border: 0;
   border-radius: 99px;
@@ -340,27 +309,49 @@
 }
 .compras-checklist-formas form {
   display: flex;
-  flex: 1 1 230px;
+  flex: 1 1 350px;
+  flex-wrap: wrap;
+  align-items: flex-end;
   min-width: 0;
   gap: 8px;
 }
-.compras-checklist-formas input {
+.compras-checklist-formas form label {
+  display: grid;
   min-width: 0;
+  gap: 5px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+.compras-produto-personalizado {
+  flex: 1 1 150px;
+}
+.compras-produto-quantidade {
+  width: 84px;
+}
+.compras-checklist-formas :is(button, input) {
   min-height: 44px;
-  flex: 1;
+}
+
+.compras-checklist-formas input {
+  width: 100%;
+  min-width: 0;
+  font-size: 0.875rem;
+  font-weight: 400;
   padding: 8px 10px;
   border: 1px solid var(--borda-suave);
   border-radius: 8px;
 }
 .compras-itens {
-  border-block: 1px solid var(--borda-suave);
+  overflow: hidden;
+  border: 1px solid var(--borda-suave);
+  border-radius: 10px;
 }
 .compras-itens li {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 6px;
-  padding-inline: 5px;
+  padding-inline: 9px;
 }
 .compras-itens li + li {
   border-top: 1px solid var(--borda-suave);
@@ -383,10 +374,15 @@
   flex-shrink: 0;
   accent-color: var(--azul-principal);
 }
-.compras-itens label span {
-  display: grid;
-  gap: 3px;
+.compras-itens label strong {
+  flex: 1;
+  min-width: 0;
   overflow-wrap: anywhere;
+}
+.compras-itens label small {
+  flex: none;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 .compras-itens small {
   color: var(--texto-apoio);
@@ -439,7 +435,72 @@
   .despensa-produto h2 {
     font-size: 1rem;
   }
-  .cozinha-busca {
-    max-width: none;
-  }
+}
+
+.despensa-quantidade {
+  border-radius: 8px;
+  background: var(--azul-fundo);
+  padding: 5px 9px;
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: var(--azul-titulo);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.despensa-form,
+.despensa-form label {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.despensa-form {
+  gap: 12px;
+}
+
+.despensa-form-modos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.despensa-form-modos button {
+  min-height: 40px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: var(--azul-fundo);
+  font-weight: 750;
+}
+
+.despensa-form-modos button[aria-pressed='true'] {
+  background: var(--azul-titulo);
+  color: white;
+}
+
+.despensa-form-campos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 165px), 1fr));
+  gap: 10px;
+}
+
+.despensa-form label {
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.despensa-form :is(input, select) {
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+  padding-inline: 10px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 8px;
+  background: white;
+  font-weight: 400;
+}
+
+.despensa-form > p:not([role='alert']) {
+  font-size: 0.8125rem;
+  color: var(--texto-apoio);
 }

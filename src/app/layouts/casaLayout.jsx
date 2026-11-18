@@ -17,7 +17,9 @@ export default function LayoutCasa({
   }, [pathname, secao]);
 
   return (
-    <div className={areaCasa ? 'casa-shell casa-shell-area' : 'casa-shell'}>
+    <div
+      className={`casa-shell layout-menu-lateral${areaCasa ? ' casa-shell-area' : ''}`}
+    >
       {navegacao}
       <div className='casa-conteudo' ref={conteudo}>
         {children ?? <Outlet />}

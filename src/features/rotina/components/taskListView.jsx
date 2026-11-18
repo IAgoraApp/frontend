@@ -15,6 +15,8 @@ export default function VisaoListaTarefas({
   aoEscolherMes,
   aoCriar,
   aoAbrir,
+  aoConcluir,
+  aoReagendar,
 }) {
   const categorias = useCategoriasRotina();
   const { limpezas, transacoes } = useBancoMvp();
@@ -24,29 +26,39 @@ export default function VisaoListaTarefas({
   const hoje = chaveData();
   const termo = busca.trim().toLocaleLowerCase('pt-BR');
 
+  const tarefasFiltradas = tarefas
+    .filter(t => categoria === 'todas' || t.category === categoria)
+    .map(t => ({
+      id: 'tarefa-' + t.occurrenceId,
+      data: t.occurrenceDate,
+      tipo: 'tarefa',
+      titulo: t.title,
+      categoria: categorias.find(c => c.id === t.category)?.rotulo,
+      detalhe: t.time,
+      icone: t.icon,
+      situacao: t.completed
+        ? 'Concluída'
+        : t.occurrenceDate < hoje
+          ? 'Em atraso'
+          : 'Pendente',
+      estado: t.completed
+        ? 'concluida'
+        : t.occurrenceDate < hoje
+          ? 'atrasada'
+          : 'pendente',
+      aoAbrir: () => aoAbrir(t),
+      aoConcluir: () => aoConcluir(t),
+      aoReagendar: () => aoReagendar(t),
+    }));
+  const corresponde = item =>
+    [item.titulo, item.categoria].some(valor =>
+      valor?.toLocaleLowerCase('pt-BR').includes(termo)
+    );
+  const atrasadas = tarefasFiltradas.filter(
+    item => item.estado === 'atrasada' && corresponde(item)
+  );
   const registros = [
-    ...tarefas
-      .filter(t => categoria === 'todas' || t.category === categoria)
-      .map(t => ({
-        id: 'tarefa-' + t.occurrenceId,
-        data: t.occurrenceDate,
-        tipo: 'tarefa',
-        titulo: t.title,
-        categoria: categorias.find(c => c.id === t.category)?.rotulo,
-        detalhe: t.time,
-        icone: t.icon,
-        situacao: t.completed
-          ? 'Concluída'
-          : t.occurrenceDate < hoje
-            ? 'Em atraso'
-            : 'Pendente',
-        estado: t.completed
-          ? 'concluida'
-          : t.occurrenceDate < hoje
-            ? 'atrasada'
-            : 'pendente',
-        aoAbrir: () => aoAbrir(t),
-      })),
+    ...tarefasFiltradas.filter(item => item.estado !== 'atrasada'),
     ...(mostrarTudo && categoria === 'todas'
       ? listarCompromissos(limpezas, transacoes).map(item => ({
           ...item,
@@ -57,12 +69,7 @@ export default function VisaoListaTarefas({
         }))
       : []),
   ].filter(
-    item =>
-      item.data >= inicio &&
-      item.data <= fim &&
-      [item.titulo, item.categoria].some(valor =>
-        valor?.toLocaleLowerCase('pt-BR').includes(termo)
-      )
+    item => item.data >= inicio && item.data <= fim && corresponde(item)
   );
 
   return (
@@ -129,6 +136,7 @@ export default function VisaoListaTarefas({
         </div>
         <ExtratoRotina
           registros={registros}
+          atrasadas={atrasadas}
           rotulo='Agenda em lista'
           vazio={
             termo || categoria !== 'todas'

@@ -1,3 +1,4 @@
+import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
 import { useState } from 'react';
 import {
   ArrowRight,
@@ -206,7 +207,7 @@ const adaptar = t => ({
 
 function AcoesMeta({ meta, executar }) {
   const [aporte, setAporte] = useState(false);
-  const [aporteSalvo, setAporteSalvo] = useState(false);
+  const notificar = useAvisoPerfilA();
   if (meta.status !== 'ativa') return null;
   const salvarStatus = status => () =>
     atualizarFinancas('meta_financeira', meta, () => ({ status }));
@@ -229,11 +230,6 @@ function AcoesMeta({ meta, executar }) {
           Cancelar meta
         </AcaoFinancas>
       </div>
-      {aporteSalvo && (
-        <p role='status' className='mt-3 text-sm'>
-          Valor adicionado à meta.
-        </p>
-      )}
       {aporte && (
         <EditorMvp
           titulo='Adicionar valor à meta'
@@ -247,7 +243,7 @@ function AcoesMeta({ meta, executar }) {
                   Math.round(aporte * 100)) /
                 100,
             }));
-            setAporteSalvo(true);
+            notificar('Valor adicionado à meta.');
           }}
         />
       )}
@@ -263,7 +259,7 @@ function AcoesRecorrencia({
   categoriaInicial,
 }) {
   const [gerando, setGerando] = useState(false);
-  const [gerados, setGerados] = useState(null);
+  const notificar = useAvisoPerfilA();
   return (
     <>
       <div className='mt-3 flex flex-wrap gap-2'>
@@ -289,7 +285,6 @@ function AcoesRecorrencia({
         {registro.ativa && (
           <AcaoFinancas
             onClick={() => {
-              setGerados(null);
               setGerando(true);
             }}
           >
@@ -297,15 +292,6 @@ function AcoesRecorrencia({
           </AcaoFinancas>
         )}
       </div>
-      {gerados !== null && (
-        <p role='status' className='mt-3 text-sm'>
-          {gerados === 0
-            ? 'Nenhum novo lançamento para este mês.'
-            : gerados === 1
-              ? '1 lançamento gerado.'
-              : gerados + ' lançamentos gerados.'}
-        </p>
-      )}
       {registro.ativa && gerando && (
         <section
           className='mt-4 rounded-xl border border-(--borda-suave) p-4'
@@ -330,9 +316,16 @@ function AcoesRecorrencia({
               categoriaCampo,
             ]}
             onClose={() => setGerando(false)}
-            onSave={v =>
-              setGerados(gerarRecorrencia(registro, v.mes, v.categoria_id))
-            }
+            onSave={v => {
+              const gerados = gerarRecorrencia(registro, v.mes, v.categoria_id);
+              notificar(
+                gerados === 0
+                  ? 'Nenhum novo lançamento para este mês.'
+                  : gerados === 1
+                    ? '1 lançamento gerado.'
+                    : `${gerados} lançamentos gerados.`
+              );
+            }}
           />
         </section>
       )}

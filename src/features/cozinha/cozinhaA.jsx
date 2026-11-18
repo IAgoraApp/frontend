@@ -1,7 +1,6 @@
-import { useSearchParams } from 'react-router-dom';
+import { Navigate, useSearchParams } from 'react-router-dom';
 import { useBancoMvp } from '../../app/dados/bancoMvp';
 import ComprasA from './comprasA';
-import DespensaA from './despensaA';
 import ReceitasA from './receitasA';
 import './organizacaoCozinha.css';
 
@@ -10,7 +9,7 @@ export default function CozinhaA() {
   const [params] = useSearchParams();
   const visao = params.get('visao') || 'inicio';
 
-  if (visao === 'despensa') return <DespensaA banco={b} casaId={casa.id} />;
+  if (visao === 'despensa') return <Navigate to='/despensa' replace />;
   if (visao === 'compras') return <ComprasA banco={b} casaId={casa.id} />;
 
   return (

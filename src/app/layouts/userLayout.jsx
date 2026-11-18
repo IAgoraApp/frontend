@@ -1,3 +1,4 @@
+import ProvedorAvisosPerfilA from '../avisos/provedorAvisosPerfilA';
 import LayoutAplicacao from './appLayout';
 
 export default function LayoutUsuario({
@@ -5,11 +6,16 @@ export default function LayoutUsuario({
   propriedadesCabecalho,
   ...propriedades
 }) {
-  return (
+  const layout = (
     <LayoutAplicacao
       {...propriedades}
       varianteCabecalho='usuario'
       propriedadesCabecalho={{ ...propriedadesCabecalho, tipoUsuario }}
     />
+  );
+  return tipoUsuario === 'consumidorA' ? (
+    <ProvedorAvisosPerfilA>{layout}</ProvedorAvisosPerfilA>
+  ) : (
+    layout
   );
 }

@@ -1,3 +1,4 @@
+import { useAvisoPerfilA } from '../../../app/avisos/avisosPerfilA';
 import { useState } from 'react';
 import {
   ChartPie,
@@ -54,7 +55,7 @@ export default function ColecaoFinancas({
   const [edicao, setEdicao] = useState(null);
   const editor = edicao ?? (criarAoAbrir ? padrao : null);
   const [exclusao, setExclusao] = useState(false);
-  const [aviso, setAviso] = useState('');
+  const notificar = useAvisoPerfilA();
   const [erro, setErro] = useState('');
   const [rotulo, Icone] = tiposRegistro[colecao];
   const item = registros.find(r => r.id === (selecionado ?? registroInicial));
@@ -72,7 +73,9 @@ export default function ColecaoFinancas({
       const resultado = acao();
       if (fecharDepois) fechar();
       setErro('');
-      setAviso(typeof mensagem === 'function' ? mensagem(resultado) : mensagem);
+      notificar(
+        typeof mensagem === 'function' ? mensagem(resultado) : mensagem
+      );
       return true;
     } catch (e) {
       setErro(e.message);
@@ -81,17 +84,11 @@ export default function ColecaoFinancas({
   }
 
   function abrir(registro) {
-    setAviso('');
     setSelecionado(registro.id);
   }
 
   return (
     <PainelFinancas titulo={titulo} classe={classe}>
-      {aviso && !item && !editor && (
-        <p role='status' className='mb-2 shrink-0 text-sm text-(--texto-apoio)'>
-          {aviso}
-        </p>
-      )}
       {filtros}
       {registros.length ? (
         lista ? (
@@ -163,7 +160,7 @@ export default function ColecaoFinancas({
                 if (onSave) onSave(valores);
                 else atualizarFinancas(colecao, valores);
                 onSaved?.(valores);
-                setAviso('Alterações salvas.');
+                notificar('Alterações salvas.');
               }}
             />
           ) : exclusao ? (
@@ -236,14 +233,6 @@ export default function ColecaoFinancas({
                 </AcaoFinancas>
               </div>
             </>
-          )}
-          {aviso && !editor && (
-            <p
-              role='status'
-              className='mt-4 rounded-lg bg-[#e7f5ed] px-3 py-2 text-sm text-(--verde-sucesso)'
-            >
-              {aviso}
-            </p>
           )}
           {erro && (
             <p

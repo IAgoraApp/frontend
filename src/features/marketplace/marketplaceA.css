@@ -488,11 +488,6 @@
   overflow-wrap: anywhere;
 }
 
-.mercado-a-caixa-topo {
-  display: flex;
-  justify-content: flex-end;
-  margin-block: -12px;
-}
 .mercado-a-inbox {
   display: grid;
   grid-template-columns: minmax(220px, 310px) minmax(0, 1fr);
@@ -877,4 +872,301 @@
 }
 .mercado-a-dialogo .mvp-form-acoes button {
   min-height: 44px;
+}
+
+.mercado-a-voltar-detalhe {
+  justify-self: start;
+  align-self: start;
+  gap: 8px;
+}
+
+.mercado-a-detalhe-topo {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.mercado-a-detalhe-identidade,
+.mercado-a-perfil-apresentacao,
+.mercado-a-perfil-botoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+
+.mercado-a-detalhe-identidade h1 {
+  font-family: var(--font-titulo);
+  font-size: clamp(1.5rem, 3vw, 2.125rem);
+  font-weight: 800;
+  line-height: 1.12;
+}
+
+.mercado-a-detalhe-identidade p,
+.mercado-a-perfil-apresentacao .mercado-a-perfil-identidade p:last-child,
+.mercado-a-perfil-descricao {
+  color: var(--texto-apoio);
+  font-size: 0.875rem;
+}
+
+.mercado-a-perfil-publico {
+  background: white;
+}
+
+.mercado-a-capa-empresa {
+  height: clamp(56px, 8vw, 106px);
+  background: var(--azul-escuro);
+  border-bottom: 4px solid var(--laranja-principal);
+}
+
+.mercado-a-banner-empresa {
+  display: block;
+  height: 100%;
+}
+
+.mercado-a-perfil-apresentacao .mercado-a-marca-empresa {
+  width: 62px;
+  height: 62px;
+  flex-basis: 62px;
+  font-size: 1.375rem;
+}
+
+.mercado-a-perfil-botoes {
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.mercado-a-perfil-botoes > * {
+  min-height: 44px;
+}
+
+.mercado-a-ofertas-empresa .mercado-a-resultados {
+  padding: clamp(12px, 2vw, 20px);
+  border: 1px solid var(--borda-suave);
+  border-radius: 12px;
+  background: var(--azul-fundo);
+}
+
+#servicos-disponiveis,
+#avaliacoes-servico {
+  scroll-margin-top: 16px;
+}
+
+.mercado-a-pedido-form {
+  display: grid;
+  gap: 14px;
+  padding-top: 14px;
+}
+
+.mercado-a-pedido-form > label {
+  display: grid;
+  gap: 5px;
+  font-weight: 700;
+}
+
+.mercado-a-pedido-form :is(textarea, input[type='datetime-local']) {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 8px;
+  background: white;
+  font-weight: 400;
+}
+
+.mercado-a-pedido-form small,
+.mercado-a-servico-pagamento {
+  color: var(--texto-apoio);
+  font-size: 13px;
+}
+
+.mercado-a-pedido-nota {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--azul-fundo);
+  font-size: 14px;
+}
+
+.mercado-a-pedido-nota label {
+  display: flex;
+  align-items: start;
+  gap: 8px;
+  font-weight: 700;
+}
+
+.mercado-a-pedido-nota input {
+  margin-top: 4px;
+}
+
+.mercado-a-pedido-mensagens {
+  max-height: 34vh;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+}
+
+.mercado-a-pedido-mensagens li + li {
+  margin-top: 8px;
+}
+
+.mercado-a-inbox {
+  background: white;
+}
+
+.mercado-a-inbox .mercado-a-conversas {
+  background: #f8fafc;
+}
+
+.mercado-a-inbox .mercado-a-chat {
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+}
+
+
+.mercado-a-chat-endereco {
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--borda-suave);
+  background: var(--azul-fundo);
+  color: var(--texto-apoio);
+  font-size: 0.8125rem;
+}
+
+.mercado-a-pedido-endereco {
+  display: grid;
+  gap: 8px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.mercado-a-pedido-endereco legend {
+  padding-inline: 4px;
+  font-weight: 750;
+}
+
+.mercado-a-pedido-endereco > label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mercado-a-pedido-endereco > p {
+  color: var(--texto-apoio);
+  font-size: 0.875rem;
+}
+
+.mercado-a-endereco-campos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.mercado-a-endereco-campos label {
+  display: grid;
+  min-width: 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.mercado-a-endereco-campos label[data-campo='complemento'] {
+  grid-column: 1 / -1;
+}
+
+.mercado-a-endereco-campos input {
+  width: 100%;
+  min-height: 40px;
+  margin-top: 4px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 8px;
+  padding-inline: 8px;
+  font-weight: 400;
+}
+
+.mercado-a-chat-contexto {
+  min-height: 0;
+  overflow-y: auto;
+  max-height: 40dvh;
+}
+
+.mercado-a-acordo {
+  display: grid;
+  gap: 5px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--borda-suave);
+  background: var(--azul-fundo);
+  font-size: 0.875rem;
+}
+
+.mercado-a-acordo p {
+  color: var(--texto-apoio);
+}
+
+.mercado-a-acordo .mercado-a-contato-acoes button {
+  min-height: 36px;
+}
+
+.mercado-a-acordo-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 8px 12px;
+}
+
+.mercado-a-acordo-form label {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  font-weight: 700;
+}
+
+.mercado-a-acordo-form input {
+  min-width: 0;
+  max-width: 100%;
+  min-height: 36px;
+  padding-inline: 8px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 6px;
+  background: white;
+}
+
+.mercado-a-acordo-form p {
+  flex-basis: 100%;
+}
+
+.mercado-a-filtros-servicos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mercado-a-filtros-servicos a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding-inline: 16px;
+  border-radius: 999px;
+  background: var(--azul-fundo);
+  color: var(--azul-titulo);
+  font-weight: 750;
+}
+
+.mercado-a-filtros-servicos a[aria-current='page'] {
+  background: var(--azul-titulo);
+  color: white;
+}
+
+.mercado-a-servicos-lista {
+  display: grid;
+  margin-top: 10px;
+  overflow-wrap: anywhere;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
+}
+
+.mercado-a-servicos-lista .mercado-a-contratacao,
+.mercado-a-servicos-lista .mercado-a-contratacao:last-child {
+  border: 1px solid var(--borda-suave);
+  border-radius: 12px;
+  background: white;
 }

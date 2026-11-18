@@ -1,15 +1,22 @@
+import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
 import { useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import {
+  Link,
+  Navigate,
+  useLocation,
+  useNavigate,
+  useParams,
+} from 'react-router-dom';
 import {
   alterarBancoMarketplace,
   dataCurta,
-  hoje,
-  inserir,
   useBancoMvp,
 } from '../../app/dados/bancoMvp';
-import { EditorMvp, PaginaMvp, VazioMvp } from '../../shared/ui/mvp';
-import DialogoMarketplace from './dialogoMarketplace';
-import { CartaoEmpresa, MarcaEmpresa } from './empresaMarketplace';
+import { PaginaMvp, VazioMvp } from '../../shared/ui/mvp';
+import SolicitarServico from './solicitarServico';
+import { chatLiberado, garantirChat } from './contratacoes';
+import VoltarMarketplace from './voltarMarketplace';
+import { CartaoEmpresa } from './empresaMarketplace';
 import CatalogoMarketplaceA, {
   FotoServico,
   NotaServico,
@@ -23,13 +30,13 @@ import ContatosMarketplaceA from './contatosMarketplaceA';
 import './marketplaceA.css';
 
 export default function MarketplaceA({ dentroDaEmpresa = false }) {
-  const { b, perfil, casa } = useBancoMvp();
+  const { b, perfil, endereco } = useBancoMvp();
   const { id, slug } = useParams();
-  const { pathname } = useLocation();
+  const { pathname, search, state } = useLocation();
   const navegar = useNavigate();
+  const notificar = useAvisoPerfilA();
   const [contratar, setContratar] = useState(false);
   const [erroChat, setErroChat] = useState('');
-  const [solicitacaoCriada, setSolicitacaoCriada] = useState(null);
   const empresas = b.perfil_empresa.filter(e => e.validado);
   const empresasPorId = new Map(empresas.map(e => [e.id, e]));
   const servicos = b.servico.filter(s =>
@@ -52,36 +59,33 @@ export default function MarketplaceA({ dentroDaEmpresa = false }) {
     return () => cancelAnimationFrame(quadro);
   }, [rotaAvaliacoes, id]);
 
-  function abrirChat(empresaId, contratadoId = null) {
+  function abrirChat(empresaId, contratadoId) {
     try {
       let conversaId;
       alterarBancoMarketplace(db => {
-        const existente = db.chat_servico.find(
-          c =>
-            c.perfil_id === perfil.id &&
-            c.empresa_id === empresaId &&
-            c.contratado_id === contratadoId
+        const pedido = db.servico_contratado.find(
+          c => c.id === contratadoId && c.perfil_id === perfil.id
         );
-        conversaId =
-          existente?.id ??
-          inserir(
-            'chat_servico',
-            {
-              perfil_id: perfil.id,
-              empresa_id: empresaId,
-              contratado_id: contratadoId,
-            },
-            db
-          ).id;
+        conversaId = garantirChat(db, pedido, empresaId).id;
       });
       navegar(`/meus-contatos/${conversaId}`);
     } catch (falha) {
       setErroChat(falha.message);
     }
   }
-  if (pathname.startsWith('/meus-contatos')) {
+  const ehMeusServicos = pathname === '/servicos-contratados';
+  if (
+    pathname.startsWith('/meus-contatos') &&
+    ['servicos', 'solicitacoes'].includes(
+      new URLSearchParams(search).get('visao')
+    )
+  )
+    return <Navigate to='/servicos-contratados' replace />;
+
+  if (ehMeusServicos || pathname.startsWith('/meus-contatos')) {
     return (
       <ContatosMarketplaceA
+        ehMeusServicos={ehMeusServicos}
         banco={b}
         perfil={perfil}
         id={id}
@@ -103,107 +107,55 @@ export default function MarketplaceA({ dentroDaEmpresa = false }) {
       );
     function fecharSolicitacao() {
       setContratar(false);
-      if (rotaContato) navegar('/servicos/' + servico.id, { replace: true });
+      if (rotaContato)
+        navegar('/servicos/' + servico.id, { replace: true, state });
     }
 
+    const pedidoAberto = b.servico_contratado.find(
+      c =>
+        c.servico_id === servico.id &&
+        c.perfil_id === perfil.id &&
+        ['pendente', 'aceito', 'em_andamento'].includes(c.status)
+    );
     const avaliacoes = b.avaliacao_servico.filter(a =>
       b.servico_contratado.some(
         c => c.id === a.contratado_id && c.servico_id === servico.id
       )
     );
     return (
-      <PaginaMvp
-        titulo={servico.titulo}
-        descricao={empresa?.nome}
-        acao={
-          <Link className='mercado-a-voltar-detalhe' to='/marketplace'>
-            Todos os serviços
-          </Link>
-        }
-      >
+      <PaginaMvp cabecalho={false}>
+        <header className='mercado-a-detalhe-topo'>
+          <VoltarMarketplace />
+          <div className='mercado-a-detalhe-identidade'>
+            <div>
+              <h1>{servico.titulo}</h1>
+              <p>{empresa.nome}</p>
+            </div>
+            <a className='mercado-a-voltar-detalhe' href='#avaliacoes-servico'>
+              Ver avaliações
+            </a>
+          </div>
+        </header>
         {erroChat && (
           <p className='mvp-confirmacao' role='alert'>
             {erroChat}
           </p>
         )}
-        {solicitacaoCriada?.servicoId === servico.id && (
-          <p role='status' className='mvp-sucesso'>
-            Solicitação enviada.{' '}
-            <Link
-              className='mvp-link'
-              to={`/meus-contatos/${solicitacaoCriada.chatId}`}
-            >
-              Abrir conversa
-            </Link>
-          </p>
-        )}
-        {(contratar || rotaContato) && (
-          <DialogoMarketplace
-            titulo='Solicitar serviço'
+        {(contratar || rotaContato) && !pedidoAberto && (
+          <SolicitarServico
+            servico={servico}
+            empresa={empresa}
+            perfil={perfil}
+            endereco={endereco}
             aoFechar={fecharSolicitacao}
-          >
-            <div className='mercado-a-dialogo-contexto'>
-              <MarcaEmpresa key={empresa.id} empresa={empresa} />
-              <div>
-                <strong>{servico.titulo}</strong>
-                <p>
-                  {empresa.nome} · {precoServico(servico)}
-                </p>
-              </div>
-            </div>
-            <div className='mercado-a-editor'>
-              <EditorMvp
-                cabecalho={false}
-                titulo='Solicitar serviço'
-                rotuloSalvar='Enviar solicitação'
-                inicial={{ descricao: '', data_agendamento: `${hoje()}T09:00` }}
-                campos={[
-                  {
-                    nome: 'descricao',
-                    rotulo: 'O que você precisa?',
-                    tipo: 'textarea',
-                  },
-                  {
-                    nome: 'data_agendamento',
-                    rotulo: 'Data desejada',
-                    tipo: 'datetime-local',
-                  },
-                ]}
-                onClose={fecharSolicitacao}
-                onSave={v => {
-                  if (v.data_agendamento < `${hoje()}T00:00`)
-                    throw new Error('Escolha uma data a partir de hoje.');
-                  let chatId;
-                  alterarBancoMarketplace(db => {
-                    const contratacao = inserir(
-                      'servico_contratado',
-                      {
-                        ...v,
-                        servico_id: servico.id,
-                        perfil_id: perfil.id,
-                        endereco_id: casa.endereco_id,
-                        valor: Number(servico.preco ?? 0),
-                        status: 'pendente',
-                        data_contratacao: new Date().toISOString(),
-                        data_conclusao: null,
-                      },
-                      db
-                    );
-                    chatId = inserir(
-                      'chat_servico',
-                      {
-                        perfil_id: perfil.id,
-                        empresa_id: servico.empresa_id,
-                        contratado_id: contratacao.id,
-                      },
-                      db
-                    ).id;
-                  });
-                  setSolicitacaoCriada({ servicoId: servico.id, chatId });
-                }}
-              />
-            </div>
-          </DialogoMarketplace>
+            aoEnviar={chatId => {
+              setContratar(false);
+              notificar('Solicitação enviada.');
+              navegar(`/meus-contatos/${chatId}`, {
+                replace: rotaContato,
+              });
+            }}
+          />
         )}
         <div className='mercado-a-detalhe'>
           <section className='mvp-painel mercado-a-servico'>
@@ -232,26 +184,31 @@ export default function MarketplaceA({ dentroDaEmpresa = false }) {
                   .
                 </p>
               )}
+              <p className='mercado-a-servico-pagamento'>
+                Pagamento combinado diretamente com a empresa.
+              </p>
               <div className='mercado-a-servico-acoes'>
-                <button
-                  type='button'
-                  className='mvp-primario'
-                  onClick={() => setContratar(true)}
-                >
-                  Solicitar serviço
-                </button>
-                <button
-                  type='button'
-                  className='mvp-link'
-                  onClick={() => abrirChat(servico.empresa_id)}
-                >
-                  Falar com a empresa
-                </button>
-                <Link
-                  className='mvp-link'
-                  to='/meus-contatos?visao=solicitacoes'
-                >
-                  Ver minhas solicitações
+                {chatLiberado(pedidoAberto) ? (
+                  <button
+                    type='button'
+                    className='mvp-primario'
+                    onClick={() =>
+                      abrirChat(servico.empresa_id, pedidoAberto.id)
+                    }
+                  >
+                    Abrir conversa
+                  </button>
+                ) : (
+                  <button
+                    type='button'
+                    className='mvp-primario'
+                    onClick={() => setContratar(true)}
+                  >
+                    Iniciar conversa
+                  </button>
+                )}
+                <Link className='mvp-link' to='/servicos-contratados'>
+                  Meus serviços
                 </Link>
               </div>
             </div>
@@ -260,7 +217,20 @@ export default function MarketplaceA({ dentroDaEmpresa = false }) {
             className='mercado-a-detalhe-lateral'
             aria-label='Empresa e avaliações'
           >
-            <CartaoEmpresa empresa={empresa} />
+            <CartaoEmpresa
+              empresa={empresa}
+              estado={
+                state?.retorno?.url === `/empresas/${empresa.id}`
+                  ? state.retorno.estado
+                  : {
+                      retorno: {
+                        url: `/servicos/${servico.id}`,
+                        rotulo: 'Voltar ao serviço',
+                        estado: state,
+                      },
+                    }
+              }
+            />
             <section
               className='mvp-painel mercado-a-avaliacoes'
               id='avaliacoes-servico'
@@ -308,7 +278,6 @@ export default function MarketplaceA({ dentroDaEmpresa = false }) {
       usuario={perfil.user_id}
       slug={slug}
       pathname={pathname}
-      aoConversar={abrirChat}
       erroChat={erroChat}
     />
   );

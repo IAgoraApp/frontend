@@ -1,17 +1,21 @@
+import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
 import { useState } from 'react';
-import { Archive, Minus, Pencil, Plus, Search, Trash2, X } from 'lucide-react';
-import { alterarBancoCompras, inserir } from '../../app/dados/bancoMvp';
-import { DialogoCasa } from '../casa/components/casaUi';
+import { Archive, Pencil, Plus, Search, X } from 'lucide-react';
+import { alterarBancoCompras, useBancoMvp } from '../../app/dados/bancoMvp';
 import { PaginaMvp } from '../../shared/ui/mvp';
 import { normalizarTexto } from './content';
 import { EditorCozinha } from './organizacaoCozinha';
+import AdicionarProdutoDespensa from './adicionarProdutoDespensa';
+import { medidaProduto } from './catalogoProdutos';
+import './organizacaoCozinha.css';
 
-export default function DespensaA({ banco, casaId }) {
+export default function DespensaA() {
+  const { b: banco, casa } = useBancoMvp();
+  const casaId = casa?.id;
   const [busca, setBusca] = useState('');
-  const [remocao, setRemocao] = useState(null);
-  const [erroRemocao, setErroRemocao] = useState('');
+  const notificar = useAvisoPerfilA();
   const [editor, setEditor] = useState(null);
-  const [erro, setErro] = useState('');
+  const [adicionando, setAdicionando] = useState(false);
   const produtos = new Map(banco.produto.map(p => [p.id, p]));
   const estoque = banco.estoque_item.filter(item => item.casa_id === casaId);
   const itens = estoque
@@ -28,49 +32,16 @@ export default function DespensaA({ banco, casaId }) {
       )
     );
 
-  function pedirRemocao(item) {
-    setErroRemocao('');
-    setRemocao(item);
-  }
-
   function remover(item) {
     alterarBancoCompras(db => {
       const atual = db.estoque_item.find(
         e => e.id === item.id && e.casa_id === casaId
       );
-      if (
-        !atual ||
-        atual.produto_id !== item.produto_id ||
-        atual.quantidade !== item.quantidade
-      )
-        throw new Error(
-          'O estoque mudou. Feche o aviso e atualize a quantidade novamente.'
-        );
+      if (!atual || atual.quantidade !== item.quantidade)
+        throw new Error('O estoque mudou. Reabra o produto antes de remover.');
       db.estoque_item = db.estoque_item.filter(e => e !== atual);
     });
-  }
-
-  function ajustar(item, delta) {
-    try {
-      let removerAoZerar;
-
-      alterarBancoCompras(db => {
-        const atual = db.estoque_item.find(
-          e => e.id === item.id && e.casa_id === casaId
-        );
-        if (!atual) throw new Error('O produto não está mais na despensa.');
-        const quantidade = Math.min(
-          99999999.99,
-          Number((atual.quantidade + delta).toFixed(2))
-        );
-        if (quantidade <= 0) removerAoZerar = atual;
-        else atual.quantidade = quantidade;
-      });
-      setErro('');
-      if (removerAoZerar) pedirRemocao(removerAoZerar);
-    } catch (falha) {
-      setErro(falha.message);
-    }
+    notificar('Produto removido da despensa.');
   }
 
   function salvar(item) {
@@ -80,43 +51,27 @@ export default function DespensaA({ banco, casaId }) {
       item.quantidade > 99999999.99
     )
       throw new Error('Informe uma quantidade de estoque válida.');
-
-    const quantidade = Number(item.quantidade.toFixed(2));
-    if (quantidade === 0) {
-      const atual = estoque.find(e => e.id === item.id);
-      if (!atual)
-        throw new Error(
-          'Informe uma quantidade maior que zero para adicionar o produto.'
-        );
-      pedirRemocao(atual);
-      return;
-    }
-
     alterarBancoCompras(db => {
-      const duplicado = db.estoque_item.find(
-        e =>
-          e.casa_id === casaId &&
-          e.produto_id === item.produto_id &&
-          e.id !== item.id
+      const atual = db.estoque_item.find(
+        e => e.id === item.id && e.casa_id === casaId
       );
-      if (item.id && duplicado)
+      if (!atual) throw new Error('O produto não está mais na despensa.');
+      if (atual.quantidade !== editor.quantidade)
         throw new Error(
-          'Esse produto já está na despensa. Edite a quantidade dele.'
+          'O estoque mudou. Reabra o produto para editar a quantidade.'
         );
-      const atual = item.id
-        ? db.estoque_item.find(e => e.id === item.id && e.casa_id === casaId)
-        : duplicado;
-      if (item.id && !atual)
-        throw new Error('O produto não está mais na despensa.');
-      const registro = {
-        casa_id: casaId,
-        produto_id: item.produto_id,
-        quantidade,
-      };
-      if (atual) Object.assign(atual, registro);
-      else inserir('estoque_item', registro, db);
+      atual.quantidade = Number(item.quantidade.toFixed(2));
     });
+    notificar('Quantidade atualizada.');
   }
+
+  if (!casaId)
+    return (
+      <PaginaMvp
+        titulo='Minha despensa'
+        descricao='Cadastre sua casa para começar a organizar a despensa.'
+      />
+    );
 
   return (
     <PaginaMvp cabecalho={false}>
@@ -129,7 +84,7 @@ export default function DespensaA({ banco, casaId }) {
           <button
             className='mvp-primario'
             type='button'
-            onClick={() => setEditor({ quantidade: 1 })}
+            onClick={() => setAdicionando(true)}
           >
             <Plus size={18} aria-hidden='true' /> Adicionar produto
           </button>
@@ -162,11 +117,6 @@ export default function DespensaA({ banco, casaId }) {
             {itens.length} {itens.length === 1 ? 'produto' : 'produtos'}
           </span>
         </div>
-        {erro && (
-          <p className='cozinha-erro' role='alert'>
-            {erro}
-          </p>
-        )}
         {itens.length ? (
           <ul className='despensa-grade'>
             {itens.map(item => {
@@ -176,7 +126,7 @@ export default function DespensaA({ banco, casaId }) {
                 <li
                   key={item.id}
                   className='despensa-produto'
-                  data-vazio={item.quantidade === 0}
+                  data-vazio={Number(item.quantidade) === 0}
                 >
                   <div className='despensa-produto-topo'>
                     <span className='despensa-embalagem'>
@@ -190,7 +140,7 @@ export default function DespensaA({ banco, casaId }) {
                     <button
                       type='button'
                       className='cozinha-icone'
-                      aria-label={`Editar ${nome}`}
+                      aria-label={`Editar quantidade de ${nome}`}
                       onClick={() => setEditor({ ...item, nome })}
                     >
                       <Pencil size={17} aria-hidden='true' />
@@ -200,39 +150,14 @@ export default function DespensaA({ banco, casaId }) {
                   {produto?.marca && <p>{produto.marca}</p>}
                   <div className='despensa-produto-rodape'>
                     <span>
-                      {item.quantidade === 0 ? 'Sem estoque' : 'Em estoque'}
+                      {Number(item.quantidade) === 0
+                        ? 'Sem estoque'
+                        : 'Em estoque'}
                     </span>
-                    <div
-                      className='despensa-quantidade'
-                      role='group'
-                      aria-label={`Quantidade de ${nome}`}
-                    >
-                      <button
-                        type='button'
-                        aria-label={
-                          item.quantidade === 0
-                            ? `Remover ${nome} do estoque`
-                            : `Diminuir ${nome}`
-                        }
-                        onClick={() => ajustar(item, -1)}
-                      >
-                        {item.quantidade === 0 ? (
-                          <Trash2 size={16} aria-hidden='true' />
-                        ) : (
-                          <Minus size={16} aria-hidden='true' />
-                        )}
-                      </button>
-                      <output>
-                        {Number(item.quantidade).toLocaleString('pt-BR')}
-                      </output>
-                      <button
-                        type='button'
-                        aria-label={`Aumentar ${nome}`}
-                        onClick={() => ajustar(item, 1)}
-                      >
-                        <Plus size={16} aria-hidden='true' />
-                      </button>
-                    </div>
+                    <output className='despensa-quantidade'>
+                      {Number(item.quantidade).toLocaleString('pt-BR')}{' '}
+                      {medidaProduto(produto)}
+                    </output>
                   </div>
                 </li>
               );
@@ -245,81 +170,31 @@ export default function DespensaA({ banco, casaId }) {
               : 'Use Adicionar produto para começar a organizar a despensa.'}
           </p>
         )}
-        {remocao && (
-          <DialogoCasa
-            titulo='Remover do estoque?'
-            aoFechar={() => setRemocao(null)}
-          >
-            <div className='cozinha-editor'>
-              <p>
-                Ao zerar a quantidade de{' '}
-                <strong>
-                  {produtos.get(remocao.produto_id)?.nome || 'este produto'}
-                </strong>
-                , você pode removê-lo da despensa. Quer remover?
-              </p>
-              {erroRemocao && (
-                <p className='cozinha-erro' role='alert'>
-                  {erroRemocao}
-                </p>
-              )}
-              <div className='cozinha-editor-acoes'>
-                <button
-                  type='button'
-                  className='cozinha-botao'
-                  onClick={() => setRemocao(null)}
-                >
-                  Manter produto
-                </button>
-                <button
-                  type='button'
-                  className='cozinha-botao cozinha-perigo'
-                  onClick={() => {
-                    try {
-                      remover(remocao);
-                      setRemocao(null);
-                    } catch (falha) {
-                      setErroRemocao(falha.message);
-                    }
-                  }}
-                >
-                  Remover produto
-                </button>
-              </div>
-            </div>
-          </DialogoCasa>
+        {adicionando && (
+          <AdicionarProdutoDespensa
+            produtos={banco.produto}
+            casaId={casaId}
+            aoFechar={() => setAdicionando(false)}
+            aoSalvar={mensagem => {
+              setAdicionando(false);
+              notificar(mensagem);
+            }}
+          />
         )}
         {editor && (
           <EditorCozinha
-            titulo={
-              editor.id ? 'Editar produto da despensa' : 'Adicionar produto'
-            }
+            titulo={`Estoque de ${editor.nome}`}
             inicial={editor}
             campos={[
               {
-                nome: 'produto_id',
-                rotulo: 'Produto',
-                numero: true,
-                opcoes: banco.produto.map(p => [
-                  p.id,
-                  [
-                    p.nome,
-                    p.marca,
-                    p.tamanho ? `${p.tamanho} ${p.unidade || ''}` : '',
-                  ]
-                    .filter(Boolean)
-                    .join(' / '),
-                ]),
-              },
-              {
                 nome: 'quantidade',
-                rotulo: 'Quantidade em estoque',
+                rotulo: `Quantidade em estoque (${medidaProduto(produtos.get(editor.produto_id))})`,
                 tipo: 'number',
                 min: 0,
               },
             ]}
             aoSalvar={salvar}
-            aoExcluir={editor.id ? () => remover(editor) : undefined}
+            aoExcluir={() => remover(editor)}
             aoFechar={() => setEditor(null)}
           />
         )}

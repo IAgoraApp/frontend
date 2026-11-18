@@ -46,9 +46,13 @@ export function MarcaEmpresa({ empresa }) {
   );
 }
 
-export function CartaoEmpresa({ empresa }) {
+export function CartaoEmpresa({ empresa, estado }) {
   return (
-    <Link className='mercado-a-perfil-cartao' to={`/empresas/${empresa.id}`}>
+    <Link
+      className='mercado-a-perfil-cartao'
+      to={`/empresas/${empresa.id}`}
+      state={estado}
+    >
       <div className='mercado-a-perfil-identidade'>
         <MarcaEmpresa key={empresa.id} empresa={empresa} />
         <div>
@@ -82,24 +86,40 @@ export function PerfilEmpresaMarketplace({ empresa }) {
       className='mercado-a-perfil-publico'
       aria-label='Informações da empresa'
     >
-      {!bannerFalhou && imagemPublica(empresa.banner) && (
-        <img
-          className='mercado-a-banner-empresa'
-          src={empresa.banner}
-          alt=''
-          onError={() => setBannerFalhou(true)}
-        />
-      )}
+      <div className='mercado-a-capa-empresa'>
+        {!bannerFalhou && imagemPublica(empresa.banner) && (
+          <img
+            className='mercado-a-banner-empresa'
+            src={empresa.banner}
+            alt=''
+            onError={() => setBannerFalhou(true)}
+          />
+        )}
+      </div>
       <div className='mercado-a-perfil-dados'>
-        <div className='mercado-a-perfil-identidade'>
-          <MarcaEmpresa empresa={empresa} />
-          <div>
-            <strong>{nomeCategoria(empresa.categoria)}</strong>
-            <p className='mercado-a-verificada'>
-              <BadgeCheck size={16} aria-hidden='true' /> Empresa verificada
-            </p>
+        <div className='mercado-a-perfil-apresentacao'>
+          <div className='mercado-a-perfil-identidade'>
+            <MarcaEmpresa empresa={empresa} />
+            <div>
+              <p className='mercado-a-verificada'>
+                <BadgeCheck size={16} aria-hidden='true' /> Empresa verificada
+              </p>
+              <h1>{empresa.nome}</h1>
+              <p>{nomeCategoria(empresa.categoria)}</p>
+            </div>
+          </div>
+          <div className='mercado-a-perfil-botoes'>
+            <a
+              className='mercado-a-voltar-detalhe'
+              href='#servicos-disponiveis'
+            >
+              Ver serviços
+            </a>
           </div>
         </div>
+        {empresa.descricao && (
+          <p className='mercado-a-perfil-descricao'>{empresa.descricao}</p>
+        )}
         <dl className='mercado-a-empresa-infos'>
           {!!empresa.local_atendimento?.length && (
             <div>

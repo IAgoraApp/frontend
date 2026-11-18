@@ -1,3 +1,4 @@
+import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
 import { useState } from 'react';
 import {
   Archive,
@@ -23,7 +24,7 @@ import {
 export default function CasaA() {
   const { b, casa, comodos, endereco, limpezas } = useBancoMvp();
   const [editar, setEditar] = useState(false);
-  const [salvo, setSalvo] = useState(false);
+  const notificar = useAvisoPerfilA();
   const [painel, setPainel] = useState(null);
   const cuidados = limpezas
     .slice()
@@ -44,9 +45,6 @@ export default function CasaA() {
           </BotaoCasa>
         }
       >
-        <p className='sr-only' role='status'>
-          {salvo && 'Residência atualizada nesta sessão.'}
-        </p>
         {editar && (
           <DialogoCasa
             titulo='Editar residência'
@@ -109,7 +107,7 @@ export default function CasaA() {
                         : e
                     );
                   });
-                  setSalvo(true);
+                  notificar('Residência atualizada.');
                 }}
               />
             </div>
@@ -166,7 +164,7 @@ export default function CasaA() {
           <Link to='/limpeza'>
             <Sparkles size={18} aria-hidden='true' /> Organizar limpezas
           </Link>
-          <Link to='/cozinha?visao=despensa'>
+          <Link to='/despensa'>
             <Archive size={18} aria-hidden='true' /> Conferir despensa
           </Link>
           <Link to='/cozinha?visao=compras'>
@@ -181,6 +179,7 @@ export default function CasaA() {
             <ColecaoMvp
               titulo='Gerenciar cômodos'
               colecao='comodo'
+              onSuccess={notificar}
               registros={comodos}
               padrao={{ casa_id: casa.id }}
               campos={[

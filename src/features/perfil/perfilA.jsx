@@ -1,3 +1,4 @@
+import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
 import { useState } from 'react';
 import {
   Camera,
@@ -74,14 +75,13 @@ export default function PerfilA() {
   const visao =
     areas.find(([id]) => id === params.get('visao'))?.[0] ?? 'perfil';
   const [modal, setModal] = useState('');
-  const [aviso, setAviso] = useState('');
+  const notificar = useAvisoPerfilA();
   const [erro, setErro] = useState('');
   const usuario = b.users.find(item => item.id === perfil?.user_id);
   const endereco = b.endereco.find(item => item.id === perfil?.endereco_id);
   const situacao = momentosPerfil.find(([id]) => id === perfil?.tipo)?.[1];
 
   function abrirModal(tipo) {
-    setAviso('');
     setErro('');
     setModal(tipo);
   }
@@ -90,7 +90,7 @@ export default function PerfilA() {
     try {
       desvincularEnderecoPerfil(perfil.user_id);
       setModal('');
-      setAviso('Endereço removido do perfil.');
+      notificar('Endereço removido do perfil.');
     } catch (falha) {
       setErro(falha.message);
     }
@@ -155,7 +155,6 @@ export default function PerfilA() {
                 <Link
                   key={id}
                   to={id === 'perfil' ? '/perfil' : '?visao=' + id}
-                  onClick={() => setAviso('')}
                   aria-current={visao === id ? 'page' : undefined}
                   className='flex min-h-11 min-w-0 flex-col items-center justify-center gap-1 rounded-lg px-1 py-2 text-center text-xs font-bold text-(--texto-apoio) hover:bg-(--azul-fundo) aria-[current=page]:bg-(--laranja-fundo) aria-[current=page]:text-[#9d2c08] sm:flex-row sm:gap-2 sm:px-3 sm:text-sm'
                 >
@@ -164,17 +163,9 @@ export default function PerfilA() {
                 </Link>
               ))}
             </nav>
-            {aviso && (
-              <p
-                role='status'
-                className='rounded-lg bg-[#e7f5ed] px-4 py-2 text-sm font-bold text-(--verde-sucesso)'
-              >
-                {aviso}
-              </p>
-            )}
             {visao === 'perfil' ? (
               <div className='grid min-w-0 gap-4'>
-                <MomentoPerfilA perfil={perfil} aoSalvar={setAviso} />
+                <MomentoPerfilA perfil={perfil} />
                 <section
                   aria-labelledby='perfil-informacoes'
                   className='min-w-0 rounded-2xl border border-(--borda-suave) bg-white p-5 sm:p-6'
@@ -203,7 +194,7 @@ export default function PerfilA() {
                       mostrarCancelar={false}
                       onSave={valores => {
                         salvarInformacoes(perfil.user_id, valores);
-                        setAviso('Informações pessoais atualizadas.');
+                        notificar('Informações pessoais atualizadas.');
                       }}
                     />
                   </div>
@@ -287,7 +278,7 @@ export default function PerfilA() {
                 b={b}
                 userId={perfil.user_id}
                 visao={visao}
-                aoSalvar={setAviso}
+                aoSalvar={notificar}
               />
             )}
           </div>
@@ -386,7 +377,7 @@ export default function PerfilA() {
                     if (modal === 'foto')
                       salvarFotoPerfil(perfil.user_id, valores.foto);
                     else salvarEnderecoPerfil(perfil.user_id, valores);
-                    setAviso(
+                    notificar(
                       modal === 'foto'
                         ? 'Foto do perfil atualizada.'
                         : 'Endereço do perfil atualizado.'
@@ -399,7 +390,7 @@ export default function PerfilA() {
           </DialogoCasa>
         )}
       </main>
-      <Rodape />
+      <Rodape variante='compacto' />
     </>
   );
 }

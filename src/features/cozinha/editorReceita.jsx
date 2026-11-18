@@ -1,3 +1,4 @@
+import { medidaProduto } from './catalogoProdutos';
 import { useState } from 'react';
 import { Plus, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -133,7 +134,9 @@ export default function EditorReceita({
                   <option key={produto.id} value={produto.id}>
                     {produto.nome}
                     {produto.marca ? ' (' + produto.marca + ')' : ''}
-                    {produto.unidade ? ' / ' + produto.unidade : ''}
+                    {produto.tamanho
+                      ? ` · ${produto.tamanho} ${produto.unidade || ''}`
+                      : ''}
                   </option>
                 ))}
               </select>
@@ -155,7 +158,9 @@ export default function EditorReceita({
               />
             </label>
             <label>
-              Quantidade
+              {item.produto_id
+                ? `Quantidade (${medidaProduto(produtos.find(produto => String(produto.id) === String(item.produto_id)))})`
+                : 'Quantidade'}
               <input
                 type='number'
                 inputMode='decimal'

@@ -1,7 +1,9 @@
-﻿import { useEffect, useRef, useState } from 'react';
+import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
+import { useEffect, useRef, useState } from 'react';
 import {
   ArrowUp,
   Check,
+  ChevronDown,
   Copy,
   House,
   ListChecks,
@@ -10,10 +12,19 @@ import {
   Plus,
   Sparkles,
   Store,
+  ShoppingBasket,
+  SprayCan,
+  Wallet,
+  X,
   Trash2,
   Truck,
 } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { useBancoMvp } from '../../app/dados/bancoMvp';
+import BotaoMenuLateral from '../../app/layouts/components/botaoMenuLateral';
+import useMenuLateral from '../../app/layouts/components/useMenuLateral';
+import { useRotinaBanco } from '../rotina/hooks/useRotinaBanco';
+import { areasCriacao, criarRegistro } from './criarRegistros';
 import './ia.css';
 
 const sugestoes = [
@@ -61,10 +72,22 @@ function responder(texto) {
   return 'Esta é uma demonstração com respostas prontas sobre o IAgora. Posso orientar sobre mudança, cuidados com a casa, rotina, finanças e divulgação de serviços.\n\nExperimente perguntar “Como montar uma rotina para a semana?” ou escolha um dos assuntos sugeridos em uma nova conversa.';
 }
 
+const iconesCriacao = {
+  rotina: ListChecks,
+  limpeza: SprayCan,
+  financas: Wallet,
+  compras: ShoppingBasket,
+};
+
 const conversasDaSessao = { itens: [], ativa: null };
 
 export default function InteligenciaArtificial() {
-  const rascunho = useLocation().state?.rascunho;
+  const { pathname, state } = useLocation();
+  const rascunho = state?.rascunho;
+  const aceitaCriacao = pathname === '/ia';
+  const dados = useBancoMvp();
+  const { despachar } = useRotinaBanco();
+  const notificar = useAvisoPerfilA();
   const textoInicial =
     typeof rascunho === 'string' ? rascunho.slice(0, 2000) : '';
   const [conversas, setConversas] = useState(() => conversasDaSessao.itens);
@@ -72,7 +95,22 @@ export default function InteligenciaArtificial() {
     textoInicial ? null : conversasDaSessao.ativa
   );
   const [texto, setTexto] = useState(textoInicial);
+  const [area, setArea] = useState(() =>
+    aceitaCriacao && Object.hasOwn(areasCriacao, state?.area)
+      ? state.area
+      : null
+  );
+  const [pedidoPendente, setPedidoPendente] = useState('');
+  const seletor = useRef(null);
+  const areaAtiva = area && areasCriacao[area];
+  const IconeArea = area && iconesCriacao[area];
   const [historicoAberto, setHistoricoAberto] = useState(false);
+  const {
+    automatico,
+    recolhido: menuRecolhido,
+    setRecolhidoManual,
+    interacoes,
+  } = useMenuLateral();
   const [copiada, setCopiada] = useState(null);
   const [erro, setErro] = useState('');
   const campo = useRef(null);
@@ -89,25 +127,54 @@ export default function InteligenciaArtificial() {
     fim.current?.scrollIntoView({ block: 'nearest', behavior: 'instant' });
   }, [conversas, ativa]);
 
+  function escolherArea(proxima) {
+    if (proxima !== area) setPedidoPendente('');
+    setArea(proxima);
+    if (seletor.current) seletor.current.open = false;
+    campo.current?.focus();
+  }
+
   function novaConversa() {
     setAtiva(null);
     setTexto('');
+    escolherArea(null);
     setErro('');
     setHistoricoAberto(false);
     campo.current?.focus();
   }
 
-  function enviar(pergunta = texto) {
+  function enviar(pergunta = texto, contexto = area) {
     const conteudo = pergunta.trim();
     if (!conteudo) return;
+    if (seletor.current) seletor.current.open = false;
     const id = ativa ?? crypto.randomUUID();
+    let resposta;
+    if (aceitaCriacao && contexto) {
+      const pedido = pedidoPendente
+        ? pedidoPendente + '\n' + conteudo
+        : conteudo;
+      try {
+        resposta = criarRegistro(contexto, pedido, dados, despachar);
+        if (resposta.pendente) setPedidoPendente(pedido.slice(0, 4000));
+        else escolherArea(null);
+      } catch (falha) {
+        resposta = {
+          texto:
+            falha.message ||
+            'Não foi possível criar o registro. Tente novamente.',
+        };
+      }
+    } else {
+      resposta = { texto: responder(conteudo) };
+    }
     const novasMensagens = [
-      { id: crypto.randomUUID(), papel: 'usuario', texto: conteudo },
       {
         id: crypto.randomUUID(),
-        papel: 'assistente',
-        texto: responder(conteudo),
+        papel: 'usuario',
+        texto: conteudo,
+        area: contexto,
       },
+      { id: crypto.randomUUID(), papel: 'assistente', ...resposta },
     ];
     setConversas(anteriores =>
       ativa
@@ -130,7 +197,8 @@ export default function InteligenciaArtificial() {
   async function copiar(mensagem) {
     try {
       await navigator.clipboard.writeText(mensagem.texto);
-      setCopiada(mensagem.id);
+      if (pathname === '/ia') notificar('Resposta copiada.');
+      else setCopiada(mensagem.id);
       setErro('');
     } catch {
       setErro(
@@ -140,11 +208,17 @@ export default function InteligenciaArtificial() {
   }
 
   return (
-    <main className='ia-pagina'>
+    <main
+      className={aceitaCriacao ? 'ia-pagina layout-menu-lateral' : 'ia-pagina'}
+      data-menu-recolhido={aceitaCriacao ? menuRecolhido : undefined}
+    >
       <div className='ia-barra-mobile'>
         <button
           type='button'
-          onClick={() => setHistoricoAberto(!historicoAberto)}
+          onClick={() => {
+            setHistoricoAberto(!historicoAberto);
+            setRecolhidoManual(false);
+          }}
           aria-expanded={historicoAberto}
           aria-controls='ia-historico'
         >
@@ -158,63 +232,87 @@ export default function InteligenciaArtificial() {
         id='ia-historico'
         className={`ia-historico ${historicoAberto ? 'ia-historico-aberto' : ''}`}
         aria-label='Histórico de conversas'
+        {...(aceitaCriacao ? interacoes : {})}
       >
-        <div className='ia-marca'>
-          <span className='ia-simbolo'>
-            <Sparkles size={22} />
-          </span>
-          <div>
-            <h1>IAgora IA</h1>
-            <p>Um passo de cada vez.</p>
-          </div>
-        </div>
-        <button className='ia-nova' type='button' onClick={novaConversa}>
-          <Plus size={18} /> Nova conversa
-        </button>
-        <h2>Suas conversas</h2>
-        <div className='ia-lista'>
-          {!conversas.length && (
-            <p className='ia-sem-historico'>
-              Sua primeira conversa começa ao lado. Vamos pensar juntos?
-            </p>
-          )}
-          {conversas.map(item => (
-            <div
-              className={`ia-conversa-item ${ativa === item.id ? 'ia-conversa-ativa' : ''}`}
-              key={item.id}
-            >
-              <button
-                type='button'
-                aria-current={ativa === item.id ? 'true' : undefined}
-                onClick={() => {
-                  setAtiva(item.id);
-                  setTexto('');
-                  setHistoricoAberto(false);
-                }}
-              >
-                <MessageCircle size={16} />
-                <span>{item.titulo}</span>
-              </button>
-              <button
-                type='button'
-                className='ia-excluir'
-                aria-label={`Excluir conversa: ${item.titulo}`}
-                onClick={() => {
-                  setConversas(anteriores =>
-                    anteriores.filter(c => c.id !== item.id)
-                  );
-                  if (ativa === item.id) novaConversa();
-                }}
-              >
-                <Trash2 size={15} />
-              </button>
+        <div className='ia-menu-topo'>
+          <div className='ia-marca menu-lateral-rotulo'>
+            <span className='ia-simbolo'>
+              <Sparkles size={22} />
+            </span>
+            <div>
+              <h1>IAgora IA</h1>
+              <p>Um passo de cada vez.</p>
             </div>
-          ))}
+          </div>
+          {aceitaCriacao && !automatico && (
+            <BotaoMenuLateral
+              expandido={!menuRecolhido}
+              aoAlternar={() => setRecolhidoManual(valor => !valor)}
+              controla='ia-conversas'
+            />
+          )}
         </div>
-        <p className='ia-nota-historico'>
-          As conversas ficam disponíveis enquanto esta página estiver aberta no
-          navegador.
-        </p>
+        <button
+          className='ia-nova'
+          type='button'
+          onClick={novaConversa}
+          aria-label='Nova conversa'
+          title={menuRecolhido ? 'Nova conversa' : undefined}
+        >
+          <Plus size={18} aria-hidden='true' />
+          <span className='menu-lateral-rotulo'>Nova conversa</span>
+        </button>
+        <div
+          className='ia-conversas menu-lateral-detalhe'
+          id='ia-conversas'
+          inert={aceitaCriacao && menuRecolhido}
+        >
+          <h2>Suas conversas</h2>
+          <div className='ia-lista'>
+            {!conversas.length && (
+              <p className='ia-sem-historico'>
+                Sua primeira conversa começa ao lado. Vamos pensar juntos?
+              </p>
+            )}
+            {conversas.map(item => (
+              <div
+                className={`ia-conversa-item ${ativa === item.id ? 'ia-conversa-ativa' : ''}`}
+                key={item.id}
+              >
+                <button
+                  type='button'
+                  aria-current={ativa === item.id ? 'true' : undefined}
+                  onClick={() => {
+                    setAtiva(item.id);
+                    setTexto('');
+                    escolherArea(null);
+                    setHistoricoAberto(false);
+                  }}
+                >
+                  <MessageCircle size={16} />
+                  <span>{item.titulo}</span>
+                </button>
+                <button
+                  type='button'
+                  className='ia-excluir'
+                  aria-label={`Excluir conversa: ${item.titulo}`}
+                  onClick={() => {
+                    setConversas(anteriores =>
+                      anteriores.filter(c => c.id !== item.id)
+                    );
+                    if (ativa === item.id) novaConversa();
+                  }}
+                >
+                  <Trash2 size={15} />
+                </button>
+              </div>
+            ))}
+          </div>
+          <p className='ia-nota-historico'>
+            As conversas ficam disponíveis enquanto esta página estiver aberta
+            no navegador.
+          </p>
+        </div>
       </aside>
       <section className='ia-espaco' aria-label='Chat com IAgora IA'>
         <header className='ia-topo'>
@@ -239,7 +337,7 @@ export default function InteligenciaArtificial() {
                   <button
                     type='button'
                     key={titulo}
-                    onClick={() => enviar(sugestao)}
+                    onClick={() => enviar(sugestao, null)}
                   >
                     <Icone size={21} strokeWidth={1.7} />
                     <strong>{titulo}</strong>
@@ -267,7 +365,17 @@ export default function InteligenciaArtificial() {
                       {mensagem.papel === 'usuario' ? 'Você' : 'IAgora IA'}
                     </strong>
                   </div>
+                  {mensagem.area && (
+                    <span className='ia-mensagem-area'>
+                      Criar · {areasCriacao[mensagem.area].nome}
+                    </span>
+                  )}
                   <p>{mensagem.texto}</p>
+                  {mensagem.rota && (
+                    <Link className='ia-ver-registro' to={mensagem.rota}>
+                      Ver registro
+                    </Link>
+                  )}
                   {mensagem.papel === 'assistente' && (
                     <button
                       className='ia-copiar'
@@ -302,6 +410,19 @@ export default function InteligenciaArtificial() {
               enviar();
             }}
           >
+            {areaAtiva && (
+              <div className='ia-anexo'>
+                <IconeArea size={16} aria-hidden='true' />
+                <span>{areaAtiva.nome}</span>
+                <button
+                  type='button'
+                  aria-label={'Remover anexo ' + areaAtiva.nome}
+                  onClick={() => escolherArea(null)}
+                >
+                  <X size={15} aria-hidden='true' />
+                </button>
+              </div>
+            )}
             <label className='ia-sr-only' htmlFor='ia-mensagem'>
               Sua mensagem para a IAgora IA
             </label>
@@ -311,7 +432,14 @@ export default function InteligenciaArtificial() {
               rows={2}
               maxLength={2000}
               value={texto}
-              placeholder='Conte o que você precisa resolver…'
+              placeholder={
+                pedidoPendente
+                  ? 'Complete os dados do registro…'
+                  : (areaAtiva?.exemplo ?? 'Conte o que você precisa resolver…')
+              }
+              onFocus={() => {
+                if (seletor.current) seletor.current.open = false;
+              }}
               onChange={evento => setTexto(evento.target.value)}
               onKeyDown={evento => {
                 if (
@@ -325,9 +453,45 @@ export default function InteligenciaArtificial() {
               }}
             />
             <div className='ia-compositor-acoes'>
-              <span>Vamos por partes, juntos.</span>
+              {aceitaCriacao ? (
+                <details
+                  ref={seletor}
+                  className='ia-criar'
+                  onKeyDown={evento => {
+                    if (evento.key === 'Escape' && evento.currentTarget.open) {
+                      evento.preventDefault();
+                      evento.currentTarget.open = false;
+                      evento.currentTarget.querySelector('summary').focus();
+                    }
+                  }}
+                >
+                  <summary>
+                    <Plus size={17} aria-hidden='true' /> Criar{' '}
+                    <ChevronDown size={14} aria-hidden='true' />
+                  </summary>
+                  <ul aria-label='Áreas para criar registros'>
+                    {Object.entries(areasCriacao).map(([id, item]) => {
+                      const Icone = iconesCriacao[id];
+                      return (
+                        <li key={id}>
+                          <button
+                            type='button'
+                            aria-pressed={area === id}
+                            onClick={() => escolherArea(id)}
+                          >
+                            <Icone size={17} aria-hidden='true' /> {item.nome}
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </details>
+              ) : (
+                <span>Vamos por partes, juntos.</span>
+              )}
               <button
                 type='submit'
+                className='ia-enviar'
                 disabled={!texto.trim()}
                 aria-label='Enviar mensagem'
               >
@@ -336,8 +500,9 @@ export default function InteligenciaArtificial() {
             </div>
           </form>
           <p className='ia-aviso'>
-            Demonstração com respostas prontas, sem conexão com uma IA. Enter
-            envia; Shift + Enter quebra a linha.
+            {aceitaCriacao
+              ? 'Demonstração local. O modo Criar interpreta pedidos por regras e salva no banco de teste.'
+              : 'Demonstração com respostas prontas, sem conexão com uma IA.'}
           </p>
         </div>
       </section>

@@ -1,4 +1,5 @@
-import { useCallback, useLayoutEffect, useState } from 'react';
+import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
+import { useLayoutEffect, useState } from 'react';
 import {
   Navigate,
   useLocation,
@@ -21,9 +22,7 @@ import {
   DialogoExcluirTarefa,
   VisaoHistorico,
   SeletorMes,
-  DialogoResultado,
   ModalRotina,
-  AvisoFlutuanteRotina,
   EspacoTrabalhoRotina,
   DetalheTarefa,
   FormularioTarefa,
@@ -34,7 +33,7 @@ import { useAlturaDisponivel } from './hooks/useAvailableHeight';
 import { useLembretes } from './hooks/useReminders';
 import { useRotinaBanco } from './hooks/useRotinaBanco';
 import GestaoRotina from './rotinaA';
-import { diasCalendario, intervaloMes } from './utils/dates';
+import { analisarData, diasCalendario, intervaloMes } from './utils/dates';
 import { criarId } from './utils/tasks';
 import classesRotina from './routineClasses';
 
@@ -89,7 +88,9 @@ export default function Rotina() {
       : visoesRotina.includes(visaoSolicitada)
         ? visaoSolicitada
         : 'geral';
-  const [mes, setMes] = useState(() => new Date());
+  const [mes, setMes] = useState(
+    () => analisarData(parametrosBusca.get('data')) ?? new Date()
+  );
   const [mostrarTudo, setMostrarTudo] = useState(false);
   const [modais, setModais] = useState([]);
   const [chaveNavegacao, setChaveNavegacao] = useState(localizacao.key);
@@ -103,13 +104,8 @@ export default function Rotina() {
   const espaco = modais[indiceEspaco];
   const chaveEspaco = espaco?.key;
   const dialogos = modais.slice(indiceEspaco + 1);
-  const [aviso, setAviso] = useState(null);
+  const notificar = useAvisoPerfilA();
   const referencia = useAlturaDisponivel();
-  const dispensarAviso = useCallback(() => setAviso(null), []);
-  const notificar = useCallback(
-    (mensagem, acao) => setAviso({ mensagem, acao }),
-    []
-  );
   useLembretes(ocorrencias, notificar);
 
   useLayoutEffect(() => {
@@ -136,14 +132,8 @@ export default function Rotina() {
     setModais(anterior => anterior.slice(0, -1));
   }
   function resultado(titulo, descricao) {
-    setModais([
-      {
-        type: 'resultado',
-        title: titulo,
-        description: descricao,
-        key: criarId(),
-      },
-    ]);
+    fechar();
+    notificar(`${titulo} ${descricao}`);
   }
 
   function resolverTarefa(tarefa) {
@@ -176,7 +166,6 @@ export default function Rotina() {
     } else {
       notificar('Mais uma tarefa feita.', () => {
         despachar({ type: 'undo', id: ocorrencia.occurrenceId });
-        dispensarAviso();
       });
     }
   }
@@ -309,20 +298,12 @@ export default function Rotina() {
         />
       );
     }
-    return (
-      <DialogoResultado
-        {...comuns}
-        titulo={entrada.title}
-        descricao={entrada.description}
-        aoContinuar={fechar}
-      />
-    );
+    return null;
   }
 
   const modalAtivo = dialogos.at(-1);
   const largo =
-    modalAtivo &&
-    ['reagendar', 'lembrete', 'repeticao'].includes(modalAtivo.type);
+    modalAtivo && ['reagendar', 'repeticao'].includes(modalAtivo.type);
   const { inicio: inicioCalendario, fim: fimCalendario } = intervaloMes(mes);
 
   if (visaoSolicitada === 'assistente') return <Navigate to='/ia' replace />;
@@ -369,13 +350,15 @@ export default function Rotina() {
             )}
             {visao === 'lista' && (
               <VisaoListaTarefas
-                tarefas={tarefasCalendario}
+                tarefas={ocorrencias}
                 mes={mes}
                 mostrarTudo={mostrarTudo}
                 aoMostrarTudo={setMostrarTudo}
                 aoEscolherMes={() => abrir('mes')}
                 aoCriar={dia => abrir('criar', undefined, { day: dia })}
                 aoAbrir={tarefa => abrir('detalhe', tarefa)}
+                aoConcluir={concluir}
+                aoReagendar={tarefa => abrir('reagendar', tarefa)}
               />
             )}
             {visao === 'historico' && (
@@ -442,9 +425,6 @@ export default function Rotina() {
               </div>
             ))}
           </ModalRotina>
-        )}
-        {aviso && (
-          <AvisoFlutuanteRotina aviso={aviso} aoDispensar={dispensarAviso} />
         )}
       </main>
     </LayoutCasa>

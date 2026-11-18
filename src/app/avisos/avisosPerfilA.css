@@ -1,0 +1,50 @@
+.aviso-perfil-a {
+  position: fixed;
+  z-index: 100;
+  top: clamp(80px, 10dvh, 104px);
+  right: clamp(12px, 4vw, 36px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: min(420px, calc(100vw - 24px));
+  padding: 5px 5px 5px 13px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 10px;
+  background: var(--azul-titulo);
+  color: white;
+  box-shadow: 0 6px 20px #102a4326;
+  font-family: var(--font-corpo);
+  font-size: 0.875rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.aviso-perfil-a p {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.aviso-perfil-a svg {
+  flex-shrink: 0;
+}
+.aviso-perfil-a button {
+  min-height: 44px;
+  flex-shrink: 0;
+  padding-inline: 7px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.aviso-perfil-a button:hover {
+  background: var(--azul-profundo);
+}
+.aviso-perfil-a button:focus-visible {
+  outline: 2px solid white;
+  outline-offset: -2px;
+}
+.aviso-perfil-a-fechar {
+  display: grid;
+  width: 44px;
+  place-items: center;
+}
+.aviso-perfil-a-acao {
+  color: var(--pessego-suave);
+}

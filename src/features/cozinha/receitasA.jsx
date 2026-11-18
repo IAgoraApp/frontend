@@ -1,3 +1,4 @@
+import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import {
@@ -21,6 +22,7 @@ import {
   criarListaDaReceita,
   ingredientesNaDespensa,
 } from './ingredientesEstoque';
+import { DialogoCasa } from '../casa/components/casaUi';
 import EditorReceita from './editorReceita';
 import {
   fotoReceita,
@@ -180,6 +182,7 @@ function Detalhe({
   aoFavoritar,
   aoPlanejar,
   aoExcluir,
+  erro,
 }) {
   const [confirmar, setConfirmar] = useState(false);
   const passos = receita.preparo
@@ -338,34 +341,43 @@ function Detalhe({
         </div>
         {propria && (
           <div className='receitas-exclusao'>
-            {confirmar ? (
-              <>
-                <p>Excluir esta receita e seus ingredientes?</p>
-                <button
-                  type='button'
-                  className='receitas-botao receitas-perigo'
-                  onClick={aoExcluir}
-                >
-                  Confirmar exclusão
-                </button>
-                <button
-                  type='button'
-                  className='receitas-botao'
-                  onClick={() => setConfirmar(false)}
-                >
-                  Cancelar
-                </button>
-              </>
-            ) : (
+            <button
+              type='button'
+              className='receitas-acao-texto receitas-perigo'
+              onClick={() => setConfirmar(true)}
+            >
+              <Trash2 size={17} aria-hidden='true' /> Excluir receita
+            </button>
+          </div>
+        )}
+        {confirmar && (
+          <DialogoCasa
+            titulo='Excluir receita?'
+            aoFechar={() => setConfirmar(false)}
+          >
+            <p>A receita e seus ingredientes serão removidos.</p>
+            <div className='receitas-acoes mt-4 justify-end'>
               <button
                 type='button'
-                className='receitas-acao-texto receitas-perigo'
-                onClick={() => setConfirmar(true)}
+                className='receitas-botao'
+                onClick={() => setConfirmar(false)}
               >
-                <Trash2 size={17} aria-hidden='true' /> Excluir receita
+                Manter receita
               </button>
+              <button
+                type='button'
+                className='receitas-botao receitas-perigo'
+                onClick={aoExcluir}
+              >
+                Confirmar exclusão
+              </button>
+            </div>
+            {erro && (
+              <p role='alert' className='receitas-erro mt-3'>
+                {erro}
+              </p>
             )}
-          </div>
+          </DialogoCasa>
         )}
       </div>
     </article>
@@ -380,7 +392,7 @@ export default function ReceitasA({ banco, casaId, usuario }) {
   const [pagina, setPagina] = useState(1);
   const tamanhoPagina = useSyncExternalStore(inscreverGrade, receitasPorPagina);
   const [erro, setErro] = useState('');
-  const [aviso, setAviso] = useState('');
+  const notificar = useAvisoPerfilA();
   const topo = useRef(null);
   const visaoAtual = params.get('visao');
   const aba = params.has('favoritas') ? 'favoritas' : params.get('aba');
@@ -437,9 +449,8 @@ export default function ReceitasA({ banco, casaId, usuario }) {
     try {
       acao();
       setErro('');
-      setAviso(mensagem);
+      notificar(mensagem);
     } catch (falha) {
-      setAviso('');
       setErro(falha.message);
     }
   }
@@ -476,9 +487,6 @@ export default function ReceitasA({ banco, casaId, usuario }) {
         ref={topo}
         tabIndex={-1}
       >
-        <p className='sr-only' role='status'>
-          {aviso}
-        </p>
         {erro && (
           <p className='receitas-erro' role='alert'>
             {erro}
@@ -495,7 +503,7 @@ export default function ReceitasA({ banco, casaId, usuario }) {
             usuario={usuario}
             voltar={caminho(visao, editada ? { receita: editada.id } : {})}
             aoSalvar={receitaId => {
-              setAviso('Receita salva.');
+              notificar('Receita salva.');
               setParams({ visao: 'minhas', receita: receitaId });
             }}
           />
@@ -520,6 +528,7 @@ export default function ReceitasA({ banco, casaId, usuario }) {
             preparo={plano.get(receita.id)}
             aoFavoritar={() => favoritar(receita)}
             aoPlanejar={status => planejar(receita, status)}
+            erro={erro}
             aoExcluir={() =>
               executar(() => {
                 removerRegistro('receitas', receita.id);

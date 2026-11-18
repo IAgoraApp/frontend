@@ -43,3 +43,149 @@
     grid-template-columns: 1fr;
   }
 }
+
+.perfil-momento {
+  display: grid;
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--borda-suave);
+  border-radius: 16px;
+  background: white;
+}
+.perfil-momento-foto {
+  position: relative;
+  min-height: 0;
+  background: var(--azul-fundo);
+}
+.perfil-momento-foto img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 40%;
+}
+.perfil-momento-form {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  padding: clamp(14px, 2.6vw, 28px);
+  overflow-wrap: anywhere;
+}
+.perfil-momento-titulo {
+  font-family: var(--font-titulo);
+  font-size: clamp(1.35rem, 2.2vw, 1.75rem);
+  font-weight: 800;
+  line-height: 1.15;
+}
+.perfil-momento-form header p {
+  margin-top: 5px;
+  color: var(--texto-apoio);
+  font-size: 0.875rem;
+}
+.perfil-momento-opcoes {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.perfil-momento-opcao {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+.perfil-momento-opcao-corpo {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  min-height: 62px;
+  padding: 9px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 9px;
+}
+.perfil-momento-opcao:hover .perfil-momento-opcao-corpo {
+  background: var(--azul-fundo);
+}
+.perfil-momento-opcao input:checked + .perfil-momento-opcao-corpo {
+  border-color: var(--laranja-principal);
+  background: color-mix(in srgb, var(--laranja-fundo) 48%, white);
+}
+.perfil-momento-opcao input:focus-visible + .perfil-momento-opcao-corpo {
+  outline: 2px solid var(--azul-principal);
+  outline-offset: 2px;
+}
+.perfil-momento-icone,
+.perfil-momento-indicador {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.perfil-momento-icone {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--azul-fundo);
+  color: var(--azul-principal);
+}
+.perfil-momento-opcao-texto {
+  display: grid;
+  gap: 2px;
+  font-size: 0.875rem;
+}
+.perfil-momento-opcao-texto > span {
+  color: var(--texto-apoio);
+  font-size: 0.8rem;
+}
+.perfil-momento-opcao-texto small {
+  color: var(--azul-titulo);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+.perfil-momento-indicador {
+  width: 19px;
+  height: 19px;
+  border: 1px solid var(--texto-apoio);
+  border-radius: 50%;
+}
+.perfil-momento-opcao input:checked + span .perfil-momento-indicador {
+  border-color: var(--azul-titulo);
+  background: var(--azul-titulo);
+  color: white;
+}
+.perfil-momento-acoes {
+  display: flex;
+  min-height: 48px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 7px;
+}
+.perfil-momento-destino {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 48px;
+  margin-right: auto;
+  color: var(--azul-principal);
+  font-size: 0.875rem;
+  font-weight: 750;
+}
+.perfil-momento-destino:hover {
+  text-decoration: underline;
+}
+.perfil-momento-destino:focus-visible {
+  outline: 2px solid var(--azul-principal);
+  outline-offset: 2px;
+}
+.perfil-momento-erro {
+  color: var(--vermelho-alerta);
+  font-size: 0.85rem;
+}
+@media (max-width: 620px) {
+  .perfil-momento {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .perfil-momento-foto {
+    height: clamp(96px, 24vw, 130px);
+  }
+}

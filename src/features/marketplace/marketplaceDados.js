@@ -41,10 +41,10 @@ export function servicoPublico(servico, empresa, agora = Date.now()) {
 }
 
 export const statusContratacao = {
-  pendente: 'Pendente',
-  aceito: 'Aceita',
+  pendente: 'Em negociação',
+  aceito: 'Marcado',
   em_andamento: 'Em andamento',
-  concluido: 'Concluída',
-  cancelado: 'Cancelada',
-  recusado: 'Recusada',
+  concluido: 'Concluído',
+  cancelado: 'Encerrado',
+  recusado: 'Encerrado',
 };

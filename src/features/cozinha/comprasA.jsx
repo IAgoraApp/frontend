@@ -1,9 +1,9 @@
+import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import {
   ArrowLeft,
   ArrowUpRight,
-  Check,
   Pencil,
   Plus,
   ShoppingBasket,
@@ -22,6 +22,7 @@ const camposLista = [{ nome: 'nome', rotulo: 'Nome da lista' }];
 
 export default function ComprasA({ banco, casaId }) {
   const [params, setParams] = useSearchParams();
+  const notificar = useAvisoPerfilA();
   const [editor, setEditor] = useState(null);
   const [erro, setErro] = useState('');
   const listas = banco.compras.filter(item => item.casa_id === casaId);
@@ -31,19 +32,33 @@ export default function ComprasA({ banco, casaId }) {
   const nomeItem = item =>
     item.nome_item || produtos.get(item.produto_id)?.nome || 'Item sem nome';
   const feitos = itens.filter(item => item.comprado).length;
+  const progresso = itens.length
+    ? Math.round((feitos / itens.length) * 100)
+    : 0;
+  const campoProduto = {
+    nome: 'produto_id',
+    rotulo: 'Produto do catálogo',
+    numero: true,
+    opcoes: banco.produto.map(p => [
+      p.id,
+      p.marca ? `${p.nome} / ${p.marca}` : p.nome,
+    ]),
+  };
+  const campoQuantidade = {
+    nome: 'quantidade',
+    rotulo: 'Quantidade',
+    tipo: 'number',
+    min: 1,
+  };
   const camposItem = [
-    { nome: 'nome_item', rotulo: 'Nome do item', obrigatorio: false },
     {
-      nome: 'produto_id',
-      rotulo: 'Produto do catálogo',
+      nome: 'nome_item',
+      rotulo: 'Nome do item',
       obrigatorio: false,
-      numero: true,
-      opcoes: banco.produto.map(p => [
-        p.id,
-        p.marca ? `${p.nome} / ${p.marca}` : p.nome,
-      ]),
+      limite: 150,
     },
-    { nome: 'quantidade', rotulo: 'Quantidade', tipo: 'number', min: 1 },
+    { ...campoProduto, obrigatorio: false },
+    campoQuantidade,
   ];
 
   function salvarLista(valores) {
@@ -66,6 +81,7 @@ export default function ComprasA({ banco, casaId }) {
       }
     });
     setParams({ visao: 'compras', lista: id });
+    notificar(valores.id ? 'Lista atualizada.' : 'Lista criada.');
   }
 
   function salvarItem(valores) {
@@ -80,6 +96,11 @@ export default function ComprasA({ banco, casaId }) {
         throw new Error('Informe o nome ou escolha um produto do catálogo.');
       if (valores.nome_item?.length > 150)
         throw new Error('Use até 150 caracteres no nome do item.');
+      if (
+        valores.produto_id &&
+        !db.produto.some(p => p.id === valores.produto_id)
+      )
+        throw new Error('Escolha um produto disponível no catálogo.');
       if (
         !Number.isInteger(valores.quantidade) ||
         valores.quantidade < 1 ||
@@ -102,6 +123,7 @@ export default function ComprasA({ banco, casaId }) {
         inserir('compra_item', { ...dados, comprado: false }, db);
       }
     });
+    notificar(valores.id ? 'Item atualizado.' : 'Item adicionado à lista.');
   }
 
   function executar(acao) {
@@ -137,6 +159,7 @@ export default function ComprasA({ banco, casaId }) {
       );
     });
     setParams({ visao: 'compras' });
+    notificar('Lista excluída.');
   }
 
   return (
@@ -153,7 +176,7 @@ export default function ComprasA({ banco, casaId }) {
             <p>
               {lista
                 ? `Criada em ${dataCurta(lista.criacao)}`
-                : 'Separe as compras por ocasião e marque os itens conforme for comprando.'}
+                : 'Organize suas compras por ocasião.'}
             </p>
           </div>
           <button
@@ -180,38 +203,56 @@ export default function ComprasA({ banco, casaId }) {
             aria-label='Checklist da lista'
           >
             <div className='compras-checklist-resumo'>
-              <div>
+              <div className='compras-progresso-texto'>
                 <strong>
                   {feitos} de {itens.length} comprados
                 </strong>
-                <progress
-                  aria-label='Itens comprados'
-                  value={feitos}
-                  max={itens.length || 1}
-                />
+                <span>{progresso}%</span>
               </div>
+              <progress
+                aria-label='Itens comprados'
+                value={feitos}
+                max={itens.length || 1}
+              />
             </div>
             <div className='compras-checklist-formas'>
               <form
                 onSubmit={evento => {
                   evento.preventDefault();
                   const form = evento.currentTarget;
-                  const nome = new FormData(form).get('item').trim();
+                  const dados = new FormData(form);
                   if (
                     executar(() =>
-                      salvarItem({ nome_item: nome, quantidade: 1 })
+                      salvarItem({
+                        nome_item: dados.get('item').trim(),
+                        quantidade: Number(dados.get('quantidade')),
+                      })
                     )
                   )
                     form.reset();
                 }}
               >
-                <input
-                  name='item'
-                  aria-label='Nome do novo item'
-                  placeholder='Ex.: tomate'
-                  required
-                  maxLength={150}
-                />
+                <label className='compras-produto-personalizado'>
+                  Produto personalizado
+                  <input
+                    name='item'
+                    placeholder='Ex.: granola caseira'
+                    required
+                    maxLength={150}
+                  />
+                </label>
+                <label className='compras-produto-quantidade'>
+                  Quantidade
+                  <input
+                    name='quantidade'
+                    type='number'
+                    min='1'
+                    max='2147483647'
+                    step='1'
+                    defaultValue='1'
+                    required
+                  />
+                </label>
                 <button className='mvp-primario' type='submit'>
                   <Plus size={17} aria-hidden='true' /> Adicionar
                 </button>
@@ -220,10 +261,10 @@ export default function ComprasA({ banco, casaId }) {
                 className='cozinha-botao'
                 type='button'
                 onClick={() =>
-                  setEditor({ tipo: 'item', valores: { quantidade: 1 } })
+                  setEditor({ tipo: 'catalogo', valores: { quantidade: 1 } })
                 }
               >
-                Adicionar com detalhes
+                Escolher do catálogo
               </button>
             </div>
             {itens.length ? (
@@ -238,13 +279,11 @@ export default function ComprasA({ banco, casaId }) {
                           alternar(item, evento.target.checked)
                         }
                       />
-                      <span>
-                        <strong>{nomeItem(item)}</strong>
-                        <small>
-                          {item.quantidade}{' '}
-                          {item.quantidade === 1 ? 'unidade' : 'unidades'}
-                        </small>
-                      </span>
+                      <strong>{nomeItem(item)}</strong>
+                      <small>
+                        {item.quantidade}{' '}
+                        {item.quantidade === 1 ? 'unidade' : 'unidades'}
+                      </small>
                     </label>
                     <button
                       type='button'
@@ -274,7 +313,6 @@ export default function ComprasA({ banco, casaId }) {
                   const linhas = banco.compra_item.filter(
                     item => item.compras_id === registro.id
                   );
-                  const comprados = linhas.filter(item => item.comprado).length;
                   return (
                     <li key={registro.id}>
                       <Link
@@ -293,40 +331,26 @@ export default function ComprasA({ banco, casaId }) {
                             <ArrowUpRight size={18} />
                           </span>
                         </div>
-                        <ul className='compras-previa'>
-                          {linhas.slice(0, 3).map(item => (
-                            <li key={item.id} data-comprado={item.comprado}>
-                              <span aria-hidden='true'>
-                                {item.comprado && <Check size={13} />}
-                              </span>
-                              {nomeItem(item)}
-                            </li>
-                          ))}
-                          {linhas.length > 3 && (
-                            <li>
-                              Mais {linhas.length - 3}{' '}
-                              {linhas.length === 4 ? 'item' : 'itens'}
-                            </li>
-                          )}
-                          {!linhas.length && <li>Lista vazia</li>}
-                        </ul>
-                        <div className='compras-cartao-rodape'>
-                          <span>
-                            {linhas.length
-                              ? `${comprados} de ${linhas.length} comprados`
-                              : '0 itens'}
-                          </span>
-                          <span
-                            className='compras-cartao-progresso'
-                            aria-hidden='true'
+                        {linhas.length ? (
+                          <ul
+                            className='compras-previa'
+                            aria-label='Itens da lista'
                           >
-                            <span
-                              style={{
-                                width: `${linhas.length ? (comprados / linhas.length) * 100 : 0}%`,
-                              }}
-                            />
-                          </span>
-                        </div>
+                            {linhas.slice(0, 2).map(item => (
+                              <li key={item.id}>
+                                <span>{nomeItem(item)}</span>
+                              </li>
+                            ))}
+                            {linhas.length > 2 && (
+                              <li className='compras-previa-mais'>
+                                +{linhas.length - 2}{' '}
+                                {linhas.length === 3 ? 'item' : 'itens'}
+                              </li>
+                            )}
+                          </ul>
+                        ) : (
+                          <p className='compras-previa-vazia'>Lista vazia</p>
+                        )}
                       </Link>
                     </li>
                   );
@@ -349,22 +373,32 @@ export default function ComprasA({ banco, casaId }) {
             aoFechar={() => setEditor(null)}
           />
         )}
-        {editor?.tipo === 'item' && lista && (
+        {['item', 'catalogo'].includes(editor?.tipo) && lista && (
           <EditorCozinha
-            titulo={editor.valores.id ? 'Editar item' : 'Adicionar item'}
+            titulo={
+              editor.tipo === 'catalogo'
+                ? 'Escolher do catálogo'
+                : 'Editar item'
+            }
             inicial={editor.valores}
-            campos={camposItem}
+            campos={
+              editor.tipo === 'catalogo'
+                ? [campoProduto, campoQuantidade]
+                : camposItem
+            }
             aoSalvar={salvarItem}
             aoExcluir={
               editor.valores.id
-                ? () =>
+                ? () => {
                     alterarBancoCompras(db => {
                       db.compra_item = db.compra_item.filter(
                         item =>
                           item.id !== editor.valores.id ||
                           item.compras_id !== lista.id
                       );
-                    })
+                    });
+                    notificar('Item removido da lista.');
+                  }
                 : undefined
             }
             aoFechar={() => setEditor(null)}

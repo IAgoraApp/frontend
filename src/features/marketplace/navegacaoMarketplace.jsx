@@ -1,4 +1,4 @@
-import { Heart, MessageCircle } from 'lucide-react';
+import { ClipboardList, Heart, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function NavegacaoMarketplace({ ativa }) {
@@ -20,7 +20,13 @@ export default function NavegacaoMarketplace({ ativa }) {
         to='/meus-contatos'
         aria-current={ativa === 'contatos' ? 'page' : undefined}
       >
-        <MessageCircle size={16} aria-hidden='true' /> Serviços e conversas
+        <MessageCircle size={16} aria-hidden='true' /> Conversas
+      </Link>
+      <Link
+        to='/servicos-contratados'
+        aria-current={ativa === 'servicos' ? 'page' : undefined}
+      >
+        <ClipboardList size={16} aria-hidden='true' /> Meus serviços
       </Link>
     </nav>
   );

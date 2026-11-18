@@ -1,16 +1,14 @@
 import { useState } from 'react';
 import {
-  ArrowLeft,
   ArrowUpRight,
   Building2,
   Heart,
   MapPin,
-  MessageCircle,
   Search,
   SlidersHorizontal,
   Star,
 } from 'lucide-react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import {
   nomeCategoria,
   normalizarBusca,
@@ -21,6 +19,7 @@ import fotoLimpeza from '../casa/assets/servicos-joao-limpeza.jpg';
 import { fotosMercado } from './content';
 import { PerfilEmpresaMarketplace } from './empresaMarketplace';
 import NavegacaoMarketplace from './navegacaoMarketplace';
+import VoltarMarketplace from './voltarMarketplace';
 
 const chaveFavoritos = 'iagora:marketplace-a:favoritos:v1';
 
@@ -86,9 +85,9 @@ export default function CatalogoMarketplaceA({
   slug,
   pathname,
   dentroDaEmpresa,
-  aoConversar,
   erroChat,
 }) {
+  const localizacao = useLocation();
   const [params, setParams] = useSearchParams();
   const [favoritos, setFavoritos] = useState(() => lerFavoritos(usuario));
   const [erro, setErro] = useState('');
@@ -160,47 +159,32 @@ export default function CatalogoMarketplaceA({
   return (
     <PaginaMvp cabecalho={false}>
       <div className='mercado-a'>
-        <header className='mercado-a-cabecalho'>
-          <div>
-            {ehEmpresa && (
-              <Link className='mercado-a-voltar' to='/marketplace'>
-                <ArrowLeft size={16} aria-hidden='true' /> Catálogo
-              </Link>
-            )}
+        {empresa ? (
+          <>
+            <VoltarMarketplace />
+            <PerfilEmpresaMarketplace key={empresa.id} empresa={empresa} />
+          </>
+        ) : (
+          <header className='mercado-a-cabecalho'>
             <h1>
-              {empresa?.nome ||
-                (ehFavoritos ? 'Serviços favoritos' : 'Empresas e serviços')}
+              {ehFavoritos ? 'Serviços favoritos' : 'Empresas e serviços'}
             </h1>
-            {empresa?.descricao && <p>{empresa.descricao}</p>}
-            {empresa?.local_atendimento?.length > 0 && (
-              <p className='mercado-a-local'>
-                <MapPin size={16} aria-hidden='true' />{' '}
-                {empresa.local_atendimento.join(', ')}
-              </p>
+            {dentroDaEmpresa ? (
+              <Link to='/empresa/anunciar' className='mvp-primario'>
+                Anunciar serviço
+              </Link>
+            ) : (
+              <NavegacaoMarketplace
+                ativa={ehFavoritos ? 'favoritos' : 'catalogo'}
+              />
             )}
-          </div>
-          {dentroDaEmpresa ? (
-            <Link to='/empresa/anunciar' className='mvp-primario'>
-              Anunciar serviço
-            </Link>
-          ) : empresa ? (
-            <button
-              type='button'
-              className='mvp-primario'
-              onClick={() => aoConversar(empresa.id)}
-            >
-              <MessageCircle size={17} aria-hidden='true' /> Falar com a empresa
-            </button>
-          ) : (
-            <NavegacaoMarketplace
-              ativa={ehFavoritos ? 'favoritos' : 'catalogo'}
-            />
-          )}
-        </header>
-        {empresa && (
-          <PerfilEmpresaMarketplace key={empresa.id} empresa={empresa} />
+          </header>
         )}
-        <div className={ehEmpresa ? undefined : 'mercado-a-diretorio'}>
+        <div
+          className={
+            ehEmpresa ? 'mercado-a-ofertas-empresa' : 'mercado-a-diretorio'
+          }
+        >
           {!ehEmpresa && (
             <aside
               className='mercado-a-filtros'
@@ -332,6 +316,19 @@ export default function CatalogoMarketplaceA({
                             <Link
                               className='mercado-a-cartao-link'
                               to={`/servicos/${s.id}`}
+                              state={{
+                                retorno: {
+                                  url: pathname + localizacao.search,
+                                  rotulo: ehEmpresa
+                                    ? 'Voltar ao perfil da empresa'
+                                    : ehFavoritos
+                                      ? 'Voltar aos favoritos'
+                                      : 'Voltar ao catálogo',
+                                  estado: ehEmpresa
+                                    ? localizacao.state
+                                    : undefined,
+                                },
+                              }}
                             >
                               {s.titulo}
                             </Link>
@@ -346,6 +343,14 @@ export default function CatalogoMarketplaceA({
                           <Link
                             className='mercado-a-empresa'
                             to={`/empresas/${perfil.id}`}
+                            state={{
+                              retorno: {
+                                url: pathname + localizacao.search,
+                                rotulo: ehFavoritos
+                                  ? 'Voltar aos favoritos'
+                                  : 'Voltar ao catálogo',
+                              },
+                            }}
                           >
                             <Building2 size={15} aria-hidden='true' />{' '}
                             {perfil.nome}

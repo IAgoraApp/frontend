@@ -1,3 +1,4 @@
+import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import {
@@ -9,14 +10,19 @@ import {
 } from 'lucide-react';
 import {
   alterarBancoMarketplace,
-  hoje,
   inserir,
   moeda,
 } from '../../app/dados/bancoMvp';
 import { EditorMvp, PaginaMvp, VazioMvp } from '../../shared/ui/mvp';
 import DialogoMarketplace from './dialogoMarketplace';
+import AcordoServico from './acordoServico';
 import NavegacaoMarketplace from './navegacaoMarketplace';
 import { statusContratacao } from './marketplaceDados';
+import {
+  chatDaContratacao,
+  chatLiberado,
+  resumoEndereco,
+} from './contratacoes';
 
 const camposAvaliacao = [
   {
@@ -32,17 +38,8 @@ const camposAvaliacao = [
     obrigatorio: false,
   },
 ];
-const camposSolicitacao = [
-  { nome: 'descricao', rotulo: 'Descrição', tipo: 'textarea' },
-  {
-    nome: 'data_agendamento',
-    rotulo: 'Data desejada',
-    tipo: 'datetime-local',
-    obrigatorio: false,
-  },
-];
-
 export default function ContatosMarketplaceA({
+  ehMeusServicos,
   banco,
   perfil,
   id,
@@ -51,18 +48,26 @@ export default function ContatosMarketplaceA({
 }) {
   const navegar = useNavigate();
   const [params] = useSearchParams();
-  const mostrarSolicitacoes = !id && params.get('visao') === 'solicitacoes';
+  const concluidos = params.get('status') === 'concluidos';
   const historico = useRef(null);
   const [edicao, setEdicao] = useState(null);
   const [confirmacao, setConfirmacao] = useState(null);
-  const [aviso, setAviso] = useState('');
+  const notificar = useAvisoPerfilA();
   const [erro, setErro] = useState('');
   const empresa = idEmpresa =>
     banco.perfil_empresa.find(e => e.id === idEmpresa);
   const contratacoes = banco.servico_contratado.filter(
     c => c.perfil_id === perfil.id
   );
-  const chats = banco.chat_servico.filter(c => c.perfil_id === perfil.id);
+  const servicosMarcados = contratacoes.filter(c =>
+    ['aceito', 'em_andamento', 'concluido'].includes(c.status)
+  );
+  const servicosVisiveis = servicosMarcados.filter(
+    c => (c.status === 'concluido') === concluidos
+  );
+  const chats = banco.chat_servico.filter(
+    c => c.perfil_id === perfil.id && chatDaContratacao(banco, c)
+  );
   const chat = chats.find(c => c.id === Number(id));
   const chatId = chat?.id;
   const mensagens = banco.mensagem.filter(m => m.chat_id === chatId);
@@ -105,7 +110,7 @@ export default function ContatosMarketplaceA({
     try {
       acao();
       setErro('');
-      setAviso(sucesso);
+      if (sucesso !== undefined) notificar(sucesso);
       return true;
     } catch (falha) {
       setErro(falha.message);
@@ -118,188 +123,155 @@ export default function ContatosMarketplaceA({
       const contratacao = db.servico_contratado.find(
         c => c.id === edicao.contratacao.id && c.perfil_id === perfil.id
       );
-      if (!contratacao) throw new Error('Solicitação indisponível.');
-      if (edicao.tipo === 'solicitacao') {
-        if (contratacao.status !== 'pendente')
-          throw new Error('A solicitação já saiu do estado pendente.');
-        if (
-          valores.data_agendamento &&
-          valores.data_agendamento < `${hoje()}T00:00`
-        )
-          throw new Error('Escolha uma data a partir de hoje.');
-        contratacao.descricao = valores.descricao;
-        contratacao.data_agendamento = valores.data_agendamento;
-      } else {
-        if (contratacao.status !== 'concluido')
-          throw new Error('A avaliação fica disponível após a conclusão.');
-        const avaliacao = db.avaliacao_servico.find(
-          a => a.contratado_id === contratacao.id
+      if (!contratacao) throw new Error('Serviço indisponível.');
+      if (contratacao.status !== 'concluido')
+        throw new Error('A avaliação fica disponível após a conclusão.');
+      const avaliacao = db.avaliacao_servico.find(
+        a => a.contratado_id === contratacao.id
+      );
+      if (avaliacao && avaliacao.id !== edicao.avaliacao?.id)
+        throw new Error('Esta contratação já foi avaliada.');
+      const dados = {
+        nota: valores.nota,
+        comentario: valores.comentario,
+        contratado_id: contratacao.id,
+        perfil_id: perfil.id,
+      };
+      if (avaliacao) Object.assign(avaliacao, dados);
+      else
+        inserir(
+          'avaliacao_servico',
+          { ...dados, data_avaliacao: new Date().toISOString() },
+          db
         );
-        if (avaliacao && avaliacao.id !== edicao.avaliacao?.id)
-          throw new Error('Esta contratação já foi avaliada.');
-        const dados = {
-          nota: valores.nota,
-          comentario: valores.comentario,
-          contratado_id: contratacao.id,
-          perfil_id: perfil.id,
-        };
-        if (avaliacao) Object.assign(avaliacao, dados);
-        else
-          inserir(
-            'avaliacao_servico',
-            { ...dados, data_avaliacao: new Date().toISOString() },
-            db
-          );
-      }
     });
-    setAviso(
-      edicao.tipo === 'solicitacao'
-        ? 'Solicitação atualizada.'
-        : 'Avaliação salva.'
-    );
+    notificar('Avaliação salva.');
   }
 
   return (
     <PaginaMvp cabecalho={false}>
       <div className='mercado-a'>
         <header className='mercado-a-cabecalho'>
-          <h1>Serviços e conversas</h1>
-          <NavegacaoMarketplace ativa='contatos' />
+          <h1>{ehMeusServicos ? 'Meus serviços' : 'Conversas'}</h1>
+          <NavegacaoMarketplace
+            ativa={ehMeusServicos ? 'servicos' : 'contatos'}
+          />
         </header>
-        <div className='mercado-a-caixa-topo'>
-          {mostrarSolicitacoes ? (
-            <Link className='mercado-a-voltar' to='/meus-contatos'>
-              <ArrowLeft size={17} aria-hidden='true' /> Voltar às conversas
-            </Link>
-          ) : (
-            <Link
-              className='mercado-a-voltar'
-              to='/meus-contatos?visao=solicitacoes'
-            >
-              Minhas solicitações
-            </Link>
-          )}
-        </div>
-        {aviso && (
-          <p className='mvp-sucesso' role='status'>
-            {aviso}
-          </p>
-        )}
         {(erro || erroChat) && !confirmacao && (
           <p className='mvp-confirmacao' role='alert'>
             {erro || erroChat}
           </p>
         )}
-        {mostrarSolicitacoes ? (
-          <section className='mvp-painel'>
-            <div className='mvp-painel-topo'>
-              <h2>Minhas contratações</h2>
+        {ehMeusServicos ? (
+          <section aria-label='Serviços contratados e concluídos'>
+            <nav
+              className='mercado-a-filtros-servicos'
+              aria-label='Situação do serviço'
+            >
+              <Link
+                to='/servicos-contratados'
+                aria-current={!concluidos ? 'page' : undefined}
+              >
+                Contratados
+              </Link>
+              <Link
+                to='/servicos-contratados?status=concluidos'
+                aria-current={concluidos ? 'page' : undefined}
+              >
+                Concluídos
+              </Link>
+            </nav>
+            <div className='mercado-a-servicos-lista'>
+              {!servicosVisiveis.length && (
+                <VazioMvp>
+                  {concluidos
+                    ? 'Nenhum serviço concluído para avaliar.'
+                    : 'Os serviços aparecem aqui após a confirmação do acordo.'}
+                </VazioMvp>
+              )}
+              {servicosVisiveis
+                .slice()
+                .reverse()
+                .map(c => {
+                  const servico = banco.servico.find(
+                    s => s.id === c.servico_id
+                  );
+                  const avaliacao = banco.avaliacao_servico.find(
+                    a => a.contratado_id === c.id && a.perfil_id === perfil.id
+                  );
+                  return (
+                    <article className='mercado-a-contratacao' key={c.id}>
+                      <div className='mercado-a-cartao-meta'>
+                        <strong>
+                          {servico?.titulo || 'Serviço indisponível'}
+                        </strong>
+                        <span className='mercado-a-nota'>
+                          {statusContratacao[c.status] || c.status}
+                        </span>
+                      </div>
+                      <p>{c.descricao}</p>
+                      {c.endereco_id && (
+                        <small>
+                          {resumoEndereco(
+                            banco.endereco.find(e => e.id === c.endereco_id)
+                          )}
+                        </small>
+                      )}
+                      <small>
+                        {c.data_agendamento
+                          ? new Date(c.data_agendamento).toLocaleString(
+                              'pt-BR',
+                              {
+                                dateStyle: 'short',
+                                timeStyle: 'short',
+                              }
+                            )
+                          : 'Sem data combinada'}
+                        {c.valor > 0 && ` · ${moeda(c.valor)}`}
+                      </small>
+                      {avaliacao && (
+                        <p>
+                          Sua avaliação: {avaliacao.nota} de 5
+                          {avaliacao.comentario
+                            ? ` · ${avaliacao.comentario}`
+                            : ''}
+                        </p>
+                      )}
+                      <div className='mercado-a-contato-acoes'>
+                        {servico && chatLiberado(c) && (
+                          <button
+                            type='button'
+                            className='mvp-link'
+                            onClick={() =>
+                              executar(
+                                () => aoConversar(servico.empresa_id, c.id),
+                                ''
+                              )
+                            }
+                          >
+                            Conversar
+                          </button>
+                        )}
+                        {c.status === 'concluido' && (
+                          <button
+                            type='button'
+                            className='mvp-link'
+                            onClick={() =>
+                              setEdicao({
+                                tipo: 'avaliacao',
+                                contratacao: c,
+                                avaliacao,
+                              })
+                            }
+                          >
+                            {avaliacao ? 'Editar avaliação' : 'Avaliar serviço'}
+                          </button>
+                        )}
+                      </div>
+                    </article>
+                  );
+                })}
             </div>
-            {!contratacoes.length && (
-              <VazioMvp>Você ainda não solicitou um serviço.</VazioMvp>
-            )}
-            {contratacoes.map(c => {
-              const servico = banco.servico.find(s => s.id === c.servico_id);
-              const avaliacao = banco.avaliacao_servico.find(
-                a => a.contratado_id === c.id && a.perfil_id === perfil.id
-              );
-              return (
-                <article className='mercado-a-contratacao' key={c.id}>
-                  <div className='mercado-a-cartao-meta'>
-                    <strong>{servico?.titulo || 'Serviço indisponível'}</strong>
-                    <span className='mercado-a-nota'>
-                      {statusContratacao[c.status] || c.status}
-                    </span>
-                  </div>
-                  <p>{c.descricao}</p>
-                  <small>
-                    {c.data_agendamento
-                      ? new Date(c.data_agendamento).toLocaleString('pt-BR', {
-                          dateStyle: 'short',
-                          timeStyle: 'short',
-                        })
-                      : 'Sem data combinada'}
-                    {c.valor > 0 && ` · ${moeda(c.valor)}`}
-                  </small>
-                  {avaliacao && (
-                    <p>
-                      Sua avaliação: {avaliacao.nota} de 5
-                      {avaliacao.comentario ? ` · ${avaliacao.comentario}` : ''}
-                    </p>
-                  )}
-                  <div className='mercado-a-contato-acoes'>
-                    {servico && (
-                      <button
-                        type='button'
-                        className='mvp-link'
-                        onClick={() =>
-                          executar(
-                            () => aoConversar(servico.empresa_id, c.id),
-                            ''
-                          )
-                        }
-                      >
-                        Conversar
-                      </button>
-                    )}
-                    {c.status === 'pendente' && (
-                      <>
-                        <button
-                          type='button'
-                          className='mvp-link'
-                          onClick={() =>
-                            setEdicao({ tipo: 'solicitacao', contratacao: c })
-                          }
-                        >
-                          Editar solicitação
-                        </button>
-                        <button
-                          type='button'
-                          className='mvp-link'
-                          onClick={() => {
-                            setErro('');
-                            setConfirmacao({
-                              titulo: 'Cancelar solicitação?',
-                              acao: () =>
-                                alterarBancoMarketplace(db => {
-                                  const atual = db.servico_contratado.find(
-                                    item =>
-                                      item.id === c.id &&
-                                      item.perfil_id === perfil.id
-                                  );
-                                  if (atual?.status !== 'pendente')
-                                    throw new Error(
-                                      'A solicitação já saiu do estado pendente.'
-                                    );
-                                  atual.status = 'cancelado';
-                                }),
-                              sucesso: 'Solicitação cancelada.',
-                            });
-                          }}
-                        >
-                          Cancelar solicitação
-                        </button>
-                      </>
-                    )}
-                    {c.status === 'concluido' && (
-                      <button
-                        type='button'
-                        className='mvp-link'
-                        onClick={() =>
-                          setEdicao({
-                            tipo: 'avaliacao',
-                            contratacao: c,
-                            avaliacao,
-                          })
-                        }
-                      >
-                        {avaliacao ? 'Editar avaliação' : 'Avaliar'}
-                      </button>
-                    )}
-                  </div>
-                </article>
-              );
-            })}
           </section>
         ) : (
           <div
@@ -315,7 +287,9 @@ export default function ContatosMarketplaceA({
             >
               <h2>Conversas</h2>
               {!chats.length && (
-                <VazioMvp>As conversas com empresas aparecerão aqui.</VazioMvp>
+                <VazioMvp>
+                  Abra um serviço no catálogo para iniciar uma conversa.
+                </VazioMvp>
               )}
               <ul>
                 {chats.map(c => {
@@ -344,10 +318,12 @@ export default function ContatosMarketplaceA({
                         </span>
                         <span className='mercado-a-conversa-resumo'>
                           <strong>
+                            {nomeServico || 'Serviço indisponível'}
+                          </strong>
+                          <small>
                             {empresa(c.empresa_id)?.nome ||
                               'Empresa indisponível'}
-                          </strong>
-                          {nomeServico && <small>{nomeServico}</small>}
+                          </small>
                           <span>{ultima?.mensagem || 'Comece a conversa'}</span>
                         </span>
                         {novas > 0 && (
@@ -382,10 +358,10 @@ export default function ContatosMarketplaceA({
                     <Building2 size={18} aria-hidden='true' />
                   </span>
                   <div>
-                    <h2>{empresaAtual?.nome || 'Conversa'}</h2>
+                    <h2>{servicoAtual?.titulo || 'Conversa'}</h2>
                     {servicoAtual && (
                       <p>
-                        {servicoAtual.titulo}
+                        {empresaAtual?.nome}
                         {vinculoAtual &&
                           ` · ${statusContratacao[vinculoAtual.status] || vinculoAtual.status}`}
                       </p>
@@ -398,9 +374,14 @@ export default function ContatosMarketplaceA({
                     onClick={() => {
                       setErro('');
                       setConfirmacao({
-                        titulo: 'Excluir conversa?',
+                        titulo:
+                          vinculoAtual.status === 'pendente'
+                            ? 'Encerrar negociação?'
+                            : 'Excluir conversa?',
                         texto:
-                          'O histórico de mensagens desta conversa será removido.',
+                          vinculoAtual.status === 'pendente'
+                            ? 'A negociação será encerrada e o histórico será removido.'
+                            : 'O histórico de mensagens desta conversa será removido.',
                         acao: () => {
                           alterarBancoMarketplace(db => {
                             const atual = db.chat_servico.find(
@@ -408,6 +389,13 @@ export default function ContatosMarketplaceA({
                             );
                             if (!atual)
                               throw new Error('Conversa indisponível.');
+                            const pedido = db.servico_contratado.find(
+                              c =>
+                                c.id === atual.contratado_id &&
+                                c.perfil_id === perfil.id
+                            );
+                            if (pedido?.status === 'pendente')
+                              pedido.status = 'cancelado';
                             db.chat_servico = db.chat_servico.filter(
                               c => c.id !== chat.id
                             );
@@ -424,6 +412,22 @@ export default function ContatosMarketplaceA({
                     <Trash2 size={18} aria-hidden='true' />
                   </button>
                 </header>
+                <div className='mercado-a-chat-contexto'>
+                  {vinculoAtual?.endereco_id && (
+                    <p className='mercado-a-chat-endereco'>
+                      {resumoEndereco(
+                        banco.endereco.find(
+                          e => e.id === vinculoAtual.endereco_id
+                        )
+                      )}
+                    </p>
+                  )}
+                  <AcordoServico
+                    pedido={vinculoAtual}
+                    propostas={banco.propostas_marketplace}
+                    userId={perfil.user_id}
+                  />
+                </div>
                 <ol
                   className='mercado-a-mensagens'
                   aria-label='Mensagens da conversa'
@@ -459,29 +463,29 @@ export default function ContatosMarketplaceA({
                     const mensagem = new FormData(form).get('mensagem').trim();
                     if (!mensagem) return;
                     if (
-                      executar(
-                        () =>
-                          alterarBancoMarketplace(db => {
-                            if (
-                              !db.chat_servico.some(
-                                c =>
-                                  c.id === chat.id && c.perfil_id === perfil.id
-                              )
+                      executar(() =>
+                        alterarBancoMarketplace(db => {
+                          if (
+                            !db.chat_servico.some(
+                              c =>
+                                c.id === chat.id &&
+                                c.perfil_id === perfil.id &&
+                                chatDaContratacao(db, c)
                             )
-                              throw new Error('Conversa indisponível.');
-                            inserir(
-                              'mensagem',
-                              {
-                                chat_id: chat.id,
-                                user_id: perfil.user_id,
-                                mensagem,
-                                data: new Date().toISOString(),
-                                lida_em: null,
-                              },
-                              db
-                            );
-                          }),
-                        'Mensagem enviada.'
+                          )
+                            throw new Error('Conversa indisponível.');
+                          inserir(
+                            'mensagem',
+                            {
+                              chat_id: chat.id,
+                              user_id: perfil.user_id,
+                              mensagem,
+                              data: new Date().toISOString(),
+                              lida_em: null,
+                            },
+                            db
+                          );
+                        })
                       )
                     )
                       form.reset();
@@ -508,7 +512,9 @@ export default function ContatosMarketplaceA({
               <div className='mercado-a-chat-vazio'>
                 <MessageCircle size={28} aria-hidden='true' />
                 <p>
-                  {id ? 'Conversa não encontrada.' : 'Selecione uma conversa.'}
+                  {id
+                    ? 'Conversa não encontrada.'
+                    : 'Escolha uma conversa para acompanhar o serviço.'}
                 </p>
               </div>
             )}
@@ -516,31 +522,15 @@ export default function ContatosMarketplaceA({
         )}
         {edicao && !confirmacao && (
           <DialogoMarketplace
-            titulo={
-              edicao.tipo === 'solicitacao'
-                ? 'Editar solicitação'
-                : 'Avaliação do serviço'
-            }
+            titulo='Avaliação do serviço'
             aoFechar={() => setEdicao(null)}
           >
             <div className='mercado-a-editor'>
               <EditorMvp
                 cabecalho={false}
                 titulo='Editar registro'
-                inicial={
-                  edicao.tipo === 'solicitacao'
-                    ? {
-                        ...edicao.contratacao,
-                        data_agendamento:
-                          edicao.contratacao.data_agendamento?.slice(0, 16),
-                      }
-                    : edicao.avaliacao || { nota: 5 }
-                }
-                campos={
-                  edicao.tipo === 'solicitacao'
-                    ? camposSolicitacao
-                    : camposAvaliacao
-                }
+                inicial={edicao.avaliacao || { nota: 5 }}
+                campos={camposAvaliacao}
                 onSave={salvarEdicao}
                 onClose={() => setEdicao(null)}
                 acaoSecundaria={

@@ -314,7 +314,6 @@
 }
 .casa-shell {
   display: grid;
-  grid-template-columns: var(--largura-menu-lateral) minmax(0, 1fr);
   flex: 1;
   align-items: start;
 }

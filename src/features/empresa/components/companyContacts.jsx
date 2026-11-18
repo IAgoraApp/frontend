@@ -1,3 +1,4 @@
+import SolicitacoesMarketplace from './solicitacoesMarketplace';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -182,6 +183,7 @@ export default function ContatosEmpresa({
 
   return (
     <div className='space-y-6'>
+      <SolicitacoesMarketplace />
       <div
         role='group'
         aria-label='Filtrar contatos por situação'

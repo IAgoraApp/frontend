@@ -3,6 +3,7 @@ import Inicio from '../../features/home/home';
 import CasaA from '../../features/casa/casaA';
 import LimpezaA from '../../features/limpeza/limpezaA';
 import CozinhaA from '../../features/cozinha/cozinhaA';
+import DespensaA from '../../features/cozinha/despensaA';
 import Rotina from '../../features/rotina/rotina';
 import FinancasA from '../../features/financas/financasA';
 import PerfilA from '../../features/perfil/perfilA';
@@ -42,6 +43,7 @@ const rotas = createBrowserRouter([
                   { path: '/casa', element: <CasaA /> },
                   { path: '/limpeza', element: <LimpezaA /> },
                   { path: '/cozinha', element: <CozinhaA /> },
+                  { path: '/despensa', element: <DespensaA /> },
                 ],
               },
               { path: '/rotina', element: <Rotina /> },
@@ -113,6 +115,10 @@ const rotas = createBrowserRouter([
               },
               {
                 path: '/favoritos',
+                element: <MarketplaceA />,
+              },
+              {
+                path: '/servicos-contratados',
                 element: <MarketplaceA />,
               },
               {

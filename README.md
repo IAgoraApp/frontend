@@ -9,6 +9,17 @@ Frontend em React e Vite com páginas institucionais, acesso pessoal e empresari
 - Gere a versão de produção: npm run build
 - Verifique o código: npm run lint
 
+## Widget de acessibilidade UserWay
+
+O widget já usa o Account ID do IAgora. Para usar outro widget em um
+ambiente específico, defina `VITE_USERWAY_ACCOUNT_ID` com o valor de
+`data-account` correspondente. Reinicie o servidor local ou gere um novo
+build depois de alterar a variável.
+
+O script é carregado uma vez na entrada do aplicativo, antes das rotas do React.
+A mesma instalação cobre as páginas públicas, os perfis de usuário e a área
+empresarial.
+
 ## Organização por funcionalidade
 
 - src/app: configuração das rotas, layout público e estilos globais.

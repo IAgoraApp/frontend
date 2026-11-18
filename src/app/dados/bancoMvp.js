@@ -46,7 +46,7 @@ function lerFinancasSalvas() {
 }
 
 const chaveCompras = 'iagora:banco-mvp:compras:v1';
-const colecoesCompras = ['compras', 'compra_item', 'estoque_item'];
+const colecoesCompras = ['compras', 'compra_item', 'estoque_item', 'produto'];
 
 function lerComprasSalvas() {
   try {
@@ -112,7 +112,7 @@ function aplicarPerfilSalvo(bancoAtual) {
 }
 
 const chaveMarketplace = 'iagora:banco-mvp:marketplace:v1';
-const colecoesMarketplace = ['servico_contratado', 'avaliacao_servico', 'chat_servico', 'mensagem'];
+const colecoesMarketplace = ['servico_contratado', 'avaliacao_servico', 'chat_servico', 'mensagem', 'enderecos_marketplace', 'propostas_marketplace'];
 
 function lerMarketplaceSalvo() {
   try {
@@ -127,7 +127,13 @@ function lerMarketplaceSalvo() {
   }
 }
 
+function mesclarEnderecosMarketplace(db, salvos) {
+  if (!Array.isArray(salvos)) return;
+  const ids = new Set(db.endereco.map(item => item.id));
+  db.endereco.push(...salvos.filter(item => !ids.has(item.id)));
+}
 let dados = { ...structuredClone(banco.dados), ...lerReceitasSalvas(), ...lerFinancasSalvas(), ...lerComprasSalvas(), ...lerMarketplaceSalvo(), ...lerCobrancasSalvas() };
+mesclarEnderecosMarketplace(dados, dados.enderecos_marketplace);
 aplicarPerfilSalvo(dados);
 const ouvintes = new Set();
 export const USUARIO_A = 1;
@@ -197,6 +203,7 @@ export function alterarBancoCompras(operacao) {
 }
 export function alterarBancoPerfil(userId, operacao) {
   alterarBanco(b => {
+    mesclarEnderecosMarketplace(b, lerMarketplaceSalvo().enderecos_marketplace);
     const enderecos = aplicarPerfilSalvo(b);
     const perfil = b.perfil.find(item => item.user_id === userId);
     const usuario = b.users.find(item => item.id === userId);
@@ -217,6 +224,8 @@ export function alterarBancoPerfil(userId, operacao) {
 export function alterarBancoMarketplace(operacao) {
   alterarBanco(b => {
     Object.assign(b, lerMarketplaceSalvo());
+    mesclarEnderecosMarketplace(b, b.enderecos_marketplace);
+    aplicarPerfilSalvo(b);
     operacao(b);
     const registros = Object.fromEntries(
       colecoesMarketplace.map(colecao => [colecao, b[colecao]])
@@ -283,6 +292,15 @@ export function removerRegistro(colecao, id) {
         item => item.receita_id !== id
       );
     }
+  });
+}
+if (typeof window !== 'undefined') {
+  window.addEventListener('storage', evento => {
+    if (evento.key !== chaveMarketplace || !evento.newValue) return;
+    alterarBanco(db => {
+      Object.assign(db, lerMarketplaceSalvo());
+      mesclarEnderecosMarketplace(db, db.enderecos_marketplace);
+    });
   });
 }
 const inscrever = ouvir => {
