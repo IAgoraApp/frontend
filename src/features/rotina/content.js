@@ -10,6 +10,7 @@ export const acoesRapidasRotina = [
   { id: 'assistente', rotulo: 'Sugestões da IA', icone: 'brilho' },
   { id: 'calendario', rotulo: 'Ver calendário', icone: 'calendario' },
   { id: 'lista', rotulo: 'Ver lista', icone: 'lista' },
+  { id: 'categorias', rotulo: 'Categorias', icone: 'lista' },
   { id: 'historico', rotulo: 'Histórico', icone: 'relogio' },
 ];
 

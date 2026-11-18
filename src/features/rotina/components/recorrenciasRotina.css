@@ -1,0 +1,164 @@
+.rotina-recorrencia-lista {
+  display: grid;
+  gap: 10px;
+}
+.rotina-recorrencia-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: clamp(12px, 2vw, 18px);
+  border: 1px solid var(--borda-suave);
+  border-radius: 12px;
+  background: white;
+  overflow-wrap: anywhere;
+}
+.rotina-recorrencia-icone {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 9px;
+  background: var(--laranja-fundo);
+  color: var(--laranja-principal);
+}
+.rotina-recorrencia-texto h2 {
+  font-family: var(--font-titulo);
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+.rotina-recorrencia-texto p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 9px;
+  margin-top: 4px;
+  font-size: 0.85rem;
+}
+.rotina-recorrencia-texto small,
+.rotina-recorrencia-texto p span,
+.rotina-recorrencia-form fieldset p {
+  color: var(--texto-apoio);
+  font-size: 0.78rem;
+}
+.rotina-recorrencia-proxima {
+  display: grid;
+  justify-items: end;
+  gap: 5px;
+}
+.rotina-recorrencia-proxima > span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--texto-apoio);
+  font-size: 0.8rem;
+}
+.rotina-recorrencia-form {
+  display: grid;
+  gap: 14px;
+}
+.rotina-recorrencia-campos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.rotina-recorrencia-form :is(label, legend) {
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+.rotina-recorrencia-form label {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.rotina-recorrencia-form :is(select, input:not([type='checkbox'])) {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 6px 8px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 8px;
+  background: var(--azul-fundo);
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+.rotina-recorrencia-dias {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+  margin-block: 6px;
+}
+.rotina-recorrencia-dias label {
+  position: relative;
+}
+.rotina-recorrencia-dias input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+.rotina-recorrencia-dias span {
+  display: grid;
+  place-items: center;
+  min-height: 37px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 7px;
+  background: white;
+  font-size: 0.76rem;
+}
+.rotina-recorrencia-dias input:checked + span {
+  border-color: var(--laranja-principal);
+  background: var(--laranja-fundo);
+}
+.rotina-recorrencia-dias input:focus-visible + span {
+  outline: 2px solid var(--azul-principal);
+}
+.rotina-recorrencia-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px;
+}
+.rotina-recorrencia-form > .rotina-recorrencia-acoes {
+  padding-top: 10px;
+  border-top: 1px solid var(--borda-suave);
+}
+.rotina-recorrencia-remover {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 44px;
+  margin-right: auto;
+  color: var(--vermelho-alerta);
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+.rotina-recorrencia-confirmacao {
+  display: grid;
+  justify-items: start;
+  gap: 6px;
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--laranja-fundo);
+}
+.rotina-recorrencia-erro {
+  color: var(--vermelho-alerta);
+}
+.rotina-recorrencias button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+@media (max-width: 760px) {
+  .rotina-recorrencia-card {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .rotina-recorrencia-proxima {
+    grid-column: 1 / -1;
+    justify-items: start;
+    padding-top: 8px;
+    border-top: 1px solid var(--borda-suave);
+  }
+}

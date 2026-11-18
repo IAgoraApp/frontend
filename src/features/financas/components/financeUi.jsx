@@ -1,5 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { Gamepad2, Wallet, X } from 'lucide-react';
+import { useEffect, useId, useRef } from 'react';
 import { Botao, Titulo } from '../../../shared/ui/index';
+import './financeDialog.css';
 import iconeMoedaEconomia from '../assets/imgBudgetCtaSavingsCoin.svg';
 import iconeDadosExemplo from '../assets/imgExampleDataInfo.svg';
 import iconeSino from '../assets/imgIconBell.svg';
@@ -56,14 +58,16 @@ const mapaIcones = {
   Wifi: iconeWifi,
 };
 
+const iconesVetoriais = { Gamepad2, Wallet };
+
 export function IconeFinancas({ nome, classe = '' }) {
+  const Vetor = iconesVetoriais[nome];
+  if (Vetor) return <Vetor className={classe} aria-hidden='true' />;
   const origem = mapaIcones[nome] ?? mapaIcones[nome.replace(/^Icon/, '')];
   return origem ? (
     <span
       aria-hidden='true'
-      className={
-        'inline-flex shrink-0 items-center justify-center ' + classe
-      }
+      className={'inline-flex shrink-0 items-center justify-center ' + classe}
     >
       <img src={origem} alt='' className='block max-h-full max-w-full' />
     </span>
@@ -106,14 +110,16 @@ export function PainelFinancas({
   return (
     <section
       className={
-        'min-w-0 rounded-xl border border-[#d9e4ec] p-5 sm:p-6 ' +
+        'min-w-0 rounded-2xl border border-(--borda-suave) p-5 sm:p-6 ' +
         (neutro ? 'bg-(--azul-fundo) ' : 'bg-white ') +
         classe
       }
     >
       {titulo && (
-        <div className='mb-5 flex flex-wrap items-center justify-between gap-3'>
-          <Titulo classe='text-xl font-extrabold'>{titulo}</Titulo>
+        <div className='mb-4 flex flex-wrap items-center justify-between gap-3'>
+          <Titulo classe='text-xl leading-tight font-extrabold sm:text-2xl'>
+            {titulo}
+          </Titulo>
           {acao}
         </div>
       )}
@@ -180,8 +186,17 @@ export function BarraProgressoFinancas({ valor, rotulo, cor = '#e03b00' }) {
   );
 }
 
-export function DialogoFinancas({ titulo, children, aoFechar }) {
+export function DialogoFinancas({
+  titulo,
+  children,
+  aoFechar,
+  Icone,
+  rotulo,
+  destrutivo = false,
+}) {
+  const tituloId = useId();
   const referencia = useRef(null);
+  const referenciaTitulo = useRef(null);
   const aoFecharAtual = useRef(aoFechar);
 
   useEffect(() => {
@@ -201,37 +216,74 @@ export function DialogoFinancas({ titulo, children, aoFechar }) {
     };
   }, []);
 
+  useEffect(() => {
+    referencia.current.scrollTop = 0;
+    referenciaTitulo.current.focus({ preventScroll: true });
+  }, [titulo]);
+
   return (
     <dialog
       ref={referencia}
+      onSubmit={evento => evento.stopPropagation()}
       onCancel={evento => {
+        evento.stopPropagation();
         evento.preventDefault();
         aoFecharAtual.current();
       }}
       onClick={evento => {
         if (evento.target === evento.currentTarget) aoFecharAtual.current();
       }}
-      aria-labelledby='titulo-dialogo-financas'
-      className='fixed inset-0 m-auto max-h-[90dvh] w-[calc(100%-2rem)] max-w-xl overflow-y-auto rounded-2xl border border-[#dbe5ed] bg-white p-5 text-(--azul-titulo) shadow-xl backdrop:bg-[#102a43]/40 sm:p-8'
+      aria-labelledby={tituloId}
+      className='finance-dialog fixed inset-0 m-auto max-h-[min(90dvh,48rem)] w-[calc(100%-1.5rem)] max-w-xl overflow-y-auto overscroll-contain rounded-2xl border border-(--borda-suave) bg-white text-(--azul-titulo) shadow-2xl backdrop:bg-[#102a43]/55'
     >
-      <div className='mb-6 flex items-start justify-between gap-4'>
-        <Titulo
-          como='h2'
-          id='titulo-dialogo-financas'
-          classe='text-2xl font-extrabold'
-        >
-          {titulo}
-        </Titulo>
+      <header
+        className={
+          'finance-dialog-head flex items-center gap-3 border-b border-(--borda-suave) px-4 py-4 sm:gap-4 sm:px-7 sm:py-5 ' +
+          (destrutivo ? 'bg-[#fff5f2]' : 'bg-white')
+        }
+      >
+        {Icone && (
+          <span
+            className={
+              'grid size-11 shrink-0 place-items-center rounded-lg ' +
+              (destrutivo
+                ? 'bg-[#fce0dc] text-(--vermelho-alerta)'
+                : 'bg-(--laranja-fundo) text-[#a52f08]')
+            }
+          >
+            <Icone size={22} aria-hidden='true' />
+          </span>
+        )}
+        <div className='min-w-0 flex-1'>
+          {rotulo && (
+            <p className='mb-1 text-xs font-bold text-(--texto-apoio)'>
+              {rotulo}
+            </p>
+          )}
+          <Titulo
+            como='h2'
+            id={tituloId}
+            classe='text-xl leading-tight font-extrabold wrap-anywhere sm:text-2xl'
+          >
+            <span
+              ref={referenciaTitulo}
+              tabIndex={-1}
+              className='focus:outline-none'
+            >
+              {titulo}
+            </span>
+          </Titulo>
+        </div>
         <button
           type='button'
           aria-label='Fechar'
           onClick={aoFechar}
-          className='-mt-2 -mr-2 flex size-11 shrink-0 items-center justify-center rounded-full text-2xl hover:bg-(--azul-fundo)'
+          className='grid size-11 shrink-0 cursor-pointer place-items-center rounded-full border border-(--borda-suave) bg-white hover:bg-(--azul-fundo)'
         >
-          ×
+          <X size={20} aria-hidden='true' />
         </button>
-      </div>
-      {children}
+      </header>
+      <div className='finance-dialog-body p-4 sm:p-7'>{children}</div>
     </dialog>
   );
 }

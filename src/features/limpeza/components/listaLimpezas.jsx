@@ -1,4 +1,4 @@
-import { CalendarDays, Check, Pencil, Trash2 } from 'lucide-react';
+import { CalendarDays, Check, Pencil } from 'lucide-react';
 import { dataCurta } from '../../../app/dados/bancoMvp';
 import { situacaoLimpeza } from '../utils/agendaLimpeza';
 
@@ -8,10 +8,18 @@ export default function ListaLimpezas({
   hoje,
   aoConcluir,
   aoEditar,
-  aoExcluir,
+  aoAbrirComodo,
+  mostrarComodo = true,
+  compacta = false,
 }) {
   return (
-    <ol className='limpeza-lista-tarefas'>
+    <ol
+      className={
+        compacta
+          ? 'limpeza-lista-tarefas limpeza-lista-compacta'
+          : 'limpeza-lista-tarefas'
+      }
+    >
       {registros.map(l => {
         const situacao = situacaoLimpeza(l, hoje);
         return (
@@ -19,6 +27,15 @@ export default function ListaLimpezas({
             className={`limpeza-tarefa limpeza-tarefa-${situacao.classe}`}
             key={l.id}
           >
+            {aoAbrirComodo && (
+              <button
+                type='button'
+                className='limpeza-abrir-comodo'
+                aria-haspopup='dialog'
+                aria-label={`Abrir cômodo de ${l.nome}`}
+                onClick={() => aoAbrirComodo(l.comodo_id)}
+              />
+            )}
             <button
               className='limpeza-concluir'
               type='button'
@@ -33,26 +50,36 @@ export default function ListaLimpezas({
               <Check size={17} aria-hidden='true' />
             </button>
             <div className='limpeza-tarefa-corpo'>
-              <span className='limpeza-tarefa-comodo'>
-                {comodos.find(c => c.id === l.comodo_id)?.nome}
-              </span>
               <h3>{l.nome}</h3>
+              {mostrarComodo && (
+                <span className='limpeza-tarefa-comodo'>
+                  {comodos.find(c => c.id === l.comodo_id)?.nome}
+                </span>
+              )}
               {l.descricao && <p>{l.descricao}</p>}
-              <small>
-                {l.ultima_vez
-                  ? `Última limpeza em ${dataCurta(l.ultima_vez)}`
-                  : 'Ainda não realizada'}
-              </small>
+              {!compacta && (
+                <div className='limpeza-tarefa-datas'>
+                  <span>
+                    <CalendarDays size={14} aria-hidden='true' />
+                    {l.proxima_vez
+                      ? `Próxima: ${dataCurta(l.proxima_vez)}`
+                      : 'Sem data prevista'}
+                  </span>
+                  <span>
+                    {l.ultima_vez
+                      ? `Última: ${dataCurta(l.ultima_vez)}`
+                      : 'Ainda não realizada'}
+                  </span>
+                </div>
+              )}
             </div>
             <div className='limpeza-tarefa-lateral'>
               <span
                 className={`limpeza-situacao limpeza-situacao-${situacao.classe}`}
               >
-                {situacao.nome}
-              </span>
-              <span className='limpeza-tarefa-prazo'>
-                <CalendarDays size={13} aria-hidden='true' />
-                {l.proxima_vez ? dataCurta(l.proxima_vez) : 'Definir data'}
+                {compacta && situacao.classe === 'agendada'
+                  ? dataCurta(l.proxima_vez)
+                  : situacao.nome}
               </span>
               <div className='limpeza-tarefa-ferramentas'>
                 <button
@@ -62,14 +89,6 @@ export default function ListaLimpezas({
                   onClick={() => aoEditar(l)}
                 >
                   <Pencil size={16} />
-                </button>
-                <button
-                  type='button'
-                  aria-label={`Excluir limpeza: ${l.nome}`}
-                  title='Excluir limpeza'
-                  onClick={() => aoExcluir(l)}
-                >
-                  <Trash2 size={16} />
                 </button>
               </div>
             </div>

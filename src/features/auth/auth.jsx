@@ -219,7 +219,7 @@ export function Autenticacao() {
 
   return (
     <div className='min-h-dvh bg-white text-(--azul-titulo)'>
-      <header className='mx-auto flex w-full max-w-[1440px] items-center justify-between px-(--margem-pagina) py-6'>
+      <header className='mx-auto flex w-full max-w-(--largura-pagina) items-center justify-between px-(--margem-pagina) py-6'>
         <Link
           to='/'
           aria-label='Voltar para a página inicial Iagora'
@@ -237,7 +237,7 @@ export function Autenticacao() {
       </header>
 
       {modo === 'sucesso' ? (
-        <main className='mx-auto flex min-h-[calc(100dvh-110px)] max-w-[1440px] flex-col items-center justify-center px-(--margem-pagina) py-10 text-center'>
+        <main className='mx-auto flex min-h-[calc(100dvh-110px)] max-w-(--largura-pagina) flex-col items-center justify-center px-(--margem-pagina) py-10 text-center'>
           <div className='relative flex size-48 items-center justify-center sm:size-56'>
             <div className='size-[82%] rounded-full bg-(--laranja-principal)' />
             <img
@@ -272,7 +272,7 @@ export function Autenticacao() {
           </div>
         </main>
       ) : (
-        <main className='mx-auto grid min-h-[calc(100dvh-110px)] w-full max-w-[1440px] items-center gap-12 px-(--margem-pagina) py-8 lg:grid-cols-[minmax(0,480px)_minmax(0,1fr)] lg:gap-16 lg:py-12'>
+        <main className='mx-auto grid min-h-[calc(100dvh-110px)] w-full max-w-(--largura-pagina) items-center gap-12 px-(--margem-pagina) py-8 lg:grid-cols-[minmax(0,480px)_minmax(0,1fr)] lg:gap-16 lg:py-12'>
           <section aria-labelledby='titulo-autenticacao' className='min-w-0'>
             <p className='text-xs font-bold tracking-[0.06em] text-(--laranja-principal) uppercase'>
               {cabecalhoAtual.selo}

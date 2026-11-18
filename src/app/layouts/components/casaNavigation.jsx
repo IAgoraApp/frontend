@@ -1,4 +1,4 @@
-﻿import { House, Sparkles, Utensils } from 'lucide-react';
+import { House, Sparkles, Utensils } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
 import '../../../shared/ui/mvp.css';
@@ -7,7 +7,6 @@ const areas = [
     rota: '/casa',
     nome: 'Minha casa',
     Icone: House,
-    inicial: 'hub',
     links: [],
   },
   {
@@ -26,8 +25,8 @@ const areas = [
     Icone: Utensils,
     inicial: 'inicio',
     links: [
-      ['inicio', 'Receitas'],
-      ['favoritas', 'Receitas favoritas'],
+      ['inicio', 'Catálogo de receitas'],
+      ['minhas', 'Minhas receitas'],
       ['despensa', 'Minha despensa'],
       ['compras', 'Lista de compras'],
     ],
@@ -35,10 +34,34 @@ const areas = [
 ];
 export default function NavegacaoCasa() {
   const { pathname, search } = useLocation();
-  const visao = new URLSearchParams(search).get('visao');
+  const visaoAtual = new URLSearchParams(search).get('visao');
+  const visao =
+    pathname === '/cozinha' && ['plano', 'favoritas'].includes(visaoAtual)
+      ? 'minhas'
+      : visaoAtual;
+  return (
+    <MenuLateralCasa
+      titulo='Seu canto'
+      IconeTitulo={House}
+      rotulo='Navegação da casa'
+      secoes={areas}
+      pathname={pathname}
+      visao={visao}
+    />
+  );
+}
+
+export function MenuLateralCasa({
+  titulo,
+  IconeTitulo,
+  rotulo,
+  secoes,
+  pathname,
+  visao,
+}) {
   const referencia = useRef(null);
   useEffect(() => {
-    if (window.matchMedia('(max-width: 600px)').matches)
+    if (window.matchMedia('(max-width: 767px)').matches)
       referencia.current
         ?.querySelector('[aria-current="page"]')
         ?.scrollIntoView({
@@ -46,33 +69,37 @@ export default function NavegacaoCasa() {
           inline: 'center',
           behavior: 'instant',
         });
-  }, [pathname, search]);
+  }, [pathname, visao]);
+
   return (
     <aside className='casa-menu'>
       <p className='casa-menu-titulo'>
-        <House size={22} />
-        Seu canto
+        <IconeTitulo size={22} aria-hidden='true' />
+        {titulo}
       </p>
-      <nav ref={referencia} aria-label='Navegação da casa'>
-        {areas.map(({ rota, nome, Icone, inicial, links }) => (
-          <section key={rota}>
+      <nav ref={referencia} aria-label={rotulo}>
+        {secoes.map(({ rota, nome, Icone, inicial, links }) => (
+          <section key={nome}>
             {links.length === 0 ? (
               <Link
                 className='casa-menu-principal'
                 to={rota}
-                aria-current={pathname === rota ? 'page' : undefined}
+                aria-current={
+                  pathname === rota && (!inicial || !visao || visao === inicial)
+                    ? 'page'
+                    : undefined
+                }
               >
-                <Icone size={16} />
+                <Icone size={16} aria-hidden='true' />
                 {nome}
               </Link>
             ) : (
               <h2>
-                <Icone size={16} />
-                {nome}
+                <Icone size={16} aria-hidden='true' /> {nome}
               </h2>
             )}
             <div>
-              {links.map(([id, rotulo]) => (
+              {links.map(([id, rotuloLink]) => (
                 <Link
                   key={id}
                   to={`${rota}?visao=${id}`}
@@ -82,7 +109,7 @@ export default function NavegacaoCasa() {
                       : undefined
                   }
                 >
-                  {rotulo}
+                  {rotuloLink}
                 </Link>
               ))}
             </div>

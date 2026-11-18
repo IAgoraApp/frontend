@@ -14,7 +14,6 @@ export function DialogoExcluirTarefa({
   return (
     <div className={classesRotina.conteudoModal}>
       <CabecalhoModalRotina
-        editorial
         id={idTitulo}
         titulo={`Excluir ${tarefa.title.charAt(0).toLowerCase() + tarefa.title.slice(1)}?`}
         descricao={
@@ -25,7 +24,9 @@ export function DialogoExcluirTarefa({
       />
       <div className={classesRotina.acoes} data-acoes>
         <BotaoRotina onClick={() => aoExcluir('occurrence')}>
-          {tarefa.frequency === 'none' ? 'Excluir tarefa' : 'Só esta ocorrência'}
+          {tarefa.frequency === 'none'
+            ? 'Excluir tarefa'
+            : 'Só esta ocorrência'}
         </BotaoRotina>
         {tarefa.frequency !== 'none' && (
           <BotaoRotina tom='secundario' onClick={() => aoExcluir('series')}>
@@ -40,16 +41,10 @@ export function DialogoExcluirTarefa({
   );
 }
 
-export function DialogoResultado({
-  titulo,
-  descricao,
-  aoContinuar,
-  idTitulo,
-}) {
+export function DialogoResultado({ titulo, descricao, aoContinuar, idTitulo }) {
   return (
     <div className={classesRotina.conteudoModal}>
       <CabecalhoModalRotina
-        editorial
         id={idTitulo}
         titulo={titulo}
         descricao={descricao}
@@ -64,7 +59,6 @@ export function SeletorMes({ mes, aoSelecionar, idTitulo }) {
   return (
     <div className={classesRotina.conteudoModal}>
       <CabecalhoModalRotina
-        editorial
         id={idTitulo}
         titulo='Qual mês você quer ver?'
         descricao='Escolha o mês para organizar suas tarefas.'
@@ -122,7 +116,6 @@ export function DialogoTarefasDia({
   return (
     <div className={classesRotina.conteudoModal}>
       <CabecalhoModalRotina
-        editorial
         id={idTitulo}
         titulo='Tarefas deste dia.'
         descricao={formatarData(dia, {

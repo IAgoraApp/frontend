@@ -26,7 +26,7 @@ O adaptador `src/app/dados/bancoMvp.js` mantém uma cópia em memória do JSON. 
 
 O saldo é saldo inicial de todas as contas do usuário somado somente aos lançamentos pagos. Os resumos do mês usam competência. Orçamentos consideram despesas previstas e pagas. Metas não movimentam o saldo. Marcar compras não altera estoque automaticamente. Excluir cômodo, tarefa, lista ou receita trata seus registros dependentes.
 
-Recorrências de tarefas permitem gerar a próxima execução explicitamente, respeitando frequência, intervalo, dias, início e fim e evitando repetir uma data existente. Não há agendador em background. Recorrências financeiras são configurações: não geram cobranças ou pagamentos automáticos. Chat não simula respostas de empresas.
+Recorrências de tarefas permitem gerar a próxima execução explicitamente, respeitando frequência, intervalo, dias, início e fim e evitando repetir uma data existente. Não há agendador em background. Em Finanças, recorrências ativas podem gerar lançamentos pendentes para o mês e a categoria escolhidos. A geração local evita duplicatas e não realiza pagamentos. Chat não simula respostas de empresas.
 
 ## Corte do MVP
 

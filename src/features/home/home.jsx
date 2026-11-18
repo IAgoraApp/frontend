@@ -1,17 +1,18 @@
 import { Link } from 'react-router-dom';
+import { Rodape } from '../../shared/index';
 import { Botao, Container, Titulo } from '../../shared/ui/index';
 import { atalhosInicio } from './content';
 import { useInicio } from './hooks/useInicio';
+import { ResumoPlataforma } from './components/ResumoPlataforma';
 import './home.css';
 import { CartaoAgenda } from './components/index';
 
 export default function Inicio() {
-  const { referencia, tarefas, eventos } = useInicio();
+  const { banco, tarefas, eventos } = useInicio();
   const momentoAtual = 'Já moro sozinho';
 
   return (
     <div
-      ref={referencia}
       lang='pt-BR'
       className='inicio-tela min-w-0 bg-white font-corpo text-(--azul-titulo) [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-offset-4 [&_a:focus-visible]:outline-(--laranja-principal)'
     >
@@ -41,38 +42,21 @@ export default function Inicio() {
           </div>
         </div>
 
-        <section
+        <nav
           className='inicio-ferramentas'
-          aria-labelledby='inicio-ferramentas'
+          aria-label='Ferramentas para a vida real'
         >
-          <p
-            id='inicio-ferramentas'
-            className='text-xs font-bold tracking-[0.12em] text-(--laranja-principal)'
-          >
-            FERRAMENTAS PARA A VIDA REAL
-          </p>
-          <nav
-            aria-label='Ferramentas para a vida real'
-            className='mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-6'
-          >
-            {atalhosInicio.map(item => (
-              <Link
-                key={item.rotulo}
-                to={item.rota}
-                className='flex min-w-0 items-center gap-3.5 rounded-xl p-2 text-sm font-bold text-(--azul-titulo) transition-colors hover:bg-(--azul-fundo) sm:text-base'
-              >
-                <span className='flex size-14 shrink-0 items-center justify-center rounded-[20px] bg-(--azul-titulo) sm:size-[70px]'>
-                  <img
-                    src={item.icone}
-                    alt=''
-                    className='max-h-9 max-w-9 object-contain'
-                  />
-                </span>
-                <span className='wrap-anywhere'>{item.rotulo}</span>
-              </Link>
-            ))}
-          </nav>
-        </section>
+          {atalhosInicio.map(item => (
+            <Link key={item.rota} to={item.rota}>
+              <span
+                aria-hidden='true'
+                className='inicio-ferramentas-icone'
+                style={{ '--ferramenta-icone': `url("${item.icone}")` }}
+              />
+              {item.rotulo}
+            </Link>
+          ))}
+        </nav>
 
         <div className='inicio-paineis grid items-stretch gap-5 lg:grid-cols-2'>
           <section
@@ -122,7 +106,9 @@ export default function Inicio() {
             <CartaoAgenda eventosDisponiveis={eventos} />
           </section>
         </div>
+        <ResumoPlataforma banco={banco} />
       </Container>
+      <Rodape />
     </div>
   );
 }

@@ -1,12 +1,12 @@
-import { useLayoutEffect, useMemo, useRef } from 'react';
+import { useMemo } from 'react';
 import { hoje, useBancoMvp } from '../../../app/dados/bancoMvp';
 
 export function useInicio() {
-  const { b, tarefas, limpezas, transacoes } = useBancoMvp();
-  const referencia = useRef(null);
+  const banco = useBancoMvp();
+  const { b, tarefas, limpezas, transacoes } = banco;
   const dia = hoje();
   const execucoes = b.execucao_tarefa.filter(
-    e => e.status === 'pendente' && tarefas.some(t => t.id === e.tarefa_id)
+    e => ['pendente', 'atrasada'].includes(e.status) && tarefas.some(t => t.id === e.tarefa_id)
   );
   const resumo = {
     hoje: execucoes
@@ -22,7 +22,7 @@ export function useInicio() {
         ...b.execucao_tarefa
           .filter(
             e =>
-              e.status === 'pendente' && tarefas.some(t => t.id === e.tarefa_id)
+              ['pendente', 'atrasada'].includes(e.status) && tarefas.some(t => t.id === e.tarefa_id)
           )
           .map(e => ({
             id: `tarefa-${e.id}`,
@@ -33,7 +33,7 @@ export function useInicio() {
             tipo: 'rotina',
           })),
         ...transacoes
-          .filter(t => t.status === 'pendente')
+          .filter(t => t.status === 'pendente' && t.vencimento)
           .map(t => ({
             id: `conta-${t.id}`,
             data: t.vencimento,
@@ -56,27 +56,5 @@ export function useInicio() {
     [b, tarefas, transacoes, limpezas]
   );
 
-  useLayoutEffect(() => {
-    const elemento = referencia.current;
-    const header = elemento
-      ?.closest('[data-layout-aplicacao]')
-      ?.querySelector(':scope > header');
-    if (!elemento) return;
-    const atualizar = () =>
-      elemento.style.setProperty(
-        '--inicio-altura',
-        `${Math.max(0, (window.visualViewport?.height ?? window.innerHeight) - (header?.getBoundingClientRect().height ?? 0))}px`
-      );
-    const observador = new ResizeObserver(atualizar);
-    if (header) observador.observe(header);
-    window.addEventListener('resize', atualizar);
-    window.visualViewport?.addEventListener('resize', atualizar);
-    atualizar();
-    return () => {
-      observador.disconnect();
-      window.removeEventListener('resize', atualizar);
-      window.visualViewport?.removeEventListener('resize', atualizar);
-    };
-  }, []);
-  return { referencia, tarefas: resumo, eventos };
+  return { banco, tarefas: resumo, eventos };
 }

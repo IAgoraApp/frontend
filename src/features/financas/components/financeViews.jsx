@@ -62,65 +62,201 @@ export function ResumoFinancas({ lancamentos, empilhado = false }) {
   );
 }
 
-export function GraficoCategorias({ dados, lancamentos }) {
+export function GraficoCategorias({
+  dados,
+  lancamentos,
+  contexto,
+  categoriaAtiva,
+  aoSelecionarCategoria,
+}) {
   const resultado = totaisPorCategoria(dados.categories, lancamentos).filter(
     item => item.type === 'expense'
   );
   const total = calcularTotais(lancamentos).saidas;
+  const selecionada = resultado.find(
+    categoria => categoria.id === categoriaAtiva
+  );
+  const montanteCentral = formatarMoeda(selecionada?.spent ?? total);
+  const digitosCentral = montanteCentral.replace(/^R\$\s*/, '');
   let cursor = 0;
   const fatias = resultado
     .filter(item => item.spent > 0)
     .map(categoria => {
       const inicio = cursor;
       cursor += total ? (categoria.spent / total) * 100 : 0;
-      return categoria.color + ' ' + inicio + '% ' + cursor + '%';
+      const cor =
+        selecionada && selecionada.id !== categoria.id
+          ? '#e0e8ef'
+          : categoria.color;
+      return cor + ' ' + inicio + '% ' + cursor + '%';
     });
 
   return (
-    <PainelFinancas titulo='Gastos por categoria' neutro classe='border-0'>
-      <div className='flex flex-col items-center gap-6 sm:flex-row lg:flex-col xl:flex-row'>
+    <PainelFinancas
+      titulo='Gastos por categoria'
+      neutro={!contexto}
+      classe={
+        contexto
+          ? '@container flex flex-col [&>div:first-child]:mb-1'
+          : 'border-0'
+      }
+    >
+      {contexto && (
+        <p className='mb-5 text-sm text-(--texto-apoio)'>{contexto}</p>
+      )}
+      <div
+        className={
+          contexto
+            ? 'flex flex-1 flex-col items-center justify-center gap-5 @min-[370px]:flex-row'
+            : 'flex flex-col items-center gap-6 sm:flex-row lg:flex-col xl:flex-row'
+        }
+      >
         <div
           role='img'
           aria-label={
-            total
-              ? 'Total em gastos: ' + formatarMoeda(total)
-              : 'Sem gastos neste mês'
+            selecionada
+              ? selecionada.name + ': ' + formatarMoeda(selecionada.spent)
+              : total
+                ? 'Total em gastos: ' + formatarMoeda(total)
+                : 'Sem gastos neste mês'
           }
-          className='flex size-48 shrink-0 items-center justify-center rounded-full'
+          className={
+            'flex shrink-0 items-center justify-center rounded-full ' +
+            (contexto
+              ? 'size-52 @min-[370px]:size-48 @min-[505px]:size-56'
+              : 'size-48')
+          }
           style={{
             background: total
               ? 'conic-gradient(' + fatias.join(',') + ')'
               : '#d9e4ec',
           }}
         >
-          <div className='flex size-36 flex-col items-center justify-center rounded-full bg-(--azul-fundo) p-3 text-center'>
-            <strong className='font-titulo text-lg font-extrabold'>
-              {formatarMoeda(total)}
-            </strong>
-            <span className='mt-1 text-xs text-(--texto-apoio)'>em gastos</span>
+          <div
+            className={
+              'flex flex-col items-center justify-center rounded-full p-2 text-center ' +
+              (contexto
+                ? 'size-36 bg-white @min-[370px]:size-33 @min-[505px]:size-39'
+                : 'size-36 bg-(--azul-fundo)')
+            }
+          >
+            {contexto ? (
+              <>
+                <span className='text-xs font-bold text-(--texto-apoio)'>
+                  R$
+                </span>
+                <strong
+                  className={
+                    'font-titulo leading-tight font-extrabold whitespace-nowrap tabular-nums ' +
+                    (digitosCentral.length > 10
+                      ? 'text-sm'
+                      : digitosCentral.length > 8
+                        ? 'text-lg'
+                        : 'text-[1.4rem] @min-[505px]:text-2xl')
+                  }
+                >
+                  {digitosCentral}
+                </strong>
+              </>
+            ) : (
+              <strong className='font-titulo text-lg font-extrabold'>
+                {montanteCentral}
+              </strong>
+            )}
+            <span className='mt-1 line-clamp-2 text-sm leading-tight text-(--texto-apoio)'>
+              {selecionada?.name ?? 'em gastos'}
+            </span>
           </div>
         </div>
-        <ul className='w-full min-w-0 flex-1 space-y-5'>
-          {(total
-            ? resultado.filter(item => item.spent > 0)
-            : resultado.slice(0, 4)
-          ).map(categoria => (
-            <li
-              key={categoria.id}
-              className='flex flex-wrap items-center gap-x-2 gap-y-1 text-xs sm:text-sm'
-            >
-              <span
-                className='size-3 shrink-0 rounded-full'
-                style={{ backgroundColor: categoria.color }}
-              />
-              <span className='min-w-0 flex-1'>{categoria.name}</span>
-              <strong>{formatarMoeda(categoria.spent)}</strong>
-              <span className='w-9 text-right text-(--texto-apoio)'>
-                {total ? Math.round((categoria.spent / total) * 100) : 0}%
-              </span>
-            </li>
-          ))}
-        </ul>
+        {aoSelecionarCategoria && !total ? (
+          <p className='text-sm text-(--texto-apoio)'>
+            Nenhuma despesa paga neste mês.
+          </p>
+        ) : (
+          <ul
+            className={
+              'w-full min-w-0 flex-1 ' +
+              (contexto ? 'divide-y divide-(--borda-suave)' : 'space-y-5')
+            }
+          >
+            {(total
+              ? resultado.filter(item => item.spent > 0)
+              : resultado.slice(0, 4)
+            ).map(categoria => {
+              const percentual = total
+                ? Math.round((categoria.spent / total) * 100)
+                : 0;
+              const conteudo = (
+                <>
+                  {aoSelecionarCategoria && categoria.icon ? (
+                    <span
+                      className='grid size-8 shrink-0 place-items-center rounded-full'
+                      style={{
+                        backgroundColor: `color-mix(in srgb, ${categoria.color} 16%, white)`,
+                      }}
+                    >
+                      <IconeFinancas nome={categoria.icon} classe='size-4' />
+                    </span>
+                  ) : (
+                    <span
+                      className='size-3 shrink-0 rounded-full'
+                      style={{ backgroundColor: categoria.color }}
+                    />
+                  )}
+                  {aoSelecionarCategoria ? (
+                    <span className='min-w-0 flex-1'>
+                      <span className='block text-sm font-semibold leading-tight sm:text-base'>
+                        {categoria.name}
+                      </span>
+                      <strong className='mt-0.5 block text-base leading-tight tabular-nums sm:text-lg'>
+                        {formatarMoeda(categoria.spent)}
+                      </strong>
+                    </span>
+                  ) : (
+                    <>
+                      <span className='min-w-0 flex-1'>{categoria.name}</span>
+                      <strong className='tabular-nums'>
+                        {formatarMoeda(categoria.spent)}
+                      </strong>
+                    </>
+                  )}
+                  <span
+                    className={
+                      'text-right tabular-nums text-(--texto-apoio) ' +
+                      (aoSelecionarCategoria
+                        ? 'shrink-0 rounded-full bg-(--azul-fundo) px-2 py-1 text-sm font-semibold'
+                        : 'w-8')
+                    }
+                  >
+                    {percentual}%
+                  </span>
+                </>
+              );
+              const classeLinha =
+                'flex flex-wrap items-center gap-x-2 gap-y-1 ' +
+                (contexto ? 'text-sm' : 'text-xs sm:text-sm');
+              return (
+                <li key={categoria.id}>
+                  {aoSelecionarCategoria ? (
+                    <button
+                      type='button'
+                      aria-pressed={categoria.id === categoriaAtiva}
+                      aria-controls='financas-lancamentos-resumo'
+                      className={
+                        'flex min-h-14 w-full cursor-pointer items-center gap-2 rounded-lg px-2 py-2 text-left hover:bg-(--azul-fundo) aria-pressed:bg-(--laranja-fundo)'
+                      }
+                      onClick={() => aoSelecionarCategoria(categoria.id)}
+                    >
+                      {conteudo}
+                    </button>
+                  ) : (
+                    <div className={classeLinha}>{conteudo}</div>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </div>
     </PainelFinancas>
   );
@@ -130,6 +266,7 @@ export function LinhasLancamentos({
   itens,
   categorias,
   compacto = false,
+  denso = false,
   aoAbrir,
   aoCriar,
 }) {
@@ -140,7 +277,10 @@ export function LinhasLancamentos({
           <button
             type='button'
             onClick={() => aoAbrir(item)}
-            className='grid min-h-18 w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-lg py-3 text-left hover:bg-(--azul-fundo) sm:gap-4'
+            className={
+              'grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-lg text-left hover:bg-(--azul-fundo) sm:gap-4 ' +
+              (denso ? 'min-h-13 py-2' : 'min-h-18 py-3')
+            }
           >
             <span
               aria-hidden='true'
@@ -162,18 +302,31 @@ export function LinhasLancamentos({
               </span>
             </span>
             <span className='min-w-0'>
-              <span className='block text-sm font-bold'>{item.name}</span>
-              <span className='mt-1 block text-xs text-(--texto-apoio)'>
+              <span
+                className={
+                  'block font-bold ' + (denso ? 'text-base' : 'text-sm')
+                }
+              >
+                {item.name}
+              </span>
+              <span
+                className={
+                  'mt-1 block text-(--texto-apoio) ' +
+                  (denso ? 'text-sm' : 'text-xs')
+                }
+              >
                 {!compacto &&
                   (categorias.find(cat => cat.id === item.categoryId)?.name ||
                     'Sem categoria') + ' · '}
                 {dataCurta(item.date)}
                 {item.repeat ? ' · Mensal' : ''}
+                {denso && item.situacao ? ' · ' + item.situacao : ''}
               </span>
             </span>
             <span
               className={
-                'text-right text-xs font-bold sm:text-sm ' +
+                'text-right font-bold tabular-nums ' +
+                (denso ? 'text-sm sm:text-base ' : 'text-xs sm:text-sm ') +
                 (item.type === 'income' ? 'text-[#18794e]' : 'text-[#b42318]')
               }
             >
@@ -378,7 +531,8 @@ export function ListaContas({ dados, mes, aoAbrir, aoCriar }) {
         (conta.repeat
           ? conta.date.slice(0, 7) <= mes
           : conta.date.slice(0, 7) === mes) &&
-        (filtro === 'todas' || statusConta(conta, mes, dados.payments) === filtro)
+        (filtro === 'todas' ||
+          statusConta(conta, mes, dados.payments) === filtro)
     )
     .sort((a, b) =>
       vencimentoConta(a, mes).localeCompare(vencimentoConta(b, mes))
@@ -414,7 +568,8 @@ export function ListaContas({ dados, mes, aoAbrir, aoCriar }) {
                   <strong className='block'>{conta.name}</strong>
                   <span className='mt-1 block text-xs text-(--texto-apoio)'>
                     {conta.repeat
-                      ? 'Todo dia ' + Number(vencimentoConta(conta, mes).slice(-2))
+                      ? 'Todo dia ' +
+                        Number(vencimentoConta(conta, mes).slice(-2))
                       : dataCurta(conta.date)}
                   </span>
                 </span>
@@ -487,10 +642,13 @@ export function RelatoriosFinancas({ dados, mes }) {
                   (item.saldo < 0 ? 'bg-[#b42318]' : 'bg-[#3f8395]')
                 }
                 style={{
-                  height: Math.max(2, (Math.abs(item.saldo) / maximo) * 75) + '%',
+                  height:
+                    Math.max(2, (Math.abs(item.saldo) / maximo) * 75) + '%',
                 }}
               />
-              <span className='text-xs text-(--texto-apoio)'>{item.rotulo}</span>
+              <span className='text-xs text-(--texto-apoio)'>
+                {item.rotulo}
+              </span>
             </div>
           ))}
         </div>

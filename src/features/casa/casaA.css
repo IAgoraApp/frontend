@@ -1,6 +1,155 @@
-.casa-identidade .mvp-pagina {
-  max-width: 1440px;
-  padding-top: 24px;
+.casa-identidade > .mvp-pagina {
+  display: grid;
+  gap: clamp(14px, 2.5vw, 24px);
+}
+.casa-identidade .mvp-cabecalho {
+  margin: 0;
+}
+.casa-identidade .casa-editar-residencia {
+  min-height: 44px;
+  padding: 6px 16px;
+  font-size: 12px;
+}
+.casa-perfil {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--azul-titulo);
+  color: white;
+}
+.casa-perfil-foto {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: 275px;
+  min-height: 0;
+  object-fit: cover;
+  object-position: center 55%;
+}
+.casa-perfil-informacoes {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px;
+  padding: clamp(14px, 3vw, 34px);
+  min-width: 0;
+}
+.casa-perfil-tipo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--pessego-suave);
+  font-size: 13px;
+  text-transform: capitalize;
+}
+.casa-perfil h2 {
+  font-family: var(--font-titulo);
+  font-size: clamp(23px, 3.3vw, 42px);
+  font-weight: 800;
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+  overflow-wrap: anywhere;
+}
+.casa-perfil-endereco {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--azul-fundo);
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.casa-perfil-endereco > svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.casa-identidade .mvp-resumo {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  background: var(--azul-fundo);
+}
+.casa-identidade .mvp-resumo > div {
+  gap: 2px;
+  padding: clamp(9px, 2vw, 18px);
+}
+.casa-identidade .mvp-resumo > div:last-child {
+  border-right: 0;
+}
+.casa-identidade .mvp-resumo strong {
+  font-size: clamp(20px, 3vw, 32px);
+  line-height: 1.2;
+}
+.casa-paineis,
+.casa-atalhos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(8px, 1.5vw, 16px);
+}
+.casa-painel-atalho {
+  min-height: 76px;
+  min-width: 0;
+  padding: 12px clamp(10px, 1.7vw, 20px);
+  border: 1px solid var(--borda-suave);
+  border-radius: 10px;
+  background: white;
+  text-align: left;
+}
+.casa-painel-atalho:hover,
+.casa-atalhos a:hover {
+  background: var(--azul-fundo);
+}
+.casa-painel-titulo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-titulo);
+  font-weight: 800;
+}
+.casa-painel-titulo svg {
+  flex-shrink: 0;
+  color: var(--laranja-principal);
+}
+.casa-painel-titulo svg:last-child {
+  margin-left: auto;
+}
+.casa-painel-previa {
+  display: block;
+  margin-top: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--texto-apoio);
+  font-size: 12px;
+}
+.casa-atalhos {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid var(--borda-suave);
+  border-radius: 10px;
+}
+.casa-atalhos a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 52px;
+  padding: 8px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 750;
+}
+.casa-atalhos a + a {
+  border-left: 1px solid var(--borda-suave);
+}
+.casa-atalhos a svg {
+  flex: none;
+  color: var(--azul-principal);
+}
+.casa-atalhos a:focus-visible {
+  outline-offset: -2px;
 }
 .casa-edicao-modal .mvp-editor {
   padding: 0;
@@ -16,129 +165,46 @@
   border-radius: 999px;
   padding-inline: 24px;
 }
-.casa-identidade .mvp-cabecalho {
-  margin-bottom: 18px;
-}
-.casa-identidade .mvp-cabecalho h1 {
-  font-size: 26px;
-}
-.casa-perfil {
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  overflow: hidden;
-  border: 1px solid var(--borda-suave);
-  border-radius: 14px;
-  margin-bottom: 20px;
-  background: var(--azul-fundo);
-}
-.casa-perfil-foto {
-  display: block;
-  width: 100%;
-  height: 100%;
-  min-height: 265px;
-  max-height: 330px;
-  object-fit: cover;
-  object-position: center 55%;
-}
-.casa-perfil-informacoes {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 14px;
-  padding: 28px 32px;
-  min-width: 0;
-}
-.casa-perfil-tipo {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 12px;
-  color: var(--texto-apoio);
-  text-transform: capitalize;
-}
-.casa-perfil h2 {
-  font-size: clamp(26px, 3vw, 38px);
-  font-weight: 800;
-  line-height: 1.12;
-  letter-spacing: -0.025em;
-  overflow-wrap: anywhere;
-}
-.casa-perfil-endereco {
-  display: flex;
-  align-items: flex-start;
-  gap: 9px;
-  color: var(--texto-apoio);
-  font-size: 13px;
-  line-height: 1.8;
-  overflow-wrap: anywhere;
-}
-.casa-perfil-endereco > svg {
-  flex-shrink: 0;
-  margin-top: 3px;
-}
-.casa-perfil-informacoes > button {
-  min-height: 42px;
-  padding: 10px 20px;
-  font-size: 12px;
-}
-.casa-identidade .mvp-resumo {
-  border: 0;
-  background: var(--azul-fundo);
-  margin-bottom: 22px;
-}
-.casa-identidade .mvp-resumo strong {
-  font-size: 24px;
-}
-.casa-identidade .mvp-painel-topo {
-  padding-block: 15px;
-}
-.casa-identidade .mvp-painel-topo > .mvp-primario {
-  border-radius: 999px;
-  padding-inline: 20px;
-}
-.casa-identidade .mvp-grade > div > .mvp-atalhos:first-child {
-  margin-top: 0;
-}
-@media (max-width: 1000px) {
-  .casa-perfil-informacoes {
-    padding: 24px;
-  }
-  .casa-perfil-foto {
-    min-height: 260px;
-  }
-}
-@media (max-width: 760px) {
-  .casa-perfil {
-    grid-template-columns: 1fr;
-  }
-  .casa-perfil-foto {
-    height: 200px;
-    min-height: 0;
-    object-position: center 48%;
-  }
-  .casa-perfil-informacoes {
-    padding: 22px;
-    gap: 12px;
-  }
+.casa-dialogo-link {
+  display: inline-block;
+  padding-block: 12px;
 }
 @media (max-width: 600px) {
-  .casa-identidade .mvp-pagina {
-    padding-top: 20px;
-  }
   .casa-identidade .mvp-cabecalho {
-    margin-bottom: 14px;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
   }
-  .casa-identidade .mvp-cabecalho h1 {
-    font-size: 24px;
+  .casa-identidade .casa-editar-residencia {
+    padding-inline: 8px;
+    font-size: 11px;
   }
-  .casa-perfil-foto {
-    height: 180px;
+  .casa-perfil {
+    grid-template-columns: minmax(0, 0.72fr) minmax(0, 1fr);
   }
   .casa-perfil-informacoes {
-    padding: 20px;
+    gap: 6px;
   }
+  .casa-perfil-tipo,
   .casa-perfil-endereco {
+    font-size: 11px;
+  }
+  .casa-perfil-endereco > svg {
+    width: 13px;
+  }
+  .casa-painel-titulo {
     font-size: 12px;
+  }
+  .casa-painel-titulo svg {
+    width: 14px;
+  }
+  .casa-atalhos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .casa-atalhos a:nth-child(odd) {
+    border-left: 0;
+  }
+  .casa-atalhos a:nth-child(n + 3) {
+    border-top: 1px solid var(--borda-suave);
   }
 }

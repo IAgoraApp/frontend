@@ -78,7 +78,7 @@ export function Integracao() {
         className='relative isolate flex min-h-dvh flex-col justify-between overflow-hidden bg-(--azul-titulo) px-(--margem-pagina) py-8 text-white'
         aria-labelledby='titulo-integracao-momento'
       >
-        <div className='mx-auto flex w-full max-w-[1280px] items-center justify-between'>
+        <div className='mx-auto flex w-full max-w-(--largura-header) items-center justify-between'>
           <Link
             to='/'
             aria-label='Voltar para a página inicial'
@@ -141,7 +141,7 @@ export function Integracao() {
           </section>
         </div>
 
-        <div className='mx-auto flex w-full max-w-[1280px] items-center justify-center gap-2 text-center text-sm text-white/75'>
+        <div className='mx-auto flex w-full max-w-(--largura-header) items-center justify-center gap-2 text-center text-sm text-white/75'>
           <span className='font-bold text-(--laranja-principal)'>↗</span>
           <p>Pode mudar de ideia depois. Seu momento também muda!</p>
         </div>

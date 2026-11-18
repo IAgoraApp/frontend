@@ -15,7 +15,6 @@ import Inicio from './home/home';
 import InicioPreparacao from './home-B/homeB';
 import { Integracao } from './onboarding/onboarding';
 import Limpeza from './limpeza/limpeza';
-import MercadoServicos from './marketplace/marketplace';
 import MinhaJornada from './minha-jornada/minhaJornada';
 import Perfil from './perfil/perfil';
 import Rotina from './rotina/rotina';
@@ -38,7 +37,6 @@ export const Funcionalidades = {
   Integracao,
   InteligenciaArtificial,
   Limpeza,
-  MercadoServicos,
   MinhaJornada,
   PaginaInicial,
   Perfil,
@@ -64,7 +62,6 @@ export {
   Integracao,
   InteligenciaArtificial,
   Limpeza,
-  MercadoServicos,
   MinhaJornada,
   PaginaInicial,
   Perfil,

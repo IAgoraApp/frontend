@@ -910,6 +910,19 @@
           ]
         },
         {
+          "nome": "Receita do Usuário",
+          "descricao": "Acompanha o preparo de uma receita para cada usuário, com os estados fazer, fazendo e feita.\n\n```\nTable receita_usuario {\n  id int [pk, increment]\n  user_id int [not null, ref: > users.id]\n  receita_id int [not null, ref: > receitas.id]\n  status varchar [not null, default: 'fazer']\n\n  indexes {\n    (user_id, receita_id) [unique]\n  }\n}\n```",
+          "checklists": [
+            {
+              "nome": "Regras",
+              "itens": [
+                "O par user_id e receita_id é único.",
+                "O status deve aceitar fazer, fazendo e feita. O padrão é fazer."
+              ]
+            }
+          ]
+        },
+        {
           "nome": "Receita Favorita",
           "descricao": "Aqui será a parte responsável por gerenciar as receitas favoritas dos usuários, permitindo adicionar, visualizar e remover receitas da lista de favoritos.\n\nCada usuário terá sua própria lista de receitas favoritas, podendo salvar receitas públicas do catálogo para acessá-las posteriormente.\n\n```\nTable receita_favorita {\n  id int [pk, increment]\n  user_id int [not null]\n  receita_id int [not null]\n\n  indexes {\n    (user_id, receita_id) [unique]\n  }\n}\n```",
           "checklists": [
@@ -992,7 +1005,7 @@
               "itens": [
                 "Uma receita pode ser criada por um usuário ou pela própria plataforma IAGORA",
                 "O campo user_id é opcional, permitindo cadastrar receitas oficiais da plataforma",
-                "O campo status deve permitir verificar se já foi feita antes, fazer ou fazendo"
+                "O campo status controla a publicação. O andamento do preparo fica em receita_usuario."
               ]
             }
           ]

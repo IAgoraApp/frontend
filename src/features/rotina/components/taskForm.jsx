@@ -1,5 +1,7 @@
+import { CalendarDays, ListChecks, Sparkles } from 'lucide-react';
+import { useCategoriasRotina } from '../hooks/useRotinaBanco';
 import { useState } from 'react';
-import { categoriasRotina, frequenciasRotina, diasSemanaRotina } from '../content';
+import { frequenciasRotina, diasSemanaRotina } from '../content';
 import { chaveData, analisarData } from '../utils/dates';
 import { validarTarefa } from '../utils/tasks';
 import { useEspacoCompacto } from '../hooks/useCompactWorkspace';
@@ -21,6 +23,7 @@ export default function FormularioTarefa({
   idTitulo,
   apresentacao = 'modal',
 }) {
+  const categoriasRotina = useCategoriasRotina();
   const [valores, setValores] = useState(() => ({
     title: tarefa?.title ?? '',
     category: tarefa?.category ?? '',
@@ -32,7 +35,8 @@ export default function FormularioTarefa({
     endDate: tarefa?.endDate ?? '',
   }));
   const [erros, setErros] = useState({});
-  const compacto = useEspacoCompacto() && apresentacao === 'pagina';
+  const pagina = apresentacao === 'pagina';
+  const compacto = useEspacoCompacto() && pagina;
   const [etapa, setEtapa] = useState(0);
   const etapas = ['Sua tarefa', 'Quando fazer', 'Detalhes'];
   const etapaCampo = nome =>
@@ -49,7 +53,7 @@ export default function FormularioTarefa({
 
   function avancar() {
     const proximosErros = Object.fromEntries(
-      Object.entries(validarTarefa(valores)).filter(
+      Object.entries(validarTarefa(valores, categoriasRotina)).filter(
         ([nome]) => etapaCampo(nome) === etapa
       )
     );
@@ -81,7 +85,7 @@ export default function FormularioTarefa({
 
   function enviar(evento) {
     evento.preventDefault();
-    const proximosErros = validarTarefa(valores);
+    const proximosErros = validarTarefa(valores, categoriasRotina);
     setErros(proximosErros);
     if (Object.keys(proximosErros).length) {
       const primeiro = Object.keys(proximosErros)[0];
@@ -99,37 +103,35 @@ export default function FormularioTarefa({
   }
 
   return (
-    <div className={classesRotina.conteudoModal}>
+    <div
+      className={
+        classesRotina.conteudoModal + (pagina ? ' rotina-form-pagina' : '')
+      }
+    >
       <CabecalhoModalRotina
         id={idTitulo}
         como={apresentacao === 'pagina' ? 'h1' : 'h2'}
-        fita={apresentacao !== 'pagina'}
         titulo={tarefa ? 'Editar tarefa' : 'Criar nova tarefa'}
         descricao={
           tarefa
             ? apresentacao === 'pagina'
               ? undefined
               : 'Ajuste os detalhes para a tarefa caber no seu dia.'
-            : 'Adicione uma tarefa manualmente ou peça sugestões para a IA.'
+            : 'Defina o que fazer e quando quer ver a tarefa na sua agenda.'
         }
       />
       {!tarefa && (
-        <div
-          className={classesRotina.modosCriacao}
-          hidden={compacto && etapa > 0}
-          role='group'
-          aria-label='Como criar a tarefa'
-        >
-          <button type='button' aria-pressed='true'>
-            Manual
-          </button>
-          <button type='button' onClick={aoAssistente}>
-            Com a IA
-          </button>
+        <div className='rotina-form-ajuda' hidden={compacto && etapa > 0}>
+          <BotaoRotina tom='secundario' onClick={aoAssistente}>
+            <Sparkles size={16} aria-hidden='true' /> Com a IA
+          </BotaoRotina>
         </div>
       )}
       {compacto && (
-        <nav className={classesRotina.etapasFormulario} aria-label='Etapas da tarefa'>
+        <nav
+          className={classesRotina.etapasFormulario}
+          aria-label='Etapas da tarefa'
+        >
           {etapas.map((rotulo, indice) => (
             <button
               key={rotulo}
@@ -160,19 +162,28 @@ export default function FormularioTarefa({
             {Object.values(erros).filter(Boolean).join(' ')}
           </p>
         )}
-        <div className={classesRotina.painelFormulario} data-etapado={compacto}>
+        <div
+          className={classesRotina.painelFormulario + ' rotina-form-campos'}
+          data-etapado={compacto}
+        >
           <div
             className={classesRotina.etapaFormulario}
             data-etapado={compacto}
             data-etapa='0'
             hidden={compacto && etapa !== 0}
           >
+            {pagina && !compacto && (
+              <h2 className='rotina-form-subtitulo'>
+                <ListChecks size={18} aria-hidden='true' /> Tarefa
+              </h2>
+            )}
+
             <CampoRotina
               id={`${idTitulo}-title`}
               name='title'
               rotulo='Título da tarefa'
               placeholder='Ex: Lavar a roupa'
-              maxLength={120}
+              maxLength={150}
               value={valores.title}
               onChange={alterar}
               required
@@ -203,6 +214,12 @@ export default function FormularioTarefa({
             data-etapa='1'
             hidden={compacto && etapa !== 1}
           >
+            {pagina && !compacto && (
+              <h2 className='rotina-form-subtitulo'>
+                <CalendarDays size={18} aria-hidden='true' /> Data e repetição
+              </h2>
+            )}
+
             <div className={classesRotina.camposRelacionados}>
               <CampoRotina
                 id={`${idTitulo}-date`}
@@ -326,7 +343,7 @@ export default function FormularioTarefa({
             )}
           </div>
         </div>
-        <div className={classesRotina.acoesFormulario}>
+        <div className={classesRotina.acoesFormulario + ' rotina-form-acoes'}>
           <BotaoRotina
             tom='contorno'
             onClick={
@@ -344,8 +361,7 @@ export default function FormularioTarefa({
               ? 'Continuar'
               : tarefa
                 ? 'Salvar alterações'
-                : 'Salvar tarefa'}{' '}
-            <span aria-hidden='true'>→</span>
+                : 'Salvar tarefa'}
           </BotaoRotina>
         </div>
       </form>

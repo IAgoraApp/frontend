@@ -1,0 +1,45 @@
+.perfil-editor .mvp-editor {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.perfil-editor .mvp-campos {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.perfil-editor .mvp-campos label:has(select),
+.perfil-editor .mvp-campos label:has([name='foto']) {
+  grid-column: 1 / -1;
+}
+
+.perfil-editor .mvp-campos :is(input, select) {
+  min-height: 44px;
+}
+
+.perfil-editor .mvp-form-acoes {
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.perfil-editor .mvp-form-acoes button {
+  min-height: 44px;
+  font-weight: 700;
+}
+
+.perfil-editor [role='alert'] {
+  margin-top: 12px;
+  color: var(--vermelho-alerta);
+  font-size: 0.875rem;
+}
+
+.perfil-editor :is(input, select, button):focus-visible {
+  outline: 2px solid var(--laranja-principal);
+  outline-offset: 2px;
+}
+
+@media (max-width: 540px) {
+  .perfil-editor .mvp-campos {
+    grid-template-columns: 1fr;
+  }
+}

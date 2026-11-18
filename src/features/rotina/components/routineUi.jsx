@@ -1,9 +1,6 @@
+import { useCategoriasRotina } from '../hooks/useRotinaBanco';
 import { ArrowLeft, X } from 'lucide-react';
-import {
-  Botao,
-  CampoFormulario,
-  Titulo,
-} from '../../../shared/ui/index';
+import { Botao, CampoFormulario, Titulo } from '../../../shared/ui/index';
 import Editar from '../assets/edit.svg';
 import Brilho from '../assets/spark.svg';
 import Calendario from '../assets/calendar.svg';
@@ -16,11 +13,6 @@ import Roupas from '../assets/shirt.svg';
 import ListaTarefas from '../assets/checklist.svg';
 import AssinaturaChecklist from '../assets/signature-checklist.svg';
 import AssinaturaRaios from '../assets/assinatura-raios.svg';
-import PontoCasa from '../assets/dot-casa.svg';
-import PontoCozinha from '../assets/dot-cozinha.svg';
-import PontoPessoal from '../assets/dot-pessoal.svg';
-import PontoFinancas from '../assets/dot-financas.svg';
-import { categoriasRotina } from '../content';
 import classesRotina from '../routineClasses';
 
 const iconesRotina = {
@@ -33,13 +25,6 @@ const iconesRotina = {
   estudos: Estudos,
   limpeza: Limpeza,
   roupas: Roupas,
-};
-
-const pontosRotina = {
-  casa: PontoCasa,
-  cozinha: PontoCozinha,
-  pessoal: PontoPessoal,
-  financas: PontoFinancas,
 };
 
 export function IconeRotina({ nome, classe = '', ...propriedades }) {
@@ -73,21 +58,10 @@ export function BotaoRotina({
   );
 }
 
-export function FitaRotina({ children = 'MINHA ROTINA', editorial = false }) {
-  return (
-    <span
-      className={`${classesRotina.fita} ${editorial ? classesRotina.fitaEditorial : ''}`}
-    >
-      {children}
-    </span>
-  );
-}
-
 export function CabecalhoRotina({
   titulo,
   descricao,
   aoVoltar,
-  fita = false,
   children,
   compacto = false,
 }) {
@@ -106,7 +80,6 @@ export function CabecalhoRotina({
       )}
       <div className={classesRotina.linhaTitulo}>
         <div className={classesRotina.copiaTitulo}>
-          {fita && <FitaRotina />}
           <Titulo como='h1' classe={classesRotina.tituloPagina}>
             {titulo}
           </Titulo>
@@ -155,26 +128,26 @@ export function ArteListaRotina({ assinatura = false }) {
   );
 }
 
-export function SeloCategoriaRotina({ categoria, neutro = false }) {
+export function SeloCategoriaRotina({ categoria }) {
+  const categoriasRotina = useCategoriasRotina();
   return (
     <span
       data-categoria
-      className={`${classesRotina.seloCategoria} ${neutro ? classesRotina.seloNeutro : classesRotina[categoria]}`}
+      className={`${classesRotina.seloCategoria} ${classesRotina.seloNeutro}`}
     >
-      {categoriasRotina.find(item => item.id === categoria)?.rotulo ?? 'Pessoal'}
+      {categoriasRotina.find(item => item.id === categoria)?.rotulo ??
+        'Sem categoria'}
     </span>
   );
 }
 
 export function PontoCategoriaRotina({ categoria }) {
+  const cor = useCategoriasRotina().find(item => item.id === categoria)?.cor;
   return (
-    <img
-      className={classesRotina.pontoCategoria}
-      src={pontosRotina[categoria]}
-      width='14'
-      height='14'
-      alt=''
+    <span
       aria-hidden='true'
+      className='inline-block size-2.5 shrink-0 rounded-full'
+      style={{ backgroundColor: cor || 'var(--azul-principal)' }}
     />
   );
 }
@@ -202,7 +175,6 @@ export function EstadoVazioRotina({
     <div className={classesRotina.estadoVazio}>
       <div className={classesRotina.linhaTitulo}>
         <div className={classesRotina.copiaTitulo}>
-          <FitaRotina />
           <Titulo como='h2' classe={classesRotina.tituloModal}>
             {titulo}
           </Titulo>
@@ -240,20 +212,18 @@ export function CabecalhoModalRotina({
   id,
   titulo,
   descricao,
-  editorial = false,
   arte = false,
   como = 'h2',
-  fita = true,
 }) {
   return (
     <div className={classesRotina.linhaTitulo}>
       <div className={classesRotina.copiaTitulo}>
-        {fita && (
-          <FitaRotina editorial={editorial}>
-            {editorial ? 'IAGORA · UM PASSO DE CADA VEZ' : 'MINHA ROTINA'}
-          </FitaRotina>
-        )}
-        <Titulo como={como} id={id} tabIndex={-1} classe={classesRotina.tituloModal}>
+        <Titulo
+          como={como}
+          id={id}
+          tabIndex={-1}
+          classe={classesRotina.tituloModal}
+        >
           {titulo}
         </Titulo>
         {descricao && <p className={classesRotina.apoio}>{descricao}</p>}
@@ -299,13 +269,7 @@ export function CampoRotina({ erro, classe = '', ...propriedades }) {
   );
 }
 
-export function SelecaoRotina({
-  id,
-  rotulo,
-  erro,
-  children,
-  ...propriedades
-}) {
+export function SelecaoRotina({ id, rotulo, erro, children, ...propriedades }) {
   return (
     <div className={classesRotina.campoFormulario}>
       <label className={classesRotina.rotuloCampo} htmlFor={id}>

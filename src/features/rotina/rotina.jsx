@@ -1,24 +1,28 @@
+import { useCallback, useLayoutEffect, useState } from 'react';
 import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useState,
-} from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom';
+  Navigate,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from 'react-router-dom';
+import {
+  CalendarDays,
+  LayoutGrid,
+  ListChecks,
+  Sparkles,
+  Tags,
+} from 'lucide-react';
+import LayoutCasa from '../../app/layouts/casaLayout';
+import { MenuLateralCasa } from '../../app/layouts/components/casaNavigation';
 import { Container } from '../../shared/ui/index';
-import Rodape from '../../shared/footer';
+import './rotina.css';
 import {
-  PainelAgenda,
-  PainelAssistente,
   VisaoCalendario,
-  DialogoTarefasDia,
   DialogoExcluirTarefa,
   VisaoHistorico,
   SeletorMes,
   DialogoResultado,
   ModalRotina,
-  VisaoGeralRotina,
   AvisoFlutuanteRotina,
   EspacoTrabalhoRotina,
   DetalheTarefa,
@@ -28,33 +32,65 @@ import {
 } from './components/index';
 import { useAlturaDisponivel } from './hooks/useAvailableHeight';
 import { useLembretes } from './hooks/useReminders';
-import { useRotina } from './hooks/useRoutine';
-import {
-  adicionarDias,
-  diasCalendario,
-  chaveData,
-  intervaloMes,
-} from './utils/dates';
-import { criarId, ocorrenciasEntre } from './utils/tasks';
+import { useRotinaBanco } from './hooks/useRotinaBanco';
+import GestaoRotina from './rotinaA';
+import { diasCalendario, intervaloMes } from './utils/dates';
+import { criarId } from './utils/tasks';
 import classesRotina from './routineClasses';
 
-const mapaVisoes = {
-  calendario: 'calendario',
-  lista: 'lista',
-  historico: 'historico',
-};
-const tiposEspaco = ['criar', 'editar', 'assistente'];
+const secoesRotina = [
+  {
+    rota: '/rotina',
+    nome: 'Visão geral',
+    Icone: LayoutGrid,
+    inicial: 'geral',
+    links: [],
+  },
+  {
+    rota: '/rotina',
+    nome: 'Atividades',
+    Icone: ListChecks,
+    links: [
+      ['lista', 'Tarefas'],
+      ['historico', 'Histórico'],
+    ],
+  },
+  {
+    rota: '/rotina',
+    nome: 'Organização',
+    Icone: Tags,
+    links: [
+      ['categorias', 'Categorias'],
+      ['recorrencias', 'Recorrências'],
+    ],
+  },
+  {
+    rota: '/ia',
+    nome: 'Dicas da IA',
+    Icone: Sparkles,
+    links: [],
+  },
+];
+const visoesRotina = secoesRotina.flatMap(secao =>
+  secao.links.map(([id]) => id)
+);
+
+const tiposEspaco = ['criar', 'editar'];
 
 export default function Rotina() {
   const localizacao = useLocation();
-  const { estado, despachar } = useRotina();
-  const [parametrosBusca, setParametrosBusca] = useSearchParams();
+  const navegar = useNavigate();
+  const { estado, ocorrencias, despachar } = useRotinaBanco();
+  const [parametrosBusca] = useSearchParams();
+  const visaoSolicitada = parametrosBusca.get('visao');
   const visao =
-    Object.keys(mapaVisoes).find(
-      chave => mapaVisoes[chave] === parametrosBusca.get('visao')
-    ) ?? 'visaoGeral';
+    visaoSolicitada === 'tarefas'
+      ? 'lista'
+      : visoesRotina.includes(visaoSolicitada)
+        ? visaoSolicitada
+        : 'geral';
   const [mes, setMes] = useState(() => new Date());
-  const [hoje, setHoje] = useState(chaveData);
+  const [mostrarTudo, setMostrarTudo] = useState(false);
   const [modais, setModais] = useState([]);
   const [chaveNavegacao, setChaveNavegacao] = useState(localizacao.key);
   if (chaveNavegacao !== localizacao.key) {
@@ -74,68 +110,20 @@ export default function Rotina() {
     (mensagem, acao) => setAviso({ mensagem, acao }),
     []
   );
-  useLembretes(estado.tasks, estado.completions, notificar);
+  useLembretes(ocorrencias, notificar);
 
   useLayoutEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  }, [localizacao.key, chaveEspaco]);
+    referencia.current
+      ?.closest('.casa-conteudo')
+      ?.scrollTo({ top: 0, behavior: 'instant' });
+  }, [localizacao.key, chaveEspaco, referencia]);
 
-  useEffect(() => {
-    const intervalo = window.setInterval(() => setHoje(chaveData()), 60_000);
-    return () => window.clearInterval(intervalo);
-  }, []);
-
-  const pendentes = useMemo(() => {
-    const inicio = adicionarDias(hoje, -30);
-    const recentes = ocorrenciasEntre(
-      estado.tasks,
-      estado.completions,
-      inicio,
-      adicionarDias(hoje, 30)
-    );
-    const antigas = estado.tasks
-      .filter(
-        tarefa =>
-          tarefa.frequency === 'none' &&
-          tarefa.date < inicio &&
-          !estado.completions.some(
-            item => item.taskId === tarefa.id && item.occurrenceDate === tarefa.date
-          )
-      )
-      .map(tarefa => ({
-        ...tarefa,
-        occurrenceDate: tarefa.date,
-        occurrenceId: `${tarefa.id}:${tarefa.date}`,
-        completed: false,
-      }));
-    return [...antigas, ...recentes].sort((a, b) =>
-      `${a.occurrenceDate}T${a.time}`.localeCompare(
-        `${b.occurrenceDate}T${b.time}`
-      )
-    );
-  }, [estado.tasks, estado.completions, hoje]);
-
-  const tarefasCalendario = useMemo(() => {
-    const dias = diasCalendario(mes);
-    return ocorrenciasEntre(
-      estado.tasks,
-      estado.completions,
-      dias[0],
-      dias.at(-1),
-      true
-    );
-  }, [estado.tasks, estado.completions, mes]);
-
-  function irPara(proxima) {
-    setParametrosBusca(anterior => {
-      const parametros = new URLSearchParams(anterior);
-      if (mapaVisoes[proxima]) parametros.set('visao', mapaVisoes[proxima]);
-      else parametros.delete('visao');
-      return parametros;
-    });
-    setModais([]);
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  }
+  const pendentes = ocorrencias.filter(tarefa => !tarefa.completed);
+  const dias = diasCalendario(mes);
+  const tarefasCalendario = ocorrencias.filter(
+    tarefa =>
+      tarefa.occurrenceDate >= dias[0] && tarefa.occurrenceDate <= dias.at(-1)
+  );
 
   function abrir(tipo, tarefa, extras = {}) {
     const entrada = { type: tipo, task: tarefa, ...extras, key: criarId() };
@@ -148,27 +136,23 @@ export default function Rotina() {
     setModais(anterior => anterior.slice(0, -1));
   }
   function resultado(titulo, descricao) {
-    setModais([{ type: 'resultado', title: titulo, description: descricao, key: criarId() }]);
+    setModais([
+      {
+        type: 'resultado',
+        title: titulo,
+        description: descricao,
+        key: criarId(),
+      },
+    ]);
   }
 
   function resolverTarefa(tarefa) {
     const id = tarefa.taskId ?? tarefa.id;
     const origem = estado.tasks.find(item => item.id === id);
-    const occurrenceDate = tarefa.occurrenceDate ?? tarefa.date;
-    const occurrenceId = `${id}:${occurrenceDate}`;
-    return {
-      frequency: 'none',
-      reminder: 'none',
-      notes: '',
-      weekdays: [],
-      excludedDates: [],
-      ...origem,
-      ...tarefa,
-      id,
-      occurrenceDate,
-      occurrenceId,
-      completed: estado.completions.some(item => item.id === occurrenceId),
-    };
+    const atual = ocorrencias.find(
+      item => item.executionId === tarefa.executionId
+    );
+    return { ...tarefa, ...origem, ...atual, id };
   }
 
   function desfazer(tarefa) {
@@ -202,29 +186,13 @@ export default function Rotina() {
       despachar({
         type: 'update',
         id: tarefa.id,
-        changes: {
-          ...valores,
-          excludedDates:
-            tarefa.frequency === valores.frequency ? tarefa.excludedDates : [],
-        },
+        occurrence: tarefa,
+        changes: valores,
       });
     } else {
       despachar({
         type: 'add',
-        tasks: [
-          {
-            ...valores,
-            id: criarId(),
-            reminder: 'none',
-            excludedDates: [],
-            icon:
-              valores.category === 'cozinha'
-                ? 'limpeza'
-                : valores.category === 'pessoal'
-                  ? 'estudos'
-                  : 'lista',
-          },
-        ],
+        tasks: [valores],
       });
     }
     resultado(
@@ -239,7 +207,6 @@ export default function Rotina() {
         type: 'reschedule',
         occurrence: tarefa,
         ...valores,
-        newId: criarId(),
       });
     } else {
       despachar({
@@ -252,7 +219,6 @@ export default function Rotina() {
                 frequency: valores.frequency,
                 weekdays: valores.weekdays,
                 endDate: valores.frequency === 'none' ? '' : valores.endDate,
-                excludedDates: [],
               },
       });
     }
@@ -264,36 +230,6 @@ export default function Rotina() {
     );
   }
 
-  function adicionarSugestoes(sugestoes) {
-    const tarefas = sugestoes.filter(
-      item =>
-        !estado.tasks.some(
-          tarefa =>
-            tarefa.title === item.title &&
-            tarefa.category === item.category &&
-            tarefa.date === item.date &&
-            tarefa.frequency === item.frequency
-        )
-    );
-    if (!tarefas.length) {
-      notificar('Estas sugestões já estão na sua rotina.');
-      return;
-    }
-    despachar({
-      type: 'add',
-      tasks: tarefas.map(item => ({ ...item, id: criarId() })),
-    });
-    resultado(
-      'Sua rotina ganhou novos passos.',
-      `${tarefas.length} ${tarefas.length === 1 ? 'tarefa foi adicionada' : 'tarefas foram adicionadas'} à sua rotina.`
-    );
-  }
-
-  function acaoRapida(acao) {
-    if (acao in mapaVisoes) irPara(acao);
-    else abrir(acao);
-  }
-
   function conteudoModal(entrada) {
     const idTitulo = `modal-rotina-${entrada.key}`;
     const tarefa = entrada.task ? resolverTarefa(entrada.task) : null;
@@ -303,13 +239,17 @@ export default function Rotina() {
         <FormularioTarefa
           {...comuns}
           apresentacao='pagina'
-          tarefa={entrada.type === 'editar' ? tarefa : undefined}
+          tarefa={
+            entrada.type === 'editar'
+              ? estado.tasks.find(item => item.id === tarefa.id)
+              : undefined
+          }
           dataPadrao={entrada.day}
           aoCancelar={voltar}
           aoSalvar={valores =>
             salvarTarefa(valores, entrada.type === 'editar' ? tarefa : null)
           }
-          aoAssistente={() => abrir('assistente')}
+          aoAssistente={() => navegar('/ia')}
           aoExcluir={() => abrir('excluir', tarefa)}
         />
       );
@@ -357,42 +297,6 @@ export default function Rotina() {
         />
       );
     }
-    if (entrada.type === 'assistente') {
-      return (
-        <PainelAssistente
-          {...comuns}
-          apresentacao='pagina'
-          aoAdicionar={adicionarSugestoes}
-          aoManual={() => abrir('criar')}
-        />
-      );
-    }
-    if (entrada.type === 'agenda') {
-      return (
-        <PainelAgenda
-          {...comuns}
-          agenda={estado.agenda}
-          aoCancelar={voltar}
-          aoConectar={() =>
-            despachar({ type: 'agenda', changes: { connected: true } })
-          }
-          aoSalvar={preferencias => {
-            despachar({ type: 'agenda', changes: { preferences: preferencias } });
-            resultado(
-              'Preferências atualizadas.',
-              'A sincronização foi configurada no exemplo.'
-            );
-          }}
-          aoDesconectar={() => {
-            despachar({ type: 'agenda', changes: { connected: false } });
-            resultado(
-              'Conexão removida.',
-              'Suas tarefas continuam disponíveis na plataforma.'
-            );
-          }}
-        />
-      );
-    }
     if (entrada.type === 'mes') {
       return (
         <SeletorMes
@@ -402,26 +306,6 @@ export default function Rotina() {
             setMes(valor);
             voltar();
           }}
-        />
-      );
-    }
-    if (entrada.type === 'dia') {
-      return (
-        <DialogoTarefasDia
-          {...comuns}
-          dia={entrada.day}
-          tarefas={ocorrenciasEntre(
-            estado.tasks,
-            estado.completions,
-            entrada.day,
-            entrada.day,
-            true
-          )}
-          aoAbrir={valor => abrir('detalhe', valor)}
-          aoConcluir={concluir}
-          aoDesfazer={desfazer}
-          aoCriar={() => abrir('criar', undefined, { day: entrada.day })}
-          aoCancelar={voltar}
         />
       );
     }
@@ -441,63 +325,71 @@ export default function Rotina() {
     ['reagendar', 'lembrete', 'repeticao'].includes(modalAtivo.type);
   const { inicio: inicioCalendario, fim: fimCalendario } = intervaloMes(mes);
 
+  if (visaoSolicitada === 'assistente') return <Navigate to='/ia' replace />;
+
   return (
-    <div lang='pt-BR' className='flex min-w-0 flex-1 flex-col bg-white'>
+    <LayoutCasa
+      secao={visao}
+      navegacao={
+        <MenuLateralCasa
+          titulo='Rotina'
+          IconeTitulo={CalendarDays}
+          rotulo='Navegação da rotina'
+          secoes={secoesRotina}
+          pathname='/rotina'
+          visao={visao}
+        />
+      }
+    >
       <main
         ref={referencia}
-        className={`${classesRotina.escopo} ${classesRotina.pagina} ${espaco || visao === 'visaoGeral' || visao === 'calendario' ? classesRotina.paginaAjustada : ''}`}
+        className={`rotina-tela ${classesRotina.escopo} ${classesRotina.pagina} min-h-full bg-(--azul-fundo)! ${espaco ? classesRotina.paginaAjustada : ''}`}
         data-visao={espaco ? 'espaco' : visao}
-        data-ajuste={Boolean(
-          espaco || visao === 'visaoGeral' || visao === 'calendario'
-        )}
+        data-ajuste={Boolean(espaco)}
         aria-label='Minha rotina'
       >
-        <Container classe={classesRotina.container}>
-          <div hidden={Boolean(espaco)} className={classesRotina.painelVisao}>
-            {visao === 'visaoGeral' && (
-              <VisaoGeralRotina
-                proximas={pendentes.filter(
-                  tarefa => tarefa.occurrenceDate >= hoje
-                )}
-                aoAcao={acaoRapida}
-                aoAbrir={tarefa => abrir('detalhe', tarefa)}
-                aoConcluir={concluir}
-              />
-            )}
-            {visao === 'calendario' && (
+        <Container classe='rotina-conteudo casa-pagina-conteudo'>
+          <div
+            hidden={Boolean(espaco)}
+            className={`rotina-visao ${classesRotina.painelVisao}`}
+          >
+            {visao === 'geral' && (
               <VisaoCalendario
                 mes={mes}
                 aoMudarMes={setMes}
                 ocorrencias={tarefasCalendario}
-                aoSelecionarDia={dia => abrir('dia', undefined, { day: dia })}
+                mostrarTudo={mostrarTudo}
+                aoMostrarTudo={setMostrarTudo}
                 aoEscolherMes={() => abrir('mes')}
-                aoVoltar={() => irPara('visaoGeral')}
-                aoAgenda={() => abrir('agenda')}
-                conectada={estado.agenda.connected}
+                aoCriar={dia => abrir('criar', undefined, { day: dia })}
+                aoAbrir={tarefa => abrir('detalhe', tarefa)}
+                aoConcluir={concluir}
+                aoDesfazer={desfazer}
               />
             )}
             {visao === 'lista' && (
               <VisaoListaTarefas
-                tarefas={pendentes}
-                aoVoltar={() => irPara('visaoGeral')}
-                aoCriar={() => abrir('criar')}
-                aoAssistente={() => abrir('assistente')}
+                tarefas={tarefasCalendario}
+                mes={mes}
+                mostrarTudo={mostrarTudo}
+                aoMostrarTudo={setMostrarTudo}
+                aoEscolherMes={() => abrir('mes')}
+                aoCriar={dia => abrir('criar', undefined, { day: dia })}
                 aoAbrir={tarefa => abrir('detalhe', tarefa)}
-                aoConcluir={concluir}
-                aoAcao={abrir}
               />
             )}
             {visao === 'historico' && (
               <VisaoHistorico
                 conclusoes={estado.completions}
                 pendentes={pendentes}
-                aoVoltar={() => irPara('visaoGeral')}
                 aoAbrir={tarefa => abrir('detalhe', tarefa)}
-                aoDesfazer={desfazer}
               />
             )}
+            {['categorias', 'recorrencias'].includes(visao) && (
+              <GestaoRotina key={visao} visao={visao} />
+            )}
             <span className={classesRotina.somenteLeitor} aria-live='polite'>
-              {visao === 'calendario'
+              {visao === 'geral'
                 ? `Calendário de ${inicioCalendario} a ${fimCalendario}.`
                 : ''}
             </span>
@@ -555,7 +447,6 @@ export default function Rotina() {
           <AvisoFlutuanteRotina aviso={aviso} aoDispensar={dispensarAviso} />
         )}
       </main>
-      <Rodape />
-    </div>
+    </LayoutCasa>
   );
 }

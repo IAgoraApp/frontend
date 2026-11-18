@@ -1,5 +1,5 @@
+import { useCategoriasRotina } from '../hooks/useRotinaBanco';
 import {
-  categoriasRotina,
   frequenciasRotina,
   opcoesLembrete,
 } from '../content';
@@ -14,6 +14,7 @@ export default function DetalheTarefa({
   aoDesfazer,
   idTitulo,
 }) {
+  const categoriasRotina = useCategoriasRotina();
   const categoria = categoriasRotina.find(
     item => item.id === tarefa.category
   )?.rotulo;

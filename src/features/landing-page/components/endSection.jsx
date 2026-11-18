@@ -1,7 +1,7 @@
 export default function SecaoEncerramento() {
   return (
-    <section className='w-full bg-(--laranja-principal) px-6 py-10 text-white sm:px-12 lg:h-[160px] lg:px-[72px] lg:py-[18px]'>
-      <div className='mx-auto flex h-full max-w-[1296px] flex-col items-center justify-center gap-6 md:flex-row md:justify-between'>
+    <section className='w-full bg-(--laranja-principal) px-(--margem-pagina) py-10 text-white lg:h-[160px] lg:py-[18px]'>
+      <div className='mx-auto flex h-full max-w-(--largura-header) flex-col items-center justify-center gap-6 md:flex-row md:justify-between'>
         <div className='flex max-w-[940px] flex-col gap-1 text-center md:text-left lg:h-[100px] lg:justify-center'>
           <span className='font-corpo text-[14px] font-bold tracking-[1px] sm:text-base'>
             SEU PRÓXIMO CAPÍTULO.

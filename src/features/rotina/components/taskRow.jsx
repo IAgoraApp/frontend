@@ -59,10 +59,7 @@ export default function LinhaTarefa({
       {variante === 'lista' && (
         <time className={classesRotina.horarioTarefa}>{tarefa.time}</time>
       )}
-      <SeloCategoriaRotina
-        categoria={tarefa.category}
-        neutro={variante === 'proximas'}
-      />
+      <SeloCategoriaRotina categoria={tarefa.category} />
       {aoAcao && !concluida && (
         <details className={classesRotina.menuTarefa} name='acoes-tarefa-rotina'>
           <summary aria-label={`Opções para ${tarefa.title}`}>

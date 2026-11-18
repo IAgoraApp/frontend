@@ -3,19 +3,24 @@ import { Outlet, useLocation } from 'react-router-dom';
 import NavegacaoCasa from './components/casaNavigation';
 import './casaLayout.css';
 
-export default function LayoutCasa() {
+export default function LayoutCasa({
+  navegacao = <NavegacaoCasa />,
+  secao,
+  areaCasa = false,
+  children,
+}) {
   const { pathname } = useLocation();
   const conteudo = useRef(null);
   useLayoutEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
     conteudo.current?.scrollTo({ top: 0, behavior: 'instant' });
-  }, [pathname]);
+  }, [pathname, secao]);
 
   return (
-    <div className='casa-shell'>
-      <NavegacaoCasa />
+    <div className={areaCasa ? 'casa-shell casa-shell-area' : 'casa-shell'}>
+      {navegacao}
       <div className='casa-conteudo' ref={conteudo}>
-        <Outlet />
+        {children ?? <Outlet />}
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ export function Container({
 }) {
   return (
     <Etiqueta
-      className={`mx-auto w-full max-w-[1440px] min-w-0 px-(--margem-pagina) ${classe}`}
+      className={`mx-auto w-full max-w-(--largura-pagina) min-w-0 px-(--margem-pagina) ${classe}`}
       {...propriedades}
     >
       {children}

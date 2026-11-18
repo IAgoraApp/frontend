@@ -160,7 +160,7 @@ export default function Cabecalho({
         }
       }}
     >
-      <div className='mx-auto flex max-w-[1440px] min-w-0 items-center justify-between gap-[clamp(1rem,2cqw,2rem)] py-4 @min-[72rem]/cabecalho:py-5'>
+      <div className='mx-auto flex max-w-(--largura-header) min-w-0 items-center justify-between gap-[clamp(1rem,2cqw,2rem)] py-4 @min-[72rem]/cabecalho:py-5'>
         <Link
           className='min-w-0 @min-[72rem]/cabecalho:shrink-0'
           to={rotaLogo}

@@ -6,16 +6,14 @@ const classesRotina = {
     'min-h-(--altura-rotina) flex-none [container:rotina-viewport/inline-size]',
   container:
     'pt-[clamp(1rem,2.223vw,2rem)] pb-12 group-data-[ajuste=true]/rotina:min-h-(--altura-rotina) group-data-[ajuste=true]/rotina:py-[clamp(0.75rem,2vw,1.5rem)]',
-  painelVisao: 'min-h-0 group-data-[ajuste=true]/rotina:h-full [&[hidden]]:hidden',
+  painelVisao:
+    'min-h-0 group-data-[ajuste=true]/rotina:h-full [&[hidden]]:hidden',
   painelModal: '[&[hidden]]:hidden',
   somenteLeitor: 'sr-only',
   copiaTitulo:
     'flex min-w-0 flex-1 flex-col items-start gap-3 group-data-[ajuste=true]/rotina:gap-2 group-data-[visao=espaco]/rotina:gap-1.5 group-data-[visao=modal]/rotina:gap-2',
   linhaTitulo:
     'flex min-w-0 items-center justify-between gap-8 max-md:flex-wrap group-data-[visao=espaco]/rotina:gap-4 group-data-[visao=modal]/rotina:gap-4',
-  fita:
-    'inline-block max-w-full rotate-[1.4deg] bg-(--rotina-laranja) px-3 py-1.5 text-xs leading-normal font-bold text-white group-data-[visao=modal]/rotina:px-2 group-data-[visao=modal]/rotina:py-1 group-data-[visao=modal]/rotina:text-[0.625rem]',
-  fitaEditorial: 'mb-1.5 px-4.5 py-2.25 tracking-[0.045rem]',
   icone:
     'inline-flex size-8 shrink-0 items-center justify-center [&_img]:block [&_img]:max-h-full [&_img]:max-w-full [&_img]:shrink-0',
   botao:
@@ -37,20 +35,18 @@ const classesRotina = {
     'text-[clamp(1.75rem,3.6vw,3.25rem)] leading-tight font-extrabold tracking-[-0.035em]',
   descricaoIntroducao: 'text-base text-(--rotina-apoio) max-md:text-sm',
   listaIlustracao: 'h-auto w-[clamp(4.5rem,14vw,11rem)] shrink-0 max-sm:hidden',
-  acoesRapidas:
-    'grid grid-cols-5 gap-3 max-md:grid-cols-3 max-md:gap-2 max-[480px]:grid-cols-2',
+  acoesRapidas: 'grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6 lg:gap-3',
   acaoRapida:
-    'flex min-h-13 min-w-0 items-center gap-2.5 rounded-xl bg-(--rotina-suave) px-4 py-3 text-left text-sm font-bold transition-colors hover:bg-(--laranja-fundo) sm:text-base',
+    'flex min-h-13 min-w-0 items-center gap-2.5 rounded-xl bg-(--rotina-suave) px-4 py-3 text-left text-sm font-bold transition-colors hover:bg-(--laranja-fundo) xl:text-base',
   cartoesVisaoGeral: 'grid min-h-0 grid-cols-2 gap-5 max-lg:grid-cols-1',
-  proximas:
-    'flex min-h-[260px] min-w-0 flex-col rounded-2xl bg-[#f5f7fa] p-5',
+  proximas: 'flex min-h-[260px] min-w-0 flex-col rounded-2xl bg-[#f5f7fa] p-5',
   cabecalhoCartao:
     'mb-3 flex min-h-8 shrink-0 flex-wrap items-center justify-between gap-x-4',
   tituloCartao: 'text-[1.375rem] leading-[1.4] font-extrabold max-md:text-lg',
   linhasProximas: 'flex min-h-0 flex-1 flex-col gap-2',
   proximasVazio: 'flex min-h-0 flex-col justify-center gap-1 py-4',
   cartaoIa:
-    'grid min-h-[260px] min-w-0 grid-cols-[minmax(0,1fr)_clamp(5rem,12vw,9.5rem)] items-center gap-4 rounded-2xl bg-(--rotina-suave) p-6 max-sm:grid-cols-1',
+    'grid min-h-[260px] min-w-0 grid-cols-[minmax(0,1fr)_clamp(5rem,12vw,9.5rem)] items-center gap-4 rounded-2xl bg-(--laranja-fundo) p-6 max-sm:grid-cols-1',
   copiaCartaoIa:
     'flex min-w-0 flex-col items-start gap-3 [&>p]:text-base [&>p]:text-(--rotina-apoio)',
   tituloCartaoIa:
@@ -83,63 +79,60 @@ const classesRotina = {
     'relative shrink-0 [&_summary]:grid [&_summary]:size-11 [&_summary]:list-none [&_summary]:place-items-center [&_summary]:rounded-full [&_summary]:text-[#96a9b9] [&_summary::-webkit-details-marker]:hidden [&_summary:hover]:bg-(--azul-fundo)',
   itensMenu:
     'absolute end-0 top-[calc(100%+0.25rem)] z-5 flex w-50 flex-col rounded-xl border border-(--rotina-borda) bg-white p-1.5 shadow-[0_0.5rem_2rem_#102a431a] [&_button]:min-h-11 [&_button]:rounded-md [&_button]:px-3 [&_button]:py-2 [&_button]:text-left [&_button]:text-[0.9375rem] [&_button:hover]:bg-(--azul-fundo) [&_button:last-child]:text-[#b32c16]',
-  cabecalhoPagina: 'mb-11 flex flex-col gap-8 max-md:mb-6 max-md:gap-5',
+  cabecalhoPagina: 'mb-3 flex flex-col gap-2',
   botaoVoltar:
     'inline-flex min-h-11 items-center gap-2 self-start text-base font-bold text-(--texto-apoio) hover:text-(--rotina-laranja) group-data-[visao=espaco]/rotina:min-h-8 group-data-[visao=espaco]/rotina:shrink-0',
   tituloPagina:
-    'text-[clamp(2rem,4.167vw,3.75rem)] leading-[1.15] font-extrabold tracking-[-0.035em]',
-  descricaoPagina:
-    'text-[clamp(1rem,1.806vw,1.5rem)] leading-[1.4] text-(--rotina-apoio)',
+    'text-[clamp(1.375rem,2.35vw,2rem)] leading-[1.15] font-extrabold tracking-[-0.035em]',
+  descricaoPagina: 'text-[0.9375rem] leading-[1.4] text-(--rotina-apoio)',
   filtrosCategoria:
-    'mb-10 grid grid-cols-5 gap-1.5 [&>button]:min-h-16 [&>button]:min-w-0 [&>button]:rounded-2xl [&>button]:border [&>button]:border-[#d9e5f0] [&>button]:px-2 [&>button]:py-3 [&>button]:text-lg [&>button]:font-bold [&>button:hover]:bg-(--rotina-suave) max-md:[&>button]:min-h-12 max-md:[&>button]:text-base max-[480px]:grid-cols-3 max-[480px]:[&>button]:min-h-11 max-[480px]:[&>button]:text-sm',
-  filtroAtivo:
-    'border-(--rotina-laranja)! bg-(--rotina-suave) text-(--rotina-laranja)',
-  gruposTarefas: 'grid gap-10 max-md:gap-6',
+    'mb-4 flex flex-wrap gap-2 rounded-xl border border-(--borda-suave) bg-white p-2 [&>button]:min-h-10 [&>button]:rounded-full [&>button]:bg-(--azul-fundo) [&>button]:px-4 [&>button]:py-2 [&>button]:text-sm [&>button]:font-bold [&>button:hover]:bg-[#e6edf2]',
+  filtroAtivo: 'bg-(--azul-titulo)! text-white',
+  gruposTarefas: 'grid gap-3',
   cabecalhoGrupoData:
-    'mb-2.5 rounded-lg bg-(--rotina-neutra) px-3 py-2.5 text-sm font-bold',
+    'rounded-t-xl border border-(--borda-suave) bg-white px-3 py-2.5 text-sm font-extrabold',
   carregarMais: 'mx-auto mt-8 flex',
   seletorPeriodo:
     'min-h-11 min-w-40 max-w-full rounded-xl border border-[#d9e5f0] bg-white px-4 py-2 font-semibold',
-  estatisticas:
-    'mt-8 mb-12 grid grid-cols-3 gap-4 max-md:mt-6 max-md:mb-8 max-md:gap-2.5 max-[480px]:grid-cols-1',
+  estatisticas: 'my-3 grid grid-cols-3 gap-2',
   estatistica:
-    'flex min-h-30 min-w-0 items-center gap-3.5 rounded-2xl bg-(--rotina-neutra) p-5 [&>div]:min-w-0 [&_dt]:text-base [&_dt]:text-(--rotina-apoio) [&_dd]:font-titulo [&_dd]:text-[2.25rem] [&_dd]:leading-tight [&_dd]:font-extrabold max-md:flex-col max-md:items-start max-md:p-4 max-[480px]:min-h-24 max-[480px]:flex-row max-[480px]:items-center',
+    'flex min-w-0 items-center gap-2 rounded-xl bg-white p-3 [&>div]:min-w-0 [&_dt]:text-sm [&_dt]:text-(--rotina-apoio) [&_dd]:font-titulo [&_dd]:text-xl [&_dd]:leading-tight [&_dd]:font-extrabold max-md:flex-col max-md:items-start max-md:p-2',
   iconeEstatistica:
     'grid size-11 shrink-0 place-items-center rounded-full bg-white',
   secaoConcluidas: '[&>h2]:mb-6 max-md:[&>h2]:mb-4',
   tarefasConcluidas:
     'rounded-2xl border border-(--rotina-borda) [&>article:first-child]:rounded-t-2xl [&>article:last-child]:rounded-b-2xl [&>article:last-child]:border-b-0',
-  visaoCalendario: 'flex min-h-[560px] min-w-0 flex-col',
-  cabecalhoCompacto: 'relative mb-4 shrink-0 gap-2 [&_h1]:text-[clamp(2rem,3.6vw,3.25rem)]',
+  visaoCalendario: 'flex h-full min-h-0 min-w-0 flex-col',
+  cabecalhoCompacto: 'relative shrink-0',
   barraCalendario:
-    'mb-4 flex shrink-0 flex-wrap items-center justify-end gap-2 max-[480px]:[&>button:first-child]:mr-auto',
+    'mb-2 flex shrink-0 flex-wrap items-center justify-between gap-1.5',
   controleCalendario:
     'inline-flex min-h-11 min-w-11 items-center justify-center gap-3 rounded-xl border border-[#d9e5f0] bg-white px-3 py-1.5 text-base hover:bg-(--azul-fundo)',
   controleMes:
-    'min-w-48 justify-between max-[480px]:order-first max-[480px]:basis-full max-[480px]:min-w-0',
+    'min-w-0 justify-between max-[480px]:gap-1 max-[480px]:px-1.5 max-[480px]:text-[0.8125rem]',
   gradeMes:
-    'grid min-h-96 flex-1 grid-rows-[2rem_repeat(var(--semanas-calendario),minmax(76px,1fr))]',
+    'grid min-h-0 flex-1 grid-rows-[1.5rem_repeat(var(--semanas-calendario),minmax(0,1fr))]',
   linhaDiasSemana:
     'grid min-h-0 grid-cols-7 items-center text-center text-sm font-bold text-(--texto-apoio) max-md:text-xs',
   semanaCalendario: 'grid min-h-0 grid-cols-7',
   diaCalendario:
-    'flex min-h-0 min-w-0 flex-col items-center gap-1 rounded-xl border border-[#f0f5f7] px-1 py-2 hover:bg-[#f7f9fb]',
+    'flex min-h-0 min-w-0 flex-col items-center justify-center gap-0.5 rounded-lg border border-[#e8eef4] px-1 hover:bg-[#f7f9fb]',
   diaForaMes: 'text-[#b2bfcc]',
-  hoje:
-    'border-(--rotina-laranja) [&>span:first-child]:bg-(--rotina-laranja) [&>span:first-child]:text-white',
+  hoje: 'border-(--rotina-laranja) [&>span:first-child]:bg-(--rotina-laranja) [&>span:first-child]:text-white',
   numeroDia:
     'grid size-9 shrink-0 place-items-center rounded-full text-lg font-bold leading-none max-md:size-7 max-md:text-sm',
   marcadoresDia:
-    'flex min-h-3.5 flex-wrap justify-center gap-1.5 max-md:[&_img]:size-2',
+    'flex min-h-2 flex-wrap justify-center gap-0.5 [&>span]:size-1.5',
   pontoCategoria: 'block size-3.5 shrink-0',
   rodapeCalendario:
-    'mt-4 flex min-w-0 shrink-0 items-center justify-between gap-4 max-md:flex-col max-md:items-start',
+    'mt-2 flex min-w-0 shrink-0 flex-wrap items-center justify-between gap-x-3',
   legendaCalendario:
-    'flex max-w-208 flex-1 flex-wrap justify-between gap-3 [&>span]:inline-flex [&>span]:items-center [&>span]:gap-2 text-sm',
+    'flex flex-wrap gap-x-3 gap-y-1 [&>span]:inline-flex [&>span]:items-center [&>span]:gap-1.5 text-xs',
   modal:
     'fixed inset-0 m-auto w-[calc(100%-2rem)] max-w-180 max-h-[calc(100dvh-1rem)] overflow-hidden overscroll-contain rounded-xl border border-[#dbe5ed] bg-white p-0 shadow-[0_1.5rem_5rem_#102a4333] backdrop:bg-[#102a4373] backdrop:backdrop-blur-[3px] open:flex open:flex-col max-[480px]:w-[calc(100%-1.5rem)]',
   modalLargo: 'max-w-260',
-  barraModal: 'relative flex min-w-0 shrink-0 basis-11 items-center bg-white px-4',
+  barraModal:
+    'relative flex min-w-0 shrink-0 basis-11 items-center bg-white px-4',
   rolagemModal:
     'min-h-0 overflow-y-auto overscroll-contain px-4 pb-4 min-[1024px]:px-8 min-[1024px]:pb-8',
   voltarModal:
@@ -152,7 +145,8 @@ const classesRotina = {
     'max-[1024px]:group-data-[visao=modal]/rotina:text-[1.375rem] text-[clamp(1.375rem,3vw,2.25rem)] leading-[1.15] font-extrabold tracking-[-0.025em] outline-none',
   aviso:
     'flex min-w-0 flex-col gap-1 rounded-xl bg-(--azul-fundo) p-4 [&>strong]:text-base [&>p]:text-sm [&>p]:text-(--rotina-apoio)',
-  avisoErro: 'border border-[#efc5bf] bg-[#fff5f3] [&_strong]:text-[#a72c1d] [&_p]:text-[#a72c1d]',
+  avisoErro:
+    'border border-[#efc5bf] bg-[#fff5f3] [&_strong]:text-[#a72c1d] [&_p]:text-[#a72c1d]',
   acoes: 'flex flex-wrap items-center gap-2 [&>button]:flex-auto',
   acoesDetalhe: 'grid grid-cols-2 max-sm:grid-cols-1',
   estadoVazio: 'flex min-w-0 flex-col gap-6 py-4',
@@ -185,10 +179,12 @@ const classesRotina = {
     'contents data-[etapado=true]:grid data-[etapado=true]:grid-cols-1 data-[etapado=true]:gap-3 [&[hidden]]:hidden',
   etapasFormulario:
     'flex shrink-0 gap-1.5 [&>button]:flex [&>button]:min-h-11 [&>button]:min-w-0 [&>button]:flex-1 [&>button]:items-center [&>button]:justify-center [&>button]:gap-1.5 [&>button]:border-b-2 [&>button]:border-(--rotina-borda) [&>button]:text-xs [&>button]:font-bold [&>button[aria-current=step]]:border-(--rotina-laranja) [&>button[aria-current=step]]:text-(--rotina-laranja) [&_span]:grid [&_span]:size-5 [&_span]:shrink-0 [&_span]:place-items-center [&_span]:rounded-full [&_span]:bg-(--rotina-suave)',
-  campoDiasSemana: 'm-0 flex min-w-0 flex-col gap-1 border-0 p-0 [&_legend]:mb-1 [&_legend]:p-0',
+  campoDiasSemana:
+    'm-0 flex min-w-0 flex-col gap-1 border-0 p-0 [&_legend]:mb-1 [&_legend]:p-0',
   opcoesDiasSemana:
     'grid grid-cols-7 gap-1 [&_label]:relative [&_label]:flex [&_label]:cursor-pointer [&_label]:items-center [&_label]:justify-center [&_input]:absolute [&_input]:size-full [&_input]:cursor-pointer [&_input]:opacity-0 [&_span]:grid [&_span]:min-h-11 [&_span]:w-full [&_span]:place-items-center [&_span]:rounded-lg [&_span]:border [&_span]:border-(--rotina-borda) [&_span]:bg-white [&_span]:text-[0.6875rem] [&_input:checked+span]:border-(--rotina-laranja) [&_input:checked+span]:bg-(--rotina-suave) [&_input:checked+span]:font-bold [&_input:checked+span]:text-(--rotina-laranja)',
-  espacoAjustes: 'grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1.75fr)_minmax(0,1fr)]',
+  espacoAjustes:
+    'grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1.75fr)_minmax(0,1fr)]',
   painelContexto:
     'flex min-w-0 flex-col gap-5 rounded-lg bg-(--laranja-fundo) p-6 text-base [&_h3]:font-titulo [&_h3]:text-2xl [&_h3]:leading-tight [&_h3]:font-extrabold [&_hr]:w-full [&_hr]:border-0 [&_hr]:border-t [&_hr]:border-[#102a431f] [&_button]:w-full',
   sobrescrito: 'text-xs font-bold',
@@ -200,7 +196,8 @@ const classesRotina = {
   rotuloExemplos: 'text-center text-sm font-bold',
   exemplosSugestao:
     'grid grid-cols-3 gap-2.5 max-sm:grid-cols-1 [&>button]:flex [&>button]:min-h-11 [&>button]:min-w-0 [&>button]:items-center [&>button]:justify-center [&>button]:gap-2 [&>button]:rounded-xl [&>button]:bg-(--rotina-suave) [&>button]:p-3 [&>button]:text-center [&>button]:text-sm [&>button:hover]:bg-(--laranja-fundo)',
-  listaSugestoes: 'flex min-h-0 flex-col gap-3 rounded-md bg-(--azul-fundo) p-3',
+  listaSugestoes:
+    'flex min-h-0 flex-col gap-3 rounded-md bg-(--azul-fundo) p-3',
   itemSugestao:
     'flex min-h-11 min-w-0 cursor-pointer items-center gap-3 rounded-xl bg-white p-3 [&_input]:size-6 [&_input]:shrink-0 [&>span]:flex [&>span]:min-w-0 [&>span]:flex-col [&>span]:gap-1 [&_strong]:text-base [&>span>span]:text-xs [&>span>span]:text-(--rotina-apoio)',
   listaEsqueleto:
@@ -208,7 +205,8 @@ const classesRotina = {
   preferenciasAgenda:
     'flex flex-col gap-2 [&_label]:flex [&_label]:min-h-11 [&_label]:cursor-pointer [&_label]:items-center [&_label]:gap-3 [&_label]:p-2 [&_input]:size-6 [&_input]:shrink-0 [&_label>span]:flex [&_label>span]:min-w-0 [&_label>span]:flex-col [&_label>span>span]:hidden',
   seletorAno: 'flex items-center justify-center gap-8 text-xl font-bold',
-  opcoesMes: 'grid grid-cols-3 gap-2 [&_button]:px-3 [&_button]:text-[0.9375rem]',
+  opcoesMes:
+    'grid grid-cols-3 gap-2 [&_button]:px-3 [&_button]:text-[0.9375rem]',
   listaTarefasDia: 'flex flex-col',
   notificacaoToast:
     'fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 z-30 flex w-max max-w-[calc(100%-2rem)] -translate-x-1/2 items-center gap-4 rounded-2xl bg-(--azul-titulo) py-4 pr-14 pl-5 text-white shadow-[0_0.5rem_2rem_#102a4333] [&>button:not([aria-label])]:font-bold [&>button:not([aria-label])]:text-[#ffc59a] [&>button[aria-label]]:top-1 [&>button[aria-label]]:right-1 [&>button[aria-label]]:text-white',

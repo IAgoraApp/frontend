@@ -1,0 +1,445 @@
+.cozinha-organizacao {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+}
+.cozinha-topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.cozinha-organizacao h2 {
+  font-family: var(--font-titulo);
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+.cozinha-organizacao :is(.mvp-primario, .cozinha-botao),
+.cozinha-botao {
+  min-height: 44px;
+}
+.cozinha-botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 8px;
+  background: white;
+  color: var(--azul-titulo);
+  font-size: 0.8rem;
+  font-weight: 750;
+}
+.cozinha-botao:hover {
+  background: var(--azul-fundo);
+}
+.cozinha-voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  justify-self: start;
+  color: var(--azul-principal);
+  font-size: 0.85rem;
+  font-weight: 750;
+}
+.cozinha-voltar:hover {
+  text-decoration: underline;
+}
+.cozinha-icone,
+.despensa-quantidade button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  color: var(--azul-principal);
+}
+.cozinha-icone:hover,
+.despensa-quantidade button:hover:enabled {
+  background: var(--laranja-fundo);
+  color: var(--azul-titulo);
+}
+.cozinha-prateleira {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+}
+.cozinha-contagem {
+  color: var(--texto-apoio);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.cozinha-busca {
+  display: flex;
+  flex: 1 1 250px;
+  max-width: 530px;
+  min-width: 0;
+  align-items: center;
+  gap: 9px;
+  padding: 0 6px 0 14px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 10px;
+  background: var(--azul-fundo);
+  color: var(--azul-principal);
+}
+.cozinha-busca > svg {
+  flex-shrink: 0;
+}
+.cozinha-busca input {
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  color: var(--azul-titulo);
+  font-size: 0.875rem;
+}
+.cozinha-busca input::-webkit-search-cancel-button {
+  display: none;
+}
+.cozinha-busca:focus-within {
+  border-color: var(--laranja-principal);
+  background: white;
+}
+.cozinha-organizacao .cozinha-busca input:focus-visible {
+  outline: none;
+}
+.despensa-grade,
+.compras-grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+  gap: 12px;
+}
+.despensa-produto {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 12px;
+  background: white;
+}
+.despensa-produto[data-vazio='true'] {
+  border-top: 3px solid var(--laranja-principal);
+  padding-top: 8px;
+  background: color-mix(in srgb, var(--laranja-fundo) 30%, white);
+}
+.despensa-produto-topo,
+.despensa-produto-rodape {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+.despensa-embalagem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--texto-apoio);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.despensa-produto h2 {
+  font-size: 1.2rem;
+  line-height: 1.2;
+}
+.despensa-produto p {
+  margin-top: 3px;
+  color: var(--texto-apoio);
+  font-size: 0.78rem;
+}
+.despensa-produto-rodape {
+  margin-top: auto;
+  padding-top: 10px;
+  flex-wrap: wrap;
+  color: var(--texto-apoio);
+  font-size: 0.75rem;
+}
+.despensa-produto[data-vazio='true'] .despensa-produto-rodape > span {
+  color: var(--azul-titulo);
+  font-weight: 750;
+}
+.despensa-quantidade {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  border-radius: 8px;
+  background: var(--azul-fundo);
+}
+.despensa-quantidade output {
+  min-width: 24px;
+  text-align: center;
+  color: var(--azul-titulo);
+  font-size: 0.85rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.despensa-quantidade button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.compras-grade {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 265px), 1fr));
+  gap: clamp(12px, 1.8vw, 20px);
+}
+.compras-grade > li {
+  min-width: 0;
+}
+.compras-cartao {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 14px;
+  background: white;
+}
+.compras-cartao:hover {
+  border-color: var(--azul-principal);
+}
+.compras-cartao-topo {
+  min-height: 3.15rem;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+}
+.compras-cartao-icone,
+.compras-cartao-abrir {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  background: var(--laranja-fundo);
+  color: var(--laranja-principal);
+  border-radius: 9px;
+}
+.compras-cartao-abrir {
+  width: 30px;
+  height: 30px;
+  background: var(--azul-fundo);
+  color: var(--azul-principal);
+  border-radius: 50%;
+}
+.compras-cartao:hover .compras-cartao-abrir {
+  background: var(--azul-titulo);
+  color: white;
+}
+.compras-cartao h2 {
+  font-size: clamp(1.15rem, 1.8vw, 1.38rem);
+  line-height: 1.12;
+}
+.compras-previa {
+  display: grid;
+  align-content: start;
+  min-height: 124px;
+  margin-block: 14px;
+  padding: 3px 12px;
+  border-radius: 8px;
+  background: var(--azul-fundo);
+  color: var(--texto-apoio);
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+.compras-previa li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 29px;
+  padding-block: 3px;
+}
+.compras-previa li + li {
+  border-top: 1px solid var(--borda-suave);
+}
+.compras-previa li > span {
+  display: grid;
+  place-items: center;
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  border: 1px solid var(--borda-divisoria);
+  border-radius: 4px;
+  color: var(--azul-principal);
+  background: white;
+}
+.compras-previa li[data-comprado='true'] {
+  text-decoration: line-through;
+}
+.compras-cartao-rodape {
+  display: grid;
+  gap: 7px;
+  margin-top: auto;
+  color: var(--texto-apoio);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.compras-cartao-progresso {
+  display: block;
+  height: 5px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--borda-suave);
+}
+.compras-cartao-progresso > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--laranja-principal);
+}
+.compras-checklist {
+  display: grid;
+  gap: 12px;
+  max-width: 990px;
+}
+.compras-checklist-resumo,
+.compras-checklist-formas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+}
+.compras-checklist-resumo {
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: var(--azul-fundo);
+}
+.compras-checklist-resumo > div {
+  display: grid;
+  gap: 4px;
+  font-size: 0.85rem;
+}
+.compras-checklist-resumo > div:first-child {
+  flex: 1 1 150px;
+  max-width: 285px;
+}
+.compras-checklist-resumo progress {
+  width: 100%;
+  height: 7px;
+  appearance: none;
+  border: 0;
+  border-radius: 99px;
+  overflow: hidden;
+  background: var(--borda-suave);
+}
+.compras-checklist-resumo progress::-webkit-progress-bar {
+  background: var(--borda-suave);
+}
+.compras-checklist-resumo progress::-webkit-progress-value {
+  background: var(--laranja-principal);
+}
+.compras-checklist-resumo progress::-moz-progress-bar {
+  background: var(--laranja-principal);
+}
+.compras-checklist-resumo span {
+  color: var(--texto-apoio);
+}
+.compras-checklist-formas form {
+  display: flex;
+  flex: 1 1 230px;
+  min-width: 0;
+  gap: 8px;
+}
+.compras-checklist-formas input {
+  min-width: 0;
+  min-height: 44px;
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 8px;
+}
+.compras-itens {
+  border-block: 1px solid var(--borda-suave);
+}
+.compras-itens li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding-inline: 5px;
+}
+.compras-itens li + li {
+  border-top: 1px solid var(--borda-suave);
+}
+.compras-itens li[data-comprado='true'] {
+  background: var(--azul-fundo);
+}
+.compras-itens label {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  gap: 10px;
+  padding: 9px 5px;
+  cursor: pointer;
+}
+.compras-itens input[type='checkbox'] {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  accent-color: var(--azul-principal);
+}
+.compras-itens label span {
+  display: grid;
+  gap: 3px;
+  overflow-wrap: anywhere;
+}
+.compras-itens small {
+  color: var(--texto-apoio);
+  font-size: 0.75rem;
+}
+.compras-itens li[data-comprado='true'] strong {
+  color: var(--texto-apoio);
+  text-decoration: line-through;
+}
+.cozinha-vazio,
+.cozinha-erro {
+  padding: 14px;
+  border-radius: 8px;
+  background: var(--azul-fundo);
+  color: var(--texto-apoio);
+  font-size: 0.85rem;
+}
+.cozinha-erro {
+  color: var(--vermelho-alerta);
+}
+.cozinha-editor .mvp-editor {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.cozinha-editor-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+.cozinha-perigo,
+.cozinha-excluir {
+  color: var(--vermelho-alerta);
+}
+.cozinha-excluir {
+  min-height: 44px;
+  margin-right: auto;
+  font-weight: 750;
+}
+@media (max-width: 600px) {
+  .despensa-grade {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .despensa-produto {
+    padding-inline: 8px;
+  }
+  .despensa-produto h2 {
+    font-size: 1rem;
+  }
+  .cozinha-busca {
+    max-width: none;
+  }
+}

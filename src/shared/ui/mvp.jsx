@@ -66,6 +66,9 @@ export function EditorMvp({
   onSave,
   onClose,
   cabecalho = true,
+  acaoSecundaria,
+  rotuloSalvar = 'Salvar',
+  mostrarCancelar = true,
 }) {
   const [erro, setErro] = useState('');
   return (
@@ -93,7 +96,7 @@ export function EditorMvp({
                 `Preencha o campo ${vazio.rotulo.toLowerCase()}.`
               );
             onSave(valores);
-            onClose();
+            onClose?.();
           } catch (e) {
             setErro(e.message);
           }
@@ -112,53 +115,65 @@ export function EditorMvp({
           </div>
         )}
         <div className='mvp-campos'>
-          {campos.map(c => (
-            <label key={c.nome}>
-              {c.rotulo}
-              {c.opcoes ? (
-                <select
-                  aria-label={c.rotulo}
-                  name={c.nome}
-                  defaultValue={inicial?.[c.nome] ?? ''}
-                  required={c.obrigatorio !== false}
-                >
-                  <option value=''>Selecione</option>
-                  {c.opcoes.map(([valor, nome]) => (
-                    <option key={valor} value={valor}>
-                      {nome}
-                    </option>
-                  ))}
-                </select>
-              ) : c.tipo === 'textarea' ? (
-                <textarea
-                  aria-label={c.rotulo}
-                  name={c.nome}
-                  defaultValue={inicial?.[c.nome] ?? ''}
-                  required={c.obrigatorio !== false}
-                  maxLength={2000}
-                />
-              ) : (
-                <input
-                  aria-label={c.rotulo}
-                  name={c.nome}
-                  type={c.tipo || 'text'}
-                  min={c.min ?? (c.tipo === 'number' ? 0 : undefined)}
-                  step={c.tipo === 'number' ? 'any' : undefined}
-                  defaultValue={inicial?.[c.nome] ?? ''}
-                  required={c.obrigatorio !== false}
-                  maxLength={c.tipo === 'number' ? undefined : 250}
-                />
-              )}
-            </label>
-          ))}
+          {campos.map(c =>
+            c.renderizar ? (
+              <fieldset key={c.nome} className='col-span-full min-w-0'>
+                <legend className='mb-2 text-sm font-bold'>{c.rotulo}</legend>
+                {c.renderizar(inicial?.[c.nome], c)}
+              </fieldset>
+            ) : (
+              <label key={c.nome}>
+                {c.rotulo}
+                {c.opcoes ? (
+                  <select
+                    aria-label={c.rotulo}
+                    name={c.nome}
+                    defaultValue={inicial?.[c.nome] ?? ''}
+                    required={c.obrigatorio !== false}
+                  >
+                    <option value=''>Selecione</option>
+                    {c.opcoes.map(([valor, nome]) => (
+                      <option key={valor} value={valor}>
+                        {nome}
+                      </option>
+                    ))}
+                  </select>
+                ) : c.tipo === 'textarea' ? (
+                  <textarea
+                    aria-label={c.rotulo}
+                    name={c.nome}
+                    defaultValue={inicial?.[c.nome] ?? ''}
+                    required={c.obrigatorio !== false}
+                    maxLength={2000}
+                  />
+                ) : (
+                  <input
+                    aria-label={c.rotulo}
+                    name={c.nome}
+                    type={c.tipo || 'text'}
+                    min={c.min ?? (c.tipo === 'number' ? 0 : undefined)}
+                    step={c.tipo === 'number' ? 'any' : undefined}
+                    defaultValue={inicial?.[c.nome] ?? ''}
+                    required={c.obrigatorio !== false}
+                    maxLength={
+                      c.tipo === 'number' ? undefined : (c.limite ?? 250)
+                    }
+                  />
+                )}
+              </label>
+            )
+          )}
         </div>
         {erro && <p role='alert'>{erro}</p>}
         <div className='mvp-form-acoes'>
-          <button type='button' onClick={onClose}>
-            Cancelar
-          </button>
+          {acaoSecundaria}
+          {mostrarCancelar && (
+            <button type='button' onClick={onClose}>
+              Cancelar
+            </button>
+          )}
           <button className='mvp-primario' type='submit'>
-            Salvar
+            {rotuloSalvar}
           </button>
         </div>
       </form>
@@ -172,6 +187,7 @@ export function ColecaoMvp({
   campos,
   padrao = {},
   detalhe,
+  imagem,
   acoes,
   podeEditar = true,
   podeExcluir = true,
@@ -231,9 +247,14 @@ export function ColecaoMvp({
       {!registros.length ? (
         <VazioMvp />
       ) : (
-        <div className='mvp-registros'>
+        <div
+          className={
+            imagem ? 'mvp-registros mvp-registros-ilustrados' : 'mvp-registros'
+          }
+        >
           {registros.map(item => (
             <div className='mvp-registro' key={item.id}>
+              {imagem?.(item)}
               <div className='mvp-registro-corpo'>
                 <strong>{item.nome || item.descricao || item.nome_item}</strong>
                 <div className='mvp-detalhe'>{detalhe?.(item)}</div>

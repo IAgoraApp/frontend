@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Plus } from 'lucide-react';
+import { ClipboardList, Plus, Sparkles, Trash2 } from 'lucide-react';
 import {
   alterarBanco,
   hoje,
@@ -12,6 +12,7 @@ import {
 import { EditorMvp, PaginaMvp } from '../../shared/ui/mvp';
 import { DialogoCasa } from '../casa/components/casaUi';
 import CardsComodos from './components/cardsComodos';
+import { imagemComodo } from './utils/imagemComodo';
 import ListaLimpezas from './components/listaLimpezas';
 import AvisoLimpeza from './components/avisoLimpeza';
 import ExtratoLimpeza from './components/extratoLimpeza';
@@ -22,57 +23,56 @@ export default function LimpezaA() {
   const { b, casa, comodos, limpezas, perfil } = useBancoMvp();
   const [params, setParams] = useSearchParams();
   const [modal, setModal] = useState(null);
+  const [confirmarExclusao, setConfirmarExclusao] = useState(false);
   const [aviso, setAviso] = useState(null);
   const dispensarAviso = useCallback(() => setAviso(null), []);
   function notificar(mensagem) {
     setAviso({ id: crypto.randomUUID(), mensagem });
   }
-  const [situacao, setSituacao] = useState('todas');
   const dia = hoje();
-  const comodo = comodos.find(c => c.id === Number(params.get('comodo')));
-  const referenciaLista = useRef(null);
-  const idSelecionado = comodo?.id;
-  useEffect(() => {
-    if (window.matchMedia('(min-width: 1000px)').matches) {
-      referenciaLista.current
-        ?.querySelector('.limpeza-rolagem-tarefas')
-        ?.scrollTo({ top: 0, behavior: 'instant' });
-      return;
-    }
-    if (!idSelecionado) return;
-    referenciaLista.current?.scrollIntoView({
-      block: 'start',
-      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        ? 'instant'
-        : 'smooth',
-    });
-  }, [idSelecionado]);
+  const ehHistorico = params.get('visao') === 'historico';
+  const comodo = ehHistorico
+    ? undefined
+    : comodos.find(c => c.id === Number(params.get('comodo')));
   const historico = b.execucao_limpeza.filter(e =>
     limpezas.some(l => l.id === e.limpeza_id)
   );
-  const ehHistorico = params.get('visao') === 'historico';
-  const lista = ordenarLimpezas(
-    limpezas.filter(
-      l =>
-        (!comodo || l.comodo_id === comodo.id) &&
-        (situacao === 'todas' ||
-          (situacao === 'feitas' ? l.ultima_vez === dia : l.ultima_vez !== dia))
-    ),
-    dia
-  );
+  const lista = ordenarLimpezas(limpezas, dia);
+  const comodoDaTarefa = modal?.item
+    ? comodos.find(c => c.id === modal.item.comodo_id)
+    : comodo;
+  const tarefasComodo = comodo
+    ? lista.filter(item => item.comodo_id === comodo.id)
+    : [];
+  const feitasNoComodo = tarefasComodo.filter(
+    item => item.ultima_vez === dia
+  ).length;
 
   function selecionarComodo(id) {
-    if (!id) setSituacao('todas');
     setParams(
       anteriores => {
         const novos = new URLSearchParams(anteriores);
-        if (!id || comodo?.id === id) novos.delete('comodo');
-        else novos.set('comodo', String(id));
+        if (id) novos.set('comodo', String(id));
+        else novos.delete('comodo');
         return novos;
       },
-      { preventScrollReset: true }
+      { replace: true, preventScrollReset: true }
     );
   }
+
+  function fecharModal() {
+    if (modal) {
+      setConfirmarExclusao(false);
+      setModal(null);
+    } else selecionarComodo(null);
+  }
+
+  const acoesLista = {
+    comodos,
+    hoje: dia,
+    aoConcluir: concluir,
+    aoEditar: item => setModal({ tipo: 'limpeza', item }),
+  };
 
   function concluir(limpeza) {
     alterarBanco(db => {
@@ -100,11 +100,16 @@ export default function LimpezaA() {
       numero: true,
       opcoes: comodos.map(c => [c.id, c.nome]),
     },
-    { nome: 'descricao', rotulo: 'O que fazer', obrigatorio: false },
     {
       nome: 'proxima_vez',
       rotulo: 'Próxima limpeza',
       tipo: 'date',
+      obrigatorio: false,
+    },
+    {
+      nome: 'descricao',
+      rotulo: 'O que fazer',
+      tipo: 'textarea',
       obrigatorio: false,
     },
   ];
@@ -114,9 +119,10 @@ export default function LimpezaA() {
       className={`limpeza-identidade${ehHistorico ? '' : ' limpeza-identidade-painel'}`}
     >
       <PaginaMvp
-        cabecalho={ehHistorico}
-        titulo='Histórico de limpeza'
-        descricao='Veja o que já foi cuidado na sua casa.'
+        titulo={ehHistorico ? 'Histórico de limpeza' : 'Atividades de limpeza'}
+        descricao={
+          ehHistorico ? 'Veja o que já foi cuidado na sua casa.' : undefined
+        }
         acao={
           ehHistorico ? (
             <Link className='mvp-link' to='/limpeza'>
@@ -140,7 +146,7 @@ export default function LimpezaA() {
             >
               <div className='limpeza-secao-topo'>
                 <div>
-                  <h1 id='limpeza-comodos-titulo'>Por onde vamos começar?</h1>
+                  <h2 id='limpeza-comodos-titulo'>Cômodos</h2>
                   <p>Clique em um cômodo para ver suas atividades.</p>
                 </div>
                 <span className='limpeza-contagem'>
@@ -156,7 +162,6 @@ export default function LimpezaA() {
                 <CardsComodos
                   comodos={comodos}
                   limpezas={limpezas}
-                  selecionado={comodo?.id}
                   aoSelecionar={selecionarComodo}
                   aoAdicionar={() => setModal({ tipo: 'comodo' })}
                   hoje={dia}
@@ -165,35 +170,41 @@ export default function LimpezaA() {
             </section>
             <section
               className='limpeza-agenda'
-              id='limpeza-lista'
-              ref={referenciaLista}
-              aria-label={
-                comodo ? `Limpezas: ${comodo.nome}` : 'Todas as limpezas'
-              }
+              aria-labelledby='limpeza-lista-titulo'
             >
-              <div className='limpeza-filtros'>
-                <button
-                  type='button'
-                  aria-pressed={!comodo}
-                  onClick={() => selecionarComodo(null)}
-                >
-                  Todas as limpezas <span>{limpezas.length}</span>
-                </button>
-                {comodo && (
-                  <span className='limpeza-filtro-ativo'>{comodo.nome}</span>
-                )}
-                <label>
-                  Situação
-                  <select
-                    aria-label='Situação'
-                    value={situacao}
-                    onChange={e => setSituacao(e.target.value)}
+              <div className='limpeza-secao-topo'>
+                <div>
+                  <h2 id='limpeza-lista-titulo'>Todas as limpezas</h2>
+                  <p>
+                    {lista.length}{' '}
+                    {lista.length === 1 ? 'atividade' : 'atividades'}
+                    {' · '}
+                    <Link className='mvp-link' to='/limpeza?visao=historico'>
+                      Ver histórico
+                    </Link>
+                  </p>
+                </div>
+                <div className='limpeza-acoes-criacao'>
+                  <Link
+                    className='mvp-link limpeza-criar-ia'
+                    to='/ia'
+                    state={{
+                      rascunho:
+                        'Ajude-me a criar atividades de limpeza para a minha casa. Sugira tarefas por cômodo e com que frequência devo fazê-las.',
+                    }}
                   >
-                    <option value='todas'>Todas</option>
-                    <option value='pendentes'>A fazer</option>
-                    <option value='feitas'>Feitas hoje</option>
-                  </select>
-                </label>
+                    <Sparkles size={16} aria-hidden='true' /> Criar com IA
+                  </Link>
+                  <button
+                    className='mvp-primario'
+                    type='button'
+                    disabled={!comodos.length}
+                    onClick={() => setModal({ tipo: 'limpeza' })}
+                  >
+                    <Plus size={16} aria-hidden='true' />
+                    Adicionar tarefa
+                  </button>
+                </div>
               </div>
               <div
                 className='limpeza-rolagem-tarefas'
@@ -204,159 +215,228 @@ export default function LimpezaA() {
                 {lista.length ? (
                   <ListaLimpezas
                     registros={lista}
-                    comodos={comodos}
-                    hoje={dia}
-                    aoConcluir={concluir}
-                    aoEditar={item => setModal({ tipo: 'limpeza', item })}
-                    aoExcluir={item => setModal({ tipo: 'excluir', item })}
+                    {...acoesLista}
+                    aoAbrirComodo={selecionarComodo}
+                    compacta
                   />
                 ) : (
                   <div className='limpeza-vazia'>
-                    <p>
-                      {situacao !== 'todas'
-                        ? 'Nenhuma atividade nesta situação.'
-                        : comodo
-                          ? `${comodo.nome} ainda não tem atividades de limpeza.`
-                          : 'Sua casa ainda não tem atividades de limpeza.'}
-                    </p>
-                    {situacao === 'todas' && !!comodos.length && (
-                      <button
-                        className='mvp-primario'
-                        type='button'
-                        onClick={() => setModal({ tipo: 'limpeza' })}
-                      >
-                        Adicionar primeira limpeza
-                      </button>
-                    )}
+                    <p>Sua casa ainda não tem atividades de limpeza.</p>
                   </div>
                 )}
-              </div>
-              <div className='limpeza-agenda-acoes'>
-                <button
-                  className='mvp-primario'
-                  type='button'
-                  disabled={!comodos.length}
-                  onClick={() => setModal({ tipo: 'limpeza' })}
-                >
-                  <Plus size={16} />
-                  Adicionar tarefa
-                </button>
-                <Link className='mvp-link' to='/limpeza?visao=historico'>
-                  Ver histórico
-                </Link>
               </div>
             </section>
           </div>
         )}
-        {modal && (
+        {!ehHistorico && (modal || comodo) && (
           <DialogoCasa
-            key={`${modal.tipo}-${modal.item?.id || 'novo'}`}
             titulo={
-              modal.tipo === 'comodo'
-                ? 'Adicionar cômodo'
-                : modal.tipo === 'excluir'
-                  ? 'Excluir limpeza'
+              !modal
+                ? comodo.nome
+                : modal.tipo === 'comodo'
+                  ? 'Adicionar cômodo'
                   : modal.item
-                    ? 'Editar limpeza'
-                    : 'Adicionar limpeza'
+                    ? 'Editar tarefa'
+                    : 'Adicionar tarefa'
             }
-            aoFechar={() => setModal(null)}
+            aoFechar={fecharModal}
           >
             <div className='limpeza-modal'>
-              {modal.tipo === 'excluir' ? (
-                <>
-                  <p>
-                    Excluir “{modal.item.nome}”? O histórico desta atividade
-                    também será removido.
-                  </p>
-                  <div className='limpeza-modal-acoes'>
-                    <button type='button' onClick={() => setModal(null)}>
-                      Manter atividade
-                    </button>
-                    <button
-                      type='button'
-                      className='mvp-primario'
-                      onClick={() => {
-                        removerRegistro('limpezas', modal.item.id);
-                        setModal(null);
-                        notificar('Atividade excluída.');
-                      }}
-                    >
-                      Excluir limpeza
-                    </button>
+              {!modal ? (
+                <section aria-label={`Atividades de ${comodo.nome}`}>
+                  <div className='limpeza-modal-comodo'>
+                    <img src={imagemComodo(comodo.tipo)} alt='' />
+                    <div className='limpeza-modal-resumo'>
+                      <div className='limpeza-modal-progresso'>
+                        <p>
+                          {feitasNoComodo} de {tarefasComodo.length} concluídas
+                          hoje
+                        </p>
+                        {!!tarefasComodo.length && (
+                          <progress
+                            aria-label='Atividades concluídas hoje'
+                            value={feitasNoComodo}
+                            max={tarefasComodo.length}
+                          />
+                        )}
+                      </div>
+                      <div className='limpeza-acoes-criacao'>
+                        <Link
+                          className='mvp-link limpeza-criar-ia'
+                          to='/ia'
+                          state={{
+                            rascunho: `Ajude-me a criar atividades de limpeza para este cômodo da minha casa: ${comodo.nome}. Inclua o que fazer e a frequência de cada tarefa.`,
+                          }}
+                        >
+                          <Sparkles size={16} aria-hidden='true' /> Criar com IA
+                        </Link>
+                        <button
+                          className='mvp-primario'
+                          type='button'
+                          onClick={() => setModal({ tipo: 'limpeza' })}
+                        >
+                          <Plus size={16} aria-hidden='true' /> Adicionar tarefa
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </>
+                  <p className='sr-only' role='status'>
+                    {aviso?.mensagem}
+                  </p>
+                  {tarefasComodo.length ? (
+                    <ListaLimpezas
+                      registros={tarefasComodo}
+                      {...acoesLista}
+                      mostrarComodo={false}
+                    />
+                  ) : (
+                    <div className='limpeza-vazia'>
+                      <p>Este cômodo ainda não tem atividades.</p>
+                    </div>
+                  )}
+                </section>
               ) : (
-                <EditorMvp
-                  cabecalho={false}
-                  titulo={
-                    modal.tipo === 'comodo' ? 'Adicionar cômodo' : 'Limpeza'
+                <div
+                  className={
+                    modal.tipo === 'limpeza'
+                      ? 'limpeza-editor-tarefa'
+                      : undefined
                   }
-                  inicial={
-                    modal.tipo === 'comodo'
-                      ? { casa_id: casa.id }
-                      : modal.item || {
-                          comodo_id: comodo?.id || null,
-                          ultima_vez: null,
-                          proxima_vez: null,
-                        }
-                  }
-                  campos={
-                    modal.tipo === 'comodo'
-                      ? [
-                          { nome: 'nome', rotulo: 'Nome do cômodo' },
-                          {
-                            nome: 'tipo',
-                            rotulo: 'Tipo',
-                            opcoes: [
-                              ['quarto', 'Quarto'],
-                              ['sala', 'Sala'],
-                              ['cozinha', 'Cozinha'],
-                              ['banheiro', 'Banheiro'],
-                              ['lavanderia', 'Lavanderia'],
-                              ['outro', 'Outro'],
-                            ],
-                          },
-                          {
-                            nome: 'descricao',
-                            rotulo: 'Descrição',
-                            obrigatorio: false,
-                          },
-                        ]
-                      : camposLimpeza
-                  }
-                  onClose={() => setModal(null)}
-                  onSave={valores => {
-                    if (modal.tipo === 'comodo') {
-                      let novo;
-                      alterarBanco(db => {
-                        novo = inserir('comodo', valores, db);
-                      });
-                      setParams(
-                        { comodo: String(novo.id) },
-                        { preventScrollReset: true }
-                      );
-                      setSituacao('todas');
-                      notificar(
-                        `${valores.nome} adicionado. Cadastre a primeira limpeza desse espaço.`
-                      );
-                    } else {
-                      salvarRegistro('limpezas', valores);
-                      if (!modal.item) {
-                        setParams(
-                          { comodo: String(valores.comodo_id) },
-                          { preventScrollReset: true }
-                        );
-                        setSituacao('todas');
-                      }
-                      notificar(
-                        modal.item
-                          ? 'Limpeza atualizada.'
-                          : 'Limpeza adicionada.'
-                      );
+                >
+                  {modal.tipo === 'limpeza' && (
+                    <div className='limpeza-editor-contexto'>
+                      {comodoDaTarefa ? (
+                        <img src={imagemComodo(comodoDaTarefa.tipo)} alt='' />
+                      ) : (
+                        <span className='limpeza-editor-icone'>
+                          <ClipboardList size={24} aria-hidden='true' />
+                        </span>
+                      )}
+                      <div>
+                        <strong>
+                          {modal.item?.nome ||
+                            comodoDaTarefa?.nome ||
+                            'Limpeza da casa'}
+                        </strong>
+                        <p>
+                          {modal.item
+                            ? comodoDaTarefa?.nome
+                            : 'Escolha o cômodo e, se quiser, defina uma data.'}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                  <EditorMvp
+                    key={`${modal.tipo}-${modal.item?.id || 'novo'}`}
+                    cabecalho={false}
+                    titulo={
+                      modal.tipo === 'comodo' ? 'Adicionar cômodo' : 'Limpeza'
                     }
-                  }}
-                />
+                    inicial={
+                      modal.tipo === 'comodo'
+                        ? { casa_id: casa.id }
+                        : modal.item || {
+                            comodo_id: comodo?.id || null,
+                            ultima_vez: null,
+                            proxima_vez: null,
+                          }
+                    }
+                    campos={
+                      modal.tipo === 'comodo'
+                        ? [
+                            { nome: 'nome', rotulo: 'Nome do cômodo' },
+                            {
+                              nome: 'tipo',
+                              rotulo: 'Tipo',
+                              opcoes: [
+                                ['quarto', 'Quarto'],
+                                ['sala', 'Sala'],
+                                ['cozinha', 'Cozinha'],
+                                ['banheiro', 'Banheiro'],
+                                ['lavanderia', 'Lavanderia'],
+                                ['outro', 'Outro'],
+                              ],
+                            },
+                            {
+                              nome: 'descricao',
+                              rotulo: 'Descrição',
+                              obrigatorio: false,
+                            },
+                          ]
+                        : camposLimpeza
+                    }
+                    rotuloSalvar={
+                      modal.tipo === 'limpeza' && !modal.item
+                        ? 'Adicionar tarefa'
+                        : undefined
+                    }
+                    acaoSecundaria={
+                      modal.item && (
+                        <button
+                          className='limpeza-excluir-tarefa'
+                          type='button'
+                          aria-expanded={confirmarExclusao}
+                          aria-controls='limpeza-confirmacao-exclusao'
+                          onClick={() => setConfirmarExclusao(atual => !atual)}
+                        >
+                          <Trash2 size={17} aria-hidden='true' /> Excluir
+                        </button>
+                      )
+                    }
+                    onClose={fecharModal}
+                    onSave={valores => {
+                      if (modal.tipo === 'comodo') {
+                        let novo;
+                        alterarBanco(db => {
+                          novo = inserir('comodo', valores, db);
+                        });
+                        selecionarComodo(novo.id);
+                        notificar(
+                          `${valores.nome} adicionado. Cadastre a primeira limpeza desse espaço.`
+                        );
+                      } else {
+                        salvarRegistro('limpezas', valores);
+                        notificar(
+                          modal.item
+                            ? 'Limpeza atualizada.'
+                            : 'Limpeza adicionada.'
+                        );
+                      }
+                    }}
+                  />
+                  <div
+                    id='limpeza-confirmacao-exclusao'
+                    hidden={!confirmarExclusao}
+                  >
+                    {confirmarExclusao && (
+                      <div className='limpeza-confirmar-exclusao'>
+                        <p>
+                          Excluir “{modal.item.nome}”? O histórico desta
+                          atividade também será removido.
+                        </p>
+                        <div>
+                          <button
+                            type='button'
+                            onClick={() => setConfirmarExclusao(false)}
+                          >
+                            Manter tarefa
+                          </button>
+                          <button
+                            className='limpeza-excluir-tarefa'
+                            type='button'
+                            onClick={() => {
+                              removerRegistro('limpezas', modal.item.id);
+                              fecharModal();
+                              notificar('Atividade excluída.');
+                            }}
+                          >
+                            Confirmar exclusão
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
               )}
             </div>
           </DialogoCasa>

@@ -4,9 +4,9 @@ export default function SecaoMomento() {
   return (
     <section
       id='momento'
-      className='w-full bg-(--azul-titulo) px-6 py-12 text-white sm:px-12 lg:h-[500px] lg:px-[72px] lg:py-[30px]'
+      className='w-full bg-(--azul-titulo) px-(--margem-pagina) py-12 text-white lg:h-[500px] lg:py-[30px]'
     >
-      <div className='mx-auto flex h-full max-w-[1296px] flex-col justify-center gap-[18px]'>
+      <div className='mx-auto flex h-full max-w-(--largura-header) flex-col justify-center gap-[18px]'>
         <div className='flex flex-col justify-center gap-[6px] lg:h-[66px]'>
           <span className='font-corpo text-[14px] font-bold tracking-[1px] sm:text-base'>
             CADA CONQUISTA TEM SEU JEITO.

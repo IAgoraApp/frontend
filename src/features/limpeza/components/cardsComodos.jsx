@@ -1,53 +1,18 @@
 import { ArrowUpRight, Plus } from 'lucide-react';
-import fotoBanheiro from '../assets/PhotoContent.png';
-import fotoSala from '../assets/PhotoContent2.png';
-import fotoQuarto from '../assets/comodo-quarto.jpg';
-import fotoLavanderia from '../assets/comodo-lavanderia.jpg';
-import fotoCozinha from '../../casa/assets/cozinha-comida-boa.jpg';
-import fotoMateriais from '../assets/PhotoKitDeLimpeza.png';
 import { dataCurta } from '../../../app/dados/bancoMvp';
 import { ordenarLimpezas } from '../utils/agendaLimpeza';
 
-const imagens = {
-  banheiro: fotoBanheiro,
-  cozinha: fotoCozinha,
-  quarto: fotoQuarto,
-  sala: fotoSala,
-  lavanderia: fotoLavanderia,
-};
+import { imagemComodo } from '../utils/imagemComodo';
 
 export default function CardsComodos({
   comodos,
   limpezas,
-  selecionado,
   aoSelecionar,
   aoAdicionar,
   hoje,
 }) {
   return (
     <div className='limpeza-comodos'>
-      <button
-        type='button'
-        className='limpeza-comodo limpeza-comodo-geral'
-        aria-label='Ver todas as limpezas'
-        aria-pressed={!selecionado}
-        aria-controls='limpeza-lista'
-        onClick={() => aoSelecionar(null)}
-      >
-        <img src={fotoMateriais} alt='' />
-        <span className='limpeza-comodo-corpo'>
-          <span className='limpeza-comodo-nome'>
-            <strong>Todas as limpezas</strong>
-            <ArrowUpRight size={18} aria-hidden='true' />
-          </span>
-          <span>
-            {limpezas.length}{' '}
-            {limpezas.length === 1 ? 'atividade' : 'atividades'} em{' '}
-            {comodos.length} {comodos.length === 1 ? 'cômodo' : 'cômodos'}
-          </span>
-          <small>Acompanhar a casa inteira</small>
-        </span>
-      </button>
       {comodos.map(comodo => {
         const atividades = limpezas.filter(l => l.comodo_id === comodo.id);
         const pendentes = ordenarLimpezas(
@@ -61,15 +26,10 @@ export default function CardsComodos({
             type='button'
             className='limpeza-comodo'
             aria-label={`Ver limpezas de ${comodo.nome}`}
-            aria-pressed={selecionado === comodo.id}
-            aria-controls='limpeza-lista'
+            aria-haspopup='dialog'
             onClick={() => aoSelecionar(comodo.id)}
           >
-            <img
-              src={imagens[comodo.tipo] || fotoMateriais}
-              alt=''
-              loading='lazy'
-            />
+            <img src={imagemComodo(comodo.tipo)} alt='' loading='lazy' />
             <span className='limpeza-comodo-corpo'>
               <span className='limpeza-comodo-nome'>
                 <strong>{comodo.nome}</strong>

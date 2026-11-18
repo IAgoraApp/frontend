@@ -161,8 +161,8 @@ export function SobreNos() {
         </section>
 
         <section className='bg-(--azul-titulo) text-white'>
-          <div className='mx-auto grid max-w-[1440px] items-center lg:grid-cols-2'>
-            <div className='px-(--margem-pagina) py-16 lg:py-24 lg:pr-14'>
+          <Container classe='grid items-center lg:grid-cols-2'>
+            <div className='py-16 lg:py-24 lg:pr-14'>
               <h2 className='font-titulo text-[clamp(2rem,3vw,2.5rem)] font-extrabold'>
                 Nossa Missão
               </h2>
@@ -179,11 +179,11 @@ export function SobreNos() {
                 className='size-full object-cover'
               />
             </div>
-          </div>
+          </Container>
         </section>
 
         <section className='bg-white text-(--azul-escuro)'>
-          <div className='mx-auto grid max-w-[1440px] items-center lg:grid-cols-2'>
+          <Container classe='grid items-center lg:grid-cols-2'>
             <div className='order-2 h-[340px] w-full overflow-hidden sm:h-[420px] lg:order-1 lg:h-[495px]'>
               <img
                 src={fotoVisao}
@@ -191,7 +191,7 @@ export function SobreNos() {
                 className='size-full object-cover object-center'
               />
             </div>
-            <div className='order-1 px-(--margem-pagina) py-16 lg:order-2 lg:py-24 lg:pl-16'>
+            <div className='order-1 py-16 lg:order-2 lg:py-24 lg:pl-16'>
               <h2 className='font-titulo text-[clamp(2rem,3vw,2.5rem)] font-extrabold'>
                 Nossa Visão
               </h2>
@@ -201,7 +201,7 @@ export function SobreNos() {
                 tranquilidade.
               </p>
             </div>
-          </div>
+          </Container>
         </section>
 
         <section className='bg-(--laranja-principal) py-16 text-white lg:py-20'>

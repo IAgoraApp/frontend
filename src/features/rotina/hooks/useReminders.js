@@ -1,19 +1,16 @@
 import { useEffect, useRef } from 'react';
 import { adicionarDias, chaveData } from '../utils/dates';
-import { ocorrenciasEntre } from '../utils/tasks';
 
-export function useLembretes(tarefas, conclusoes, notificar) {
+export function useLembretes(ocorrencias, notificar) {
   const exibidos = useRef(new Set());
 
   useEffect(() => {
     function verificar() {
       const agora = Date.now();
       const hoje = chaveData();
-      const proximas = ocorrenciasEntre(
-        tarefas,
-        conclusoes,
-        hoje,
-        adicionarDias(hoje, 1)
+      const proximas = ocorrencias.filter(tarefa =>
+        !tarefa.completed && tarefa.occurrenceDate >= hoje &&
+        tarefa.occurrenceDate <= adicionarDias(hoje, 1)
       );
       for (const tarefa of proximas) {
         if (tarefa.reminder === 'none') continue;
@@ -34,5 +31,5 @@ export function useLembretes(tarefas, conclusoes, notificar) {
     const intervalo = window.setInterval(verificar, 30_000);
     verificar();
     return () => window.clearInterval(intervalo);
-  }, [tarefas, conclusoes, notificar]);
+  }, [ocorrencias, notificar]);
 }

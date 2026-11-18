@@ -1,6 +1,6 @@
+import { useCategoriasRotina } from '../hooks/useRotinaBanco';
 import { useState } from 'react';
 import {
-  categoriasRotina,
   frequenciasRotina,
   opcoesLembrete,
   diasSemanaRotina,
@@ -28,6 +28,7 @@ export default function AjustesTarefa({
   aoCancelar,
   idTitulo,
 }) {
+  const categoriasRotina = useCategoriasRotina();
   const [valores, setValores] = useState(() => ({
     date: tarefa.occurrenceDate,
     time: tarefa.time,

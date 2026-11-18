@@ -7,6 +7,9 @@
   z-index: 40;
 }
 .casa-shell {
+  --largura-pagina: 1440px;
+  --espaco-lateral-topo: 20px;
+  --espaco-lateral-base: 40px;
   min-height: 0;
   overflow: hidden;
   align-items: stretch;
@@ -33,7 +36,7 @@
   font-size: 13px;
   font-weight: 750;
 }
-@media (max-width: 600px) {
+@media (max-width: 767px) {
   .casa-shell {
     display: flex;
     flex-direction: column;
@@ -50,4 +53,51 @@
     padding: 8px 6px;
     font-size: 12px;
   }
+}
+
+.casa-shell :is(.mvp-pagina, .casa-pagina-conteudo) {
+  padding-block: var(--espaco-lateral-topo) var(--espaco-lateral-base);
+}
+
+@media (min-width: 1024px) {
+  .casa-shell {
+    --espaco-lateral-topo: 28px;
+  }
+}
+
+@media (max-height: 640px) {
+  .casa-shell {
+    --espaco-lateral-base: 20px;
+  }
+}
+
+.casa-shell-area {
+  --casa-espaco-secao: 18px;
+}
+.casa-shell-area .mvp-pagina h1 {
+  color: var(--azul-titulo);
+  font-family: var(--font-titulo);
+  font-size: clamp(1.5rem, 3.2vw, 2.25rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  overflow-wrap: anywhere;
+}
+.casa-shell-area .mvp-cabecalho {
+  margin-bottom: var(--casa-espaco-secao);
+}
+.casa-shell-area .casa-identidade .mvp-cabecalho {
+  margin-bottom: 0;
+}
+.casa-shell-area :is(.mvp-cabecalho, .cozinha-topo, .receitas-topo) p {
+  margin-top: 6px;
+  color: var(--texto-apoio);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.casa-shell-area
+  :is(.mvp-cabecalho, .cozinha-topo, .receitas-topo, .limpeza-secao-topo)
+  :is(.mvp-primario, .receitas-primario, .casa-editar-residencia) {
+  min-height: 44px;
+  border-radius: 8px;
 }

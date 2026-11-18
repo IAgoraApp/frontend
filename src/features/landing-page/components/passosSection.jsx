@@ -7,9 +7,9 @@ export default function SecaoPassos() {
   return (
     <section
       id='como-funciona'
-      className='w-full bg-(--laranja-principal) px-6 py-10 text-white sm:px-12 lg:h-[300px] lg:px-[72px] lg:py-[18px]'
+      className='w-full bg-(--laranja-principal) px-(--margem-pagina) py-10 text-white lg:h-[300px] lg:py-[18px]'
     >
-      <div className='mx-auto flex h-full max-w-[1296px] flex-col justify-center gap-[15px]'>
+      <div className='mx-auto flex h-full max-w-(--largura-header) flex-col justify-center gap-[15px]'>
         <div className='flex flex-col gap-1'>
           <span className='font-corpo text-[14px] font-bold tracking-[1px] sm:text-base'>
             TRÊS PASSOS, UM NOVO COMEÇO.

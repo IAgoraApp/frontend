@@ -12,9 +12,9 @@ export default function SecaoRecursos() {
   return (
     <section
       id='funcionalidades'
-      className='w-full border-b border-[#D6E0E8] bg-white px-6 py-12 sm:px-12 lg:h-[520px] lg:px-[72px] lg:py-6'
+      className='w-full border-b border-[#D6E0E8] bg-white px-(--margem-pagina) py-12 lg:h-[520px] lg:py-6'
     >
-      <div className='mx-auto flex h-full max-w-[1296px] flex-col justify-center gap-5'>
+      <div className='mx-auto flex h-full max-w-(--largura-header) flex-col justify-center gap-5'>
         <div className='flex flex-col gap-1'>
           <span className='font-corpo text-[14px] font-bold tracking-[1px] text-(--laranja-principal) sm:text-base'>
             A VIDA REAL PEDE

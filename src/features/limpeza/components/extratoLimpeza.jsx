@@ -1,7 +1,16 @@
 import { useState } from 'react';
-import { Clock3, Search, SlidersHorizontal } from 'lucide-react';
+import {
+  ArrowUpRight,
+  CalendarDays,
+  Clock3,
+  Search,
+  SlidersHorizontal,
+  UserRound,
+} from 'lucide-react';
 import { hoje } from '../../../app/dados/bancoMvp';
 import { agruparExecucoes, dataLocalExecucao } from '../utils/extratoLimpeza';
+import { DialogoCasa } from '../../casa/components/casaUi';
+import { imagemComodo } from '../utils/imagemComodo';
 import './extratoLimpeza.css';
 
 const normalizar = texto =>
@@ -10,10 +19,16 @@ const normalizar = texto =>
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase();
 
-export default function ExtratoLimpeza({ registros, limpezas, comodos }) {
+export default function ExtratoLimpeza({
+  registros,
+  limpezas,
+  comodos,
+  perfis,
+}) {
   const [mes, setMes] = useState('todos');
   const [comodo, setComodo] = useState('todos');
   const [busca, setBusca] = useState('');
+  const [execucaoId, setExecucaoId] = useState(null);
   const meses = [
     ...new Set(
       registros.map(e => dataLocalExecucao(e.realizada_em).slice(0, 7))
@@ -23,13 +38,17 @@ export default function ExtratoLimpeza({ registros, limpezas, comodos }) {
     .reverse();
   const atividades = new Map(limpezas.map(l => [l.id, l]));
   const espacos = new Map(comodos.map(c => [c.id, c]));
+  const pessoas = new Map(perfis.map(p => [p.id, p.nome]));
+  const execucao = registros.find(item => item.id === execucaoId);
+  const atividadeDetalhe = atividades.get(execucao?.limpeza_id);
+  const localDetalhe = espacos.get(atividadeDetalhe?.comodo_id);
   const filtrados = registros.filter(e => {
     const atividade = atividades.get(e.limpeza_id);
     return (
       (mes === 'todos' || dataLocalExecucao(e.realizada_em).startsWith(mes)) &&
       (comodo === 'todos' || atividade?.comodo_id === Number(comodo)) &&
       normalizar(
-        `${atividade?.nome} ${atividade?.descricao} ${espacos.get(atividade?.comodo_id)?.nome}`
+        `${atividade?.nome} ${atividade?.descricao} ${espacos.get(atividade?.comodo_id)?.nome} ${pessoas.get(e.perfil_id) ?? ''}`
       ).includes(normalizar(busca.trim()))
     );
   });
@@ -121,22 +140,32 @@ export default function ExtratoLimpeza({ registros, limpezas, comodos }) {
                   const atividade = atividades.get(e.limpeza_id);
                   const data = new Date(e.realizada_em);
                   return (
-                    <li className='extrato-registro' key={e.id}>
-                      <time
-                        dateTime={e.realizada_em}
-                        title={data.toLocaleString('pt-BR')}
+                    <li key={e.id}>
+                      <button
+                        className='extrato-registro'
+                        type='button'
+                        aria-haspopup='dialog'
+                        onClick={() => setExecucaoId(e.id)}
                       >
-                        <Clock3 size={12} aria-hidden='true' />
-                        {data.toLocaleTimeString('pt-BR', {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
-                      </time>
-                      <div className='extrato-registro-corpo'>
-                        <strong>{atividade?.nome}</strong>
-                        <p>{espacos.get(atividade?.comodo_id)?.nome}</p>
-                      </div>
-                      <span className='extrato-concluida'>Concluída</span>
+                        <time
+                          dateTime={e.realizada_em}
+                          title={data.toLocaleString('pt-BR')}
+                        >
+                          <Clock3 size={12} aria-hidden='true' />
+                          {data.toLocaleTimeString('pt-BR', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
+                        </time>
+                        <span className='extrato-registro-corpo'>
+                          <strong>{atividade?.nome}</strong>
+                          <span>{espacos.get(atividade?.comodo_id)?.nome}</span>
+                        </span>
+                        <span className='extrato-registro-acao'>
+                          <span className='extrato-concluida'>Concluída</span>
+                          <ArrowUpRight size={16} aria-hidden='true' />
+                        </span>
+                      </button>
                     </li>
                   );
                 })}
@@ -163,6 +192,52 @@ export default function ExtratoLimpeza({ registros, limpezas, comodos }) {
             </button>
           )}
         </div>
+      )}
+      {execucao && (
+        <DialogoCasa
+          titulo={atividadeDetalhe?.nome || 'Limpeza realizada'}
+          aoFechar={() => setExecucaoId(null)}
+        >
+          <div className='extrato-detalhe'>
+            {localDetalhe && (
+              <figure className='extrato-detalhe-comodo'>
+                <img src={imagemComodo(localDetalhe.tipo)} alt='' />
+                <figcaption>
+                  {localDetalhe.nome}
+                  <span className='extrato-concluida'>Concluída</span>
+                </figcaption>
+              </figure>
+            )}
+            <dl className='extrato-detalhe-dados'>
+              <div>
+                <CalendarDays size={18} aria-hidden='true' />
+                <dt>Realizada em</dt>
+                <dd>
+                  <time dateTime={execucao.realizada_em}>
+                    {new Date(execucao.realizada_em).toLocaleString('pt-BR', {
+                      dateStyle: 'long',
+                      timeStyle: 'short',
+                    })}
+                  </time>
+                </dd>
+              </div>
+              <div>
+                <UserRound size={18} aria-hidden='true' />
+                <dt>Responsável</dt>
+                <dd>
+                  {pessoas.get(execucao.perfil_id) || 'Perfil indisponível'}
+                </dd>
+              </div>
+            </dl>
+            <section className='extrato-detalhe-orientacoes'>
+              <h3>Orientações da atividade</h3>
+              <p>
+                {atividadeDetalhe?.descricao?.trim() ||
+                  'Esta atividade ainda não tem orientações cadastradas.'}
+              </p>
+            </section>
+          </div>
+        </DialogoCasa>
       )}
     </section>
   );

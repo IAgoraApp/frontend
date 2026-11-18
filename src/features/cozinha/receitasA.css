@@ -1,0 +1,608 @@
+.receitas-tela {
+  display: grid;
+  gap: 20px;
+  color: var(--azul-titulo);
+  overflow-wrap: anywhere;
+}
+.receitas-tela h2,
+.receitas-editor legend {
+  font-family: var(--font-titulo);
+  line-height: 1.12;
+  font-weight: 750;
+}
+.receitas-tela button[aria-pressed='true'] {
+  color: var(--laranja-principal);
+}
+.receitas-topo,
+.receitas-plano {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.receitas-detalhe-topo h1 + p,
+.receitas-plano p {
+  margin-top: 7px;
+  color: var(--texto-apoio);
+}
+.receitas-botao,
+.receitas-icone,
+.receitas-acao-texto {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+.receitas-botao {
+  padding: 8px 14px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 8px;
+  background: white;
+  color: var(--azul-titulo);
+  text-align: center;
+}
+.receitas-botao:hover,
+.receitas-icone:hover {
+  background: var(--azul-fundo);
+}
+.receitas-primario {
+  background: var(--laranja-principal);
+  border-color: var(--laranja-principal);
+  color: white;
+}
+.receitas-primario:hover {
+  background: var(--laranja-destaque);
+}
+.receitas-icone {
+  width: 44px;
+  flex: 0 0 44px;
+  border-radius: 50%;
+}
+.receitas-acao-texto {
+  justify-content: flex-start;
+  color: var(--azul-titulo);
+}
+.receitas-acao-texto:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.receitas-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.receitas-tela :is(input, select, textarea) {
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 8px;
+  background: #fff;
+}
+.receitas-busca {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 265px;
+  max-width: 520px;
+  padding-inline: 12px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 8px;
+  background: white;
+}
+.receitas-busca:focus-within {
+  outline: 2px solid var(--laranja-principal);
+  outline-offset: 3px;
+}
+.receitas-busca input {
+  width: 100%;
+  border: 0;
+  padding-inline: 0;
+}
+.receitas-tela .receitas-busca input:focus-visible {
+  outline: 0;
+}
+.receitas-detalhe-topo.com-foto {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  border-radius: 16px;
+}
+.receitas-foto {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  aspect-ratio: 1.65;
+  place-items: center;
+  background: var(--azul-fundo);
+  color: var(--azul-titulo);
+  overflow: hidden;
+}
+.receitas-foto img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  object-fit: cover;
+}
+.receitas-ilustrativa {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  padding: 3px 7px;
+  border-radius: 4px;
+  background: white;
+  font-size: 0.7rem;
+}
+.receitas-listagem {
+  gap: clamp(8px, 1.9vh, 18px);
+}
+.receitas-grade {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(8px, 1.5vw, 18px);
+}
+.receitas-card .receitas-foto {
+  max-height: clamp(88px, 26vh, 235px);
+}
+.receitas-paginacao {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+.receitas-paginacao button:disabled {
+  opacity: 0.4;
+  cursor: default;
+  background: transparent;
+}
+.receitas-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--borda-suave);
+  border-radius: 12px;
+  background: white;
+}
+.receitas-card .receitas-foto {
+  border-radius: 11px 11px 0 0;
+}
+.receitas-card-link {
+  display: block;
+  flex: 1;
+  border-radius: 12px 12px 0 0;
+}
+.receitas-card-link:hover h2 {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.receitas-card-texto {
+  padding: 14px 15px 12px;
+}
+.receitas-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 12px;
+  color: var(--texto-apoio);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.receitas-card h2 {
+  margin-block: 5px;
+  font-size: 1.3rem;
+}
+.receitas-card p {
+  font-size: 0.875rem;
+  color: var(--texto-apoio);
+}
+.receitas-card-acoes {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 54px;
+  margin-inline: 14px;
+  border-top: 1px solid var(--borda-suave);
+}
+.receitas-situacao {
+  padding: 5px 10px;
+  border-radius: 5px;
+  background: var(--azul-fundo);
+  color: var(--azul-titulo);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.receitas-situacao[data-status='fazendo'] {
+  background: var(--laranja-fundo);
+  color: var(--azul-titulo);
+}
+.receitas-situacao[data-status='feita'] {
+  background: color-mix(in srgb, var(--verde-sucesso) 12%, white);
+  color: var(--verde-sucesso);
+}
+.receitas-acoes {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.receitas-detalhe-topo .receitas-acoes {
+  margin-top: 16px;
+}
+.receitas-detalhe,
+.receitas-editor {
+  display: grid;
+  gap: 20px;
+}
+.receitas-detalhe > a {
+  justify-self: start;
+}
+.receitas-detalhe-topo {
+  align-items: center;
+  gap: 20px;
+}
+.receitas-detalhe-topo .receitas-foto {
+  border-radius: 12px;
+}
+.receitas-plano {
+  padding: 15px;
+  border-radius: 12px;
+  background: var(--azul-fundo);
+}
+.receitas-plano h2,
+.receitas-instrucoes h2 {
+  font-size: 1.25rem;
+}
+.receitas-plano p {
+  font-size: 0.875rem;
+}
+.receitas-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.receitas-instrucoes {
+  display: grid;
+  grid-template-columns: minmax(0, 0.75fr) minmax(0, 1fr);
+  gap: 18px;
+}
+.receitas-instrucoes section,
+.receitas-editor > fieldset {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 12px;
+  background: white;
+}
+.receitas-instrucoes :is(ul, ol, p) {
+  margin-top: 12px;
+}
+.receitas-instrucoes ul li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-block: 8px;
+  border-bottom: 1px solid var(--borda-suave);
+}
+.receitas-instrucoes ul li:last-child {
+  border: 0;
+}
+.receitas-instrucoes strong {
+  white-space: nowrap;
+}
+.receitas-instrucoes ol {
+  padding-inline-start: 22px;
+  list-style: decimal;
+}
+.receitas-instrucoes ol li {
+  padding-inline-start: 4px;
+  margin-bottom: 8px;
+}
+.receitas-exclusao {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.receitas-perigo,
+.receitas-erro {
+  color: var(--vermelho-alerta);
+}
+.receitas-erro {
+  padding: 10px 14px;
+  background: color-mix(in srgb, var(--vermelho-alerta) 8%, white);
+  border-radius: 8px;
+}
+.receitas-editor {
+  max-width: 960px;
+}
+.receitas-editor legend {
+  padding-inline: 6px;
+  font-size: 1.25rem;
+}
+.receitas-editor label {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  font-size: 0.875rem;
+  font-weight: 650;
+}
+.receitas-editor label + label {
+  margin-top: 12px;
+}
+.receitas-editor :is(input, textarea, select) {
+  width: 100%;
+  font-weight: 400;
+}
+.receitas-campos,
+.receitas-ingrediente {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  min-width: 0;
+}
+.receitas-campos label + label,
+.receitas-ingrediente label + label {
+  margin: 0;
+}
+.receitas-ingrediente {
+  grid-template-columns:
+    minmax(0, 1.1fr) minmax(0, 1fr) minmax(92px, 0.4fr)
+    44px;
+  align-items: end;
+  margin-bottom: 14px;
+  padding: 10px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 8px;
+}
+.receitas-ingrediente legend {
+  font-size: 0.875rem;
+}
+@media (max-width: 760px) {
+  .receitas-detalhe-topo.com-foto,
+  .receitas-instrucoes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .receitas-ingrediente {
+    grid-template-columns: minmax(0, 1fr) 44px;
+  }
+  .receitas-ingrediente label:nth-of-type(-n + 2) {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 440px) {
+  .receitas-campos {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (width < 1100px) {
+  .receitas-grade {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .receitas-listagem .receitas-topo {
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+  .receitas-listagem .receitas-topo p {
+    display: none;
+  }
+  .receitas-listagem .receitas-topo .receitas-botao {
+    flex-shrink: 0;
+    padding-inline: 8px;
+    font-size: 0.75rem;
+  }
+  .receitas-listagem .receitas-filtros {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+    gap: 6px;
+    font-size: 0.75rem;
+  }
+  .receitas-listagem .receitas-busca {
+    gap: 5px;
+    padding-inline: 6px;
+  }
+  .receitas-listagem .receitas-busca svg {
+    flex: 0 0 14px;
+  }
+  .receitas-listagem .receitas-filtros select {
+    padding-inline: 6px;
+  }
+  .receitas-card-texto {
+    padding: 8px;
+  }
+  .receitas-card h2 {
+    font-size: 1.05rem;
+  }
+  .receitas-card p {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    font-size: 0.75rem;
+  }
+  .receitas-card-acoes {
+    min-height: 44px;
+    margin-inline: 6px;
+  }
+  .receitas-card-acoes .receitas-acao-texto {
+    font-size: 0.75rem;
+    gap: 4px;
+  }
+}
+@media (max-height: 640px) {
+  .receitas-listagem   .receitas-card p {
+    display: none;
+  }
+}
+
+@media (max-height: 640px) {
+  .receitas-listagem {
+    gap: 8px;
+  }
+}
+
+.receitas-colecoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.receitas-colecoes [aria-current='page'] {
+  border-color: var(--laranja-fundo);
+  background: var(--laranja-fundo);
+  color: var(--azul-titulo);
+}
+.casa-conteudo:has(.receitas-leitura) {
+  overflow: hidden;
+}
+.mvp-pagina:has(.receitas-leitura) {
+  height: 100%;
+}
+.receitas-leitura {
+  height: 100%;
+  grid-template-rows: minmax(0, 1fr);
+}
+.receitas-leitura:has(> .receitas-erro) {
+  grid-template-rows: auto minmax(0, 1fr);
+}
+.receitas-leitura .receitas-detalhe {
+  min-height: 0;
+  grid-template-rows: auto auto auto minmax(0, 1fr);
+  gap: clamp(8px, 1.7vh, 18px);
+}
+.receitas-detalhe-topo.com-foto {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.7fr);
+}
+.receitas-detalhe-topo .receitas-foto {
+  width: 100%;
+  max-height: min(25dvh, 240px);
+}
+.receitas-leitura-conteudo {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.receitas-leitura-conteudo:focus-visible {
+  outline: 2px solid var(--laranja-principal);
+  outline-offset: -2px;
+}
+.receitas-exclusao {
+  margin-top: 10px;
+}
+@media (max-width: 600px) {
+  .receitas-colecoes .receitas-botao {
+    padding-inline: 7px;
+    gap: 4px;
+    font-size: 0.72rem;
+  }
+  .receitas-colecoes svg {
+    width: 14px;
+  }
+  .receitas-detalhe-topo.com-foto {
+    grid-template-columns: minmax(0, 1fr) minmax(80px, 0.7fr);
+    gap: 8px;
+  }
+  .receitas-detalhe-topo h1 + p,
+  .receitas-plano p {
+    font-size: 0.78rem;
+  }
+  .receitas-detalhe-topo .receitas-acoes {
+    margin-top: 6px;
+  }
+  .receitas-leitura .receitas-botao {
+    padding-inline: 7px;
+    gap: 4px;
+    font-size: 0.75rem;
+  }
+  .receitas-leitura .receitas-plano {
+    gap: 6px;
+    padding: 8px;
+  }
+  .receitas-plano h2 {
+    font-size: 1rem;
+  }
+  .receitas-plano p {
+    display: none;
+  }
+  .receitas-instrucoes {
+    gap: 8px;
+  }
+}
+@media (max-height: 490px) {
+  .receitas-leitura .receitas-detalhe {
+    display: block;
+    overflow-y: auto;
+  }
+  .receitas-detalhe > * + * {
+    margin-top: 8px;
+  }
+  .receitas-leitura-conteudo {
+    overflow: visible;
+  }
+}
+
+.receitas-leitura:focus {
+  outline: none;
+}
+@media (max-width: 600px) {
+  .receitas-plano > .receitas-acoes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    gap: 6px;
+  }
+  .receitas-plano .receitas-status {
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 600px) and (max-height: 640px) {
+  .receitas-detalhe-topo h1 + p {
+    display: none;
+  }
+}
+
+.receitas-ingrediente-estoque small {
+  display: block;
+  margin-top: 2px;
+  color: var(--verde-sucesso);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.receitas-ingrediente-estoque small[data-faltando='true'] {
+  color: var(--texto-apoio);
+}
+.receitas-criar-lista {
+  margin-top: 12px;
+}
+
+.receitas-criacao {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.receitas-criar-ia svg {
+  color: var(--laranja-principal);
+}
+@media (max-width: 400px) {
+  .receitas-criacao {
+    flex-wrap: nowrap;
+  }
+  .receitas-criar-ia {
+    width: 44px;
+  }
+  .receitas-criar-ia span {
+    display: none;
+  }
+}

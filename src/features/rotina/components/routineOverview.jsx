@@ -1,18 +1,14 @@
 import { Titulo } from '../../../shared/ui/index';
 import { acoesRapidasRotina } from '../content';
 import Robo from '../assets/robot.png';
-import {
-  ArteListaRotina,
-  BotaoRotina,
-  FitaRotina,
-  IconeRotina,
-} from './routineUi';
+import { ArteListaRotina, BotaoRotina, IconeRotina } from './routineUi';
 import LinhaTarefa from './taskRow';
 import { useCapacidadeProximas } from '../hooks/useUpcomingCapacity';
 import classesRotina from '../routineClasses';
 
 export default function VisaoGeralRotina({
   proximas,
+  atrasadas,
   aoAcao,
   aoAbrir,
   aoConcluir,
@@ -22,17 +18,20 @@ export default function VisaoGeralRotina({
     <div className={classesRotina.visaoGeral}>
       <div className={classesRotina.introducao}>
         <div className={classesRotina.copiaTitulo}>
-          <FitaRotina />
           <Titulo como='h1' classe={classesRotina.tituloBoasVindas}>
             Oi! Vamos organizar o seu dia?
           </Titulo>
           <p className={classesRotina.descricaoIntroducao}>
-            Crie tarefas, receba sugestões da IA e mantenha sua rotina em dia.
+            Planeje suas tarefas, veja o que vem a seguir e acompanhe o que já
+            fez.
           </p>
         </div>
         <ArteListaRotina />
       </div>
-      <nav className={classesRotina.acoesRapidas} aria-label='Ações da minha rotina'>
+      <nav
+        className={classesRotina.acoesRapidas}
+        aria-label='Ações da minha rotina'
+      >
         {acoesRapidasRotina.map(acao => (
           <button
             key={acao.id}
@@ -63,7 +62,8 @@ export default function VisaoGeralRotina({
               className={classesRotina.acaoTexto}
               onClick={() => aoAcao('lista')}
             >
-              Ver todas <span aria-hidden='true'>→</span>
+              {atrasadas ? `Ver lista (${atrasadas} em atraso)` : 'Ver todas'}{' '}
+              <span aria-hidden='true'>→</span>
             </button>
           </div>
           {proximas.length ? (
@@ -102,7 +102,6 @@ export default function VisaoGeralRotina({
           aria-labelledby='titulo-cartao-ia'
         >
           <div className={classesRotina.copiaCartaoIa}>
-            <FitaRotina>COM A AJUDA DA IA</FitaRotina>
             <Titulo
               como='h2'
               id='titulo-cartao-ia'

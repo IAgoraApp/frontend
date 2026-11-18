@@ -1,8 +1,7 @@
-import { House, MapPin, Pencil } from 'lucide-react';
+import { House, MapPin } from 'lucide-react';
 import fotoCasa from '../assets/residencia-minha.png';
-import { BotaoCasa } from './casaUi';
 
-export default function PerfilCasa({ casa, endereco, aoEditar }) {
+export default function PerfilCasa({ casa, endereco }) {
   return (
     <section className='casa-perfil' aria-labelledby='casa-perfil-nome'>
       <img
@@ -31,10 +30,6 @@ export default function PerfilCasa({ casa, endereco, aoEditar }) {
             </div>
           </div>
         )}
-        <BotaoCasa onClick={aoEditar}>
-          <Pencil size={15} aria-hidden='true' />
-          Editar residência
-        </BotaoCasa>
       </div>
     </section>
   );

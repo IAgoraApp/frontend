@@ -40,7 +40,7 @@ export function CartaoCasa({ titulo, children, classe = '', acao }) {
   );
 }
 
-export function DialogoCasa({ titulo, children, aoFechar }) {
+export function DialogoCasa({ titulo, children, aoFechar, classe = '' }) {
   const referencia = useRef(null);
 
   useEffect(() => {
@@ -67,7 +67,7 @@ export function DialogoCasa({ titulo, children, aoFechar }) {
       onClick={evento => {
         if (evento.target === evento.currentTarget) aoFechar();
       }}
-      className='fixed inset-0 m-auto max-h-[90dvh] w-[calc(100%-2rem)] max-w-2xl overflow-y-auto rounded-2xl border border-[#dbe5ed] bg-white p-5 text-(--azul-titulo) shadow-xl backdrop:bg-[#102a43]/40 sm:p-8'
+      className={`fixed inset-0 m-auto max-h-[90dvh] w-[calc(100%-2rem)] max-w-2xl overflow-y-auto rounded-2xl border border-[#dbe5ed] bg-white p-5 text-(--azul-titulo) shadow-xl backdrop:bg-[#102a43]/40 sm:p-8 ${classe}`}
     >
       <div className='mb-6 flex items-start justify-between gap-4'>
         <Titulo

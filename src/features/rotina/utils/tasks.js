@@ -12,11 +12,11 @@ export function criarId() {
   return crypto.randomUUID();
 }
 
-export function validarTarefa(tarefa) {
+export function validarTarefa(tarefa, categorias = categoriasRotina) {
   const erros = {};
   if (!tarefa.title?.trim()) erros.title = 'Dê um título para a tarefa.';
-  if (tarefa.title?.trim().length > 120) erros.title = 'Use até 120 caracteres.';
-  if (!categoriasRotina.some(categoria => categoria.id === tarefa.category)) {
+  if (tarefa.title?.trim().length > 150) erros.title = 'Use até 150 caracteres.';
+  if (!categorias.some(categoria => categoria.id === tarefa.category)) {
     erros.category = 'Selecione uma categoria.';
   }
   if (!analisarData(tarefa.date)) erros.date = 'Informe uma data válida.';

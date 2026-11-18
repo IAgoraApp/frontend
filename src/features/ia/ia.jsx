@@ -13,6 +13,7 @@ import {
   Trash2,
   Truck,
 } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 import './ia.css';
 
 const sugestoes = [
@@ -43,6 +44,10 @@ function responder(texto) {
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase();
+  if (/receita/.test(pergunta))
+    return 'Para montar uma receita, me diga quais ingredientes você tem e para quantas pessoas quer cozinhar. Na Cozinha, use Nova receita para guardar os ingredientes, as quantidades e o modo de preparo.';
+  if (/atividades de limpeza/.test(pergunta))
+    return 'Comece com tarefas pequenas por cômodo:\n\n• Cozinha: limpe bancada e fogão após o uso.\n• Banheiro: lave pia, vaso e box semanalmente.\n• Quarto: troque a roupa de cama uma vez por semana.\n\nEm Limpeza, abra o cômodo e use Adicionar tarefa para registrar os cuidados e escolher a próxima data.';
   if (/servic|negocio|empresa|cliente|anuncio/.test(pergunta))
     return 'Para apresentar seus serviços no IAgora:\n\n1. Complete o perfil da empresa com sua área de atuação e região atendida.\n2. Crie um anúncio com uma descrição clara do que está incluído no serviço.\n3. Adicione fotos que mostrem seu trabalho e revise os dados de contato.\n\nVocê pode acompanhar seus anúncios e os contatos pelo painel da empresa.';
   if (/mudan|morar|alug|apartamento/.test(pergunta))
@@ -59,9 +64,14 @@ function responder(texto) {
 const conversasDaSessao = { itens: [], ativa: null };
 
 export default function InteligenciaArtificial() {
+  const rascunho = useLocation().state?.rascunho;
+  const textoInicial =
+    typeof rascunho === 'string' ? rascunho.slice(0, 2000) : '';
   const [conversas, setConversas] = useState(() => conversasDaSessao.itens);
-  const [ativa, setAtiva] = useState(() => conversasDaSessao.ativa);
-  const [texto, setTexto] = useState('');
+  const [ativa, setAtiva] = useState(() =>
+    textoInicial ? null : conversasDaSessao.ativa
+  );
+  const [texto, setTexto] = useState(textoInicial);
   const [historicoAberto, setHistoricoAberto] = useState(false);
   const [copiada, setCopiada] = useState(null);
   const [erro, setErro] = useState('');

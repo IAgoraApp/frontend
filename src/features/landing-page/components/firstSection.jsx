@@ -1131,8 +1131,8 @@ export default function SecaoHero() {
   const poligonosIniciais = calcularPoligonosAbas(1.0);
 
   return (
-    <section className='relative flex w-full flex-col items-center justify-center overflow-hidden bg-white px-6 py-12 sm:px-12 lg:min-h-[920px] xl:min-h-[960px] lg:px-[72px] lg:py-10'>
-      <div className='relative mx-auto flex w-full max-w-[1440px] flex-col items-center gap-4'>
+    <section className='relative flex w-full flex-col items-center justify-center overflow-hidden bg-white px-(--margem-pagina) py-12 lg:min-h-[920px] xl:min-h-[960px] lg:py-10'>
+      <div className='relative mx-auto flex w-full max-w-(--largura-header) flex-col items-center gap-4'>
         <div className='relative z-20 flex w-full flex-col items-center justify-center gap-4 text-center lg:min-h-[460px]'>
           <h1 className='w-full max-w-[1360px] font-titulo text-[42px] leading-[1.02] font-extrabold tracking-tight text-(--azul-titulo) sm:text-[68px] md:text-[84px] lg:text-[102px] xl:text-[114px]'>
             <span className='block'>Quero Morar Sozinho(a)</span>

@@ -85,11 +85,12 @@
   grid-template-columns: 70px minmax(0, 1fr) auto;
   align-items: center;
   gap: 16px;
-  margin-inline: 24px;
-  padding: 21px 0;
+  width: 100%;
+  padding: 18px 24px;
+  text-align: left;
   border-bottom: 1px solid #eaf0f4;
 }
-.extrato-registro:last-child {
+.extrato-dia li:last-child .extrato-registro {
   border-bottom: 0;
 }
 .extrato-registro > time {
@@ -108,7 +109,8 @@
   font-size: 14px;
   font-weight: 750;
 }
-.extrato-registro-corpo p {
+.extrato-registro-corpo > span {
+  display: block;
   font-size: 12px;
   color: var(--texto-apoio);
   margin-top: 4px;
@@ -185,8 +187,7 @@
   .extrato-registro {
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 8px 10px;
-    margin-inline: 14px;
-    padding-block: 17px;
+    padding: 14px;
   }
   .extrato-registro > time {
     grid-column: 1;
@@ -200,10 +201,92 @@
   .extrato-registro-corpo > strong {
     font-size: 13px;
   }
-  .extrato-concluida {
+  .extrato-registro-acao {
     grid-column: 2;
     grid-row: 1;
-    font-size: 9px;
-    padding: 3px 6px;
+  }
+}
+
+.extrato-registro:hover {
+  background: var(--azul-fundo);
+}
+.limpeza-extrato .extrato-registro:focus-visible {
+  outline-offset: -2px;
+}
+.extrato-registro-acao {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--laranja-principal);
+}
+.extrato-detalhe {
+  display: grid;
+  gap: 16px;
+  overflow-wrap: anywhere;
+}
+.extrato-detalhe-comodo {
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--azul-titulo);
+  color: white;
+}
+.extrato-detalhe-comodo img {
+  width: 100%;
+  height: clamp(95px, 23dvh, 180px);
+  object-fit: cover;
+}
+.extrato-detalhe-comodo figcaption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 14px;
+  font-weight: 750;
+}
+.extrato-detalhe-dados {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.extrato-detalhe-dados > div {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: start;
+  gap: 4px 8px;
+  min-width: 0;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--azul-fundo);
+}
+.extrato-detalhe-dados svg {
+  color: var(--azul-principal);
+}
+.extrato-detalhe-dados dt {
+  font-size: 12px;
+  color: var(--texto-apoio);
+}
+.extrato-detalhe-dados dd {
+  grid-column: 2;
+  font-size: 13px;
+  font-weight: 700;
+}
+.extrato-detalhe-orientacoes {
+  padding: 14px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 8px;
+}
+.extrato-detalhe-orientacoes h3 {
+  font-family: var(--font-titulo);
+  font-weight: 800;
+}
+.extrato-detalhe-orientacoes p {
+  margin-top: 6px;
+  color: var(--texto-apoio);
+  font-size: 14px;
+  white-space: pre-wrap;
+}
+@media (max-width: 400px) {
+  .extrato-detalhe-dados {
+    grid-template-columns: 1fr;
   }
 }

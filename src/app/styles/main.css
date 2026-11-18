@@ -3,6 +3,7 @@
 
 @theme static {
   --margem-pagina: 1rem;
+  --largura-header: 1440px;
   --font-titulo: 'Bricolage Grotesque', sans-serif;
   --font-corpo: 'DM Sans', sans-serif;
 
@@ -25,6 +26,22 @@
   --texto-claro: #526579;
   --verde-sucesso: #18794e;
   --vermelho-alerta: #b42318;
+}
+
+body {
+  --largura-pagina: calc(var(--largura-header) + 2 * var(--margem-pagina));
+}
+
+:root {
+  --largura-menu-lateral: 272px;
+  --recuo-menu-lateral: 20px;
+}
+
+@media (min-width: 1500px) {
+  :root {
+    --largura-menu-lateral: 300px;
+    --recuo-menu-lateral: 32px;
+  }
 }
 
 @layer base {

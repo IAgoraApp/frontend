@@ -2,25 +2,15 @@ import { useState } from 'react';
 import EstatisticaConcluido from '../assets/stat-check.svg';
 import EstatisticaGrafico from '../assets/stat-chart.svg';
 import EstatisticaSequencia from '../assets/stat-flame.svg';
-import { Titulo } from '../../../shared/ui/index';
-import { adicionarDias, chaveData, formatarData } from '../utils/dates';
-import {
-  EstadoVazioRotina,
-  BotaoRotina,
-  CabecalhoRotina,
-} from './routineUi';
-import LinhaTarefa from './taskRow';
+import { useCategoriasRotina } from '../hooks/useRotinaBanco';
+import { adicionarDias, chaveData } from '../utils/dates';
+import { CabecalhoRotina } from './routineUi';
+import ExtratoRotina from './routineStatement';
 import classesRotina from '../routineClasses';
 
-export default function VisaoHistorico({
-  conclusoes,
-  pendentes,
-  aoVoltar,
-  aoAbrir,
-  aoDesfazer,
-}) {
+export default function VisaoHistorico({ conclusoes, pendentes, aoAbrir }) {
   const [periodo, setPeriodo] = useState('mes');
-  const [visiveis, setVisiveis] = useState(10);
+  const categorias = useCategoriasRotina();
   const hoje = chaveData();
   const inicio =
     periodo === 'mes'
@@ -53,44 +43,61 @@ export default function VisaoHistorico({
       rotulo: 'Tarefas concluídas',
       valor: concluidas.length,
       icone: EstatisticaConcluido,
+      tom: 'verde',
     },
     {
       rotulo: 'Taxa de conclusão',
       valor: `${taxa}%`,
       icone: EstatisticaGrafico,
+      tom: 'azul',
     },
     {
       rotulo: 'Sequência atual',
       valor: `${sequencia} ${sequencia === 1 ? 'dia' : 'dias'}`,
       icone: EstatisticaSequencia,
+      tom: 'laranja',
     },
   ];
 
+  const registros = concluidas.map(tarefa => ({
+    id: tarefa.id,
+    data: chaveData(new Date(tarefa.completedAt)),
+    tipo: 'tarefa',
+    titulo: tarefa.title,
+    categoria: categorias.find(c => c.id === tarefa.category)?.rotulo,
+    detalhe: new Date(tarefa.completedAt).toLocaleTimeString('pt-BR', {
+      hour: '2-digit',
+      minute: '2-digit',
+    }),
+    situacao: 'Concluída',
+    estado: 'concluida',
+    icone: tarefa.icon,
+    aoAbrir: () => aoAbrir(tarefa),
+  }));
+
   return (
-    <div>
-      <CabecalhoRotina
-        fita
-        titulo='Histórico de conclusão'
-        descricao='Acompanhe o seu progresso ao longo do tempo.'
-        aoVoltar={aoVoltar}
-      >
+    <div className='rotina-extrato'>
+      <CabecalhoRotina titulo='Histórico'>
         <select
-          className={classesRotina.seletorPeriodo}
+          className='rotina-extrato-controle'
           aria-label='Período do histórico'
           value={periodo}
-          onChange={evento => {
-            setPeriodo(evento.target.value);
-            setVisiveis(10);
-          }}
+          onChange={evento => setPeriodo(evento.target.value)}
         >
-          <option value='mes'>Esse mês</option>
+          <option value='mes'>Este mês</option>
           <option value='semana'>Últimos 7 dias</option>
           <option value='tudo'>Todo o período</option>
         </select>
       </CabecalhoRotina>
-      <dl className={classesRotina.estatisticas}>
+      <dl
+        className={classesRotina.estatisticas + ' rotina-extrato-estatisticas'}
+      >
         {estatisticas.map(estatistica => (
-          <div key={estatistica.rotulo} className={classesRotina.estatistica}>
+          <div
+            key={estatistica.rotulo}
+            className={classesRotina.estatistica}
+            data-tom={estatistica.tom}
+          >
             <span className={classesRotina.iconeEstatistica}>
               <img src={estatistica.icone} alt='' />
             </span>
@@ -102,44 +109,18 @@ export default function VisaoHistorico({
         ))}
       </dl>
       <section
-        className={classesRotina.secaoConcluidas}
-        aria-labelledby='titulo-concluidas'
+        className='rotina-extrato-painel'
+        aria-labelledby='historico-lista-titulo'
       >
-        <Titulo como='h2' id='titulo-concluidas' classe={classesRotina.tituloCartao}>
+        <h2 id='historico-lista-titulo' className='rotina-extrato-titulo'>
           Tarefas concluídas
-        </Titulo>
-        {concluidas.length ? (
-          <div className={classesRotina.tarefasConcluidas}>
-            {concluidas.slice(0, visiveis).map(tarefa => (
-              <LinhaTarefa
-                key={tarefa.id}
-                tarefa={tarefa}
-                variante='historico'
-                rotuloData={`${formatarData(tarefa.occurrenceDate)} · ${tarefa.time}`}
-                aoAbrir={aoAbrir}
-                aoDesfazer={aoDesfazer}
-              />
-            ))}
-          </div>
-        ) : (
-          <EstadoVazioRotina
-            titulo='Cada passo vai aparecer aqui.'
-            descricao='Você ainda não concluiu tarefas neste período.'
-          >
-            <BotaoRotina tom='secundario' onClick={aoVoltar}>
-              Voltar à rotina
-            </BotaoRotina>
-          </EstadoVazioRotina>
-        )}
-        {concluidas.length > visiveis && (
-          <BotaoRotina
-            tom='secundario'
-            classe={classesRotina.carregarMais}
-            onClick={() => setVisiveis(contador => contador + 10)}
-          >
-            Ver mais conclusões
-          </BotaoRotina>
-        )}
+        </h2>
+        <ExtratoRotina
+          registros={registros}
+          rotulo='Histórico de tarefas concluídas'
+          vazio='Nenhuma tarefa concluída neste período.'
+          decrescente
+        />
       </section>
     </div>
   );

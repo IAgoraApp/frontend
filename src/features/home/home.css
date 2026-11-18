@@ -1,10 +1,3 @@
-.inicio-tela {
-  height: var(--inicio-altura, calc(100dvh - 90px));
-  flex: none;
-  min-height: 0;
-}
-
-/* O espaço da assinatura passa a pertencer ao calendário e aos compromissos. */
 .inicio-tarefas {
   border-radius: 12px;
 }
@@ -17,35 +10,107 @@
   border-radius: 6px;
 }
 .inicio-tela .inicio-conteudo {
-  height: 100%;
-  max-width: none;
   display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr);
   gap: clamp(14px, 2.7vh, 30px);
-  padding: clamp(16px, 3vh, 32px) clamp(20px, 4vw, 64px);
+  padding-block: clamp(16px, 3vh, 32px);
 }
 .inicio-boas-vindas {
   min-width: 0;
 }
 .inicio-boas-vindas h1 {
-  font-size: clamp(24px, 2.5vw, 36px);
+  font-size: clamp(26px, 2.7vw, 38px);
 }
-.inicio-ferramentas nav {
+.inicio-ferramentas {
+  display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: 12px;
+  gap: 1px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 12px;
+  background: var(--borda-suave);
 }
-.inicio-ferramentas nav a {
-  gap: 12px;
-  font-size: 14px;
+.inicio-ferramentas a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(6px, 1vw, 14px);
+  min-width: 0;
+  min-height: 58px;
+  padding: 8px;
+  background: var(--azul-fundo);
+  color: var(--azul-titulo);
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  overflow-wrap: anywhere;
 }
-.inicio-ferramentas nav a > span:first-child {
-  width: clamp(44px, 5vw, 70px);
-  height: clamp(44px, 5vw, 70px);
+.inicio-ferramentas a:first-child {
+  border-radius: 11px 0 0 11px;
+}
+.inicio-ferramentas a:last-child {
+  border-radius: 0 11px 11px 0;
+}
+.inicio-ferramentas a:is(:hover, :focus-visible) {
+  position: relative;
+  z-index: 1;
+  background: var(--laranja-fundo);
+}
+.inicio-ferramentas a:focus-visible {
+  outline: 2px solid var(--laranja-principal);
+  outline-offset: -2px;
+}
+.inicio-ferramentas-icone {
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+  background: var(--azul-principal);
+  mask: var(--ferramenta-icone) center / contain no-repeat;
+}
+.inicio-ferramentas a:is(:hover, :focus-visible) .inicio-ferramentas-icone {
+  background: var(--laranja-principal);
+}
+@media (min-width: 701px) and (max-width: 1000px) {
+  .inicio-ferramentas a {
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+@media (max-width: 700px) {
+  .inicio-ferramentas {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .inicio-ferramentas a {
+    min-height: 44px;
+    padding: 6px;
+    font-size: 0.8125rem;
+  }
+  .inicio-ferramentas a:first-child {
+    border-radius: 11px 0 0;
+  }
+  .inicio-ferramentas a:nth-child(3) {
+    border-radius: 0 11px 0 0;
+  }
+  .inicio-ferramentas a:nth-child(4) {
+    border-radius: 0 0 0 11px;
+  }
+  .inicio-ferramentas a:last-child {
+    border-radius: 0 0 11px;
+  }
+  .inicio-ferramentas-icone {
+    flex-basis: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+@media (max-width: 390px) {
+  .inicio-ferramentas a {
+    flex-direction: column;
+    gap: 3px;
+  }
 }
 .inicio-paineis {
   min-height: 0;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 .inicio-tarefas {
   padding: clamp(20px, 3vw, 44px);
@@ -58,7 +123,7 @@
   margin-top: 14px;
 }
 .inicio-tarefas h2 + p {
-  font-size: clamp(14px, 1.3vw, 18px);
+  font-size: clamp(16px, 1.3vw, 18px);
   margin-top: 14px;
   max-width: 55ch;
 }
@@ -106,13 +171,6 @@
   .inicio-boas-vindas > div a {
     font-size: 13px;
   }
-  .inicio-ferramentas nav a {
-    flex-direction: column;
-    gap: 6px;
-    padding: 0;
-    text-align: center;
-    font-size: 12px;
-  }
   .inicio-calendario-grade {
     gap: 10px;
     grid-template-columns: 1fr 1fr;
@@ -143,14 +201,14 @@
 }
 @media (max-width: 700px) {
   .inicio-tela .inicio-conteudo {
-    padding: 14px 16px;
+    padding-block: 14px;
     gap: 14px;
   }
   .inicio-boas-vindas {
     gap: 12px;
   }
   .inicio-boas-vindas h1 {
-    font-size: 23px;
+    font-size: 26px;
     max-width: 240px;
   }
   .inicio-boas-vindas > div {
@@ -160,37 +218,18 @@
     gap: 10px;
   }
   .inicio-boas-vindas > div p:first-child {
-    font-size: 9px;
+    font-size: 11px;
     letter-spacing: 0.7px;
   }
   .inicio-boas-vindas > div p:nth-child(2) {
-    font-size: 12px;
+    font-size: 14px;
   }
   .inicio-boas-vindas > div a {
-    font-size: 11px;
+    font-size: 13px;
     min-height: 32px;
-  }
-  .inicio-ferramentas > p {
-    font-size: 10px;
-  }
-  .inicio-ferramentas nav {
-    gap: 8px;
-  }
-  .inicio-ferramentas nav a {
-    font-size: 10px;
-  }
-  .inicio-ferramentas nav a > span:first-child {
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
-  }
-  .inicio-ferramentas nav img {
-    max-width: 25px;
-    max-height: 25px;
   }
   .inicio-paineis {
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(120px, 0.7fr) minmax(0, 1fr);
     gap: 12px;
   }
   .inicio-tarefas {
@@ -204,7 +243,7 @@
     max-width: none;
   }
   .inicio-tarefas > div > p:first-child {
-    font-size: 9px;
+    font-size: 11px;
     grid-column: 1;
   }
   .inicio-tarefas h2 {
@@ -213,7 +252,7 @@
     grid-column: 1;
   }
   .inicio-tarefas h2 + p {
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1.5;
     margin-top: 6px;
     display: -webkit-box;
@@ -228,7 +267,7 @@
     margin: 0;
     padding: 10px 16px;
     min-height: 42px;
-    font-size: 12px;
+    font-size: 14px;
   }
   .inicio-agenda {
     gap: 6px;
@@ -241,13 +280,13 @@
     margin-bottom: 6px;
   }
   .inicio-mes > div:first-child p {
-    font-size: 13px;
+    font-size: 15px;
   }
   .inicio-compromissos > div:first-child {
     margin-bottom: 6px;
   }
   .inicio-compromissos > div:first-child > span {
-    font-size: 9px;
+    font-size: 11px;
     letter-spacing: 0;
   }
   .inicio-eventos {
@@ -264,275 +303,39 @@
     width: 28px;
   }
   .inicio-eventos a strong {
-    font-size: 10px;
+    font-size: 13px;
   }
   .inicio-eventos a > span:nth-child(2) > span {
-    font-size: 9px;
+    font-size: 11px;
   }
 }
 @media (max-width: 430px) {
   .inicio-boas-vindas {
-    align-items: flex-start;
-  }
-  .inicio-boas-vindas h1 {
-    font-size: 21px;
-  }
-  .inicio-boas-vindas > div {
-    padding: 7px 9px;
     flex-direction: column;
-    gap: 0;
-    align-items: flex-start;
-    min-width: 128px;
+    align-items: stretch;
   }
-  .inicio-boas-vindas > div a {
-    min-height: 24px;
-  }
-  .inicio-ferramentas nav {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    row-gap: 8px;
-    margin-top: 8px;
-  }
-  .inicio-ferramentas nav a {
-    flex-direction: row;
-    justify-content: flex-start;
-    gap: 7px;
-  }
-  .inicio-ferramentas nav a > span:first-child {
-    width: 32px;
-    height: 32px;
-    border-radius: 10px;
-  }
-  .inicio-ferramentas nav img {
-    max-width: 22px;
-    max-height: 22px;
-  }
-  .inicio-paineis {
-    grid-template-rows: minmax(110px, 0.65fr) minmax(0, 1fr);
-  }
-  .inicio-tarefas {
-    padding: 12px;
-  }
-  .inicio-tarefas h2 {
-    font-size: 21px;
-  }
-  .inicio-tarefas h2 + p {
-    font-size: 11px;
-  }
-  .inicio-tarefas a {
-    padding: 9px 12px;
-    font-size: 11px;
-  }
-  .inicio-calendario {
-    padding: 10px;
-  }
-  .inicio-mes button {
-    width: 24px;
-    height: 24px;
-  }
-  .inicio-mes > div:first-child > div {
-    gap: 3px;
-  }
-  .inicio-mes > div:first-child button {
-    width: 24px;
-    height: 24px;
-  }
-}
-@media (max-height: 700px) {
-  .inicio-tela .inicio-conteudo {
-    gap: 10px;
-    padding-top: 12px;
-    padding-bottom: 12px;
-  }
-  .inicio-ferramentas nav {
-    margin-top: 8px;
-  }
-  .inicio-ferramentas nav a > span:first-child {
-    width: 36px;
-    height: 36px;
-  }
-  .inicio-ferramentas nav img {
-    max-width: 24px;
-    max-height: 24px;
-  }
-  .inicio-tarefas h2 + p {
-    font-size: 12px;
-    margin-top: 8px;
-  }
-  .inicio-tarefas h2 {
-    font-size: 26px;
-  }
-  .inicio-tarefas a {
-    min-height: 40px;
-    margin-top: 14px;
-    padding: 8px 20px;
-  }
-  .inicio-eventos {
-    max-height: 150px;
-  }
-  .inicio-mes button {
-    height: 24px;
-    width: 24px;
-  }
-  .inicio-calendario-grade {
-    gap: 10px;
-  }
-  .inicio-mes > div:first-child {
-    margin-bottom: 4px;
-  }
-}
-@media (max-height: 700px) and (max-width: 700px) {
-  .inicio-tela .inicio-conteudo {
-    padding: 10px 12px;
-    gap: 8px;
-  }
-  .inicio-boas-vindas h1 {
-    font-size: 19px;
-  }
-  .inicio-ferramentas nav a > span:first-child {
-    width: 28px;
-    height: 28px;
-  }
-  .inicio-ferramentas nav img {
-    max-width: 20px;
-    max-height: 20px;
-  }
-  .inicio-paineis {
-    grid-template-rows: 108px minmax(0, 1fr);
-    gap: 8px;
-  }
-  .inicio-tarefas {
-    padding: 10px 12px;
-  }
-  .inicio-tarefas h2 {
-    font-size: 20px;
-  }
-  .inicio-tarefas h2 + p {
-    font-size: 10px;
-    margin-top: 4px;
-    -webkit-line-clamp: 2;
-  }
-  .inicio-tarefas a {
-    margin: 0;
-    padding: 7px 10px;
-    font-size: 10px;
-  }
-  .inicio-calendario {
-    padding: 8px;
-  }
-  .inicio-mes button {
-    width: 21px;
-    height: 21px;
-    font-size: 10px;
-  }
-  .inicio-mes > div:nth-child(2) {
-    row-gap: 0;
-  }
-  .inicio-mes > div:nth-child(2) > span {
-    font-size: 8px;
-    padding: 2px 0;
-  }
-  .inicio-mes > div:first-child p {
-    font-size: 11px;
-  }
-  .inicio-mes > div:first-child button {
-    width: 22px;
-    height: 22px;
-  }
-  .inicio-eventos {
-    max-height: 130px;
-  }
-  .inicio-compromissos {
-    padding-left: 8px;
-  }
-  .inicio-compromissos > div:first-child > span {
-    font-size: 8px;
-  }
-  .inicio-calendario-grade {
-    gap: 8px;
-  }
-}
-@media (max-height: 650px) and (max-width: 430px) {
-  .inicio-boas-vindas h1 {
-    font-size: 18px;
-  }
+
+  .inicio-boas-vindas h1,
   .inicio-boas-vindas > div {
-    padding: 6px 8px;
-    min-width: 120px;
+    max-width: none;
   }
-  .inicio-boas-vindas > div p:first-child {
-    font-size: 8px;
-    line-height: 1.2;
+
+  .inicio-tarefas > div {
+    display: block;
   }
-  .inicio-boas-vindas > div p:nth-child(2) {
-    font-size: 10px;
-    line-height: 1.2;
-    margin-top: 3px;
+
+  .inicio-tarefas a {
+    margin-top: 12px;
   }
-  .inicio-boas-vindas > div a {
-    min-height: 20px;
-    font-size: 10px;
+
+  .inicio-calendario-grade {
+    grid-template-columns: minmax(0, 1fr);
   }
-  .inicio-ferramentas > p {
-    font-size: 9px;
-    line-height: 12px;
-  }
-  .inicio-ferramentas nav {
-    margin-top: 6px;
-    row-gap: 6px;
-  }
-  .inicio-ferramentas nav a {
-    font-size: 9px;
-    gap: 5px;
-  }
-  .inicio-ferramentas nav a > span:first-child {
-    width: 26px;
-    height: 26px;
-  }
-  .inicio-ferramentas nav a > span:nth-child(2) {
-    overflow-wrap: normal;
-  }
-  .inicio-paineis {
-    grid-template-rows: 112px minmax(0, 1fr);
-  }
-  .inicio-tarefas h2 {
-    font-size: 17px;
-    line-height: 1.2;
-    margin-top: 4px;
-  }
-  .inicio-tarefas > div > p:first-child {
-    font-size: 8px;
-    line-height: 12px;
-  }
-  .inicio-tarefas h2 + p {
-    font-size: 10px;
-    line-height: 1.4;
-  }
-  .inicio-mes button {
-    width: 20px;
-    height: 17px;
-    font-size: 9px;
-  }
-  .inicio-mes > div:first-child button {
-    width: 20px;
-    height: 20px;
-  }
-  .inicio-mes > div:first-child p {
-    font-size: 10px;
-  }
-  .inicio-mes > div:nth-child(2) > span {
-    font-size: 7px;
-    line-height: 10px;
-    padding: 1px 0;
-  }
-  .inicio-eventos {
-    max-height: 95px;
-  }
-  .inicio-eventos a {
-    padding: 4px;
-  }
-  .inicio-compromissos > div:first-child {
-    gap: 2px;
-    margin-bottom: 4px;
+
+  .inicio-compromissos {
+    border-top: 1px solid var(--borda-suave);
+    border-left: 0;
+    padding: 10px 0 0;
   }
 }
 @media (min-width: 701px) {
@@ -572,7 +375,7 @@
     margin-bottom: 16px;
   }
   .inicio-eventos {
-    max-height: none;
+    max-height: 250px;
     flex: 1;
     min-height: 0;
     padding-bottom: 3px;
@@ -586,32 +389,224 @@
     max-height: 205px;
   }
 }
-@media (max-height: 700px) and (min-width: 701px) {
-  .inicio-calendario {
-    padding: 14px;
+.inicio-resumo {
+  display: grid;
+  gap: clamp(24px, 2.5vw, 36px);
+  margin-top: 6px;
+  padding-top: clamp(22px, 2.5vw, 34px);
+  padding-bottom: 8px;
+  border-top: 1px solid var(--borda-suave);
+}
+
+.inicio-resumo > h2 {
+  font-size: clamp(24px, 2.4vw, 32px);
+  font-weight: 800;
+}
+
+.inicio-financas {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.65fr);
+  align-items: center;
+  padding: clamp(20px, 4vw, 48px);
+  border-radius: 14px;
+  background: var(--azul-fundo);
+}
+
+.inicio-resumo h3 {
+  font-size: clamp(21px, 2vw, 28px);
+  font-weight: 800;
+}
+
+.inicio-financas-valor {
+  margin-top: 12px;
+  font-family: var(--font-titulo);
+  font-size: clamp(30px, 5vw, 60px);
+  font-weight: 800;
+  line-height: 1;
+  overflow-wrap: anywhere;
+}
+
+.inicio-financas-valor + p {
+  margin-top: 6px;
+}
+
+.inicio-financas-conta {
+  display: grid;
+  margin-top: 16px;
+  font-size: 0.875rem;
+}
+
+.inicio-financas img {
+  width: 100%;
+  max-height: 250px;
+  object-fit: contain;
+}
+
+.inicio-resumo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+  margin-top: 8px;
+  font-weight: 800;
+  color: var(--azul-principal);
+}
+
+.inicio-resumo-grupo {
+  display: grid;
+  gap: 14px;
+}
+
+.inicio-casa-cartoes,
+.inicio-servicos-grade {
+  display: grid;
+  gap: 16px;
+}
+
+.inicio-casa-cartoes {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.inicio-servicos-grade {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+.inicio-foto-cartao {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--borda-suave);
+  border-radius: 12px;
+  background: white;
+}
+
+.inicio-foto-cartao img {
+  width: 100%;
+  height: clamp(145px, 16vw, 220px);
+  object-fit: cover;
+}
+
+.inicio-foto-legenda {
+  display: flex;
+  min-height: 80px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+}
+
+.inicio-foto-legenda > span {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.inicio-foto-legenda strong {
+  font-family: var(--font-titulo);
+  font-size: 1.125rem;
+}
+
+.inicio-foto-legenda span span {
+  font-size: 0.875rem;
+}
+
+.inicio-foto-legenda svg {
+  flex: none;
+}
+
+.inicio-foto-cartao:hover .inicio-foto-legenda {
+  background: var(--laranja-fundo);
+}
+
+@media (max-width: 700px) {
+  .inicio-casa-cartoes,
+  .inicio-servicos-grade {
+    grid-template-columns: minmax(0, 1fr);
   }
-  .inicio-mes > div:first-child {
-    margin-bottom: 8px;
-  }
-  .inicio-mes > div:nth-child(2) > button {
-    width: 28px;
-    height: 28px;
-    font-size: 12px;
-  }
-  .inicio-eventos a {
-    padding: 7px;
-  }
-  .inicio-compromissos > div:first-child {
-    margin-bottom: 8px;
+
+  .inicio-financas {
+    grid-template-columns: minmax(0, 1fr) minmax(64px, 0.42fr);
+    gap: 8px;
   }
 }
-@media (max-height: 700px) and (max-width: 700px) {
-  .inicio-eventos {
-    max-height: 165px;
-  }
+
+.inicio-servico {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-width: 0;
+  border-radius: 14px;
+  background: var(--azul-fundo);
 }
-@media (max-height: 650px) and (max-width: 430px) {
-  .inicio-eventos {
-    max-height: 125px;
-  }
+
+.inicio-servico > img {
+  width: 100%;
+  height: clamp(155px, 17vw, 230px);
+  border-radius: 14px 14px 0 0;
+  object-fit: cover;
+  object-position: center 25%;
+}
+
+.inicio-servico-ia {
+  background: var(--azul-escuro);
+  color: white;
+}
+
+.inicio-servico-ia > img {
+  padding: 16px;
+  background: #fff2e8;
+  object-fit: contain;
+}
+
+.inicio-servico-conteudo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: clamp(16px, 2.5vw, 32px);
+}
+
+.inicio-servico-conteudo > p {
+  max-width: 52ch;
+}
+
+.inicio-servico-conteudo > a {
+  margin-top: auto;
+}
+
+.inicio-mercado-categorias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.inicio-mercado-categorias a,
+.inicio-ia-exemplo {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+}
+
+.inicio-mercado-categorias a {
+  background: white;
+  color: var(--azul-principal);
+  font-weight: 700;
+}
+
+.inicio-mercado-categorias a:hover,
+.inicio-servico-conteudo > a:hover {
+  text-decoration: underline;
+}
+
+.inicio-ia-exemplo {
+  background: var(--azul-profundo);
+}
+
+.inicio-servico-ia .inicio-resumo-link {
+  color: #ffb695;
 }

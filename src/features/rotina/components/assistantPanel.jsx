@@ -138,7 +138,9 @@ export default function PainelAssistente({
           <BotaoRotina
             disabled={!selecionadas.length}
             onClick={() =>
-              aoAdicionar(sugestoes.filter(item => selecionadas.includes(item.id)))
+              aoAdicionar(
+                sugestoes.filter(item => selecionadas.includes(item.id))
+              )
             }
           >
             Adicionar selecionadas
@@ -157,7 +159,6 @@ export default function PainelAssistente({
       <CabecalhoModalRotina
         id={idTitulo}
         como={apresentacao === 'pagina' ? 'h1' : 'h2'}
-        fita={apresentacao !== 'pagina'}
         titulo='Sugestões da IA'
         descricao='Com base no seu momento, aqui estão algumas ideias para a sua rotina.'
       />
@@ -187,7 +188,10 @@ export default function PainelAssistente({
             gerar(comando);
           }}
         >
-          <label className={classesRotina.somenteLeitor} htmlFor={`${idTitulo}-comando`}>
+          <label
+            className={classesRotina.somenteLeitor}
+            htmlFor={`${idTitulo}-comando`}
+          >
             Descreva a rotina que você quer organizar
           </label>
           <input

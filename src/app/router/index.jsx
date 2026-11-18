@@ -1,11 +1,11 @@
+import MarketplaceA from '../../features/marketplace/marketplaceA';
 import Inicio from '../../features/home/home';
 import CasaA from '../../features/casa/casaA';
 import LimpezaA from '../../features/limpeza/limpezaA';
 import CozinhaA from '../../features/cozinha/cozinhaA';
-import RotinaA from '../../features/rotina/rotinaA';
+import Rotina from '../../features/rotina/rotina';
 import FinancasA from '../../features/financas/financasA';
 import PerfilA from '../../features/perfil/perfilA';
-import MarketplaceA from '../../features/marketplace/marketplaceA';
 import {
   createBrowserRouter,
   Navigate,
@@ -37,14 +37,14 @@ const rotas = createBrowserRouter([
                 element: <Funcionalidades.InteligenciaArtificial />,
               },
               {
-                element: <LayoutCasa />,
+                element: <LayoutCasa areaCasa />,
                 children: [
                   { path: '/casa', element: <CasaA /> },
                   { path: '/limpeza', element: <LimpezaA /> },
                   { path: '/cozinha', element: <CozinhaA /> },
                 ],
               },
-              { path: '/rotina', element: <RotinaA /> },
+              { path: '/rotina', element: <Rotina /> },
               { path: '/financas', element: <FinancasA /> },
               {
                 path: '/calculadoras',
@@ -77,7 +77,7 @@ const rotas = createBrowserRouter([
               },
               {
                 path: '/buscar/mapa',
-                element: <Navigate to='/marketplace' replace />,
+                element: <MarketplaceA />,
               },
               {
                 path: '/marketplace/filtros',
@@ -113,7 +113,7 @@ const rotas = createBrowserRouter([
               },
               {
                 path: '/favoritos',
-                element: <Navigate to='/marketplace' replace />,
+                element: <MarketplaceA />,
               },
               {
                 path: '/meus-contatos',
@@ -257,21 +257,11 @@ const rotas = createBrowserRouter([
               },
               {
                 path: '/empresa/marketplace',
-                element: (
-                  <Funcionalidades.MercadoServicos
-                    dentroDaEmpresa
-                    visao='hub'
-                  />
-                ),
+                element: <MarketplaceA dentroDaEmpresa />,
               },
               {
                 path: '/empresa/buscar',
-                element: (
-                  <Funcionalidades.MercadoServicos
-                    dentroDaEmpresa
-                    visao='buscar'
-                  />
-                ),
+                element: <MarketplaceA dentroDaEmpresa />,
               },
             ],
           },

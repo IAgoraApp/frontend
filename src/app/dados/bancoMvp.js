@@ -1,8 +1,134 @@
 import { useSyncExternalStore } from 'react';
 import banco from '../../../iagora_banco_mock_completo.json';
 
-// O JSON é a única carga inicial. Alterações do protótipo vivem nesta sessão.
-let dados = structuredClone(banco.dados);
+const chaveReceitas = 'iagora:banco-mvp:receitas:v1';
+const colecoesReceitas = [
+  'receitas',
+  'receita_item',
+  'receita_favorita',
+  'receita_usuario',
+];
+
+function lerReceitasSalvas() {
+  try {
+    const salvas = JSON.parse(window.localStorage.getItem(chaveReceitas));
+    return Object.fromEntries(
+      colecoesReceitas
+        .filter(colecao => Array.isArray(salvas?.[colecao]))
+        .map(colecao => [colecao, salvas[colecao]])
+    );
+  } catch {
+    return {};
+  }
+}
+
+const chaveFinancas = 'iagora:banco-mvp:financas:v1';
+const colecoesFinancas = [
+  'categoria_financas',
+  'conta_financeira',
+  'transacao_financeira',
+  'orcamento',
+  'meta_financeira',
+  'recorrencia_financeira',
+];
+
+function lerFinancasSalvas() {
+  try {
+    const salvas = JSON.parse(window.localStorage.getItem(chaveFinancas));
+    return Object.fromEntries(
+      colecoesFinancas
+        .filter(colecao => Array.isArray(salvas?.[colecao]))
+        .map(colecao => [colecao, salvas[colecao]])
+    );
+  } catch {
+    return {};
+  }
+}
+
+const chaveCompras = 'iagora:banco-mvp:compras:v1';
+const colecoesCompras = ['compras', 'compra_item', 'estoque_item'];
+
+function lerComprasSalvas() {
+  try {
+    const salvas = JSON.parse(window.localStorage.getItem(chaveCompras));
+    return Object.fromEntries(
+      colecoesCompras
+        .filter(colecao => Array.isArray(salvas?.[colecao]))
+        .map(colecao => [colecao, salvas[colecao]])
+    );
+  } catch {
+    return {};
+  }
+}
+
+const chaveCobrancas = 'iagora:banco-mvp:cobrancas:v1';
+const colecoesCobrancas = ['assinatura', 'pagamento', 'metodo_pagamento'];
+
+function lerCobrancasSalvas() {
+  try {
+    const salvas = JSON.parse(localStorage.getItem(chaveCobrancas));
+    return Object.fromEntries(
+      colecoesCobrancas.filter(c => Array.isArray(salvas?.[c])).map(c => [c, salvas[c]])
+    );
+  } catch {
+    return {};
+  }
+}
+
+export function alterarBancoCobrancas(operacao) {
+  alterarBanco(b => {
+    Object.assign(b, lerCobrancasSalvas());
+    operacao(b);
+    try {
+      localStorage.setItem(chaveCobrancas, JSON.stringify(
+        Object.fromEntries(colecoesCobrancas.map(c => [c, b[c]]))
+      ));
+    } catch {
+      throw new Error('O navegador não conseguiu salvar as alterações de cobrança.');
+    }
+  });
+}
+
+const chavePerfil = 'iagora:banco-mvp:perfil:v1';
+
+function aplicarPerfilSalvo(bancoAtual) {
+  try {
+    const salvo = JSON.parse(window.localStorage.getItem(chavePerfil));
+    if (!salvo) return {};
+    const perfil = bancoAtual.perfil.find(item => item.id === salvo.perfil?.id);
+    const usuario = bancoAtual.users.find(item => item.id === perfil?.user_id);
+    if (!usuario) return {};
+    Object.assign(perfil, salvo.perfil);
+    if (typeof salvo.email === 'string') usuario.email = salvo.email;
+    for (const endereco of Object.values(salvo.enderecos ?? {})) {
+      const atual = bancoAtual.endereco.find(item => item.id === endereco.id);
+      if (atual) Object.assign(atual, endereco);
+      else bancoAtual.endereco.push(endereco);
+    }
+    return salvo.enderecos ?? {};
+  } catch {
+    return {};
+  }
+}
+
+const chaveMarketplace = 'iagora:banco-mvp:marketplace:v1';
+const colecoesMarketplace = ['servico_contratado', 'avaliacao_servico', 'chat_servico', 'mensagem'];
+
+function lerMarketplaceSalvo() {
+  try {
+    const salvo = JSON.parse(window.localStorage.getItem(chaveMarketplace));
+    return Object.fromEntries(
+      colecoesMarketplace
+        .filter(colecao => Array.isArray(salvo?.[colecao]))
+        .map(colecao => [colecao, salvo[colecao]])
+    );
+  } catch {
+    return {};
+  }
+}
+
+let dados = { ...structuredClone(banco.dados), ...lerReceitasSalvas(), ...lerFinancasSalvas(), ...lerComprasSalvas(), ...lerMarketplaceSalvo(), ...lerCobrancasSalvas() };
+aplicarPerfilSalvo(dados);
 const ouvintes = new Set();
 export const USUARIO_A = 1;
 export const hoje = () => {
@@ -25,6 +151,83 @@ export function alterarBanco(operacao) {
   dados = proximo;
   ouvintes.forEach(ouvir => ouvir());
 }
+export function alterarBancoReceitas(operacao) {
+  alterarBanco(b => {
+    Object.assign(b, lerReceitasSalvas());
+    operacao(b);
+    const receitas = Object.fromEntries(
+      colecoesReceitas.map(colecao => [colecao, b[colecao]])
+    );
+    try {
+      window.localStorage.setItem(chaveReceitas, JSON.stringify(receitas));
+    } catch {
+      throw new Error(
+        'O navegador não conseguiu salvar suas alterações. Verifique o armazenamento e tente novamente.'
+      );
+    }
+  });
+}
+export function alterarBancoFinancas(operacao) {
+  alterarBanco(b => {
+    Object.assign(b, lerFinancasSalvas());
+    operacao(b);
+    const financas = Object.fromEntries(
+      colecoesFinancas.map(colecao => [colecao, b[colecao]])
+    );
+    try {
+      window.localStorage.setItem(chaveFinancas, JSON.stringify(financas));
+    } catch {
+      throw new Error('O navegador não conseguiu salvar a alteração. Verifique o armazenamento e tente novamente.');
+    }
+  });
+}
+export function alterarBancoCompras(operacao) {
+  alterarBanco(b => {
+    Object.assign(b, lerComprasSalvas());
+    operacao(b);
+    const compras = Object.fromEntries(
+      colecoesCompras.map(colecao => [colecao, b[colecao]])
+    );
+    try {
+      window.localStorage.setItem(chaveCompras, JSON.stringify(compras));
+    } catch {
+      throw new Error('O navegador não conseguiu salvar a alteração.');
+    }
+  });
+}
+export function alterarBancoPerfil(userId, operacao) {
+  alterarBanco(b => {
+    const enderecos = aplicarPerfilSalvo(b);
+    const perfil = b.perfil.find(item => item.user_id === userId);
+    const usuario = b.users.find(item => item.id === userId);
+    if (!perfil || !usuario) throw new Error('Perfil indisponível.');
+    const endereco = operacao(b, perfil, usuario);
+    if (endereco) enderecos[endereco.id] = endereco;
+    try {
+      localStorage.setItem(chavePerfil, JSON.stringify({
+        perfil,
+        email: usuario.email,
+        enderecos,
+      }));
+    } catch {
+      throw new Error('O navegador não conseguiu salvar suas alterações.');
+    }
+  });
+}
+export function alterarBancoMarketplace(operacao) {
+  alterarBanco(b => {
+    Object.assign(b, lerMarketplaceSalvo());
+    operacao(b);
+    const registros = Object.fromEntries(
+      colecoesMarketplace.map(colecao => [colecao, b[colecao]])
+    );
+    try {
+      window.localStorage.setItem(chaveMarketplace, JSON.stringify(registros));
+    } catch {
+      throw new Error('O navegador não conseguiu salvar a alteração.');
+    }
+  });
+}
 export function inserir(colecao, registro, bancoAtual) {
   const novo = {
     ...registro,
@@ -43,7 +246,10 @@ export function salvarRegistro(colecao, registro) {
   });
 }
 export function removerRegistro(colecao, id) {
-  alterarBanco(b => {
+  const alterar = colecoesReceitas.includes(colecao)
+    ? alterarBancoReceitas
+    : alterarBanco;
+  alterar(b => {
     b[colecao] = b[colecao].filter(item => item.id !== id);
     if (colecao === 'tarefa') {
       b.execucao_tarefa = b.execucao_tarefa.filter(
@@ -71,6 +277,9 @@ export function removerRegistro(colecao, id) {
     if (colecao === 'receitas') {
       b.receita_item = b.receita_item.filter(item => item.receita_id !== id);
       b.receita_favorita = b.receita_favorita.filter(
+        item => item.receita_id !== id
+      );
+      b.receita_usuario = b.receita_usuario.filter(
         item => item.receita_id !== id
       );
     }
