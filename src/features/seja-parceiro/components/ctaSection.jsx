@@ -4,11 +4,8 @@ import profissionalCtaImg from '../assets/profissional-cta.png';
 
 export default function SecaoChamada() {
   return (
-    <section
-      aria-labelledby='titulo-anunciar'
-      className='bg-(--azul-titulo)'
-    >
-      <Container classe='grid items-center gap-8 py-7 md:grid-cols-[minmax(0,350fr)_minmax(0,720fr)] lg:flex lg:min-h-[316px] lg:gap-14'>
+    <section aria-labelledby='titulo-anunciar' className='bg-(--azul-titulo)'>
+      <Container classe='grid items-center gap-8 py-7 md:grid-cols-[minmax(0,350fr)_minmax(0,720fr)] lg:flex lg:gap-10'>
         <img
           src={profissionalCtaImg}
           alt='Profissional de serviços em sua oficina'
@@ -16,7 +13,7 @@ export default function SecaoChamada() {
           height='260'
           className='aspect-[350/260] w-full max-w-[350px] rounded-lg object-cover lg:h-[260px] lg:shrink-0'
         />
-        <div className='flex min-w-0 flex-col items-start gap-[15px] lg:min-h-[250px] lg:max-w-[720px] lg:justify-center'>
+        <div className='flex min-w-0 flex-col items-start gap-[15px] lg:max-w-[720px] lg:justify-center'>
           <CabecalhoSecao
             id='titulo-anunciar'
             sobretitulo='FAÇA PARTE DO IAGORA'
@@ -38,7 +35,7 @@ export default function SecaoChamada() {
             cor='laranja'
             classe='min-h-12 w-[250px] max-w-full px-4! text-[17px] font-bold!'
           >
-            Quero anunciar agora
+            Cadastrar empresa
           </Botao>
         </div>
       </Container>

@@ -3,8 +3,10 @@ import logoMarca from '../features/landing-page/assets/iagora-logo.png';
 import { Container } from './ui/index';
 
 export default function Rodape({ variante = 'padrao' }) {
-  const ehEmpresa = variante === 'empresa';
-  const ehInicial = variante === 'inicial';
+  const ehParceiro = variante === 'parceiro';
+  const ehEmpresa = variante === 'empresa' || ehParceiro;
+  const ehApresentacao = variante === 'apresentacao';
+  const ehInicial = variante === 'inicial' || ehApresentacao;
 
   if (variante === 'compacto') {
     return (
@@ -47,20 +49,39 @@ export default function Rodape({ variante = 'padrao' }) {
         },
         {
           rotulo: 'Como funciona',
-          rota: ehEmpresa ? '/sejaparceiro#como-funciona' : '/como-funciona',
+          rota: ehEmpresa
+            ? '/sejaparceiro#como-funciona'
+            : ehApresentacao
+              ? '#como-funciona'
+              : '/como-funciona',
         },
         { rotulo: 'Sobre nós', rota: '/sobrenos' },
       ],
     },
     {
-      titulo: 'Sua conta',
+      titulo: ehApresentacao ? 'Acesso e suporte' : 'Sua conta',
       links: [
         {
-          rotulo: ehEmpresa ? 'Área da empresa' : 'Meu perfil',
-          rota: ehEmpresa ? '/empresa/login' : '/perfil',
+          rotulo: ehParceiro
+            ? 'Cadastrar empresa'
+            : ehApresentacao
+              ? 'Acessar plataforma'
+              : ehEmpresa
+                ? 'Área da empresa'
+                : 'Meu perfil',
+          rota: ehParceiro
+            ? '/empresa/cadastro'
+            : ehApresentacao
+              ? '/login'
+              : ehEmpresa
+                ? '/empresa/login'
+                : '/perfil',
         },
         { rotulo: 'Suporte', rota: '/ajuda' },
-        { rotulo: 'Perguntas frequentes', rota: '/ajuda/faq' },
+        {
+          rotulo: 'Perguntas frequentes',
+          rota: ehApresentacao ? '#perguntas-frequentes' : '/ajuda/faq',
+        },
       ],
     },
   ];

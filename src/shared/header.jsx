@@ -1,4 +1,4 @@
-﻿import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import logoLaranja from './assets/logoLaranja.png';
@@ -10,6 +10,7 @@ export default function Cabecalho({
   tipoUsuario = 'consumidorA',
   classe = '',
   classeBorda = '',
+  acaoPrincipal,
 }) {
   const localizacao = useLocation();
   const referenciaCabecalho = useRef(null);
@@ -31,11 +32,16 @@ export default function Cabecalho({
     return () => document.removeEventListener('pointerdown', aoClicarFora);
   }, [menuAberto]);
 
-  const { rotaLogo, linksNavegacao, botaoAcao } =
-    variante === 'usuario'
-      ? (variantesCabecalhoUsuario[tipoUsuario] ??
-        variantesCabecalhoUsuario.consumidorA)
-      : (variantesCabecalho[variante] ?? variantesCabecalho.publico);
+  const {
+    rotaLogo,
+    linksNavegacao,
+    botaoAcao: acaoPadrao,
+  } = variante === 'usuario'
+    ? (variantesCabecalhoUsuario[tipoUsuario] ??
+      variantesCabecalhoUsuario.consumidorA)
+    : (variantesCabecalho[variante] ?? variantesCabecalho.publico);
+
+  const botaoAcao = acaoPrincipal ?? acaoPadrao;
 
   const ehRotaAtiva = rota => {
     const caminho = localizacao.pathname;
@@ -111,31 +117,37 @@ export default function Cabecalho({
   };
 
   const renderizarLinks = (movel = false) =>
-    linksNavegacao.map(item => (
-      <Link
-        key={item.rota}
-        to={item.rota}
-        aria-current={ehRotaAtiva(item.rota) ? 'page' : undefined}
-        onClick={fecharMenu}
-        className={`text-sm font-bold transition-colors hover:text-(--laranja-principal) sm:text-[15px] ${
-          ehRotaAtiva(item.rota)
-            ? 'text-(--laranja-principal)'
-            : 'text-(--azul-titulo)'
-        } ${
-          movel
-            ? 'flex min-h-11 items-center rounded-lg p-3 hover:bg-(--azul-fundo)'
-            : 'whitespace-nowrap'
-        }`}
-      >
-        {item.nome}
-      </Link>
-    ));
+    linksNavegacao.map(item => {
+      const ancora = item.rota.startsWith('#');
+      const Elemento = ancora ? 'a' : Link;
+      return (
+        <Elemento
+          key={item.rota}
+          {...(ancora ? { href: item.rota } : { to: item.rota })}
+          aria-current={ehRotaAtiva(item.rota) ? 'page' : undefined}
+          onClick={fecharMenu}
+          className={`text-sm font-bold transition-colors hover:text-(--laranja-principal) sm:text-[15px] ${
+            ehRotaAtiva(item.rota)
+              ? 'text-(--laranja-principal)'
+              : 'text-(--azul-titulo)'
+          } ${
+            movel
+              ? 'flex min-h-11 items-center rounded-lg p-3 hover:bg-(--azul-fundo)'
+              : 'whitespace-nowrap'
+          }`}
+        >
+          {item.nome}
+        </Elemento>
+      );
+    });
 
   const renderizarAcao = () =>
     botaoAcao && (
       <Botao
-        como={Link}
-        to={botaoAcao.rota}
+        como={botaoAcao.rota.startsWith('#') ? 'a' : Link}
+        {...(botaoAcao.rota.startsWith('#')
+          ? { href: botaoAcao.rota }
+          : { to: botaoAcao.rota })}
         cor={botaoAcao.cor || 'laranja'}
         onClick={fecharMenu}
         classe='px-6! min-h-[46px]! text-[15px]!'

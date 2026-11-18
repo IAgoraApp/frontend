@@ -19,7 +19,7 @@ export function SejaParceiro() {
         <SecaoPerguntasParceiro />
         <SecaoChamada />
       </main>
-      <Rodape variante='empresa' />
+      <Rodape variante='parceiro' />
     </>
   );
 }

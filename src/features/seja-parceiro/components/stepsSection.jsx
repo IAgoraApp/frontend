@@ -9,7 +9,7 @@ export default function SecaoPassosParceiro() {
       aria-labelledby='titulo-como-funciona'
       className='scroll-mt-6 bg-(--laranja-principal)'
     >
-      <Container classe='py-[45px] lg:min-h-[288px]'>
+      <Container classe='py-8 sm:py-10'>
         <CabecalhoSecao
           id='titulo-como-funciona'
           sobretitulo='COMO FUNCIONA'
@@ -22,7 +22,8 @@ export default function SecaoPassosParceiro() {
           {passosParceiro.map((passo, indice) => (
             <article
               key={passo.id}
-              className='flex min-w-0 items-center gap-[14px] rounded-lg bg-white px-[18px] py-4 lg:min-h-[116px]'
+              data-entrada=''
+              className='flex min-w-0 items-center gap-[14px] rounded-lg bg-white px-[18px] py-4'
             >
               <div className='grid size-[42px] shrink-0 place-items-center'>
                 <img src={passo.icone} alt='' className='max-w-none' />

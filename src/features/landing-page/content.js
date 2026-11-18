@@ -4,72 +4,57 @@ import calculadorasImg from './assets/02-calculadoras-3d.png';
 import cozinhaImg from './assets/03-cozinha-3d.png';
 import segurancaImg from './assets/04-seguranca-3d.png';
 import financasImg from './assets/05-financas-3d.png';
+import caixaContaImg from './assets/passo-criar-conta.png';
+import caixaMomentoImg from './assets/passo-escolher-momento.png';
+import caixaRotinaImg from './assets/passo-organizar-rotina.png';
 
 export const categoriasRecursos = [
   {
     id: 'guias',
     rotulo: 'Guias e dicas',
-    selo: '01 / GUIAS E DICAS',
-    titulo: 'Aprenda o que ninguém te ensinou.',
+    titulo: 'Aprenda o que ninguém te ensinou',
     descricao:
       'Lavar roupa, limpar a casa e montar sua primeira cozinha. Dicas, tutoriais e explicações sem complicação.',
-    chamada: 'Explorar guias',
-    rota: '/aprendendo',
     imagem: guiasImg,
   },
   {
     id: 'checklists',
     rotulo: 'Checklists',
-    selo: '02 / CHECKLISTS PRÁTICOS',
-    titulo: 'Não esqueça nada importante na mudança.',
+    titulo: 'Não esqueça nada importante na mudança',
     descricao:
       'Listas completas de itens essenciais para cada cômodo, vistoria de contrato e compras do mês.',
-    chamada: 'Ver checklists',
-    rota: '/checklists',
     imagem: checklistImg,
   },
   {
     id: 'calculadoras',
-    rotulo: 'Calculadoras',
-    selo: '03 / PLANEJAMENTO FINANCEIRO',
-    titulo: 'Descubra quanto custa seu canto.',
+    rotulo: 'Planejamento',
+    titulo: 'Descubra quanto custa seu canto',
     descricao:
       'Simule o custo real do aluguel, condomínio, contas de consumo e alimentação antes de assinar contrato.',
-    chamada: 'Calcular custos',
-    rota: '/calculadoras',
     imagem: calculadorasImg,
   },
   {
     id: 'cozinha',
     rotulo: 'Cozinha',
-    selo: '04 / COZINHA SEM MISTÉRIO',
-    titulo: 'Coma bem gastando pouco tempo.',
+    titulo: 'Coma bem gastando pouco tempo',
     descricao:
       'Receitas rápidas com ingredientes básicos, conservação de alimentos e utensílios que realmente valem a pena.',
-    chamada: 'Acessar receitas',
-    rota: '/cozinha',
     imagem: cozinhaImg,
   },
   {
     id: 'seguranca',
     rotulo: 'Segurança',
-    selo: '05 / SEGURANÇA E MANUTENÇÃO',
-    titulo: 'Cuide do seu cantinho com tranquilidade.',
+    titulo: 'Cuide do seu cantinho com tranquilidade',
     descricao:
       'Dicas sobre fechaduras, extintores, quadro de luz e direitos fundamentais do inquilino.',
-    chamada: 'Dicas de segurança',
-    rota: '/seguranca',
     imagem: segurancaImg,
   },
   {
     id: 'financas',
     rotulo: 'Finanças',
-    selo: '06 / ORGANIZAÇÃO DA CARTEIRA',
-    titulo: 'Suas contas em dia sem sufoco.',
+    titulo: 'Suas contas em dia sem sufoco',
     descricao:
       'Métodos simples para controlar boletos, criar reserva de emergência e evitar o cheque especial.',
-    chamada: 'Organizar finanças',
-    rota: '/financas',
     imagem: financasImg,
   },
 ];
@@ -77,32 +62,27 @@ export const categoriasRecursos = [
 export const passosInicio = [
   {
     numero: '01',
-    aba: '01 Conta',
-    titulo: 'Crie sua conta',
-    descricao: 'Salve seus interesses e acompanhe o que já fez.',
+    titulo: 'Crie sua\nconta',
+    imagem: caixaContaImg,
   },
   {
     numero: '02',
-    aba: '02 Seu momento',
-    titulo: 'Escolha o seu momento',
-    descricao:
-      'Diga se está se preparando para sair de casa ou se já está no seu canto precisando de organização.',
+    titulo: 'Escolha\nseu momento',
+    imagem: caixaMomentoImg,
   },
   {
     numero: '03',
-    aba: '03 Seu dia',
-    titulo: 'Viva seu dia a dia com leveza',
-    descricao:
-      'Acesse roteiros prontos para cada semana: receitas práticas, listas de compras e controle financeiro.',
+    titulo: 'Viva\nseu canto',
+    imagem: caixaRotinaImg,
   },
 ];
 
 export const perguntasFrequentes = [
   {
     id: 1,
-    pergunta: 'Preciso de conta para conhecer o Iagora?',
+    pergunta: 'O que posso conhecer antes de entrar?',
     resposta:
-      'Não! Você pode navegar pelos guias essenciais, checklists de introdução e ferramentas básicas livremente. Criar uma conta gratuita é útil para salvar seu progresso, personalizar custos e guardar suas listas favoritas.',
+      'Aqui você pode conhecer os recursos para planejar a mudança e cuidar da casa. Na plataforma, você escolhe seu momento de moradia e organiza suas listas, tarefas e contas.',
   },
   {
     id: 2,

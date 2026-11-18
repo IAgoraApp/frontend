@@ -1,0 +1,114 @@
+.landing-recursos {
+  padding-block: clamp(32px, 6vw, 76px);
+  scroll-margin-top: 16px;
+  background: white;
+  color: var(--azul-titulo);
+}
+
+.landing-recursos-cabecalho {
+  display: grid;
+  gap: 8px;
+  margin-bottom: clamp(16px, 3vw, 32px);
+}
+
+.landing-recursos-cabecalho h2 {
+  font-size: clamp(2rem, 4.2vw, 3.75rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+.landing-recursos-cabecalho p {
+  color: var(--texto-apoio);
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+}
+
+.landing-recursos-grade {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 16px;
+  background: var(--borda-suave);
+  overflow: hidden;
+}
+
+.landing-recursos-grade > li {
+  display: flex;
+  min-width: 0;
+  background: white;
+  --recurso-fundo: var(--azul-fundo);
+}
+
+.landing-recursos-grade > li:is([data-recurso='checklists'], [data-recurso='cozinha'], [data-recurso='financas']) {
+  --recurso-fundo: var(--laranja-fundo);
+}
+
+.landing-recurso {
+  display: grid;
+  flex: 1;
+  grid-template-columns: minmax(64px, 26%) minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(10px, 1.5vw, 20px);
+  padding: clamp(12px, 2vw, 22px);
+  overflow-wrap: anywhere;
+}
+
+.landing-recurso-arte {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  background: var(--recurso-fundo);
+}
+
+.landing-recurso-arte img {
+  width: 94%;
+  height: 94%;
+  object-fit: contain;
+}
+
+.landing-recurso-conteudo {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 5px;
+}
+
+.landing-recurso h3 {
+  font-size: clamp(1.15rem, 1.8vw, 1.45rem);
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.landing-recurso-titulo {
+  font-weight: 750;
+  font-size: 0.875rem;
+}
+
+.landing-recurso-descricao {
+  margin-bottom: 5px;
+  color: var(--texto-apoio);
+  font-size: 0.875rem;
+}
+
+@media (min-width: 640px) {
+  .landing-recursos-grade {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  .landing-recursos-grade {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.landing-recurso:hover {
+  background: var(--azul-fundo);
+}
+
+.landing-recurso:focus-visible {
+  outline: 2px solid var(--azul-principal);
+  outline-offset: -3px;
+}

@@ -7,6 +7,7 @@ export default function LayoutAplicacao({
   children,
   classe = '',
   propriedadesCabecalho,
+  referencia,
 }) {
   const { pathname } = useLocation();
 
@@ -16,6 +17,7 @@ export default function LayoutAplicacao({
 
   return (
     <div
+      ref={referencia}
       className={`flex min-h-dvh min-w-0 flex-col bg-white ${classe}`}
       data-layout-aplicacao='ativo'
     >

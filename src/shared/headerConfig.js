@@ -52,17 +52,11 @@ const dadosCabecalhoConsumidorB = {
 const dadosCabecalhoPublico = {
   rotaLogo: '/',
   linksNavegacao: [
-    { nome: 'Como funciona', rota: '/como-funciona' },
+    { nome: 'Início', rota: '/' },
     { nome: 'Sobre nós', rota: '/sobrenos' },
     { nome: 'Para empresas', rota: '/sejaparceiro' },
-    { nome: 'IA', rota: '/ia' },
-    { nome: 'Entrar', rota: '/login' },
   ],
-  botaoAcao: {
-    rotulo: 'Começar agora',
-    rota: '/login?modo=cadastro',
-    cor: 'laranja',
-  },
+  botaoAcao: { rotulo: 'Acessar plataforma', rota: '/login', cor: 'laranja' },
 };
 
 export const variantesCabecalhoUsuario = {
