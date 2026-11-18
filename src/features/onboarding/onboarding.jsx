@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import logoLaranja from '../../shared/assets/logoLaranja.png';
 import caixaMudancaImg from '../landing-page/assets/caixa.png';
 import ondaDecorativa from './assets/onda.svg';
@@ -14,12 +14,17 @@ import {
   lerEstadoPlataforma,
   salvarEstadoPlataforma,
 } from '../../app/estado/estadoPlataforma';
+import { acessoLocal } from '../../app/dados/acessoLocal';
+import { contaApi, lerSessao, salvarSessao } from '../../app/dados/contaApi';
+import { EtapaCadastro } from '../auth/components/EtapaCadastro';
 import { opcoesMomento, opcoesPrioridades } from './content';
 
-export function Integracao() {
+export function Integracao({ cadastro = false }) {
   const navegar = useNavigate();
   const estadoInicial = lerEstadoPlataforma();
 
+  const [salvando, setSalvando] = useState(false);
+  const [erro, setErro] = useState('');
   const [etapa, setEtapa] = useState('momento');
   const [momentoSelecionado, setMomentoSelecionado] = useState(
     estadoInicial.perfil.momento === 'morando' ? 'living-alone' : 'planning'
@@ -72,10 +77,79 @@ export function Integracao() {
     navegar(destino);
   };
 
+  const sessao = cadastro && !acessoLocal ? lerSessao() : null;
+  if (cadastro && !acessoLocal && sessao?.tipo !== 1)
+    return <Navigate to='/login' replace />;
+
+  if (sessao && !sessao.cadastroPendente)
+    return <Navigate to='/perfil' replace />;
+
+  async function escolherMomento(opcao) {
+    if (!cadastro) {
+      persistirMomento(opcao.id);
+      return;
+    }
+    if (salvando) return;
+    setSalvando(true);
+    setErro('');
+    try {
+      if (sessao) {
+        const perfil = await contaApi(`/perfis/user/${sessao.id}`, {
+          token: sessao.token,
+        });
+        await contaApi(`/perfis/${perfil.id}`, {
+          metodo: 'PATCH',
+          token: sessao.token,
+          dados: { tipo: opcao.id === 'living-alone' ? 1 : 2 },
+        });
+      }
+      persistirMomento(opcao.id, false);
+      if (sessao) salvarSessao({ ...sessao, cadastroPendente: false });
+      navegar(opcao.rotaDestino, { replace: true });
+    } catch (falha) {
+      setErro(falha.message);
+    } finally {
+      setSalvando(false);
+    }
+  }
+
+  if (cadastro)
+    return (
+      <EtapaCadastro sessao={sessao} ocupado={salvando}>
+        <section
+          className='etapa-cadastro-conteudo'
+          aria-labelledby='titulo-moradia'
+        >
+          <h1 id='titulo-moradia'>Em que momento você está?</h1>
+          <p>Escolha o que melhor descreve sua relação com a casa hoje.</p>
+          {erro && <p role='alert'>{erro}</p>}
+          <section
+            className='etapa-cadastro-momentos'
+            aria-label='Escolha o seu momento de vida'
+          >
+            {opcoesMomento.map(opcao => (
+              <button
+                key={opcao.id}
+                type='button'
+                disabled={salvando}
+                onClick={() => escolherMomento(opcao)}
+              >
+                <img src={opcao.imagem} alt='' />
+                <div>
+                  <h2>{opcao.titulo}</h2>
+                  <p>{opcao.descricao}</p>
+                </div>
+              </button>
+            ))}
+          </section>
+        </section>
+      </EtapaCadastro>
+    );
+
   if (etapa === 'momento') {
     return (
       <main
-        className='relative isolate flex min-h-dvh flex-col justify-between overflow-hidden bg-(--azul-titulo) px-(--margem-pagina) py-8 text-white'
+        className='relative isolate flex min-h-dvh flex-col justify-between overflow-hidden bg-white px-(--margem-pagina) py-8 text-(--azul-titulo)'
         aria-labelledby='titulo-integracao-momento'
       >
         <div className='mx-auto flex w-full max-w-(--largura-header) items-center justify-between'>
@@ -90,7 +164,7 @@ export function Integracao() {
               className='h-7 w-auto object-contain sm:h-8'
             />
           </Link>
-          <p className='flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-white/85'>
+          <p className='flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-(--texto-apoio)'>
             <span className='size-2 rounded-full bg-(--laranja-principal)' />
             SEU MOMENTO · 01 / 01
           </p>
@@ -106,10 +180,15 @@ export function Integracao() {
           >
             Seu agora começa onde?
           </h1>
-          <p className='mt-3 text-base text-white/80 sm:text-lg'>
+          <p className='mt-3 text-base text-(--texto-apoio) sm:text-lg'>
             Cada começo é diferente. Conta pra gente qual é o seu.
           </p>
 
+          {erro && (
+            <p className='mt-4 font-bold text-red-700' role='alert'>
+              {erro}
+            </p>
+          )}
           <section
             aria-label='Escolha o seu momento de vida'
             className='mt-8 grid gap-7 md:grid-cols-2'
@@ -118,8 +197,9 @@ export function Integracao() {
               <button
                 key={opcao.id}
                 type='button'
-                onClick={() => persistirMomento(opcao.id, true)}
-                className='group cursor-pointer overflow-hidden rounded-xl bg-white text-left text-(--azul-titulo) shadow-xl transition-transform hover:-translate-y-1 focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-(--laranja-principal)'
+                disabled={salvando}
+                onClick={() => escolherMomento(opcao)}
+                className='group cursor-pointer overflow-hidden rounded-xl border border-(--borda-suave) bg-white text-left text-(--azul-titulo) shadow-sm transition-transform hover:-translate-y-1 focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-(--laranja-principal)'
               >
                 <div className='aspect-[16/10] w-full overflow-hidden'>
                   <img
@@ -141,7 +221,7 @@ export function Integracao() {
           </section>
         </div>
 
-        <div className='mx-auto flex w-full max-w-(--largura-header) items-center justify-center gap-2 text-center text-sm text-white/75'>
+        <div className='mx-auto flex w-full max-w-(--largura-header) items-center justify-center gap-2 text-center text-sm text-(--texto-apoio)'>
           <span className='font-bold text-(--laranja-principal)'>↗</span>
           <p>Pode mudar de ideia depois. Seu momento também muda!</p>
         </div>
@@ -244,11 +324,7 @@ export function Integracao() {
                 >
                   Vou morar sozinho
                 </Botao>
-                <Botao
-                  como={Link}
-                  to='/cadastro-empresa'
-                  variante='secundario'
-                >
+                <Botao como={Link} to='/cadastro-empresa' variante='secundario'>
                   Quero anunciar
                 </Botao>
                 <Botao

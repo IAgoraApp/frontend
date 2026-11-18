@@ -26,7 +26,7 @@ export function EmpresaAcesso({ modoInicial = 'divisao' }) {
   const [erro, setErro] = useState('');
 
   if (modoInicial === 'divisao' && entrarQuery) {
-    return <Navigate to='/login?perfil=empresa' replace />;
+    return <Navigate to='/login' replace />;
   }
 
   const enviarCadastro = evento => {
