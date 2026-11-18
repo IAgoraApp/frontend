@@ -1,3 +1,4 @@
+import { usePerfilPreparacao } from '../../../app/dados/perfilNavegacao';
 import { Check, MoreVertical } from 'lucide-react';
 import { IconeRotina, SeloCategoriaRotina } from './routineUi';
 import { diaRelativo } from '../utils/dates';
@@ -12,6 +13,7 @@ export default function LinhaTarefa({
   variante = 'lista',
   rotuloData,
 }) {
+  const preparacao = usePerfilPreparacao();
   const concluida = tarefa.completed || variante === 'historico';
   function acao(evento, tipo) {
     evento.currentTarget.closest('details')?.removeAttribute('open');
@@ -73,7 +75,7 @@ export default function LinhaTarefa({
               ['lembrete', 'Ajustar lembrete'],
               ['repeticao', 'Repetição'],
               ['excluir', 'Excluir tarefa'],
-            ].map(([tipo, rotulo]) => (
+            ].filter(([tipo]) => !preparacao || tipo !== 'lembrete').map(([tipo, rotulo]) => (
               <button
                 key={tipo}
                 type='button'

@@ -1,3 +1,6 @@
+import { EditorMvp } from '../../shared/ui/mvp';
+import { camposEnderecoPerfil, desvincularEnderecoPerfil, salvarEnderecoPerfil, salvarFotoPerfil, salvarInformacoes } from './perfilDados';
+import { alterarBancoPerfil, USUARIO_B, useBancoMvp } from '../../app/dados/bancoMvp';
 import { useState } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import fotoQueroMorar from '../onboarding/assets/onboarding-quero-morar-sozinho.jpg';
@@ -26,20 +29,35 @@ import {
   VisaoSegurancaPerfil,
 } from './components/SubvisoesPerfil';
 
-export function Perfil() {
+export function Perfil({ preparacao = false }) {
+  const banco = useBancoMvp(USUARIO_B);
+  const lerPerfil = () => {
+    const atual = lerEstadoPlataforma();
+    if (!preparacao) return atual;
+    const perfil = banco.perfil;
+    return { ...atual, perfil: {
+      nome: perfil.nome, nomeCompleto: perfil.nome,
+      email: banco.b.users.find(item => item.id === perfil.user_id)?.email,
+      fotoUrl: perfil.foto?.startsWith('/mock/') ? null : perfil.foto,
+      momento: perfil.tipo === 2 ? 'preparacao' : 'morando',
+    } };
+  };
   const localizacao = useLocation();
   const navegar = useNavigate();
   const [parametros, setParametros] = useSearchParams();
-  const visao = parametros.get('visao') || '';
+  const visaoSolicitada = parametros.get('visao') || '';
+  const controlesB = ['foto', 'momento', 'seguranca', 'moradia'];
+  const visao = preparacao && !['controle', 'documentos', ...controlesB].includes(visaoSolicitada) ? '' : visaoSolicitada;
 
-  const [estado, setEstado] = useState(lerEstadoPlataforma);
+  const [estado, setEstado] = useState(lerPerfil);
   const [nome, setNome] = useState(
-    () => lerEstadoPlataforma().perfil?.nome || ''
+    () => lerPerfil().perfil?.nome || ''
   );
   const [email, setEmail] = useState(
-    () => lerEstadoPlataforma().perfil?.email || ''
+    () => lerPerfil().perfil?.email || ''
   );
   const [salvoResumo, setSalvoResumo] = useState(false);
+  const [erroResumo, setErroResumo] = useState('');
   const [modalSairAberto, setModalSairAberto] = useState(false);
 
   const ehPreparacao =
@@ -58,6 +76,13 @@ export function Perfil() {
   };
 
   const atualizarPerfil = campos => {
+    if (preparacao) {
+      alterarBancoPerfil(USUARIO_B, (_db, perfil) => {
+        if (campos.momento !== undefined) perfil.tipo = campos.momento === 'preparacao' ? 2 : 1;
+      });
+      setEstado(atual => ({ ...atual, perfil: { ...atual.perfil, ...campos } }));
+      return;
+    }
     const atual = lerEstadoPlataforma();
     const proximo = {
       ...atual,
@@ -106,6 +131,17 @@ export function Perfil() {
 
   const lidarSalvarResumo = evento => {
     evento.preventDefault();
+    setErroResumo('');
+    if (preparacao) {
+      try {
+        salvarInformacoes(USUARIO_B, { nome: nome.trim(), email: email.trim() });
+        setEstado(atual => ({ ...atual, perfil: { ...atual.perfil, nome: nome.trim(), email: email.trim() } }));
+        setSalvoResumo(true);
+      } catch (falha) {
+        setErroResumo(falha.message);
+      }
+      return;
+    }
     atualizarPerfil({
       nome: nome.trim() || estado.perfil.nome,
       nomeCompleto: nome.trim() || estado.perfil.nomeCompleto,
@@ -120,6 +156,7 @@ export function Perfil() {
         <Container como='main' classe='flex-1 py-8 sm:py-12'>
           {visao === 'controle' && (
             <VisaoControleConta
+              secoesPermitidas={preparacao ? controlesB : undefined}
               aoVoltar={() => abrirVisao('')}
               aoAbrirVisao={abrirVisao}
               aoSair={() => setModalSairAberto(true)}
@@ -133,16 +170,29 @@ export function Perfil() {
               aoAbrirMomento={() => abrirVisao('momento')}
             />
           )}
-          {visao === 'foto' && (
+          {visao === 'foto' && (preparacao ? (
+            <EditorMvp titulo='Foto de perfil' inicial={{ foto: banco.perfil.foto }}
+              campos={[{ nome: 'foto', rotulo: 'Link da foto', tipo: 'url', obrigatorio: false, limite: 500 }]}
+              onSave={({ foto }) => {
+                salvarFotoPerfil(USUARIO_B, foto);
+                setEstado(atual => ({ ...atual, perfil: { ...atual.perfil, fotoUrl: foto } }));
+              }}
+              onClose={() => abrirVisao('')}
+            />
+          ) : (
             <VisaoFotoPerfil
               perfil={estado.perfil}
               aoSalvar={atualizarPerfil}
               aoVoltar={() => abrirVisao('')}
             />
-          )}
-          {visao === 'seguranca' && (
-            <VisaoSegurancaPerfil aoVoltar={() => abrirVisao('controle')} />
-          )}
+          ))}
+          {visao === 'seguranca' && (preparacao ? (
+            <div className='grid gap-4'>
+              <h1 className='font-titulo text-3xl font-extrabold'>Senha e acesso</h1>
+              <Link to='/login?modo=recuperar' className='font-bold underline'>Redefinir senha</Link>
+              <button type='button' className='justify-self-start underline' onClick={() => abrirVisao('controle')}>Voltar</button>
+            </div>
+          ) : <VisaoSegurancaPerfil aoVoltar={() => abrirVisao('controle')} />)}
           {visao === 'momento' && (
             <VisaoAlterarMomento
               aoSelecionarMomento={selecionarMomento}
@@ -163,17 +213,35 @@ export function Perfil() {
               aoVoltar={() => abrirVisao('controle')}
             />
           )}
-          {visao === 'moradia' && (
+          {visao === 'moradia' && (preparacao ? (
+            <EditorMvp titulo='Endereço do perfil'
+              inicial={banco.b.endereco.find(item => item.id === banco.perfil.endereco_id) ?? { pais: 'Brasil' }}
+              campos={camposEnderecoPerfil}
+              onSave={valores => salvarEnderecoPerfil(USUARIO_B, valores)}
+              onClose={() => abrirVisao('controle')}
+              acaoSecundaria={banco.perfil.endereco_id && (
+                <Botao type='button' variante='contorno' onClick={() => {
+                  try {
+                    desvincularEnderecoPerfil(USUARIO_B);
+                    abrirVisao('controle');
+                  } catch (falha) {
+                    setErroResumo(falha.message);
+                  }
+                }}>Desvincular endereço</Botao>
+              )}
+            />
+          ) : (
             <VisaoMoradiaPerfil
               perfil={estado.perfil}
               ehPreparacao={ehPreparacao}
               aoSalvar={atualizarPerfil}
               aoVoltar={() => abrirVisao('controle')}
             />
-          )}
+          ))}
+          {erroResumo && <p role='alert'>{erroResumo}</p>}
           {visao === 'documentos' && (
             <VisaoDocumentosPerfil
-              aoAbrirPrivacidade={() => abrirVisao('privacidade')}
+              aoAbrirPrivacidade={() => preparacao ? navegar('/privacidade') : abrirVisao('privacidade')}
               aoAbrirControle={() => abrirVisao('controle')}
               aoFechar={() => abrirVisao('')}
             />
@@ -321,6 +389,7 @@ export function Perfil() {
                 Seus dados ficam no seu perfil e podem ser atualizados.
               </div>
 
+              {erroResumo && <p className='mt-3 text-(--vermelho-alerta)' role='alert'>{erroResumo}</p>}
               <div className='mt-6 flex flex-wrap items-center gap-4'>
                 <Botao type='submit' cor='laranja' classe='px-8!'>
                   Salvar alterações ↗
@@ -328,7 +397,7 @@ export function Perfil() {
                 <p className='text-xs text-(--texto-apoio)'>
                   {salvoResumo
                     ? 'Alterações salvas localmente no seu perfil.'
-                    : 'Informações ilustrativas • nada foi alterado na sua conta.'}
+                    : preparacao ? 'As alterações deste perfil de teste ficam neste navegador.' : 'Informações ilustrativas • nada foi alterado na sua conta.'}
                 </p>
               </div>
             </form>

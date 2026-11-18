@@ -1,8 +1,9 @@
 import { useMemo } from 'react';
 import { hoje, useBancoMvp } from '../../../app/dados/bancoMvp';
 
-export function useInicio() {
+export function useInicio(preparacao = false) {
   const banco = useBancoMvp();
+  const usuario = banco.perfil?.user_id;
   const { b, tarefas, limpezas, transacoes } = banco;
   const dia = hoje();
   const execucoes = b.execucao_tarefa.filter(
@@ -56,5 +57,20 @@ export function useInicio() {
     [b, tarefas, transacoes, limpezas]
   );
 
+  if (preparacao) {
+    const jornadas = b.jornada.filter(item => item.user_id === usuario);
+    const etapas = b.etapa_jornada.filter(item => item.status === 'pendente' && jornadas.some(j => j.id === item.jornada_id && j.status === 'em_andamento'));
+    const prazoPorEtapa = new Map(etapas.map(etapa => [etapa.id, etapa.prazo]));
+    const pendentes = b.tarefa_jornada.filter(item => !item.concluida && etapas.some(e => e.id === item.etapa_id));
+    const tarefas = {
+      hoje: pendentes.filter(tarefasVencidas).map(item => ({ title: item.titulo })),
+      proximas: pendentes.filter(item => !tarefasVencidas(item)).map(item => ({ title: item.titulo })),
+    };
+    function tarefasVencidas(item) {
+      const prazo = prazoPorEtapa.get(item.etapa_id);
+      return prazo && prazo <= dia;
+    }
+    return { banco, tarefas };
+  }
   return { banco, tarefas: resumo, eventos };
 }

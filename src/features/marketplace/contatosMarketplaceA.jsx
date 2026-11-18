@@ -1,3 +1,4 @@
+import { usePerfilPreparacao } from '../../app/dados/perfilNavegacao';
 import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -47,6 +48,7 @@ export default function ContatosMarketplaceA({
   erroChat,
 }) {
   const navegar = useNavigate();
+  const preparacao = usePerfilPreparacao();
   const [params] = useSearchParams();
   const concluidos = params.get('status') === 'concluidos';
   const historico = useRef(null);
@@ -422,11 +424,11 @@ export default function ContatosMarketplaceA({
                       )}
                     </p>
                   )}
-                  <AcordoServico
+                  {!preparacao && <AcordoServico
                     pedido={vinculoAtual}
                     propostas={banco.propostas_marketplace}
                     userId={perfil.user_id}
-                  />
+                  />}
                 </div>
                 <ol
                   className='mercado-a-mensagens'

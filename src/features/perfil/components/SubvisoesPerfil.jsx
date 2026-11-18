@@ -19,6 +19,7 @@ export function VisaoControleConta({
   aoVoltar,
   aoAbrirVisao,
   aoSair,
+  secoesPermitidas,
 }) {
   return (
     <div className='space-y-8'>
@@ -32,7 +33,7 @@ export function VisaoControleConta({
 
       <div className='rounded-2xl bg-(--azul-fundo) p-4 sm:p-6'>
         <div className='space-y-3'>
-          {secoesControleConta.map(item => (
+          {secoesControleConta.filter(item => !secoesPermitidas || secoesPermitidas.includes(item.id)).map(item => (
             <button
               key={item.id}
               type='button'
@@ -48,7 +49,7 @@ export function VisaoControleConta({
                 </span>
                 <div className='min-w-0'>
                   <p className='text-base font-bold text-(--azul-titulo) sm:text-lg'>
-                    {item.titulo}
+                    {secoesPermitidas && item.id === 'moradia' ? 'Endereço do perfil' : item.titulo}
                   </p>
                   <p className='text-sm text-(--texto-apoio)'>
                     {item.subtitulo}

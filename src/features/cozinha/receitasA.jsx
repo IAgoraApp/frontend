@@ -319,7 +319,7 @@ function Detalhe({
             ) : (
               <p>Nenhum ingrediente cadastrado.</p>
             )}
-            {temFaltantes && (
+            {temFaltantes && aoCriarLista && (
               <button
                 type='button'
                 className='receitas-botao receitas-primario receitas-criar-lista'
@@ -516,12 +516,12 @@ export default function ReceitasA({ banco, casaId, usuario }) {
               banco.produto,
               banco.estoque_item.filter(i => i.casa_id === casaId)
             )}
-            aoCriarLista={() =>
+            aoCriarLista={casaId ? () =>
               executar(() => {
                 const listaId = criarListaDaReceita(receita, casaId);
                 navegar(`/cozinha?visao=compras&lista=${listaId}`);
               }, 'Lista de compras criada.')
-            }
+              : undefined}
             visao={visao}
             propria={receita.user_id === usuario}
             favorita={favoritas.has(receita.id)}

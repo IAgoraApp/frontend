@@ -1,3 +1,4 @@
+import { usePerfilPreparacao } from '../../../app/dados/perfilNavegacao';
 import {
   Bell,
   CalendarDays,
@@ -23,6 +24,7 @@ export default function DetalheTarefa({
   aoDesfazer,
   idTitulo,
 }) {
+  const preparacao = usePerfilPreparacao();
   const categorias = useCategoriasRotina();
   const categoria = categorias.find(item => item.id === tarefa.category);
   const frequencia =
@@ -41,12 +43,12 @@ export default function DetalheTarefa({
     ],
     [Clock, 'Horário previsto', tarefa.time],
     [Repeat, 'Repetição', frequencia],
-    [Bell, 'Lembrete', lembrete],
+    ...(!preparacao ? [[Bell, 'Lembrete', lembrete]] : []),
   ];
   const acoes = [
     [Pencil, 'editar', 'Editar'],
     [CalendarDays, 'reagendar', 'Reagendar'],
-    [Bell, 'lembrete', 'Ajustar lembrete'],
+    ...(!preparacao ? [[Bell, 'lembrete', 'Ajustar lembrete']] : []),
     [Repeat, 'repeticao', 'Repetição'],
   ];
 

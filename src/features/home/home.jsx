@@ -1,15 +1,17 @@
 import { Link } from 'react-router-dom';
 import { Rodape } from '../../shared/index';
 import { Botao, Container, Titulo } from '../../shared/ui/index';
-import { atalhosInicio } from './content';
+import { atalhosInicio, atalhosPreparacao } from './content';
 import { useInicio } from './hooks/useInicio';
 import { ResumoPlataforma } from './components/ResumoPlataforma';
 import './home.css';
+import ResumoJornada from './components/ResumoJornada';
 import { CartaoAgenda } from './components/index';
 
-export default function Inicio() {
-  const { banco, tarefas, eventos } = useInicio();
-  const momentoAtual = 'Já moro sozinho';
+export default function Inicio({ preparacao = false }) {
+  const { banco, tarefas, eventos } = useInicio(preparacao);
+  const momentoAtual = preparacao ? 'Quero morar sozinho' : 'Já moro sozinho';
+  const tarefasRota = preparacao ? '/minhajornada' : '/rotina?visao=lista';
 
   return (
     <div
@@ -22,7 +24,7 @@ export default function Inicio() {
             como='h1'
             classe='text-3xl leading-tight font-extrabold sm:text-4xl'
           >
-            Oi! O que vamos resolver hoje?
+            {preparacao ? 'Oi! Vamos planejar sua mudança?' : 'Oi! O que vamos resolver hoje?'}
           </Titulo>
           <div className='flex min-w-0 items-center justify-between gap-6 rounded-[10px] bg-(--azul-fundo) px-5 py-4 lg:w-[445px]'>
             <div className='min-w-0'>
@@ -35,6 +37,7 @@ export default function Inicio() {
             </div>
             <Link
               to='/onboarding'
+              state={{ usuarioMvp: banco.perfil?.user_id }}
               className='inline-flex min-h-11 shrink-0 items-center font-bold text-(--laranja-principal)'
             >
               Alterar ↗
@@ -46,7 +49,7 @@ export default function Inicio() {
           className='inicio-ferramentas'
           aria-label='Ferramentas para a vida real'
         >
-          {atalhosInicio.map(item => (
+          {(preparacao ? atalhosPreparacao : atalhosInicio).map(item => (
             <Link key={item.rota} to={item.rota}>
               <span
                 aria-hidden='true'
@@ -65,7 +68,7 @@ export default function Inicio() {
           >
             <div className='min-w-0 max-w-lg'>
               <p className='text-xs font-bold tracking-[1.5px] text-[#e13b00]'>
-                MINHAS TAREFAS
+                {preparacao ? 'TAREFAS DA JORNADA' : 'MINHAS TAREFAS'}
               </p>
               <Titulo
                 id='inicio-tarefas'
@@ -73,7 +76,7 @@ export default function Inicio() {
               >
                 {tarefas.hoje.length
                   ? `${tarefas.hoje.length} pendentes`
-                  : 'Seu dia, no seu ritmo'}
+                  : preparacao ? 'Prepare sua mudança' : 'Seu dia, no seu ritmo'}
                 {tarefas.hoje.length > 0 && tarefas.proximas.length > 0
                   ? ` e ${tarefas.proximas.length} próximas.`
                   : '.'}
@@ -81,7 +84,7 @@ export default function Inicio() {
               <p className='mt-4 text-base leading-relaxed text-white/90 sm:text-lg'>
                 {tarefas.hoje.length
                   ? `Hoje: ${tarefas.hoje.map(item => item.title).join(', ')}.`
-                  : 'Você está em dia com as tarefas de hoje. Que tal organizar os próximos passos?'}
+                  : preparacao ? 'Nenhuma tarefa da jornada vence hoje.' : 'Você está em dia com as tarefas de hoje. Que tal organizar os próximos passos?'}
                 {tarefas.proximas.length > 0 &&
                   ` Próximas: ${tarefas.proximas
                     .slice(0, 2)
@@ -90,23 +93,24 @@ export default function Inicio() {
               </p>
               <Botao
                 como={Link}
-                to='/rotina?visao=lista'
+                to={tarefasRota}
                 cor='laranja'
                 classe='mt-6 min-h-13 rounded-full px-8'
               >
-                Ver tarefas
+                {preparacao ? 'Abrir minha jornada' : 'Ver tarefas'}
               </Botao>
             </div>
           </section>
 
-          <section
-            className='inicio-agenda flex min-w-0 flex-col justify-between gap-6'
-            aria-label='Calendário e compromissos'
-          >
-            <CartaoAgenda eventosDisponiveis={eventos} />
-          </section>
+          {preparacao ? (
+            <ResumoJornada banco={banco} />
+          ) : (
+            <section className='inicio-agenda flex min-w-0 flex-col justify-between gap-6' aria-label='Calendário e compromissos'>
+              <CartaoAgenda eventosDisponiveis={eventos} />
+            </section>
+          )}
         </div>
-        <ResumoPlataforma banco={banco} />
+        <ResumoPlataforma banco={banco} preparacao={preparacao} />
       </Container>
       <Rodape />
     </div>

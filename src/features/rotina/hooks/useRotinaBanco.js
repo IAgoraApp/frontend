@@ -3,7 +3,6 @@ import {
   alterarBanco,
   hoje,
   inserir,
-  USUARIO_A,
   useBancoMvp,
 } from '../../../app/dados/bancoMvp';
 import { adicionarDias } from '../utils/dates';
@@ -72,7 +71,7 @@ function salvarRegra(db, tarefaId, tarefa) {
 }
 
 export function useRotinaBanco() {
-  const { b, tarefas, categorias } = useBancoMvp();
+  const { b, perfil, tarefas, categorias } = useBancoMvp();
   const [lembretes, setLembretes] = useState({});
   const porId = new Map(
     tarefas.map(t => {
@@ -176,7 +175,7 @@ export function useRotinaBanco() {
             inserir(
               'categoria_tarefa',
               {
-                user_id: USUARIO_A,
+                user_id: perfil.user_id,
                 nome: 'Rotina',
                 cor: '#12377d',
                 icone: 'list-check',

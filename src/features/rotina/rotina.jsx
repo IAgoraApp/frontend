@@ -1,3 +1,4 @@
+import { usePerfilPreparacao } from '../../app/dados/perfilNavegacao';
 import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
 import { useLayoutEffect, useState } from 'react';
 import {
@@ -77,6 +78,7 @@ const visoesRotina = secoesRotina.flatMap(secao =>
 const tiposEspaco = ['criar', 'editar'];
 
 export default function Rotina() {
+  const preparacao = usePerfilPreparacao();
   const localizacao = useLocation();
   const navegar = useNavigate();
   const { estado, ocorrencias, despachar } = useRotinaBanco();
@@ -238,7 +240,7 @@ export default function Rotina() {
           aoSalvar={valores =>
             salvarTarefa(valores, entrada.type === 'editar' ? tarefa : null)
           }
-          aoAssistente={() => navegar('/ia')}
+          aoAssistente={preparacao ? undefined : () => navegar('/ia')}
           aoExcluir={() => abrir('excluir', tarefa)}
         />
       );
@@ -306,7 +308,7 @@ export default function Rotina() {
     modalAtivo && ['reagendar', 'repeticao'].includes(modalAtivo.type);
   const { inicio: inicioCalendario, fim: fimCalendario } = intervaloMes(mes);
 
-  if (visaoSolicitada === 'assistente') return <Navigate to='/ia' replace />;
+  if (visaoSolicitada === 'assistente') return <Navigate to={preparacao ? '/rotina' : '/ia'} replace />;
 
   return (
     <LayoutCasa
@@ -316,7 +318,7 @@ export default function Rotina() {
           titulo='Rotina'
           IconeTitulo={CalendarDays}
           rotulo='Navegação da rotina'
-          secoes={secoesRotina}
+          secoes={preparacao ? secoesRotina.filter(secao => secao.rota !== '/ia') : secoesRotina}
           pathname='/rotina'
           visao={visao}
         />
