@@ -1,0 +1,27 @@
+@media (prefers-reduced-motion: no-preference) {
+  [data-entrada-visivel] {
+    animation: landing-aparecer 460ms cubic-bezier(0.22, 0.65, 0.3, 1) both;
+  }
+
+  .landing-recursos-grade > li:nth-child(3n + 2) [data-entrada-visivel],
+  #perguntas-frequentes dl > div:nth-child(2)[data-entrada-visivel] {
+    animation-delay: 55ms;
+  }
+
+  .landing-recursos-grade > li:nth-child(3n) [data-entrada-visivel],
+  #perguntas-frequentes dl > div:nth-child(3)[data-entrada-visivel] {
+    animation-delay: 100ms;
+  }
+
+  @keyframes landing-aparecer {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}

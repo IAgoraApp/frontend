@@ -1,29 +1,33 @@
+import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Container } from '../../../shared/ui';
+
 export default function SecaoEncerramento() {
   return (
-    <section className='w-full bg-(--laranja-principal) px-(--margem-pagina) py-10 text-white lg:h-[160px] lg:py-[18px]'>
-      <div className='mx-auto flex h-full max-w-(--largura-header) flex-col items-center justify-center gap-6 md:flex-row md:justify-between'>
-        <div className='flex max-w-[940px] flex-col gap-1 text-center md:text-left lg:h-[100px] lg:justify-center'>
-          <span className='font-corpo text-[14px] font-bold tracking-[1px] sm:text-base'>
-            SEU PRÓXIMO CAPÍTULO.
-          </span>
-          <h2 className='font-titulo text-2xl leading-[36px] font-extrabold sm:text-[32px]'>
-            O seu agora começa aqui.
+    <section
+      aria-labelledby='titulo-acessar-plataforma'
+      className='bg-(--azul-escuro) py-10 text-white sm:py-16'
+    >
+      <Container classe='grid items-center gap-6 md:grid-cols-[minmax(0,1fr)_auto]'>
+        <div className='grid gap-2' data-entrada=''>
+          <h2
+            id='titulo-acessar-plataforma'
+            className='text-3xl leading-tight font-extrabold tracking-tight sm:text-5xl'
+          >
+            Seu canto começa aqui
           </h2>
-          <p className='font-corpo text-base leading-[22px] sm:text-[20px]'>
-            Independência é uma grande conquista. Você pode aprender um pouco
-            por vez.
+          <p className='max-w-[46ch] text-base text-white/85 sm:text-lg'>
+            Da primeira chave às tarefas de todo dia, organize sua casa no seu
+            ritmo.
           </p>
         </div>
-
-        <div className='shrink-0'>
-          <a
-            href='#funcionalidades'
-            className='flex h-[42px] w-[180px] items-center justify-center rounded-full bg-(--azul-titulo) font-corpo text-base font-bold text-white transition-colors hover:bg-[#0c1f32] sm:text-lg'
-          >
-            Começar agora
-          </a>
-        </div>
-      </div>
+        <Link
+          to='/login'
+          className='inline-flex min-h-12 w-fit items-center gap-2 rounded-full bg-(--laranja-principal) px-5 font-bold text-white hover:bg-[#c43300] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white'
+        >
+          Acessar plataforma <ArrowRight size={18} aria-hidden='true' />
+        </Link>
+      </Container>
     </section>
   );
 }

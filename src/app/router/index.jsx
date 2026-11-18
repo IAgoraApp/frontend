@@ -1,3 +1,5 @@
+import { acessoLocal } from '../dados/acessoLocal';
+import { Perfil } from '../../features/perfil/perfil';
 import MarketplaceA from '../../features/marketplace/marketplaceA';
 import Inicio from '../../features/home/home';
 import CasaA from '../../features/casa/casaA';
@@ -6,7 +8,7 @@ import CozinhaA from '../../features/cozinha/cozinhaA';
 import DespensaA from '../../features/cozinha/despensaA';
 import Rotina from '../../features/rotina/rotina';
 import FinancasA from '../../features/financas/financasA';
-import PerfilA from '../../features/perfil/perfilA';
+import PerfilDaConta from '../../features/auth/perfilDaConta';
 import {
   createBrowserRouter,
   Navigate,
@@ -56,7 +58,10 @@ const rotas = createBrowserRouter([
                 path: '/calculadoras/:tipo',
                 element: <Navigate to='/financas' replace />,
               },
-              { path: '/perfil', element: <PerfilA /> },
+              {
+                path: '/perfil',
+                element: acessoLocal ? <Perfil /> : <PerfilDaConta />,
+              },
               {
                 path: '/checklists',
                 element: <Navigate to='/rotina' replace />,
@@ -155,7 +160,10 @@ const rotas = createBrowserRouter([
                 path: '/encontrar-casa',
                 element: <Funcionalidades.EncontrarCasa />,
               },
-              { path: '/perfil-b', element: <Funcionalidades.Perfil /> },
+              {
+                path: '/perfil-b',
+                element: acessoLocal ? <Perfil /> : <PerfilDaConta />,
+              },
               {
                 path: '/ia-b',
                 element: <Funcionalidades.InteligenciaArtificial />,
@@ -231,11 +239,19 @@ const rotas = createBrowserRouter([
               },
               {
                 path: '/empresa/perfil',
-                element: <Funcionalidades.Empresa visao='perfil' />,
+                element: acessoLocal ? (
+                  <Funcionalidades.Empresa visao='perfil' />
+                ) : (
+                  <PerfilDaConta empresa />
+                ),
               },
               {
                 path: '/perfil-empresa',
-                element: <Funcionalidades.Empresa visao='perfil' />,
+                element: acessoLocal ? (
+                  <Funcionalidades.Empresa visao='perfil' />
+                ) : (
+                  <PerfilDaConta empresa />
+                ),
               },
               {
                 path: '/empresa/perfil/midias',
@@ -277,6 +293,14 @@ const rotas = createBrowserRouter([
         element: <RotaPublica />,
         children: [
           { path: '/login', element: <Funcionalidades.Autenticacao /> },
+          {
+            path: '/cadastro/dados-da-empresa',
+            element: <PerfilDaConta empresa cadastro />,
+          },
+          {
+            path: '/cadastro/moradia',
+            element: <Funcionalidades.Integracao cadastro />,
+          },
           { path: '/onboarding', element: <Funcionalidades.Integracao /> },
           {
             element: <LayoutPublico />,
@@ -303,12 +327,12 @@ const rotas = createBrowserRouter([
               {
                 path: '/empresa/cadastro',
                 element: (
-                  <Funcionalidades.EmpresaAcesso modoInicial='cadastro' />
+                  <Navigate to='/login?modo=cadastro&perfil=empresa' replace />
                 ),
               },
               {
                 path: '/empresa/login',
-                element: <Funcionalidades.EmpresaAcesso modoInicial='login' />,
+                element: <Navigate to='/login' replace />,
               },
               {
                 path: '/como-funciona',

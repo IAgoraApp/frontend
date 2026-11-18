@@ -18,66 +18,66 @@ export const membrosEquipe = [
   {
     id: 'kaua-vitor',
     nome: 'Kauã Vitor',
-    cargo: 'PRODUCT OWNER E FULL STACK',
+    cargo: 'Product owner e full stack',
     foto: fotoKauavitor,
     github: 'https://github.com/KauaRDESIGN',
   },
   {
     id: 'gabriel-gomes',
     nome: 'Gabriel Gomes',
-    cargo: 'DESENVOLVEDOR BACK-END E VENDAS',
+    cargo: 'Back-end e vendas',
     foto: fotoGabriel,
     github: 'https://github.com/gomeszyk',
   },
   {
     id: 'fernando-vieira',
     nome: 'Fernando Vieira',
-    cargo: 'DESIGNER UI/UX E FRONT-END',
+    cargo: 'Design UI/UX e front-end',
     foto: fotoFernando,
     github: 'https://github.com/euFehVieira',
   },
   {
     id: 'igor-vasconcelos',
     nome: 'Igor Vasconcelos',
-    cargo: 'DESENVOLVEDOR BACK-END E VENDAS',
+    cargo: 'Back-end e vendas',
     foto: fotoIgor,
     github: 'https://github.com/igorvasconcelos11-web',
   },
   {
     id: 'emily-batista',
     nome: 'Emily Batista',
-    cargo: 'DESENVOLVEDORA BACK-END E VENDAS',
+    cargo: 'Back-end e vendas',
     foto: fotoEmily,
     github: 'https://github.com/emilybatista123',
   },
   {
     id: 'emilly-barauna',
     nome: 'Emilly Barauna',
-    cargo: 'DESENVOLVEDORA BACK-END E VENDAS',
+    cargo: 'Back-end e vendas',
     foto: fotoEmilly,
     github: 'https://github.com/Emilly-Barauna',
   },
   {
     id: 'joao-vitor',
     nome: 'João Vitor',
-    cargo: 'SCRUM MASTER E BACK-END',
+    cargo: 'Scrum master e back-end',
     foto: fotoJoao,
     github: 'https://github.com/joaovpr156',
   },
   {
     id: 'davi-antonio',
     nome: 'Davi Antônio',
-    cargo: 'DESENVOLVEDOR BACK-END E VENDAS',
+    cargo: 'Back-end e vendas',
     foto: fotoDavi,
     github: 'https://github.com/davizin-ra',
   },
 ];
 
 export const tecnologiasEquipe = [
-  { nome: 'REACT', icone: iconeReact },
-  { nome: 'MYSQL', icone: iconeMysql },
-  { nome: 'JAVASCRIPT', icone: iconeJavascript },
-  { nome: 'JAVA', icone: iconeJava },
+  { nome: 'React', icone: iconeReact },
+  { nome: 'MySQL', icone: iconeMysql },
+  { nome: 'JavaScript', icone: iconeJavascript },
+  { nome: 'Java', icone: iconeJava },
 ];
 
 export const valoresEquipe = [

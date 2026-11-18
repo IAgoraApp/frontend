@@ -1,3 +1,5 @@
+import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import caixaImg from '../assets/caixa-usuario.png';
 
@@ -1151,15 +1153,17 @@ export default function SecaoHero() {
           </div>
 
           <p className='mt-1 max-w-[700px] font-corpo text-[16px] leading-[25px] font-normal text-(--azul-titulo) sm:text-[19px] lg:text-[21px]'>
-            A dúvida é sua, a resposta é nossa!
+            Planeje sua mudança e organize as tarefas, as contas e a rotina da casa.
           </p>
 
-          <a
-            href='#funcionalidades'
-            className='mt-2 flex h-[50px] w-[230px] items-center justify-center rounded-[25px] bg-(--laranja-principal) font-corpo text-[18px] font-bold text-white transition-colors hover:bg-[#c43300] sm:h-[54px] sm:w-[250px] sm:text-[20px]'
-          >
-            Começar agora
-          </a>
+          <div className='mt-2 flex flex-wrap items-center justify-center gap-3'>
+            <Link to='/login' className='inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-(--laranja-principal) px-6 font-bold text-white hover:bg-[#c43300] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--azul-principal)'>
+              Acessar plataforma <ArrowRight size={19} aria-hidden='true' />
+            </Link>
+            <a href='#funcionalidades' className='inline-flex min-h-12 items-center justify-center rounded-full border border-(--borda-suave) bg-white px-6 font-bold text-(--azul-titulo) hover:bg-(--azul-fundo) focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--azul-principal)'>
+              Conhecer os recursos
+            </a>
+          </div>
         </div>
 
         <div className='relative flex w-full items-center justify-center lg:h-[370px] xl:h-[400px]'>
