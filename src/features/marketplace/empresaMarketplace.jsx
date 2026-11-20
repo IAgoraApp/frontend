@@ -4,6 +4,7 @@ import {
   BadgeCheck,
   Building2,
   Clock3,
+  Globe,
   Mail,
   MapPin,
   Phone,
@@ -28,7 +29,7 @@ function imagemPublica(url) {
 
 export function MarcaEmpresa({ empresa }) {
   const [falhou, setFalhou] = useState(false);
-  const iniciais = empresa.nome
+  const iniciais = (empresa.nome ?? '')
     .trim()
     .split(/\s+/)
     .slice(0, 2)
@@ -76,7 +77,7 @@ export function CartaoEmpresa({ empresa, estado }) {
   );
 }
 
-export function PerfilEmpresaMarketplace({ empresa }) {
+export function PerfilEmpresaMarketplace({ empresa, acoes, situacao }) {
   const [bannerFalhou, setBannerFalhou] = useState(false);
   const horarios = Object.entries(empresa.horario_atendimento || {}).filter(
     ([, valor]) => typeof valor === 'string' && valor.trim()
@@ -99,22 +100,28 @@ export function PerfilEmpresaMarketplace({ empresa }) {
       <div className='mercado-a-perfil-dados'>
         <div className='mercado-a-perfil-apresentacao'>
           <div className='mercado-a-perfil-identidade'>
-            <MarcaEmpresa empresa={empresa} />
+            <MarcaEmpresa key={empresa.logo ?? 'padrao'} empresa={empresa} />
             <div>
-              <p className='mercado-a-verificada'>
-                <BadgeCheck size={16} aria-hidden='true' /> Empresa verificada
-              </p>
+              {empresa.validado ? (
+                <p className='mercado-a-verificada'>
+                  <BadgeCheck size={16} aria-hidden='true' /> Empresa verificada
+                </p>
+              ) : (
+                situacao && <p>{situacao}</p>
+              )}
               <h1>{empresa.nome}</h1>
               <p>{nomeCategoria(empresa.categoria)}</p>
             </div>
           </div>
           <div className='mercado-a-perfil-botoes'>
-            <a
-              className='mercado-a-voltar-detalhe'
-              href='#servicos-disponiveis'
-            >
-              Ver serviços
-            </a>
+            {acoes ?? (
+              <a
+                className='mercado-a-voltar-detalhe'
+                href='#servicos-disponiveis'
+              >
+                Ver serviços
+              </a>
+            )}
           </div>
         </div>
         {empresa.descricao && (
@@ -163,6 +170,18 @@ export function PerfilEmpresaMarketplace({ empresa }) {
               <dd>
                 <a href={`mailto:${empresa.email_comercial}`}>
                   {empresa.email_comercial}
+                </a>
+              </dd>
+            </div>
+          )}
+          {/^https?:\/\//i.test(empresa.site ?? '') && (
+            <div>
+              <dt>
+                <Globe size={16} aria-hidden='true' /> Site
+              </dt>
+              <dd>
+                <a href={empresa.site} target='_blank' rel='noreferrer'>
+                  {empresa.site.replace(/^https?:\/\//i, '')}
                 </a>
               </dd>
             </div>

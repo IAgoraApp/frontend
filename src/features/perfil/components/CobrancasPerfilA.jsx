@@ -44,7 +44,7 @@ function Situacao({ valor }) {
   );
 }
 
-export default function CobrancasPerfilA({ b, userId, visao, aoSalvar }) {
+export default function CobrancasPerfilA({ b, userId, visao, aoSalvar, atualizarPublicacao }) {
   const [modal, setModal] = useState(null);
   const [erro, setErro] = useState('');
   const assinaturas = b.assinatura
@@ -481,14 +481,14 @@ export default function CobrancasPerfilA({ b, userId, visao, aoSalvar }) {
               </dl>
               {registro.status === 'pendente' &&
                 registro.gateway === 'mock' &&
-                registro.assinatura_id && (
+                (registro.assinatura_id || (registro.publicacao_id && atualizarPublicacao)) && (
                   <div className='mt-4 flex flex-wrap justify-end gap-2'>
                     <Botao
                       type='button'
                       variante='contorno'
                       onClick={() =>
                         executar(
-                          () => atualizarCobranca(userId, registro.id, false),
+                          () => (registro.publicacao_id ? atualizarPublicacao : atualizarCobranca)(userId, registro.id, false),
                           'Cobrança cancelada.'
                         )
                       }
@@ -499,7 +499,7 @@ export default function CobrancasPerfilA({ b, userId, visao, aoSalvar }) {
                       type='button'
                       onClick={() =>
                         executar(
-                          () => atualizarCobranca(userId, registro.id, true),
+                          () => (registro.publicacao_id ? atualizarPublicacao : atualizarCobranca)(userId, registro.id, true),
                           'Pagamento de teste confirmado.'
                         )
                       }

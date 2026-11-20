@@ -1,3 +1,5 @@
+import { acessoLocal } from '../../../app/dados/acessoLocal';
+import { lerGuia } from '../../minha-jornada/guiaMudanca';
 import { useMemo } from 'react';
 import { hoje, useBancoMvp } from '../../../app/dados/bancoMvp';
 
@@ -7,7 +9,9 @@ export function useInicio(preparacao = false) {
   const { b, tarefas, limpezas, transacoes } = banco;
   const dia = hoje();
   const execucoes = b.execucao_tarefa.filter(
-    e => ['pendente', 'atrasada'].includes(e.status) && tarefas.some(t => t.id === e.tarefa_id)
+    e =>
+      ['pendente', 'atrasada'].includes(e.status) &&
+      tarefas.some(t => t.id === e.tarefa_id)
   );
   const resumo = {
     hoje: execucoes
@@ -23,7 +27,8 @@ export function useInicio(preparacao = false) {
         ...b.execucao_tarefa
           .filter(
             e =>
-              ['pendente', 'atrasada'].includes(e.status) && tarefas.some(t => t.id === e.tarefa_id)
+              ['pendente', 'atrasada'].includes(e.status) &&
+              tarefas.some(t => t.id === e.tarefa_id)
           )
           .map(e => ({
             id: `tarefa-${e.id}`,
@@ -58,18 +63,19 @@ export function useInicio(preparacao = false) {
   );
 
   if (preparacao) {
-    const jornadas = b.jornada.filter(item => item.user_id === usuario);
-    const etapas = b.etapa_jornada.filter(item => item.status === 'pendente' && jornadas.some(j => j.id === item.jornada_id && j.status === 'em_andamento'));
-    const prazoPorEtapa = new Map(etapas.map(etapa => [etapa.id, etapa.prazo]));
-    const pendentes = b.tarefa_jornada.filter(item => !item.concluida && etapas.some(e => e.id === item.etapa_id));
+    const { etapas } = lerGuia(b, acessoLocal ? usuario : undefined);
+    const pendentes = etapas.flatMap(etapa =>
+      etapa.tarefas
+        .filter(item => !item.concluida)
+        .map(item => ({
+          title: item.titulo,
+          prazo: etapa.prazo,
+        }))
+    );
     const tarefas = {
-      hoje: pendentes.filter(tarefasVencidas).map(item => ({ title: item.titulo })),
-      proximas: pendentes.filter(item => !tarefasVencidas(item)).map(item => ({ title: item.titulo })),
+      hoje: pendentes.filter(item => item.prazo && item.prazo <= dia),
+      proximas: pendentes.filter(item => !item.prazo || item.prazo > dia),
     };
-    function tarefasVencidas(item) {
-      const prazo = prazoPorEtapa.get(item.etapa_id);
-      return prazo && prazo <= dia;
-    }
     return { banco, tarefas };
   }
   return { banco, tarefas: resumo, eventos };

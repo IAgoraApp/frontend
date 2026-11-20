@@ -1,3 +1,5 @@
+import { useBancoMvp } from '../../app/dados/bancoMvp';
+import { selecionarContaEmpresaLocal } from '../empresa/empresaDados';
 import { acessoLocal } from '../../app/dados/acessoLocal';
 import { useCallback, useRef, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -37,6 +39,7 @@ export function Autenticacao() {
 
 function FormularioAcesso({ params }) {
   const navegar = useNavigate();
+  const { b } = useBancoMvp();
   const token = params.get('token');
   const modo = token
     ? 'nova-senha'
@@ -110,7 +113,11 @@ function FormularioAcesso({ params }) {
   async function enviar(evento) {
     evento.preventDefault();
     if (entradaLocal) {
-      const email = new FormData(evento.currentTarget).get('email');
+      const email = String(new FormData(evento.currentTarget).get('email') ?? '').trim().toLowerCase();
+      if (!cadastro && selecionarContaEmpresaLocal(b, email)) {
+        navegar('/empresa', { replace: true });
+        return;
+      }
       navegar(
         cadastro
           ? empresa

@@ -3,25 +3,31 @@ import { Link } from 'react-router-dom';
 import { dataCurta, moeda } from '../../../app/dados/bancoMvp';
 import { acessoLocal } from '../../../app/dados/acessoLocal';
 import { lerGuia } from '../../minha-jornada/guiaMudanca';
-import { estimarReserva, listar, resumoMoradia } from '../../preparacao/modelo';
+import { estimarReserva, listar } from '../../preparacao/modelo';
+import { resumirOrcamento } from '../../financas-B/dinheiroDados';
+import { lerPrevisaoMudanca } from '../../preparacao/previsaoMudanca';
 
 export default function ResumoJornada({ banco }) {
   const { b, perfil } = banco;
   const usuario = perfil?.user_id;
   const guia = lerGuia(b, acessoLocal ? usuario : undefined);
-  const planos = listar(b, 'plano_moradia', usuario);
-  const plano = planos.find(item => item.status === 'ativo');
-  const custos = plano ? listar(b, 'custo_moradia', usuario, plano.id) : [];
-  const saldo =
-    plano && resumoMoradia(plano.renda_mensal, plano.reserva_atual, custos);
-  const estimativa = saldo && estimarReserva(plano.reserva_atual, saldo, 3);
-  const temCustoMensal = custos.some(item => item.tipo === 'mensal');
-  const temCustoInicial = custos.some(item => item.tipo === 'inicial');
+  const imovel = listar(b, 'casa_desejada', usuario)[0];
+  const resumo = resumirOrcamento(b, usuario, imovel);
+  const { temCustoMensal, temCustoInicial } = resumo;
+  const estimativa = estimarReserva(
+    resumo.reserva,
+    {
+      mensal: resumo.gastosFuturos,
+      inicial: resumo.custosIniciais,
+    },
+    3
+  );
+  const dataMudanca = lerPrevisaoMudanca(b, usuario);
   const proximaTarefa = guia.proxima?.tarefas.find(item => !item.concluida);
   const rotaGuia = guia.proxima
     ? '/minhajornada?etapa=' + guia.proxima.id
     : '/minhajornada';
-  const rotaPlano = plano ? '/financas-b?plano=' + plano.id : '/financas-b';
+  const rotaPlano = imovel ? '/financas-b?imovel=' + imovel.id : '/financas-b';
 
   return (
     <section
@@ -56,12 +62,14 @@ export default function ResumoJornada({ banco }) {
         <ChevronRight size={20} aria-hidden='true' />
       </Link>
       <div className='inicio-jornada-financas'>
-        {plano && custos.length ? (
+        {resumo.temPlano ? (
           <>
             <dl>
               <div>
                 <dt>Custo mensal previsto</dt>
-                <dd>{temCustoMensal ? moeda(saldo.mensal) : 'A estimar'}</dd>
+                <dd>
+                  {temCustoMensal ? moeda(resumo.gastosFuturos) : 'A estimar'}
+                </dd>
               </div>
               <div>
                 <dt>Falta na reserva · cenário de 3 meses</dt>
@@ -76,23 +84,22 @@ export default function ResumoJornada({ banco }) {
                 completar a estimativa.
               </p>
             )}
-            {saldo.saldoMensal < 0 && (
+            {resumo.depois < 0 && (
               <p className='text-(--vermelho-alerta)'>
-                Os gastos mensais excedem a renda em {moeda(-saldo.saldoMensal)}
-                .
+                Os gastos mensais excedem a renda em {moeda(-resumo.depois)}.
               </p>
             )}
           </>
         ) : (
           <p>
-            {plano
+            {imovel
               ? 'Cadastre custos para estimar quanto a mudança vai exigir.'
               : 'Crie um plano de moradia para estimar custos e reserva.'}
           </p>
         )}
         <Link to={rotaPlano}>
-          {plano?.mudanca_prevista
-            ? 'Mudança prevista para ' + dataCurta(plano.mudanca_prevista)
+          {dataMudanca
+            ? 'Mudança prevista para ' + dataCurta(dataMudanca)
             : 'Abrir planejamento'}{' '}
           <ChevronRight size={16} aria-hidden='true' />
         </Link>

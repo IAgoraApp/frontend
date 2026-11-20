@@ -1,0 +1,336 @@
+.imoveis-navegacao {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+}
+
+.imoveis-navegacao h2 {
+  font: 800 1.2rem/1.2 var(--font-titulo);
+}
+
+.imoveis-setas {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--texto-apoio);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.imoveis-setas button {
+  display: grid;
+  min-width: 44px;
+  min-height: 44px;
+  place-items: center;
+  border: 1px solid var(--borda-suave);
+  border-radius: 8px;
+  background: white;
+  color: var(--azul-titulo);
+  cursor: pointer;
+}
+
+.imoveis-setas button:enabled:hover {
+  border-color: var(--laranja-principal);
+  background: #fff2e8;
+}
+
+.imoveis-setas button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+@media (width > 640px) {
+  .imoveis-destaque .casa-perfil {
+    min-height: 230px;
+  }
+
+  .imoveis-destaque .casa-perfil-foto {
+    height: 0;
+    min-height: 100%;
+    max-height: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .imoveis-destaque .casa-perfil {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .imoveis-destaque .casa-perfil-foto {
+    height: clamp(145px, 48vw, 220px);
+  }
+}
+
+.imoveis-endereco {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  gap: 9px;
+  padding-top: 12px;
+  border-top: 1px solid #ffffff40;
+  color: var(--azul-fundo);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.imoveis-endereco svg {
+  flex-shrink: 0;
+  color: var(--pessego-suave);
+  margin-top: 2px;
+}
+
+.imoveis-endereco strong {
+  color: white;
+}
+
+.imoveis-editor-ajuda {
+  margin-bottom: 14px;
+  color: var(--texto-apoio);
+  font-size: 0.875rem;
+}
+
+.imoveis-previsao {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 10px;
+  background: white;
+}
+
+.imoveis-previsao > svg {
+  color: #a33312;
+}
+
+.imoveis-previsao h2 {
+  font-size: 0.875rem;
+  font-weight: 750;
+}
+
+.imoveis-previsao p {
+  color: var(--texto-apoio);
+  font-size: 0.8125rem;
+}
+
+.imoveis-previsao button,
+.imoveis-editar-ficha {
+  min-height: 42px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: #fff2e8;
+  color: var(--azul-titulo);
+  font-size: 0.875rem;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.imoveis-editar-ficha {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 2px;
+  background: white;
+}
+
+.imoveis-previsao button:hover,
+.imoveis-editar-ficha:hover {
+  background: #ffe1cd;
+}
+
+.imoveis-modal {
+  background: #f4f7fa;
+}
+
+.imoveis-modal-data {
+  max-width: 28rem;
+}
+
+.imoveis-modal > div:first-child {
+  margin-bottom: 10px;
+}
+
+.imoveis-modal .mvp-editor-secoes {
+  gap: 10px;
+}
+
+.imoveis-modal details {
+  background: white;
+}
+
+.imoveis-modal details[open] {
+  border-color: #a5b9cc;
+}
+
+.imoveis-modal summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  list-style: none;
+}
+
+.imoveis-modal summary::-webkit-details-marker {
+  display: none;
+}
+
+.imoveis-modal summary svg {
+  color: #a33312;
+  flex-shrink: 0;
+}
+
+.imoveis-modal summary::after {
+  width: 8px;
+  height: 8px;
+  margin-inline: auto 4px;
+  border: solid currentColor;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  content: '';
+}
+
+.imoveis-modal details[open] summary::after {
+  transform: rotate(225deg);
+}
+
+.imoveis-modal .mvp-campos {
+  gap: 10px;
+}
+
+.imoveis-modal .mvp-form-acoes {
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--borda-suave);
+}
+
+.imoveis-modal .mvp-form-acoes button {
+  min-height: 44px;
+}
+
+.imoveis-modal .mvp-form-acoes button:first-child:nth-last-child(3) {
+  margin-inline-end: auto;
+}
+
+.imoveis-modal :is(button, input, select, textarea, summary):focus-visible {
+  outline: 2px solid var(--laranja-principal);
+  outline-offset: 2px;
+}
+
+.imoveis-status-mobilia {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--pessego-suave);
+  font-size: 0.875rem;
+}
+
+.imoveis-observacoes {
+  padding: 12px 16px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 10px;
+  background: white;
+  margin-top: 8px;
+  font-size: 0.875rem;
+}
+
+.imoveis-observacoes h3 {
+  font-weight: 750;
+}
+.imoveis-observacoes p {
+  margin-top: 3px;
+  white-space: pre-wrap;
+  color: var(--texto-apoio);
+}
+
+.imoveis-modal-edicao {
+  height: min(38rem, 88dvh);
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+.imoveis-modal-edicao .mvp-editor-secoes + .mvp-campos {
+  margin-top: 14px;
+}
+
+.imoveis-modal-edicao .imoveis-opcoes-mobilia {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 155px), 1fr));
+  gap: 7px;
+}
+
+.imoveis-modal-edicao .imoveis-opcoes-mobilia label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 7px 9px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.imoveis-opcoes-mobilia label:has(:checked) {
+  background: #fff2e8;
+}
+
+.imoveis-modal-edicao .imoveis-opcoes-mobilia input {
+  width: 17px;
+  height: 17px;
+  min-height: 0;
+  padding: 0;
+  flex-shrink: 0;
+  accent-color: var(--laranja-principal);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .imoveis-modal-edicao summary::after {
+    transition: transform 180ms ease;
+  }
+  @supports (interpolate-size: allow-keywords) and
+    selector(details::details-content) {
+    .imoveis-modal-edicao details::details-content {
+      interpolate-size: allow-keywords;
+      height: 0;
+      overflow: clip;
+      transition:
+        height 200ms ease,
+        content-visibility 200ms allow-discrete;
+    }
+
+    .imoveis-modal-edicao details[open]::details-content {
+      height: auto;
+    }
+  }
+}
+
+.imoveis-modal-edicao[open] {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  scrollbar-gutter: auto;
+}
+
+.imoveis-modal-edicao > .mvp-editor {
+  flex: 1;
+  min-height: 0;
+}
+
+.imoveis-modal-edicao .mvp-editor > form {
+  display: grid;
+  height: 100%;
+  grid-template-rows: minmax(0, 1fr) auto;
+}
+
+.imoveis-modal-edicao .mvp-editor-conteudo {
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  padding: 3px;
+}
+
+.imoveis-modal-edicao .mvp-form-acoes {
+  margin-top: 8px;
+}

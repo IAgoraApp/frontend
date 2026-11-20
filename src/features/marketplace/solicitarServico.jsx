@@ -60,7 +60,7 @@ export default function SolicitarServico({
         const prestador = db.perfil_empresa.find(
           e => e.id === atual?.empresa_id
         );
-        if (!atual || !servicoPublico(atual, prestador))
+        if (!atual || !servicoPublico(atual, prestador, undefined, db.publicacao_servico.filter(p => p.servico_id === atual.id)))
           throw new Error('O serviço saiu do catálogo.');
         if (
           db.servico_contratado.some(

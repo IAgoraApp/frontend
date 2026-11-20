@@ -213,7 +213,6 @@ export const catalogoIndicePlataforma = [
     itens: [
       { nome: 'Acesso / cadastro da empresa', rota: '/cadastro-empresa' },
       { nome: 'Início da empresa', rota: '/empresa' },
-      { nome: 'Dashboard de métricas', rota: '/empresa/dashboard' },
       { nome: 'Meus anúncios', rota: '/empresa/anuncios' },
       { nome: 'Novo anúncio', rota: '/empresa/anunciar' },
       { nome: 'Perfil da empresa', rota: '/empresa/perfil' },
@@ -262,11 +261,6 @@ export const catalogoEstadosValidacoes = [
     titulo: 'Serviço indisponível',
     descricao: 'Anúncio pausado, removido ou expirado.',
     rota: '/servicos/indisponivel',
-  },
-  {
-    titulo: 'Carregamento no painel da empresa',
-    descricao: 'Simula atualização de dados do painel B2B.',
-    rota: '/empresa/dashboard?carregando=1',
   },
   {
     titulo: 'Erro sem conexão',

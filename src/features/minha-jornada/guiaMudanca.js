@@ -96,6 +96,31 @@ export const etapasGuia = [
     ],
     apoio: { rota: '/aprendendo', rotulo: 'Abrir aulas sobre a casa' },
   },
+  {
+    id: 'compras',
+    titulo: 'Organize as compras',
+    categoria: 'compras',
+    foto: fotoCasa,
+    descricao: 'Confira o que já tem e o que falta para montar a casa.',
+    tarefas: [
+      [
+        'Quarto e primeira noite',
+        'Confira se você já tem colchão, travesseiro e roupa de cama.',
+      ],
+      [
+        'Cozinha do dia a dia',
+        'Confira geladeira, fogão, panela, pratos, copos e talheres.',
+      ],
+      [
+        'Banheiro',
+        'Separe toalhas, papel higiênico, sabonete e itens de higiene.',
+      ],
+      [
+        'Limpeza e lavanderia',
+        'Confira vassoura, pano, produtos de limpeza e um lugar para secar roupas.',
+      ],
+    ],
+  },
 ];
 
 const tarefasExtras = {
@@ -158,7 +183,7 @@ const tarefasExtras = {
 };
 
 export function tarefasDaEtapa(etapa) {
-  return [...etapa.tarefas, ...tarefasExtras[etapa.id]];
+  return [...etapa.tarefas, ...(tarefasExtras[etapa.id] ?? [])];
 }
 
 export function encontrarGuia(banco, usuario) {
@@ -202,19 +227,41 @@ const referencias = {
   ],
 };
 
+export const fotosEtapa = etapasGuia.filter(
+  (etapa, indice) =>
+    etapasGuia.findIndex(item => item.foto === etapa.foto) === indice
+);
+
+function fotoEtapaPersonalizada({ id }) {
+  const chave = String(id);
+  let hash = 2166136261;
+  for (const caractere of chave) {
+    hash = Math.imul(hash ^ caractere.codePointAt(0), 16777619);
+  }
+  return etapasGuia[(hash >>> 0) % etapasGuia.length].foto;
+}
+
+export const etapaCompras = etapasGuia.find(etapa => etapa.id === 'compras');
+
 export function lerGuia(banco, usuario) {
   const guia = encontrarGuia(banco, usuario);
+  const registros = guia
+    ? banco.etapa_jornada
+        .filter(item => item.jornada_id === guia.id)
+        .toSorted((a, b) => a.ordem - b.ordem)
+    : etapasGuia;
+  const adicionarCompras =
+    guia &&
+    !guia.comprasIncluidas &&
+    !registros.some(etapa => etapa.categoria === etapaCompras.categoria);
   const etapas = (
-    guia
-      ? banco.etapa_jornada
-          .filter(item => item.jornada_id === guia.id)
-          .toSorted((a, b) => a.ordem - b.ordem)
-      : etapasGuia
+    adicionarCompras ? [...registros, etapaCompras] : registros
   ).map(registro => {
-    const base = etapasGuia.find(item => item.titulo === registro.titulo);
+    const salvo = guia && registro !== etapaCompras;
+    const base = etapasGuia.find(item => item.categoria === registro.categoria);
     const id = base?.id ?? String(registro.id);
     const tarefas = (
-      guia
+      salvo
         ? banco.tarefa_jornada
             .filter(item => item.etapa_id === registro.id)
             .toSorted((a, b) => a.ordem - b.ordem)
@@ -224,11 +271,20 @@ export function lerGuia(banco, usuario) {
             concluida: false,
           }))
     ).map(item => ({ ...item, referencia: base && referencias[item.titulo] }));
+    const fotoEscolhida =
+      guia &&
+      banco.fotos_etapas_preparacao?.find(
+        item => item.etapa_id === registro.id
+      );
     return {
       ...registro,
       id,
+      registroId: salvo ? registro.id : undefined,
       tarefas,
-      foto: base?.foto ?? fotoMudanca,
+      foto:
+        fotosEtapa.find(item => item.id === fotoEscolhida?.foto)?.foto ??
+        base?.foto ??
+        fotoEtapaPersonalizada(registro),
       apoio: base?.apoio,
       feitas: tarefas.filter(item => item.concluida).length,
     };

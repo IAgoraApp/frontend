@@ -171,7 +171,7 @@ const rotas = createBrowserRouter([
             children: [
               {
                 path: '/empresa/ia',
-                element: <Funcionalidades.InteligenciaArtificial />,
+                element: <Navigate to='/empresa' replace />,
               },
               {
                 path: '/empresa',
@@ -179,11 +179,11 @@ const rotas = createBrowserRouter([
               },
               {
                 path: '/empresa/dashboard',
-                element: <Funcionalidades.Empresa visao='painel' />,
+                element: <Navigate to='/empresa/perfil' replace />,
               },
               {
                 path: '/dashboard',
-                element: <Funcionalidades.Empresa visao='painel' />,
+                element: <Navigate to='/empresa/perfil' replace />,
               },
               {
                 path: '/empresa/anuncios',

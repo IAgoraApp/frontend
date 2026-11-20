@@ -30,7 +30,13 @@ export const painel =
 export const campo =
   'w-full min-w-0 rounded-lg border border-(--borda-suave) bg-white px-3 py-2 font-normal';
 
-export default function LayoutPreparacao({ titulo, descricao, chaveSecao, children }) {
+export default function LayoutPreparacao({
+  titulo,
+  descricao,
+  chaveSecao,
+  acao,
+  children,
+}) {
   const { pathname, search } = useLocation();
   return (
     <LayoutCasa
@@ -47,15 +53,28 @@ export default function LayoutPreparacao({ titulo, descricao, chaveSecao, childr
     >
       <main className='min-h-full min-w-0 bg-(--azul-fundo) text-(--azul-titulo) wrap-anywhere [&_:is(a,button,input,select,textarea):focus-visible]:outline-2 [&_:is(a,button,input,select,textarea):focus-visible]:outline-offset-3 [&_:is(a,button,input,select,textarea):focus-visible]:outline-(--laranja-principal)'>
         <Container classe='casa-pagina-conteudo space-y-4'>
-          <header>
-            <Titulo
-              como='h1'
-              classe='text-3xl leading-tight font-bold sm:text-4xl'
+          {(titulo || descricao || acao) && (
+            <header
+              className={
+                acao
+                  ? 'flex flex-wrap items-center justify-between gap-3'
+                  : undefined
+              }
             >
-              {titulo}
-            </Titulo>
-            <p className='mt-2 text-(--texto-apoio)'>{descricao}</p>
-          </header>
+              <div>
+                <Titulo
+                  como='h1'
+                  classe='text-3xl leading-tight font-bold sm:text-4xl'
+                >
+                  {titulo}
+                </Titulo>
+                {descricao && (
+                  <p className='mt-2 text-(--texto-apoio)'>{descricao}</p>
+                )}
+              </div>
+              {acao}
+            </header>
+          )}
           {children}
         </Container>
       </main>

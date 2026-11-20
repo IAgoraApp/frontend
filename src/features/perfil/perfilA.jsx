@@ -1,7 +1,6 @@
 import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
 import { useState } from 'react';
 import {
-  Camera,
   ChevronRight,
   CreditCard,
   House,
@@ -18,7 +17,7 @@ import { EditorMvp } from '../../shared/ui/mvp';
 import { DialogoCasa } from '../casa/components/casaUi';
 import CobrancasPerfilA from './components/CobrancasPerfilA';
 import MomentoPerfilA from './components/MomentoPerfilA';
-import { extrairIniciais } from './content';
+import { IdentidadePerfil, NavegacaoPerfil } from './components/EstruturaPerfil';
 import './perfilA.css';
 import {
   camposEnderecoPerfil,
@@ -34,26 +33,6 @@ const areas = [
   ['assinatura', 'Assinatura', Receipt],
   ['pagamentos', 'Pagamentos', CreditCard],
 ];
-
-function RetratoPerfil({ nome, foto }) {
-  const [falhou, setFalhou] = useState(false);
-  return foto && !foto.startsWith('/mock/') && !falhou ? (
-    <img
-      src={foto}
-      alt=''
-      referrerPolicy='no-referrer'
-      onError={() => setFalhou(true)}
-      className='size-full rounded-full object-cover'
-    />
-  ) : (
-    <span
-      aria-hidden='true'
-      className='grid size-full place-items-center rounded-full bg-(--laranja-fundo) font-titulo text-3xl font-extrabold sm:text-4xl text-[#9d2c08]'
-    >
-      {extrairIniciais(nome)}
-    </span>
-  );
-}
 
 function EnderecoPerfil({ endereco }) {
   const rua = [endereco.rua, endereco.numero, endereco.complemento]
@@ -115,57 +94,15 @@ export default function PerfilA() {
     <>
       <main className='min-w-0 flex-1 bg-(--azul-fundo) font-corpo text-(--azul-titulo) [&_button:focus-visible]:outline-2 [&_button:focus-visible]:outline-offset-2 [&_button:focus-visible]:outline-(--laranja-principal)'>
         <Container classe='pb-12 pt-6 lg:pt-8'>
-          <section
-            aria-labelledby='perfil-nome'
-            className='mb-4 grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-3 gap-y-3 rounded-2xl border border-(--borda-suave) bg-white p-4 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:gap-4 sm:p-5'
-          >
-            <div className='size-16 shrink-0 rounded-full bg-(--azul-fundo) p-1 sm:size-20'>
-              <RetratoPerfil
-                key={perfil.foto ?? 'padrao'}
-                nome={perfil.nome}
-                foto={perfil.foto}
-              />
-            </div>
-            <div className='min-w-0 flex-1'>
-              <h1
-                id='perfil-nome'
-                className='font-titulo text-2xl leading-tight font-extrabold wrap-anywhere sm:text-3xl'
-              >
-                {perfil.nome}
-              </h1>
-              <p className='text-sm wrap-anywhere text-(--texto-apoio)'>
-                {usuario.email}
-              </p>
-              <p className='mt-1 text-sm font-bold text-[#9d2c08]'>
-                {situacao}
-              </p>
-            </div>
-            <Botao
-              type='button'
-              variante='contorno'
-              classe='col-span-full justify-self-start gap-2 text-sm sm:col-span-1'
-              onClick={() => abrirModal('foto')}
-            >
-              <Camera size={17} aria-hidden='true' /> Alterar foto
-            </Botao>
-          </section>
+          <IdentidadePerfil
+            nome={perfil.nome}
+            email={usuario.email}
+            foto={perfil.foto}
+            situacao={situacao}
+            aoAlterarFoto={() => abrirModal('foto')}
+          />
           <div className='grid min-w-0 gap-4'>
-            <nav
-              aria-label='Áreas do perfil'
-              className='grid grid-cols-3 gap-1 rounded-xl border border-(--borda-suave) bg-white p-1.5 sm:p-2'
-            >
-              {areas.map(([id, nome, Icone]) => (
-                <Link
-                  key={id}
-                  to={id === 'perfil' ? rotaPerfil : '?visao=' + id}
-                  aria-current={visao === id ? 'page' : undefined}
-                  className='flex min-h-11 min-w-0 flex-col items-center justify-center gap-1 rounded-lg px-1 py-2 text-center text-xs font-bold text-(--texto-apoio) hover:bg-(--azul-fundo) aria-[current=page]:bg-(--laranja-fundo) aria-[current=page]:text-[#9d2c08] sm:flex-row sm:gap-2 sm:px-3 sm:text-sm'
-                >
-                  <Icone size={17} aria-hidden='true' className='shrink-0' />{' '}
-                  {nome}
-                </Link>
-              ))}
-            </nav>
+            <NavegacaoPerfil areas={areas} rota={rotaPerfil} visao={visao} />
             {visao === 'perfil' ? (
               <div className='grid min-w-0 gap-4'>
                 <MomentoPerfilA key={perfil.user_id + ':' + perfil.tipo} perfil={perfil} />

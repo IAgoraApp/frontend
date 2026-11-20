@@ -1,0 +1,423 @@
+.empresa-servicos-barra {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-bottom: 16px;
+  color: var(--texto-apoio);
+  font-size: 0.875rem;
+}
+
+.empresa-servicos-barra label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: min(100%, 320px);
+  padding: 0 12px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 8px;
+  background: white;
+}
+
+.empresa-servicos-barra input {
+  width: 100%;
+  min-height: 42px;
+  color: var(--azul-titulo);
+}
+
+.empresa-servicos-grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 255px), 1fr));
+  gap: 14px;
+}
+
+.empresa-servico-card,
+.empresa-servico-ficha {
+  display: grid;
+  border: 1px solid var(--borda-suave);
+  border-radius: 14px;
+  background: white;
+}
+
+.empresa-servico-card {
+  height: 100%;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+}
+
+.empresa-servico-card:hover {
+  border-color: var(--azul-principal);
+}
+
+.empresa-servico-card:focus-visible,
+.empresa-servico-miniaturas button:focus-visible {
+  outline: 2px solid var(--azul-principal);
+  outline-offset: 3px;
+}
+.empresa-servico-card .mercado-a-cartao-foto {
+  aspect-ratio: 1.85;
+  height: auto;
+}
+.empresa-servico-card .mercado-a-foto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.empresa-servico-card-dados {
+  display: grid;
+  align-content: start;
+  grid-template-rows: auto 1fr auto auto;
+  gap: 8px;
+  padding: 14px;
+  overflow-wrap: anywhere;
+}
+
+.empresa-servico-card h2 {
+  font: 800 1.15rem/1.2 var(--font-titulo);
+}
+
+.empresa-servico-meta,
+.empresa-servico-card-valor,
+.empresa-servico-card-link {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px 10px;
+}
+
+.empresa-servico-meta {
+  color: var(--texto-apoio);
+  font-size: 0.78rem;
+}
+.empresa-servico-status {
+  padding: 4px 8px;
+  border-radius: 5px;
+  background: var(--azul-fundo);
+  color: var(--azul-principal);
+  font-weight: 750;
+}
+
+.empresa-servico-card-link {
+  padding-top: 9px;
+  border-top: 1px solid var(--borda-suave);
+  color: var(--azul-principal);
+  font-size: 0.875rem;
+  font-weight: 750;
+}
+
+.empresa-servico-ficha {
+  padding: clamp(12px, 2vw, 24px);
+  gap: 16px;
+}
+.empresa-servico-vitrine {
+  display: grid;
+  align-items: start;
+  gap: clamp(12px, 2.2vw, 26px);
+}
+
+@media (min-width: 760px) {
+  .empresa-servico-vitrine {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  }
+}
+
+.empresa-servico-galeria,
+.empresa-servico-info {
+  display: grid;
+  min-width: 0;
+  gap: 10px;
+}
+
+.empresa-servico-galeria .empresa-servico-foto {
+  height: clamp(160px, 30dvh, 320px);
+  border-radius: 9px;
+  background: var(--azul-fundo);
+}
+
+.empresa-servico-galeria .mercado-a-foto {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.empresa-servico-miniaturas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.empresa-servico-miniaturas button {
+  width: 64px;
+  height: 48px;
+  padding: 2px;
+  overflow: hidden;
+  border: 1px solid var(--borda-suave);
+  border-radius: 6px;
+  background: var(--azul-fundo);
+  cursor: pointer;
+}
+
+.empresa-servico-miniaturas button[aria-pressed='true'] {
+  border: 2px solid var(--azul-principal);
+}
+.empresa-servico-miniaturas .mercado-a-foto-legenda {
+  display: none;
+}
+.empresa-servico-preco {
+  font: 800 clamp(1.4rem, 2.8vw, 2.25rem)/1.1 var(--font-titulo);
+}
+.empresa-servico-info > p,
+.empresa-servico-disponibilidade p {
+  font-size: 0.875rem;
+  color: var(--texto-apoio);
+}
+
+.empresa-servico-disponibilidade {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--azul-fundo);
+}
+.empresa-servico-disponibilidade svg {
+  flex: none;
+  color: var(--azul-principal);
+}
+
+.empresa-servico-ferramentas,
+.empresa-servico-operacoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+}
+.empresa-servico-ferramentas > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.empresa-servico-sobre,
+.empresa-servico-operacoes {
+  padding-top: 14px;
+  border-top: 1px solid var(--borda-suave);
+}
+.empresa-servico-sobre h2 {
+  font: 800 1.2rem/1.25 var(--font-titulo);
+}
+.empresa-servico-sobre p {
+  margin-top: 6px;
+  max-width: 76ch;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.empresa-servico-excluir {
+  color: var(--vermelho-alerta);
+}
+
+.empresa-servico-editor .mvp-editor-secoes {
+  gap: 12px;
+}
+.empresa-servico-editor summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.empresa-servico-editor summary svg {
+  color: var(--azul-principal);
+}
+.empresa-servico-editor summary::after {
+  content: '+';
+  margin-inline-start: auto;
+}
+.empresa-servico-editor details[open] summary::after {
+  content: '−';
+}
+.empresa-servico-editor textarea {
+  grid-column: 1 / -1;
+}
+.empresa-servico-editor label:has(textarea) {
+  grid-column: 1 / -1;
+}
+.empresa-editor-dias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.empresa-editor-dias label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 38px;
+  padding: 6px 9px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 7px;
+  cursor: pointer;
+}
+.empresa-editor-dias label:has(:checked) {
+  background: var(--azul-fundo);
+  border-color: var(--azul-principal);
+}
+.empresa-editor-dias input[type='checkbox'] {
+  width: 1rem;
+  min-width: 0;
+  min-height: 0;
+  accent-color: var(--azul-principal);
+}
+
+.mvp-pagina.empresa-anuncio-pagina {
+  padding-inline: var(--margem-pagina);
+  padding-block: clamp(12px, 2dvh, 22px) 24px;
+}
+
+.empresa-anuncio-cabecalho {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.empresa-anuncio-voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 6px 12px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 8px;
+  background: var(--azul-fundo);
+  color: var(--azul-principal);
+  font-weight: 750;
+}
+
+.empresa-anuncio-voltar:hover {
+  background: white;
+  border-color: var(--azul-principal);
+}
+
+.empresa-anuncio-cabecalho h1 {
+  font: 800 clamp(1.5rem, 3vw, 2.25rem)/1.15 var(--font-titulo);
+  overflow-wrap: anywhere;
+}
+
+.empresa-anuncio-cabecalho > p {
+  color: var(--texto-apoio);
+  font-size: 0.875rem;
+}
+
+.empresa-anuncio-secoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  width: 100%;
+  border-bottom: 1px solid var(--borda-suave);
+}
+
+.empresa-anuncio-secoes a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  color: var(--azul-principal);
+  font-size: 0.875rem;
+  font-weight: 750;
+}
+
+.empresa-anuncio-secoes a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.empresa-anuncio-conteudo {
+  --anuncio-respiro: clamp(12px, 1.8vw, 20px);
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.empresa-anuncio-conteudo
+  :is(#dados-anuncio, #publicacoes-anuncio, #avaliacoes-anuncio) {
+  scroll-margin-block-start: 12px;
+}
+
+.empresa-anuncio-conteudo :is(.empresa-servico-ficha, .mvp-painel) {
+  padding: var(--anuncio-respiro);
+  margin-block: 0;
+}
+
+.empresa-anuncio-conteudo .mvp-painel-topo {
+  padding: 0 0 10px;
+}
+
+.empresa-anuncio-conteudo .empresa-servico-vitrine {
+  gap: var(--anuncio-respiro);
+}
+
+.empresa-anuncio-cabecalho h1 {
+  font-size: clamp(2rem, 4vw, 3.125rem);
+  font-weight: 900;
+}
+
+.empresa-anuncio-secoes {
+  gap: 6px 24px;
+}
+
+.empresa-anuncio-secoes a,
+.empresa-anuncio-voltar {
+  min-height: 46px;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.empresa-anuncio-conteudo .empresa-servico-info {
+  gap: 14px;
+  overflow-wrap: anywhere;
+}
+
+.empresa-anuncio-conteudo .empresa-servico-meta,
+.empresa-anuncio-conteudo .empresa-servico-info > p,
+.empresa-anuncio-conteudo .empresa-servico-disponibilidade p {
+  font-size: 0.975rem;
+}
+
+.empresa-anuncio-conteudo .empresa-servico-preco {
+  font-size: clamp(1.75rem, 3.4vw, 2.6rem);
+}
+
+.empresa-anuncio-conteudo .empresa-servico-sobre h2,
+.empresa-anuncio-conteudo .mvp-painel h2 {
+  font-size: clamp(1.25rem, 2.3vw, 1.55rem);
+  font-weight: 800;
+}
+
+.empresa-anuncio-conteudo .empresa-servico-sobre p {
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.empresa-anuncio-conteudo
+  :is(.empresa-servico-ferramentas, .empresa-servico-operacoes)
+  > :is(button, a) {
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.empresa-servico-dialogo > .empresa-servico-editor {
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  overflow: visible;
+  border: 0;
+}
+
+.empresa-servico-dialogo .mvp-editor-conteudo {
+  align-content: start;
+}
+.empresa-servico-dialogo .mvp-editor-secoes summary {
+  font-size: 1rem;
+  font-weight: 800;
+}

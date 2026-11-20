@@ -10,7 +10,7 @@ import {
 import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
 import { rotaPerfilMoradia } from '../../app/dados/perfilNavegacao';
 import { acessoLocal } from '../../app/dados/acessoLocal';
-import { atualizarEmpresa } from '../../app/estado/estadoEmpresa';
+import { cadastrarEmpresaLocal } from '../empresa/empresaDados';
 import { EtapaCadastro } from './components/EtapaCadastro';
 import fotoProfissional from '../empresa/assets/ServiceCover.png';
 import './auth.css';
@@ -121,15 +121,8 @@ function EditorPerfil({ sessao, empresa, cadastro, local = false }) {
         if (!payload.categoria || !payload.telefone)
           throw new Error('Informe a categoria e o telefone comercial.');
         if (local) {
-          atualizarEmpresa(atual => ({
-            ...atual,
-            empresa: {
-              ...atual.empresa,
-              ...payload,
-              email: payload.email_comercial,
-            },
-          }));
-          navegar('/empresa/dashboard', { replace: true });
+          cadastrarEmpresaLocal(sessao.email || payload.email_comercial, payload);
+          navegar('/empresa/perfil', { replace: true });
           return;
         }
         await contaApi(perfil.id ? endpoint : '/empresas/perfil', {

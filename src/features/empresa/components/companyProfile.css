@@ -1,0 +1,306 @@
+.empresa-perfil-fundo {
+  flex: 1;
+  min-width: 0;
+  background: var(--azul-fundo);
+  color: var(--azul-titulo);
+  font-family: var(--font-corpo);
+}
+
+.empresa-perfil-pagina {
+  display: grid;
+  gap: 12px;
+  padding-block: clamp(12px, 2dvh, 20px);
+}
+
+.empresa-perfil-hero {
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgb(16 42 67 / 6%);
+}
+
+.empresa-perfil-hero .mercado-a-capa-empresa {
+  height: clamp(90px, 18dvh, 170px);
+  background-color: var(--azul-titulo);
+  background-image: repeating-linear-gradient(
+    125deg,
+    transparent 0 48px,
+    rgb(255 255 255 / 8%) 49px 50px,
+    transparent 51px 88px
+  );
+}
+
+.empresa-perfil-hero .mercado-a-banner-empresa {
+  max-height: none;
+}
+
+.empresa-perfil-hero .mercado-a-perfil-dados {
+  padding: clamp(14px, 2.4vw, 26px);
+}
+
+.empresa-perfil-hero .mercado-a-perfil-identidade {
+  align-items: center;
+}
+
+.empresa-perfil-hero .mercado-a-perfil-identidade h1 {
+  font-size: clamp(1.65rem, 3.2vw, 2.6rem);
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.empresa-perfil-hero .mercado-a-marca-empresa {
+  width: clamp(60px, 8vw, 94px);
+  height: clamp(60px, 8vw, 94px);
+  flex-basis: clamp(60px, 8vw, 94px);
+}
+
+.empresa-perfil-hero .mercado-a-perfil-descricao {
+  max-width: 74ch;
+}
+
+.empresa-perfil-secoes {
+  display: grid;
+  align-items: start;
+  gap: 14px;
+}
+
+.empresa-perfil-secoes > section {
+  padding: clamp(12px, 1.4vw, 18px);
+}
+
+@media (min-width: 840px) {
+  .empresa-perfil-secoes {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: stretch;
+  }
+  .empresa-perfil-secoes > section:only-child {
+    grid-column: 1 / -1;
+  }
+}
+
+.empresa-perfil-barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+
+.empresa-perfil-barra span,
+.empresa-perfil-aviso {
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.empresa-perfil-aviso {
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--laranja-fundo);
+  color: #9d2c08;
+}
+
+.empresa-perfil-fundo :is(a, button):focus-visible {
+  outline: 2px solid var(--azul-principal);
+  outline-offset: 3px;
+}
+
+.empresa-editor-dialogo {
+  max-width: 880px;
+}
+
+.empresa-editor-layout {
+  display: grid;
+  align-items: start;
+  gap: 18px;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.empresa-editor-visual {
+  overflow: hidden;
+  border: 1px solid var(--borda-suave);
+  border-radius: 12px;
+  background: var(--azul-fundo);
+}
+
+.empresa-editor-visual > img {
+  width: 100%;
+  height: clamp(104px, 25vw, 220px);
+  object-fit: cover;
+}
+
+.empresa-editor-visual figcaption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  overflow-wrap: anywhere;
+}
+
+.empresa-editor-visual figcaption span:not(.mercado-a-marca-empresa) {
+  display: block;
+  color: var(--texto-apoio);
+  font-size: .78rem;
+}
+
+.empresa-editor-visual .mercado-a-marca-empresa {
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+}
+
+.empresa-editor-layout summary svg {
+  display: inline-block;
+  margin-inline-end: 5px;
+  vertical-align: text-bottom;
+  color: var(--azul-principal);
+}
+
+.empresa-editor-layout label:has(textarea) { grid-column: 1 / -1; }
+
+.empresa-horarios {
+  display: grid;
+  gap: 8px;
+}
+
+.empresa-horarios > p,
+.empresa-horario-dia > small {
+  color: var(--texto-apoio);
+  font-size: .8rem;
+}
+
+.empresa-horario-dia {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  gap: 5px 10px;
+  padding-block-start: 8px;
+  border-top: 1px solid var(--borda-suave);
+}
+
+.empresa-horario-dia > :is(strong, small) { grid-column: 1 / -1; }
+.empresa-horario-dia input { min-width: 0; width: 100%; }
+
+.empresa-perfil-fotos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.empresa-perfil-fotos > a {
+  aspect-ratio: 1.25;
+  border-radius: 8px;
+}
+
+@media (min-width: 740px) {
+  .empresa-editor-layout {
+    grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr);
+  }
+}
+
+.empresa-editor-dialogo[open] {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: min(650px, 88dvh);
+  overflow: hidden;
+}
+
+.empresa-editor-dialogo > :first-child {
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--borda-suave);
+}
+
+.empresa-editor-dialogo .empresa-editor-layout {
+  min-height: 0;
+  align-items: stretch;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 12px;
+}
+
+.empresa-editor-dialogo .empresa-editor-visual {
+  align-self: start;
+}
+
+.empresa-editor-dialogo :is(.perfil-editor, .mvp-editor, form) {
+  height: 100%;
+  min-height: 0;
+}
+
+.empresa-editor-dialogo form {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+}
+
+.empresa-editor-dialogo .mvp-editor-conteudo {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 4px;
+  scrollbar-gutter: stable;
+}
+
+.empresa-editor-dialogo .mvp-form-acoes {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--borda-suave);
+}
+
+.empresa-editor-dialogo summary:hover {
+  background: var(--azul-fundo);
+}
+
+.empresa-editor-dialogo .mvp-secao-descricao {
+  display: block;
+  margin-top: 3px;
+  padding-inline-start: 24px;
+  color: var(--texto-apoio);
+  font-size: .8rem;
+  font-weight: 400;
+}
+
+.empresa-editor-midias[open] {
+  height: min(530px, 88dvh);
+}
+
+@media (max-width: 739px) {
+  .empresa-editor-dialogo .empresa-editor-visual > img {
+    height: clamp(48px, 13dvh, 105px);
+  }
+}
+
+@media (min-width: 740px) {
+  .empresa-editor-dialogo .empresa-editor-layout {
+    grid-template-rows: minmax(0, 1fr);
+  }
+}
+
+.empresa-editor-arquivo {
+  display: grid;
+  gap: 12px;
+}
+
+.empresa-editor-arquivo input[type='file'] {
+  cursor: pointer;
+  background: var(--azul-fundo);
+  border-style: dashed;
+}
+
+.empresa-editor-dialogo summary {
+  position: relative;
+  padding-inline-end: 42px;
+  list-style: none;
+}
+
+.empresa-editor-dialogo summary::-webkit-details-marker { display: none; }
+
+.empresa-editor-dialogo summary::after {
+  position: absolute;
+  inset-block-start: 13px;
+  inset-inline-end: 14px;
+  width: 24px;
+  color: var(--azul-principal);
+  content: '+';
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.empresa-editor-dialogo details[open] > summary::after { content: '−'; }

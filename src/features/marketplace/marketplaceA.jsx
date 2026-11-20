@@ -10,7 +10,6 @@ import {
 } from 'react-router-dom';
 import {
   alterarBancoMarketplace,
-  dataCurta,
   useBancoMvp,
 } from '../../app/dados/bancoMvp';
 import { PaginaMvp, VazioMvp } from '../../shared/ui/mvp';
@@ -27,6 +26,7 @@ import {
   precoServico,
   servicoPublico,
 } from './marketplaceDados';
+import AvaliacoesServico from './AvaliacoesServico';
 import ContatosMarketplaceA from './contatosMarketplaceA';
 import './marketplaceA.css';
 
@@ -42,7 +42,7 @@ export default function MarketplaceA({ dentroDaEmpresa = false }) {
   const empresas = b.perfil_empresa.filter(e => e.validado);
   const empresasPorId = new Map(empresas.map(e => [e.id, e]));
   const servicos = b.servico.filter(s =>
-    servicoPublico(s, empresasPorId.get(s.empresa_id))
+    servicoPublico(s, empresasPorId.get(s.empresa_id), undefined, b.publicacao_servico.filter(p => p.servico_id === s.id))
   );
   const servico = pathname.startsWith('/servicos/')
     ? servicos.find(s => s.id === Number(id))
@@ -236,39 +236,7 @@ export default function MarketplaceA({ dentroDaEmpresa = false }) {
                     }
               }
             />
-            <section
-              className='mvp-painel mercado-a-avaliacoes'
-              id='avaliacoes-servico'
-              aria-labelledby='mercado-a-avaliacoes-titulo'
-              tabIndex={-1}
-            >
-              <div className='mvp-painel-topo'>
-                <h2 id='mercado-a-avaliacoes-titulo'>Avaliações</h2>
-                <span>
-                  {avaliacoes.length}{' '}
-                  {avaliacoes.length === 1 ? 'avaliação' : 'avaliações'}
-                </span>
-              </div>
-              {avaliacoes.length ? (
-                <ul
-                  className='mercado-a-avaliacoes-lista'
-                  tabIndex={0}
-                  aria-label='Comentários do serviço'
-                >
-                  {avaliacoes.map(a => (
-                    <li key={a.id}>
-                      <div>
-                        <strong>{a.nota} de 5</strong>
-                        <small>{dataCurta(a.data_avaliacao)}</small>
-                      </div>
-                      {a.comentario && <p>{a.comentario}</p>}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <VazioMvp>Ainda não há avaliações deste serviço.</VazioMvp>
-              )}
-            </section>
+            <AvaliacoesServico avaliacoes={avaliacoes} />
           </aside>
         </div>
       </PaginaMvp>

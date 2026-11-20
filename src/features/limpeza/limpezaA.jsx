@@ -17,6 +17,7 @@ import { imagemComodo } from './utils/imagemComodo';
 import ListaLimpezas from './components/listaLimpezas';
 import ExtratoLimpeza from './components/extratoLimpeza';
 import { ordenarLimpezas } from './utils/agendaLimpeza';
+import { dataLocalExecucao } from './utils/extratoLimpeza';
 import './limpezaA.css';
 
 export default function LimpezaA() {
@@ -88,6 +89,29 @@ export default function LimpezaA() {
     notificar(`Limpeza registrada: ${limpeza.nome}.`);
   }
 
+  function excluirExecucao(id) {
+    alterarBanco(db => {
+      const execucao = db.execucao_limpeza.find(item => item.id === id);
+      const atividade = db.limpezas.find(
+        item =>
+          item.id === execucao?.limpeza_id &&
+          comodos.some(c => c.id === item.comodo_id)
+      );
+      if (!atividade) return;
+      db.execucao_limpeza = db.execucao_limpeza.filter(item => item.id !== id);
+      if (atividade.ultima_vez === dataLocalExecucao(execucao.realizada_em)) {
+        const ultima = db.execucao_limpeza
+          .filter(item => item.limpeza_id === atividade.id)
+          .reduce((data, item) => {
+            const candidata = dataLocalExecucao(item.realizada_em);
+            return data == null || candidata > data ? candidata : data;
+          }, null);
+        atividade.ultima_vez = ultima;
+      }
+    });
+    notificar('Registro removido do histórico de limpeza.');
+  }
+
   const camposLimpeza = [
     { nome: 'nome', rotulo: 'Atividade' },
     {
@@ -133,6 +157,7 @@ export default function LimpezaA() {
             limpezas={limpezas}
             comodos={comodos}
             perfis={b.perfil}
+            aoRemover={excluirExecucao}
           />
         ) : (
           <div className='limpeza-paineis'>

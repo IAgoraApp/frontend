@@ -63,7 +63,10 @@ function lerComprasSalvas() {
 }
 
 const chaveCobrancas = 'iagora:banco-mvp:cobrancas:v1';
-const colecoesCobrancas = ['assinatura', 'pagamento', 'metodo_pagamento'];
+const colecoesCobrancas = [
+  'assinatura', 'pagamento', 'metodo_pagamento', 'perfil_empresa', 'servico',
+  'publicacao_servico', 'enderecos_empresa', 'validacoes_empresa', 'contas_empresa_locais',
+];
 
 function lerCobrancasSalvas() {
   try {
@@ -76,9 +79,25 @@ function lerCobrancasSalvas() {
   }
 }
 
+function mesclarDadosEmpresa(b) {
+  const enderecos = new Map((b.enderecos_empresa ?? []).map(e => [e.id, e]));
+  b.endereco = b.endereco.map(e => {
+    const atualizado = enderecos.get(e.id);
+    enderecos.delete(e.id);
+    return atualizado ?? e;
+  });
+  b.endereco.push(...enderecos.values());
+  const ids = new Set(b.users.map(u => u.id));
+  b.users.push(...(b.contas_empresa_locais ?? []).filter(u => !ids.has(u.id)));
+}
+
 export function alterarBancoCobrancas(operacao) {
   alterarBanco(b => {
     Object.assign(b, lerCobrancasSalvas());
+    b.enderecos_empresa ??= [];
+    b.validacoes_empresa ??= [];
+    b.contas_empresa_locais ??= [];
+    mesclarDadosEmpresa(b);
     operacao(b);
     try {
       localStorage.setItem(chaveCobrancas, JSON.stringify(
@@ -139,6 +158,11 @@ const colecoesPreparacao = [
   'jornada', 'etapa_jornada', 'tarefa_jornada', 'plano_moradia',
   'custo_moradia', 'simulacao_moradia', 'simulacao_item', 'casa_desejada',
   'progresso_aula', 'tentativa_quiz', 'resposta_quiz', 'enderecos_preparacao',
+  'previsoes_mudanca',
+  'fotos_etapas_preparacao',
+  'vinculos_planos_imoveis',
+  'dinheiro_preparacao',
+  'categorias_custos_preparacao',
 ];
 
 function lerPreparacaoSalva() {
@@ -167,6 +191,7 @@ export function alterarBancoPreparacao(operacao) {
 let dados = { ...structuredClone(banco.dados), ...lerReceitasSalvas(), ...lerFinancasSalvas(), ...lerComprasSalvas(), ...lerMarketplaceSalvo(), ...lerCobrancasSalvas(), ...lerPreparacaoSalva() };
 mesclarEnderecosMarketplace(dados, dados.enderecos_marketplace);
 mesclarEnderecosMarketplace(dados, dados.enderecos_preparacao);
+mesclarDadosEmpresa(dados);
 aplicarPerfilSalvo(dados);
 for (const perfil of banco.dados.perfil.filter(item => item.user_id !== 1))
   aplicarPerfilSalvo(dados, chavePerfil + ':' + perfil.user_id);
@@ -333,7 +358,14 @@ export function removerRegistro(colecao, id) {
 }
 if (typeof window !== 'undefined') {
   window.addEventListener('storage', evento => {
-    if (evento.key !== chaveMarketplace || !evento.newValue) return;
+    if (!evento.newValue || ![chaveMarketplace, chaveCobrancas].includes(evento.key)) return;
+    if (evento.key === chaveCobrancas) {
+      alterarBanco(db => {
+        Object.assign(db, lerCobrancasSalvas());
+        mesclarDadosEmpresa(db);
+      });
+      return;
+    }
     alterarBanco(db => {
       Object.assign(db, lerMarketplaceSalvo());
       mesclarEnderecosMarketplace(db, db.enderecos_marketplace);

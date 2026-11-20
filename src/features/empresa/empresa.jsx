@@ -1,524 +1,370 @@
 import { useState } from 'react';
+import { ArrowLeft } from 'lucide-react';
 import {
+  Link,
   useLocation,
   useNavigate,
   useParams,
   useSearchParams,
 } from 'react-router-dom';
+import { useBancoMvp } from '../../app/dados/bancoMvp';
+import { acessoLocal } from '../../app/dados/acessoLocal';
+import { lerSessao } from '../../app/dados/contaApi';
+import { Botao } from '../../shared/ui';
+import { DialogoCasa } from '../casa/components/casaUi';
+import { PaginaMvp, VazioMvp } from '../../shared/ui/mvp';
+import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
+import DetalheAnuncio from './components/adDetail';
+import EditorAnuncio from './components/adEditor';
+import ListaAnuncios from './components/adsList';
+import AvaliacoesServico from '../marketplace/AvaliacoesServico';
+import InicioEmpresa from './components/companyHome';
+import PerfilEmpresa from './components/companyProfile';
+import SolicitacoesMarketplace from './components/solicitacoesMarketplace';
+import PublicacoesEmpresa from './components/PublicacoesEmpresa';
 import {
-  CabecalhoSubpagina,
-  Container,
-  EstadoCarregamento,
-  EstadoVazio,
-  ModalConfirmacao,
-} from '../../shared/ui/index';
-import {
-  atualizarEmpresa,
-  idEmpresaPadrao,
-  useEmpresa,
-  validarAnuncio,
-} from '../../app/estado/estadoEmpresa';
-import {
-  lerEstadoPlataforma,
-  salvarEstadoPlataforma,
-} from '../../app/estado/estadoPlataforma';
-import {
-  ContatosEmpresa,
-  DashboardEmpresa,
-  DetalheAnuncio,
-  EditorAnuncio,
-  EditorFotos,
-  FaixaAvisoEmpresa,
-  InicioEmpresa,
-  ListaAnuncios,
-  MidiasEmpresa,
-  PerfilEmpresa,
-  PreviaAnuncio,
-} from './components/index';
-import { CartaoEmpresa } from './components/empresaUi';
-import { Botao } from '../../shared/ui/index';
+  acionarServico,
+  cancelarPublicacao,
+  cobrarPublicacao,
+  contratarPublicacao,
+  contaEmpresaLocal,
+  empresaDoUsuario,
+  salvarServico,
+  servicosDaEmpresa,
+} from './empresaDados';
+import '../marketplace/marketplaceA.css';
+import './servicosEmpresa.css';
 
-const cabecalhosVisao = {
-  painel: {
-    selo: 'PAINEL DA EMPRESA',
-    titulo: 'Desempenho dos seus anúncios.',
-    subtitulo:
-      'Acompanhe visualizações, contatos recebidos e resultados por serviço.',
-    assinatura: 'caixa',
-    etiqueta: 'BORA CRESCER ↗',
-  },
-  anuncios: {
-    selo: 'SEU NEGÓCIO NO IAGORA',
-    titulo: 'Seus anúncios.',
-    subtitulo:
-      'Acompanhe status, visualizações e atualize os serviços oferecidos.',
-    assinatura: 'checklist',
-    etiqueta: 'TUDO EM DIA ↗',
-  },
-  novo: {
-    selo: 'ANUNCIAR SERVIÇO',
-    titulo: 'Você faz bem. Conta pra geral.',
-    subtitulo:
-      'Apresente o serviço com clareza e revise como ele aparece no Marketplace.',
-    assinatura: 'caixa',
-    etiqueta: 'MOSTRE SEU TRABALHO ↗',
-  },
-  editar: {
-    selo: 'EDITAR ANÚNCIO',
-    titulo: 'Ajuste o que seu serviço precisa mostrar.',
-    subtitulo: 'Revise título, atendimento, valores e fotos antes de salvar.',
-    assinatura: 'prancheta',
-    etiqueta: 'DO SEU JEITO ↗',
-  },
-  fotos: {
-    selo: 'FOTOS DO ANÚNCIO',
-    titulo: 'Mostre seu trabalho.',
-    subtitulo: 'Adicione imagens reais do atendimento ou da equipe.',
-    assinatura: 'planta',
-    etiqueta: 'SEU CAPRICHO ↗',
-  },
-  previa: {
-    selo: 'PRÉVIA PÚBLICA',
-    titulo: 'Assim seu serviço será apresentado.',
-    subtitulo:
-      'Confira título, descrição, preço e contato antes de enviar para análise.',
-    assinatura: 'chave',
-    etiqueta: 'VITRINE IAGORA ↗',
-  },
-  perfil: {
-    selo: 'PERFIL DA EMPRESA',
-    titulo: 'Cuide da presença da sua marca.',
-    subtitulo:
-      'Seu perfil ajuda novos moradores a confiar no seu trabalho desde o início.',
-    assinatura: 'planta',
-    etiqueta: 'SUA ASSINATURA ↗',
-  },
-  midias: {
-    selo: 'LOGO E PORTFÓLIO',
-    titulo: 'Logo, foto comercial e portfólio.',
-    subtitulo:
-      'Personalize as imagens que identificam sua empresa no Marketplace.',
-    assinatura: 'planta',
-    etiqueta: 'MARCA PRÓPRIA ↗',
-  },
-  contatos: {
-    selo: 'ATENDIMENTO',
-    titulo: 'Meus contatos.',
-    subtitulo: 'Veja os moradores que entraram em contato e responda por aqui.',
-    assinatura: 'livro',
-    etiqueta: 'CONVERSA ABERTA ↗',
-  },
+const titulos = {
+  anuncios: 'Meus serviços',
+  novo: 'Cadastrar serviço',
+  editar: 'Editar serviço',
+  fotos: 'Fotos do serviço',
+  previa: 'Prévia do serviço',
+  contatos: 'Atendimentos',
+  conversa: 'Atendimentos',
+};
+const acoes = {
+  validar: [
+    'Enviar serviço para análise?',
+    'O serviço ficará pendente até a equipe revisar.',
+  ],
+  ativar: [
+    'Ativar serviço?',
+    'Serviços aprovados com publicação vigente voltam ao catálogo.',
+  ],
+  desativar: [
+    'Desativar serviço?',
+    'O serviço sairá do catálogo. O histórico ficará disponível.',
+  ],
+  excluir: ['Excluir serviço?', 'O serviço será removido da sua lista.'],
+  cancelar: [
+    'Cancelar publicação?',
+    'A divulgação e as cobranças pendentes desta publicação serão canceladas.',
+  ],
 };
 
 function EmpresaConteudo({ visao }) {
-  const { dados, erro } = useEmpresa();
-  const parametrosUrl = useParams();
   const navegar = useNavigate();
-  const [parametrosBusca] = useSearchParams();
-
-  const carregando = parametrosBusca.get('carregando') === '1';
-  const anuncio = dados.anuncios.find(item => item.id === parametrosUrl.id);
-  const contato = dados.contatos.find(
-    item =>
-      item.id === parametrosUrl.id &&
-      (!item.empresaId || item.empresaId === idEmpresaPadrao)
+  const { id } = useParams();
+  const [params] = useSearchParams();
+  const { b } = useBancoMvp();
+  const notificar = useAvisoPerfilA();
+  const [confirmacao, setConfirmacao] = useState(null);
+  const [editandoInformacoes, setEditandoInformacoes] = useState(false);
+  const [erro, setErro] = useState('');
+  const userId = acessoLocal
+    ? contaEmpresaLocal(b, lerSessao())?.id
+    : undefined;
+  const empresa = empresaDoUsuario(b, userId);
+  const servicos = servicosDaEmpresa(b, empresa);
+  const ids = new Set(servicos.map(s => s.id));
+  const pedidos = b.servico_contratado.filter(p => ids.has(p.servico_id));
+  const anuncio = servicos.find(s => s.id === Number(id));
+  const rotaServico = anuncio && `/empresa/anuncios/${anuncio.id}`;
+  const chat = b.chat_servico.find(
+    c => c.id === Number(id) && c.empresa_id === empresa?.id
   );
 
-  const [aviso, setAviso] = useState('');
-  const [falha, setFalha] = useState('');
-  const [confirmacao, setConfirmacao] = useState(null);
-  const [fotosEdicao, setFotosEdicao] = useState(() => anuncio?.fotos ?? []);
+  function executar(operacao, mensagem, destino) {
+    try {
+      operacao();
+      setErro('');
+      setConfirmacao(null);
+      if (mensagem) notificar(mensagem);
+      if (destino) navegar(destino);
+    } catch (falha) {
+      setErro(falha.message);
+    }
+  }
 
-  const precisaAnuncio = ['editar', 'detalhe', 'fotos', 'previa'].includes(
+  function salvar(dados, permanecer = false) {
+    const salvo = salvarServico(userId, anuncio?.id, dados);
+    notificar(anuncio ? 'Serviço atualizado.' : 'Rascunho salvo.');
+    if (!permanecer) navegar(`/empresa/anuncios/${salvo.id}`);
+  }
+
+  if (!acessoLocal || !userId)
+    return (
+      <PaginaMvp titulo='Área profissional'>
+        <VazioMvp>
+          Este módulo está disponível no ambiente de demonstração enquanto o
+          servidor não oferece os recursos comerciais.
+        </VazioMvp>
+      </PaginaMvp>
+    );
+
+  if (visao === 'inicio')
+    return (
+      <InicioEmpresa empresa={empresa} servicos={servicos} pedidos={pedidos} />
+    );
+
+  if (visao === 'perfil' || (visao === 'midias' && empresa))
+    return (
+      <>
+        {erro && (
+          <p className='mvp-vazio' role='alert'>
+            {erro}
+          </p>
+        )}
+        <PerfilEmpresa
+          b={b}
+          userId={userId}
+          empresa={empresa}
+          visao={params.get('visao')}
+          somenteMidias={visao === 'midias'}
+          executar={executar}
+          notificar={notificar}
+        />
+      </>
+    );
+
+  if (!empresa)
+    return (
+      <PaginaMvp titulo='Área profissional'>
+        <VazioMvp>
+          Cadastre o perfil da sua empresa para gerenciar serviços.
+        </VazioMvp>
+        <Link className='mvp-link' to='/empresa/perfil'>
+          Cadastrar perfil
+        </Link>
+      </PaginaMvp>
+    );
+
+  const precisaAnuncio = ['detalhe', 'editar', 'fotos', 'previa'].includes(
     visao
   );
-
-  function executarAtualizacao(transformar, mensagemSucesso) {
-    try {
-      atualizarEmpresa(transformar);
-      setFalha('');
-      if (mensagemSucesso) setAviso(mensagemSucesso);
-      return true;
-    } catch (excecao) {
-      setFalha(excecao.message);
-      return false;
-    }
-  }
-
-  function salvarAnuncio(valor, modo) {
-    const situacao =
-      modo === 'rascunho' ? 'rascunho' : (anuncio?.situacao ?? 'rascunho');
-    const proximo = {
-      ...valor,
-      situacao,
-      atualizadoEm: new Date().toISOString(),
-    };
-    if (
-      executarAtualizacao(
-        anterior => ({
-          ...anterior,
-          anuncios: anterior.anuncios.some(item => item.id === proximo.id)
-            ? anterior.anuncios.map(item =>
-                item.id === proximo.id ? proximo : item
-              )
-            : [...anterior.anuncios, proximo],
-        }),
-        modo === 'rascunho' ? 'Rascunho salvo.' : 'Anúncio atualizado.'
-      )
-    ) {
-      navegar(
-        `/empresa/anuncios/${proximo.id}${modo === 'previa' ? '/previa' : ''}`
-      );
-    }
-  }
-
-  function executarAcaoAnuncio(acao) {
-    if (!anuncio) return;
-    if (acao === 'excluir') {
-      if (
-        executarAtualizacao(
-          anterior => ({
-            ...anterior,
-            anuncios: anterior.anuncios.filter(item => item.id !== anuncio.id),
-          }),
-          'Anúncio excluído. O histórico de contatos foi preservado.'
-        )
-      ) {
-        setConfirmacao(null);
-        navegar('/empresa/anuncios');
-      }
-      return;
-    }
-
-    const proximaSituacao =
-      acao === 'pausar'
-        ? 'pausado'
-        : acao === 'publicar'
-          ? 'analise'
-          : 'ativo';
-
-    if (acao === 'publicar') {
-      const mensagemValidacao = validarAnuncio(anuncio);
-      if (mensagemValidacao) {
-        setFalha(mensagemValidacao);
-        setConfirmacao(null);
-        return;
-      }
-    }
-
-    if (
-      executarAtualizacao(
-        anterior => ({
-          ...anterior,
-          anuncios: anterior.anuncios.map(item =>
-            item.id === anuncio.id
-              ? {
-                  ...item,
-                  situacao: proximaSituacao,
-                  atualizadoEm: new Date().toISOString(),
-                }
-              : item
-          ),
-        }),
-        proximaSituacao === 'analise'
-          ? 'Pedido de análise registrado nesta demonstração.'
-          : proximaSituacao === 'pausado'
-            ? 'Anúncio pausado.'
-            : 'Anúncio ativo no catálogo desta demonstração.'
-      )
-    ) {
-      setConfirmacao(null);
-      if (acao === 'publicar') {
-        navegar(`/empresa/anuncios/${anuncio.id}`);
-      }
-    }
-  }
-
-  function responderContato(item, texto) {
-    const agora = new Date().toISOString();
-    const idMensagem = crypto.randomUUID();
-    const atualizado = executarAtualizacao(
-      anterior => ({
-        ...anterior,
-        contatos: anterior.contatos.map(entrada =>
-          entrada.id === item.id
-            ? {
-                ...entrada,
-                situacao:
-                  entrada.situacao === 'concluido' ? 'concluido' : 'andamento',
-                mensagens: [
-                  ...entrada.mensagens,
-                  {
-                    id: idMensagem,
-                    autor: 'empresa',
-                    texto,
-                    data: agora,
-                  },
-                ],
-              }
-            : entrada
-        ),
-      }),
-      'Resposta registrada localmente.'
+  const titulosComServico = ['detalhe', 'previa'];
+  if ((precisaAnuncio && !anuncio) || (visao === 'conversa' && !chat))
+    return (
+      <PaginaMvp titulo='Registro indisponível'>
+        <Link
+          className='mvp-link'
+          to={
+            precisaAnuncio
+              ? '/empresa/anuncios'
+              : '/empresa/contatos?visao=chat'
+          }
+        >
+          Voltar para a lista
+        </Link>
+      </PaginaMvp>
     );
-    if (atualizado) {
-      const plataforma = lerEstadoPlataforma();
-      const possuiVinculo = (plataforma.contatosCliente || []).some(
-        c => c.id === item.id
-      );
-      if (possuiVinculo) {
-        salvarEstadoPlataforma({
-          ...plataforma,
-          contatosCliente: plataforma.contatosCliente.map(c =>
-            c.id === item.id
-              ? {
-                  ...c,
-                  situacao: c.situacao === 'Concluído' ? 'Concluído' : 'Em andamento',
-                  mensagens: [
-                    ...(c.mensagens || []),
-                    {
-                      id: idMensagem,
-                      autor: 'empresa',
-                      texto,
-                      data: agora,
-                    },
-                  ],
-                }
-              : c
-          ),
-        });
-      }
-    }
-    return atualizado;
-  }
 
-  const cabecalhoAtual = cabecalhosVisao[visao] || cabecalhosVisao.painel;
-  const tituloPagina =
-    visao === 'detalhe'
-      ? anuncio?.titulo || 'Rascunho sem título'
-      : visao === 'conversa'
-        ? `Conversa com ${contato?.nome || 'cliente'}.`
-        : cabecalhoAtual.titulo;
-  const subtituloPagina =
-    visao === 'conversa'
-      ? `${contato?.servico || 'Atendimento'} · Histórico ilustrativo.`
-      : cabecalhoAtual.subtitulo;
-  const rotaVoltar =
-    visao === 'conversa'
-      ? '/empresa/contatos'
-      : visao === 'midias'
-        ? '/empresa/perfil'
-        : precisaAnuncio
-          ? '/empresa/anuncios'
-          : '/empresa';
+  const pedidosDoServico = pedidos.filter(
+    p => p.servico_id === anuncio?.id && p.status === 'concluido'
+  );
+  const podeExcluir =
+    anuncio &&
+    !pedidos.some(p => p.servico_id === anuncio.id) &&
+    !b.publicacao_servico.some(p => p.servico_id === anuncio.id);
+  const dadosAcao = acoes[confirmacao?.acao];
 
   return (
-    <div
-      lang='pt-BR'
-      className='min-w-0 flex-1 bg-white font-corpo text-(--azul-titulo)'
+    <PaginaMvp
+      cabecalho={!precisaAnuncio}
+      classe={precisaAnuncio ? 'empresa-anuncio-pagina' : ''}
+      titulo={titulos[visao]}
+      descricao={
+        visao === 'previa'
+          ? 'Veja como seu serviço será apresentado no Marketplace.'
+          : ['contatos', 'conversa'].includes(visao)
+            ? 'Acompanhe os serviços e converse com seus clientes.'
+            : undefined
+      }
+      acao={
+        visao === 'anuncios' ? (
+          <Link className='mvp-primario' to='/empresa/anunciar'>
+            Cadastrar serviço
+          </Link>
+        ) : null
+      }
     >
-      <Container classe='pt-5'>
-        <FaixaAvisoEmpresa
-          exemplo={dados.exemplo}
-          erroArmazenamento={erro}
-          falha={falha}
-          aviso={aviso}
-          aoFecharAviso={() => setAviso('')}
-        />
-      </Container>
-
-      {carregando ? (
-        <Container como='main' classe='py-8 sm:py-12'>
-          <EstadoCarregamento
-            titulo='Carregando painel da empresa'
-            descricao='Organizando anúncios, métricas e conversas desta conta.'
-          />
-        </Container>
-      ) : visao === 'inicio' ? (
-        <main>
-          <InicioEmpresa dados={dados} />
-        </main>
-      ) : (
-        <Container como='main' classe='space-y-8 py-8 pb-14 sm:py-10'>
-          {(precisaAnuncio && !anuncio) ||
-          (visao === 'conversa' && !contato) ? (
-            <EstadoVazio
-              varianteAlerta='erro'
-              titulo='Registro não encontrado'
-              descricao='Este anúncio ou contato pode ter sido removido desta demonstração.'
-              textoAcao='Voltar para a lista'
-              rotaAcao={
-                visao === 'conversa'
-                  ? '/empresa/contatos'
-                  : '/empresa/anuncios'
-              }
-            />
-          ) : (
-            <>
-              <CabecalhoSubpagina
-                voltarPara={rotaVoltar}
-                rotuloVoltar='← Voltar'
-                selo={cabecalhoAtual.selo}
-                titulo={tituloPagina}
-                subtitulo={subtituloPagina}
-                assinatura={cabecalhoAtual.assinatura}
-                etiquetaAssinatura={cabecalhoAtual.etiqueta}
-              />
-
-              {visao === 'painel' && <DashboardEmpresa dados={dados} />}
-
-              {visao === 'anuncios' && <ListaAnuncios dados={dados} />}
-
-              {(visao === 'novo' || visao === 'editar') && (
-                <EditorAnuncio
-                  key={anuncio?.id ?? 'novo-anuncio'}
-                  anuncio={anuncio}
-                  empresa={dados.empresa}
-                  aoSalvar={salvarAnuncio}
-                />
-              )}
-
-              {visao === 'detalhe' && (
-                <DetalheAnuncio
-                  key={anuncio.id}
-                  anuncio={anuncio}
-                  aoAcionar={setConfirmacao}
-                />
-              )}
-
-              {visao === 'perfil' && (
-                <PerfilEmpresa
-                  key={dados.empresa.nome + dados.empresa.logo}
-                  empresa={dados.empresa}
-                  aoSalvar={empresaAtualizada =>
-                    executarAtualizacao(
-                      anterior => ({ ...anterior, empresa: empresaAtualizada }),
-                      'Perfil da empresa atualizado.'
-                    )
-                  }
-                />
-              )}
-
-              {visao === 'midias' && (
-                <MidiasEmpresa
-                  empresa={dados.empresa}
-                  aoSalvar={empresaAtualizada =>
-                    executarAtualizacao(
-                      anterior => ({ ...anterior, empresa: empresaAtualizada }),
-                      'Logo e portfólio atualizados com sucesso.'
-                    )
-                  }
-                />
-              )}
-
-              {(visao === 'contatos' || visao === 'conversa') && (
-                <ContatosEmpresa
-                  key={contato?.id ?? 'lista-contatos'}
-                  dados={dados}
-                  contato={contato}
-                  aoAlterarSituacao={(item, situacao) =>
-                    executarAtualizacao(
-                      anterior => ({
-                        ...anterior,
-                        contatos: anterior.contatos.map(entrada =>
-                          entrada.id === item.id
-                            ? { ...entrada, situacao }
-                            : entrada
-                        ),
-                      }),
-                      'Status do contato atualizado.'
-                    )
-                  }
-                  aoResponder={responderContato}
-                />
-              )}
-
-              {visao === 'fotos' && (
-                <CartaoEmpresa titulo='Fotos do anúncio'>
-                  <EditorFotos
-                    fotos={fotosEdicao}
-                    aoAlterar={setFotosEdicao}
-                  />
-                  <div className='mt-6 flex flex-wrap gap-3'>
-                    <Botao
-                      type='button'
-                      cor='laranja'
-                      onClick={() => {
-                        if (
-                          executarAtualizacao(
-                            anterior => ({
-                              ...anterior,
-                              anuncios: anterior.anuncios.map(item =>
-                                item.id === anuncio.id
-                                  ? {
-                                      ...item,
-                                      fotos: fotosEdicao,
-                                      atualizadoEm: new Date().toISOString(),
-                                    }
-                                  : item
-                              ),
-                            }),
-                            'Fotos atualizadas.'
-                          )
-                        ) {
-                          navegar(`/empresa/anuncios/${anuncio.id}`);
-                        }
-                      }}
-                    >
-                      Salvar fotos
-                    </Botao>
-                    <Botao
-                      type='button'
-                      variante='secundario'
-                      onClick={() => navegar(`/empresa/anuncios/${anuncio.id}`)}
-                    >
-                      Voltar ao anúncio
-                    </Botao>
-                  </div>
-                </CartaoEmpresa>
-              )}
-
-              {visao === 'previa' && (
-                <PreviaAnuncio
-                  anuncio={anuncio}
-                  empresa={dados.empresa}
-                  aoPublicarParaAnalise={() => setConfirmacao('publicar')}
-                />
-              )}
-            </>
+      {precisaAnuncio && (
+        <header className='empresa-anuncio-cabecalho'>
+          <Link
+            className='empresa-anuncio-voltar'
+            to={visao === 'detalhe' ? '/empresa/anuncios' : rotaServico}
+          >
+            <ArrowLeft size={18} aria-hidden='true' />
+            {visao === 'detalhe' ? 'Meus serviços' : 'Voltar ao serviço'}
+          </Link>
+          <h1>
+            {titulosComServico.includes(visao)
+              ? anuncio.titulo
+              : titulos[visao]}
+          </h1>
+          {visao === 'previa' && (
+            <p>Veja como seu serviço será apresentado no Marketplace.</p>
           )}
-        </Container>
+          {visao === 'detalhe' && (
+            <nav
+              className='empresa-anuncio-secoes'
+              aria-label='Seções do anúncio'
+            >
+              <a href='#dados-anuncio'>Informações</a>
+              <a href='#publicacoes-anuncio'>Publicações</a>
+              <a href='#avaliacoes-anuncio'>Avaliações</a>
+            </nav>
+          )}
+        </header>
       )}
-
-      <ModalConfirmacao
-        aberto={Boolean(confirmacao)}
-        destrutivo={confirmacao === 'excluir'}
-        titulo={
-          confirmacao === 'excluir'
-            ? 'Excluir anúncio?'
-            : confirmacao === 'pausar'
-              ? 'Pausar anúncio?'
-              : confirmacao === 'publicar'
-                ? 'Enviar anúncio para análise?'
-                : confirmacao === 'renovar'
-                  ? 'Renovar anúncio?'
-                  : 'Reativar anúncio?'
+      {erro && (
+        <p className='mvp-vazio' role='alert'>
+          {erro}
+        </p>
+      )}
+      <div
+        className={
+          precisaAnuncio ? 'empresa-anuncio-conteudo' : 'grid min-w-0 gap-4'
         }
-        descricao={
-          confirmacao === 'excluir'
-            ? 'O anúncio será removido desta demonstração. O histórico de contatos anteriores será preservado.'
-            : confirmacao === 'pausar'
-              ? 'O serviço deixará de aparecer no Marketplace até que você decida reativá-lo.'
-              : confirmacao === 'publicar'
-                ? 'O anúncio passará para o status Em análise nesta demonstração local.'
-                : 'O anúncio voltará a ficar ativo para os moradores no Marketplace.'
-        }
-        textoConfirmar='Confirmar'
-        textoCancelar='Cancelar'
-        aoCancelar={() => setConfirmacao(null)}
-        aoConfirmar={() => executarAcaoAnuncio(confirmacao)}
-      />
-    </div>
+      >
+        {visao === 'anuncios' && (
+          <ListaAnuncios
+            servicos={servicos}
+            empresa={empresa}
+            publicacoes={b.publicacao_servico}
+          />
+        )}
+        {['novo', 'editar', 'fotos'].includes(visao) && (
+          <EditorAnuncio
+            anuncio={anuncio}
+            somenteFotos={visao === 'fotos'}
+            aoSalvar={salvar}
+          />
+        )}
+        {titulosComServico.includes(visao) && (
+          <DetalheAnuncio
+            anuncio={anuncio}
+            empresa={empresa}
+            publicacoes={b.publicacao_servico}
+            previa={visao === 'previa'}
+            aoEditar={() => setEditandoInformacoes(true)}
+            aoAcionar={acao => {
+              setErro('');
+              setConfirmacao({ acao });
+            }}
+            podeExcluir={podeExcluir}
+          />
+        )}
+        {visao === 'detalhe' && (
+          <>
+            <div id='publicacoes-anuncio' tabIndex={-1}>
+              <PublicacoesEmpresa
+                b={b}
+                empresa={empresa}
+                servico={anuncio}
+                executar={executar}
+                operacoes={{
+                  contratar: (plano, renovacao) => {
+                    contratarPublicacao(userId, anuncio.id, plano, renovacao);
+                    if (!renovacao)
+                      notificar(
+                        'Publicação contratada. Gere a cobrança para concluir.'
+                      );
+                  },
+                  cobrar: (publicacao, metodo) => {
+                    cobrarPublicacao(userId, publicacao, metodo);
+                    notificar('Cobrança de teste criada.');
+                  },
+                  confirmarCancelamento: publicacao => {
+                    setErro('');
+                    setConfirmacao({ acao: 'cancelar', publicacao });
+                  },
+                }}
+              />
+            </div>
+            <div id='avaliacoes-anuncio' tabIndex={-1}>
+              <AvaliacoesServico
+                avaliacoes={b.avaliacao_servico.filter(a =>
+                  pedidosDoServico.some(
+                    p => p.id === a.contratado_id && p.perfil_id === a.perfil_id
+                  )
+                )}
+              />
+            </div>
+          </>
+        )}
+        {['contatos', 'conversa'].includes(visao) && (
+          <SolicitacoesMarketplace
+            b={b}
+            empresa={empresa}
+            servicos={servicos}
+            pedidos={pedidos}
+            chatInicial={
+              chat && { chatId: chat.id, pedidoId: chat.contratado_id }
+            }
+          />
+        )}
+      </div>
+      {editandoInformacoes && anuncio && (
+        <DialogoCasa
+          titulo='Editar informações do serviço'
+          classe='empresa-editor-dialogo empresa-servico-dialogo'
+          aoFechar={() => setEditandoInformacoes(false)}
+        >
+          <EditorAnuncio
+            anuncio={anuncio}
+            aoSalvar={dados => salvar(dados, true)}
+            aoCancelar={() => setEditandoInformacoes(false)}
+          />
+        </DialogoCasa>
+      )}
+      {dadosAcao && (
+        <DialogoCasa
+          titulo={dadosAcao[0]}
+          aoFechar={() => setConfirmacao(null)}
+        >
+          <p>{dadosAcao[1]}</p>
+          <div className='mt-5 flex flex-wrap justify-end gap-2'>
+            <Botao
+              type='button'
+              variante='contorno'
+              onClick={() => setConfirmacao(null)}
+            >
+              Voltar
+            </Botao>
+            <Botao
+              type='button'
+              onClick={() => {
+                const { acao, publicacao } = confirmacao;
+                setConfirmacao(null);
+                executar(
+                  () =>
+                    acao === 'cancelar'
+                      ? cancelarPublicacao(userId, publicacao)
+                      : acionarServico(userId, anuncio.id, acao),
+                  'Alteração salva.',
+                  acao === 'excluir' ? '/empresa/anuncios' : undefined
+                );
+              }}
+            >
+              Confirmar
+            </Botao>
+          </div>
+        </DialogoCasa>
+      )}
+    </PaginaMvp>
   );
 }
 

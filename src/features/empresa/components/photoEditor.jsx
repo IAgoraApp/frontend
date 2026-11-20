@@ -5,6 +5,7 @@ import { lerImagemComoDados } from '../../../app/estado/estadoEmpresa';
 export default function EditorFotos({
   fotos,
   aoAlterar,
+  aoCarregar,
   rotulo = 'Fotos do serviço',
   limite = 5,
 }) {
@@ -22,6 +23,7 @@ export default function EditorFotos({
       return;
     }
     setOcupado(true);
+    aoCarregar?.(true);
     try {
       const imagens = await Promise.all(arquivos.map(lerImagemComoDados));
       aoAlterar([...fotos, ...imagens]);
@@ -29,6 +31,7 @@ export default function EditorFotos({
       setErro(falha.message || 'Não foi possível ler a imagem selecionada.');
     } finally {
       setOcupado(false);
+      aoCarregar?.(false);
       evento.target.value = '';
     }
   }
@@ -77,19 +80,26 @@ export default function EditorFotos({
               key={`${foto}-${indice}`}
               className='overflow-hidden rounded-xl border border-[#dbe5ed] bg-white'
             >
-              <img
-                src={foto}
-                alt={
-                  indice === 0
-                    ? 'Foto principal'
-                    : `Foto complementar ${indice + 1}`
-                }
-                className='aspect-[1.5] w-full object-cover'
-              />
+              {foto.startsWith('/mock/') ? (
+                <p className='grid aspect-[1.5] place-items-center bg-(--azul-fundo) text-sm'>
+                  Imagem de exemplo
+                </p>
+              ) : (
+                <img
+                  src={foto}
+                  alt={
+                    indice === 0
+                      ? 'Foto principal'
+                      : `Foto complementar ${indice + 1}`
+                  }
+                  className='aspect-[1.5] w-full object-cover'
+                />
+              )}
               <div className='flex flex-wrap items-center justify-between gap-2 p-3'>
                 {indice > 0 ? (
                   <Botao
                     type='button'
+                    disabled={ocupado}
                     variante='secundario'
                     classe='min-h-[38px]! px-3! py-1! text-xs!'
                     onClick={() =>
@@ -105,8 +115,11 @@ export default function EditorFotos({
                 )}
                 <button
                   type='button'
+                  disabled={ocupado}
                   aria-label={`Remover imagem ${indice + 1}`}
-                  onClick={() => aoAlterar(fotos.filter((_, i) => i !== indice))}
+                  onClick={() =>
+                    aoAlterar(fotos.filter((_, i) => i !== indice))
+                  }
                   className='min-h-[38px] cursor-pointer px-2 text-xs font-bold text-[#b42318] hover:underline'
                 >
                   Remover

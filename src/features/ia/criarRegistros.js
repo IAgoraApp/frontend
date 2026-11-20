@@ -23,7 +23,7 @@ export const areasCriacao = {
   },
 };
 
-const normalizar = texto =>
+export const normalizar = texto =>
   texto.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
 const limpar = valor =>
   valor
@@ -33,7 +33,7 @@ const limpar = valor =>
 const padraoData =
   /\b(\d{4}-\d{2}-\d{2}|\d{1,2}\/\d{1,2}(?:\/\d{4})?|hoje|amanha|ontem)\b/i;
 
-function campo(texto, nomes) {
+export function campo(texto, nomes) {
   const correspondencias = [
     ...texto.matchAll(
       new RegExp('(?:^|[;\\n])\\s*(?:' + nomes + ')\\s*:\\s*([^;\\n]+)', 'gi')
@@ -42,7 +42,7 @@ function campo(texto, nomes) {
   return limpar(correspondencias.at(-1)?.[1]);
 }
 
-function lerData(texto) {
+export function lerData(texto) {
   const trecho = normalizar(texto).match(padraoData)?.[1];
   if (!trecho) return null;
   if (trecho === 'hoje') return hoje();
@@ -94,7 +94,7 @@ function tituloAgenda(texto) {
   );
 }
 
-function falta(campos) {
+export function falta(campos) {
   return {
     texto:
       'Para criar o registro, preciso de ' +

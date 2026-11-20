@@ -1618,8 +1618,8 @@
       {
         "id": 1,
         "titulo": "Como montar um orçamento",
-        "descricao": "Organize sua renda",
-        "conteudo": "Liste renda, despesas fixas e variáveis.",
+        "descricao": "Separe o que entra, o que sai e o que você pode guardar.",
+        "conteudo": "1. Anote o valor que de fato cai na sua conta. Se a renda varia, use um mês mais apertado como referência.\n\n2. Liste os compromissos que se repetem, como aluguel e internet. Depois estime o que varia, como mercado e transporte.\n\n3. Compare o total de gastos com o que entra. Se sobrar, defina quanto vai separar para imprevistos.\n\nPara praticar, anote três gastos fixos e três variáveis do seu próximo mês.",
         "video_url": null,
         "imagem": "/mock/aulas/1.jpg",
         "categoria": "financas"
@@ -1627,8 +1627,8 @@
       {
         "id": 2,
         "titulo": "Limpeza básica da casa",
-        "descricao": "Rotina de limpeza",
-        "conteudo": "Separe produtos adequados para cada superfície.",
+        "descricao": "Organize uma rotina curta e cuide de cada superfície.",
+        "conteudo": "1. Antes de comprar produtos, veja o que você já tem e leia as orientações da embalagem e da superfície.\n\n2. Comece pelo que mais atrapalha sua rotina: louça, lixo e superfícies de preparo de alimentos. Distribua o restante ao longo da semana.\n\n3. Separe os panos por área para evitar levar a sujeira de um cômodo para outro.\n\nPara praticar, escolha dois dias da semana e combine uma tarefa pequena com cada dia.",
         "video_url": null,
         "imagem": "/mock/aulas/2.jpg",
         "categoria": "limpeza"
@@ -1636,8 +1636,8 @@
       {
         "id": 3,
         "titulo": "Cozinha para iniciantes",
-        "descricao": "Prepare refeições simples",
-        "conteudo": "Planeje ingredientes e siga cuidados de higiene.",
+        "descricao": "Planeje refeições simples com ingredientes que você reaproveita.",
+        "conteudo": "1. Escolha duas ou três refeições que você já se sente confortável para preparar. Veja o que tem e compre só os ingredientes que faltam.\n\n2. Antes de começar, lave as mãos e prepare uma bancada limpa. Separe os utensílios que usará em cada etapa.\n\n3. Anote o que sobrou para usar no planejamento das próximas refeições.\n\nPara praticar, monte uma lista curta para duas refeições com ingredientes em comum.",
         "video_url": null,
         "imagem": "/mock/aulas/3.jpg",
         "categoria": "culinaria"
@@ -1645,8 +1645,8 @@
       {
         "id": 4,
         "titulo": "Primeiro aluguel",
-        "descricao": "Entenda os custos",
-        "conteudo": "Considere aluguel, condomínio, caução e contas.",
+        "descricao": "Compare o custo mensal e o que você vai pagar na entrada.",
+        "conteudo": "1. Some aluguel, condomínio, contas básicas e o custo do trajeto. Use o custo mensal completo para comparar endereços.\n\n2. Em outra lista, coloque os gastos de entrada, como frete, itens essenciais e a garantia, se ela for pedida.\n\n3. Na visita, anote o estado do imóvel e o que está incluído. Guarde essas informações para conferir com a proposta.\n\nPara praticar, compare dois imóveis usando as mesmas categorias de gastos.",
         "video_url": null,
         "imagem": "/mock/aulas/4.jpg",
         "categoria": "moradia"
@@ -1654,8 +1654,8 @@
       {
         "id": 5,
         "titulo": "Segurança doméstica",
-        "descricao": "Cuidados essenciais",
-        "conteudo": "Identifique riscos elétricos e de gás.",
+        "descricao": "Conheça a casa e saiba a quem recorrer quando algo der errado.",
+        "conteudo": "1. Ao chegar, descubra onde ficam os registros e o quadro de energia. Guarde os contatos da administração do imóvel e de profissionais qualificados.\n\n2. Observe se há equipamentos danificados e evite improvisar reparos. Inclua as pendências na vistoria ou na lista de manutenção.\n\n3. Deixe acessos e passagens livres. Combine com quem mora com você onde encontrar os contatos de ajuda.\n\nPara praticar, faça uma lista do que conferir na chegada e de quem pode ajudar se for necessário.",
         "video_url": null,
         "imagem": "/mock/aulas/5.jpg",
         "categoria": "manutencao"
@@ -1681,6 +1681,11 @@
         "id": 4,
         "aula_id": 4,
         "titulo": "Quiz: Aluguel"
+      },
+      {
+        "id": 5,
+        "aula_id": 5,
+        "titulo": "Quiz: Segurança doméstica"
       }
     ],
     "questao": [
@@ -1708,6 +1713,31 @@
         "id": 5,
         "quiz_id": 4,
         "enunciado": "Qual custo pode ser exigido no início da locação?"
+      },
+      {
+        "id": 6,
+        "quiz_id": 2,
+        "enunciado": "Como organizar a limpeza se você tem pouco tempo?"
+      },
+      {
+        "id": 7,
+        "quiz_id": 3,
+        "enunciado": "O que facilita a lista de compras da semana?"
+      },
+      {
+        "id": 8,
+        "quiz_id": 4,
+        "enunciado": "Qual comparação ajuda a escolher entre dois imóveis?"
+      },
+      {
+        "id": 9,
+        "quiz_id": 5,
+        "enunciado": "O que vale anotar no primeiro dia no imóvel?"
+      },
+      {
+        "id": 10,
+        "quiz_id": 5,
+        "enunciado": "O que fazer ao identificar um equipamento danificado?"
       }
     ],
     "alternativa": [
@@ -1799,6 +1829,96 @@
         "id": 15,
         "questao_id": 5,
         "texto": "Seguro de celular",
+        "correta": false
+      },
+      {
+        "id": 16,
+        "questao_id": 6,
+        "texto": "Distribuir tarefas pequenas durante a semana",
+        "correta": true
+      },
+      {
+        "id": 17,
+        "questao_id": 6,
+        "texto": "Guardar toda a limpeza para uma vez por mês",
+        "correta": false
+      },
+      {
+        "id": 18,
+        "questao_id": 6,
+        "texto": "Usar o mesmo pano em todos os cômodos",
+        "correta": false
+      },
+      {
+        "id": 19,
+        "questao_id": 7,
+        "texto": "Comprar ingredientes de cada prato sem olhar a despensa",
+        "correta": false
+      },
+      {
+        "id": 20,
+        "questao_id": 7,
+        "texto": "Escolher refeições com ingredientes em comum",
+        "correta": true
+      },
+      {
+        "id": 21,
+        "questao_id": 7,
+        "texto": "Escolher as refeições só depois de ir ao mercado",
+        "correta": false
+      },
+      {
+        "id": 22,
+        "questao_id": 8,
+        "texto": "Só o valor da mudança",
+        "correta": false
+      },
+      {
+        "id": 23,
+        "questao_id": 8,
+        "texto": "Apenas o preço do aluguel",
+        "correta": false
+      },
+      {
+        "id": 24,
+        "questao_id": 8,
+        "texto": "O custo mensal total, incluindo condomínio, contas e trajeto",
+        "correta": true
+      },
+      {
+        "id": 25,
+        "questao_id": 9,
+        "texto": "Onde ficam os registros e os contatos de ajuda",
+        "correta": true
+      },
+      {
+        "id": 26,
+        "questao_id": 9,
+        "texto": "A marca da tinta de todas as paredes",
+        "correta": false
+      },
+      {
+        "id": 27,
+        "questao_id": 9,
+        "texto": "O número de tomadas dos vizinhos",
+        "correta": false
+      },
+      {
+        "id": 28,
+        "questao_id": 10,
+        "texto": "Deixar de lado e continuar usando",
+        "correta": false
+      },
+      {
+        "id": 29,
+        "questao_id": 10,
+        "texto": "Registrar o problema e procurar ajuda qualificada",
+        "correta": true
+      },
+      {
+        "id": 30,
+        "questao_id": 10,
+        "texto": "Improvisar um reparo sem saber a causa",
         "correta": false
       }
     ],

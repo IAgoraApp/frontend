@@ -1,0 +1,879 @@
+.aprendendo-capa {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--azul-titulo);
+  color: white;
+}
+
+.aprendendo-capa-texto {
+  align-self: center;
+  padding: clamp(20px, 3.6vw, 48px);
+}
+
+.aprendendo-capa h2 {
+  max-width: 17ch;
+  font: 800 clamp(1.9rem, 4vw, 3.5rem)/1.04 var(--font-titulo);
+  letter-spacing: -0.035em;
+}
+
+.aprendendo-capa p {
+  max-width: 42ch;
+  margin-top: 10px;
+  color: #e0ebf4;
+}
+
+.aprendendo-capa img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.aprendendo-cta,
+.aprendendo-voltar,
+.aprendendo-aula-acoes a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-weight: 750;
+}
+
+.aprendendo-cta {
+  margin-top: 17px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: #fff2e8;
+  color: var(--azul-titulo);
+}
+
+.aprendendo-cta:hover {
+  background: #ffe1cd;
+}
+
+.aprendendo-progresso {
+  margin-top: 14px;
+}
+
+.aprendendo-progresso p {
+  font-size: 0.875rem;
+}
+.aprendendo-progresso progress,
+.aprendendo-quiz-progresso progress {
+  width: 100%;
+  height: 8px;
+  accent-color: var(--laranja-principal);
+}
+
+.aprendendo-cabecalho-trilha {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-block: 24px 12px;
+}
+
+.aprendendo-cabecalho-trilha h2,
+.aprendendo-quiz h2 {
+  font: 800 clamp(1.2rem, 2.2vw, 1.55rem)/1.2 var(--font-titulo);
+}
+
+.aprendendo-cabecalho-trilha select {
+  min-height: 42px;
+  padding: 7px 10px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 8px;
+  background: white;
+  font-size: 0.875rem;
+}
+
+.aprendendo-cartoes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+  gap: 12px;
+}
+
+.aprendendo-cartao {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--borda-suave);
+  border-radius: 12px;
+  background: white;
+}
+
+.aprendendo-cartao:hover {
+  border-color: var(--laranja-principal);
+}
+.aprendendo-cartao img {
+  width: 100%;
+  height: clamp(110px, 13vw, 172px);
+  object-fit: cover;
+}
+
+.aprendendo-cartao-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 11px 13px;
+}
+
+.aprendendo-cartao h3 {
+  font: 800 1.05rem/1.2 var(--font-titulo);
+}
+.aprendendo-cartao p {
+  color: var(--texto-apoio);
+  font-size: 0.84rem;
+}
+.aprendendo-cartao .aprendendo-categoria {
+  color: #a33312;
+  font-weight: 750;
+}
+
+.aprendendo-cartao-rodape {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 1px solid var(--borda-suave);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.aprendendo-cartao-rodape > svg:last-child {
+  margin-left: auto;
+}
+
+.aprendendo-aula,
+.aprendendo-quiz {
+  overflow: hidden;
+  border: 1px solid var(--borda-suave);
+  border-radius: 12px;
+  background: white;
+}
+
+.aprendendo-aula-capa img {
+  width: 100%;
+  height: clamp(150px, 20vw, 265px);
+  object-fit: cover;
+}
+
+.aprendendo-aula-capa div {
+  padding: clamp(14px, 2.3vw, 24px);
+  background: var(--azul-titulo);
+  color: white;
+}
+
+.aprendendo-aula-capa h1 {
+  font: 800 clamp(1.4rem, 3vw, 2.2rem)/1.12 var(--font-titulo);
+}
+.aprendendo-aula-capa p {
+  color: #e0ebf4;
+  font-size: 0.875rem;
+  margin-block: 3px;
+}
+.aprendendo-aula-corpo,
+.aprendendo-quiz {
+  padding: clamp(14px, 2vw, 23px);
+}
+
+.aprendendo-texto-aula {
+  white-space: pre-line;
+  line-height: 1.65;
+}
+
+.aprendendo-aula-acoes,
+.aprendendo-quiz-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+.aprendendo-aula-acoes {
+  margin-top: 12px;
+}
+.aprendendo-quiz-acoes {
+  justify-content: flex-end;
+}
+.aprendendo-pratica,
+.aprendendo-quiz {
+  display: grid;
+  gap: 13px;
+  min-width: 0;
+}
+
+.aprendendo-quiz > header {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.aprendendo-quiz > header svg {
+  flex-shrink: 0;
+  color: #a33312;
+}
+.aprendendo-quiz-progresso {
+  font-size: 0.8125rem;
+  color: var(--texto-apoio);
+}
+
+.aprendendo-alternativas {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+}
+.aprendendo-alternativas legend {
+  margin-bottom: 9px;
+  font-weight: 750;
+}
+.aprendendo-alternativas label,
+.aprendendo-resultado {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 8px;
+}
+
+.aprendendo-alternativas label {
+  min-height: 44px;
+  cursor: pointer;
+}
+.aprendendo-alternativas input {
+  flex-shrink: 0;
+  width: 17px;
+  height: 17px;
+  accent-color: var(--laranja-principal);
+}
+.aprendendo-resultado,
+.aprendendo-alternativas label:has(:checked) {
+  background: #fff2e8;
+}
+.aprendendo-erro {
+  color: var(--vermelho-alerta);
+}
+
+.casa-shell > .casa-conteudo:has(.aprendendo-tela) {
+  overflow: clip;
+  scrollbar-gutter: auto;
+}
+
+.casa-shell .casa-pagina-conteudo:has(> .aprendendo-tela) {
+  padding-block: clamp(7px, 1.7dvh, 18px);
+}
+
+.casa-pagina-conteudo:has(> .aprendendo-tela) > header {
+  margin-bottom: 8px;
+}
+
+.aprendendo-capa {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.7fr);
+}
+
+.aprendendo-capa-texto {
+  padding: clamp(12px, 2.4dvh, 28px);
+}
+
+.aprendendo-capa h2 {
+  max-width: 22ch;
+  font-size: clamp(1.5rem, 4.4dvh, 3rem);
+}
+
+.aprendendo-capa img {
+  min-height: 0;
+  max-height: 33dvh;
+  object-position: center 30%;
+}
+
+.aprendendo-cta {
+  margin-top: 10px;
+}
+.aprendendo-progresso {
+  margin-top: 6px;
+}
+.aprendendo-progresso p {
+  margin-top: 0;
+}
+.aprendendo-cabecalho-trilha {
+  margin-block: 12px 7px;
+}
+
+.aprendendo-setas-trilha {
+  display: flex;
+  gap: 5px;
+}
+
+.aprendendo-cabecalho-trilha label {
+  margin-left: auto;
+}
+
+.aprendendo-seta {
+  display: inline-grid;
+  min-width: 40px;
+  min-height: 40px;
+  place-items: center;
+  border: 1px solid var(--borda-suave);
+  border-radius: 8px;
+  background: white;
+  color: var(--azul-titulo);
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.aprendendo-seta:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.aprendendo-seta:hover:enabled {
+  background: #fff2e8;
+}
+
+.aprendendo-cartoes {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.aprendendo-cartao img {
+  height: clamp(76px, 15dvh, 155px);
+}
+
+.aprendendo-estudo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+
+.aprendendo-estudo > .aprendendo-aula-capa {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.5fr);
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--azul-titulo);
+}
+
+.aprendendo-aula-capa > img {
+  grid-column: 2;
+  grid-row: 1;
+  height: 100%;
+  min-height: 0;
+  max-height: 110px;
+}
+
+.aprendendo-aula-capa > div {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: center;
+  padding: 10px 14px;
+}
+
+.aprendendo-navegacao-aula .aprendendo-voltar {
+  min-height: 35px;
+  font-size: 0.875rem;
+}
+
+.aprendendo-modos {
+  display: flex;
+  gap: 5px;
+}
+
+.aprendendo-modos button {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 40px;
+  border: 1px solid var(--borda-suave);
+  border-radius: 8px;
+  background: white;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.aprendendo-modos button[aria-pressed='true'] {
+  border-color: var(--azul-titulo);
+  background: var(--azul-titulo);
+  color: white;
+}
+
+.aprendendo-aula-corpo h3 {
+  margin-block: 4px 7px;
+  font: 800 clamp(1.05rem, 3vw, 1.55rem)/1.17 var(--font-titulo);
+}
+
+.aprendendo-passo,
+.aprendendo-total-tentativas {
+  color: var(--texto-apoio);
+  font-size: 0.8125rem;
+}
+
+.aprendendo-aula-acoes {
+  justify-content: flex-end;
+  margin-top: 0;
+  padding: 8px 12px;
+  border-top: 1px solid var(--borda-suave);
+}
+
+.aprendendo-quiz {
+  gap: 8px;
+}
+.aprendendo-alternativas label {
+  padding: 6px 8px;
+}
+.aprendendo-escolher-quiz select {
+  max-width: 100%;
+}
+
+@media (max-width: 680px) {
+  .aprendendo-cartoes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .aprendendo-capa {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.45fr);
+  }
+  .aprendendo-capa img {
+    grid-column: 2;
+    height: 100%;
+    max-height: none;
+  }
+  .aprendendo-capa-texto {
+    padding: 11px;
+  }
+  .aprendendo-capa h2 {
+    font-size: clamp(1.3rem, 6vw, 1.85rem);
+  }
+  .aprendendo-capa-texto > p {
+    font-size: 0.8rem;
+    margin-top: 5px;
+  }
+  .aprendendo-capa .aprendendo-cta {
+    font-size: 0.82rem;
+    min-height: 36px;
+    padding: 5px 8px;
+  }
+  .aprendendo-progresso p {
+    font-size: 0.75rem;
+  }
+  .aprendendo-cabecalho-trilha {
+    gap: 5px;
+  }
+  .aprendendo-cabecalho-trilha select {
+    padding: 4px;
+    min-height: 36px;
+    font-size: 0.75rem;
+  }
+  .aprendendo-cabecalho-trilha h2 {
+    font-size: 1.05rem;
+  }
+  .aprendendo-setas-trilha .aprendendo-seta {
+    min-width: 34px;
+    min-height: 36px;
+  }
+  .aprendendo-cartao-texto {
+    padding: 6px 8px;
+  }
+  .aprendendo-cartao h3 {
+    font-size: 0.95rem;
+  }
+  .aprendendo-aula-capa > img {
+    max-height: 76px;
+  }
+  .aprendendo-aula-capa h1 {
+    font-size: 1.15rem;
+  }
+  .aprendendo-quiz {
+    padding: 10px;
+  }
+  .aprendendo-quiz h2 {
+    font-size: 1.05rem;
+  }
+  .aprendendo-alternativas {
+    gap: 5px;
+    font-size: 0.875rem;
+  }
+  .aprendendo-alternativas legend {
+    margin-bottom: 4px;
+  }
+  .aprendendo-alternativas label {
+    min-height: 38px;
+  }
+  .aprendendo-aula-corpo {
+    padding: 10px 12px;
+  }
+  .aprendendo-texto-aula {
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+}
+
+@media (max-height: 680px) {
+  .aprendendo-capa-texto > p {
+    display: none;
+  }
+  .aprendendo-cabecalho-trilha {
+    margin-block: 8px 6px;
+  }
+  .aprendendo-navegacao-aula .aprendendo-voltar {
+    min-height: 28px;
+  }
+}
+
+@media (max-height: 600px) {
+  .casa-pagina-conteudo:has(> .aprendendo-tela) > header {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .aprendendo-capa h2 {
+    font-size: 1.2rem;
+  }
+  .aprendendo-capa-texto {
+    padding: 8px 10px;
+  }
+  .aprendendo-cartao img {
+    height: 63px;
+  }
+  .aprendendo-cartoes {
+    gap: 6px;
+  }
+  .aprendendo-progresso {
+    margin-top: 3px;
+  }
+  .aprendendo-capa .aprendendo-cta {
+    margin-top: 5px;
+  }
+  .aprendendo-aula-capa > img {
+    max-height: 55px;
+  }
+  .aprendendo-aula-capa > div {
+    padding: 5px 9px;
+  }
+  .aprendendo-aula-capa p {
+    margin-block: 0;
+    font-size: 0.75rem;
+  }
+  .aprendendo-estudo,
+  .aprendendo-quiz {
+    gap: 5px;
+  }
+  .aprendendo-modos button {
+    min-height: 34px;
+  }
+  .aprendendo-quiz-acoes button {
+    min-height: 36px;
+  }
+}
+
+@media (max-height: 600px) {
+  .aprendendo-quiz {
+    padding: 7px;
+  }
+  .aprendendo-quiz-acoes button {
+    padding-inline: 9px;
+    font-size: 0.8rem;
+  }
+  .aprendendo-quiz .aprendendo-alternativas {
+    font-size: 0.8125rem;
+    line-height: 1.25;
+  }
+  .aprendendo-tela:has(.aprendendo-pratica)
+    .aprendendo-navegacao-aula
+    .aprendendo-voltar {
+    min-height: 23px;
+  }
+  .aprendendo-alternativas label {
+    min-height: 34px;
+    padding-block: 4px;
+  }
+  .aprendendo-quiz-progresso {
+    line-height: 1.2;
+  }
+  .aprendendo-quiz-progresso progress {
+    display: block;
+    margin-top: 3px;
+  }
+}
+
+.aprendendo-navegacao-aula {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  column-gap: 10px;
+}
+
+.casa-conteudo:has(.aprendendo-estudo) > main,
+.casa-pagina-conteudo:has(.aprendendo-estudo),
+.aprendendo-tela:has(.aprendendo-estudo) {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+}
+
+.aprendendo-tela:has(.aprendendo-estudo) {
+  --aprendendo-margem-painel: clamp(6px, 2dvh, 20px);
+  padding-bottom: var(--aprendendo-margem-painel);
+}
+
+.aprendendo-estudo {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid var(--borda-suave);
+  border-radius: 12px;
+  background: white;
+}
+
+.aprendendo-estudo > .aprendendo-aula-capa {
+  border-radius: 0;
+}
+
+.aprendendo-estudo .aprendendo-modos {
+  gap: 0;
+  border-bottom: 1px solid var(--borda-suave);
+}
+
+.aprendendo-estudo .aprendendo-modos button {
+  border: 0;
+  border-radius: 0;
+  background: white;
+  color: var(--azul-titulo);
+  box-shadow: inset 0 -2px transparent;
+}
+
+.aprendendo-estudo .aprendendo-modos button + button {
+  border-left: 1px solid var(--borda-suave);
+}
+
+.aprendendo-estudo .aprendendo-modos button[aria-pressed='true'] {
+  background: #fff2e8;
+  box-shadow: inset 0 -2px var(--laranja-principal);
+}
+
+.aprendendo-estudo .aprendendo-modos button:focus-visible {
+  outline-offset: -3px;
+}
+
+.aprendendo-estudo .aprendendo-aula,
+.aprendendo-estudo .aprendendo-quiz {
+  border: 0;
+  border-radius: 0;
+}
+
+.aprendendo-estudo :is(.aprendendo-aula-corpo, .aprendendo-quiz-corpo) {
+  flex: 1;
+  min-height: 0;
+}
+
+.aprendendo-estudo > :is(header, .aprendendo-modos),
+.aprendendo-navegacao-aula {
+  flex-shrink: 0;
+}
+
+.aprendendo-estudo > :is(.aprendendo-aula, .aprendendo-pratica),
+.aprendendo-pratica > .aprendendo-quiz {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.aprendendo-quiz {
+  --quiz-fundo: #f4f7fa;
+  --quiz-realce: #fff2e8;
+  padding: 0;
+  gap: 0;
+}
+
+.aprendendo-quiz > header {
+  flex-shrink: 0;
+  padding: 10px clamp(10px, 2vw, 24px);
+  border-bottom: 1px solid var(--borda-suave);
+  background: var(--quiz-fundo);
+}
+
+.aprendendo-quiz > header h2 {
+  font-size: clamp(1rem, 2.2vw, 1.35rem);
+}
+
+.aprendendo-quiz-corpo {
+  padding: clamp(10px, 2.5dvh, 25px) clamp(10px, 2vw, 24px);
+}
+
+.aprendendo-quiz-progresso {
+  display: grid;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.aprendendo-quiz-progresso span {
+  font-weight: 750;
+}
+
+.aprendendo-alternativas legend,
+.aprendendo-quiz-intro h3 {
+  font: 800 clamp(1.05rem, 2.4vw, 1.6rem)/1.18 var(--font-titulo);
+}
+
+.aprendendo-alternativas label {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 8px;
+  min-height: 43px;
+  padding: 5px 9px;
+  background: var(--quiz-fundo);
+}
+
+.aprendendo-alternativas input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.aprendendo-alternativas label:has(:focus-visible) {
+  outline: 2px solid var(--laranja-principal);
+  outline-offset: 2px;
+}
+
+.aprendendo-alternativas label:has(:checked) {
+  border-color: var(--laranja-principal);
+  background: var(--quiz-realce);
+}
+
+.aprendendo-alternativa-letra {
+  display: grid;
+  width: 25px;
+  height: 25px;
+  place-items: center;
+  border-radius: 6px;
+  background: white;
+  color: var(--azul-titulo);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.aprendendo-alternativas label:has(:checked) .aprendendo-alternativa-letra {
+  background: var(--azul-titulo);
+  color: white;
+}
+
+.aprendendo-resultado {
+  padding: 13px 15px;
+  border-color: transparent;
+  background: var(--quiz-realce);
+}
+
+.aprendendo-resultado strong {
+  font: 800 clamp(1.3rem, 4vw, 2.2rem)/1.1 var(--font-titulo);
+}
+
+.aprendendo-total-tentativas,
+.aprendendo-quiz-intro p {
+  margin-top: 6px;
+}
+
+.aprendendo-quiz .aprendendo-quiz-acoes,
+.aprendendo-estudo .aprendendo-aula-acoes {
+  flex-shrink: 0;
+  margin-top: auto;
+  min-height: 56px;
+  padding: 6px clamp(8px, 2vw, 24px);
+  border-top: 1px solid var(--borda-suave);
+  background: white;
+}
+
+.aprendendo-quiz .aprendendo-quiz-acoes button {
+  gap: 6px;
+  min-height: 42px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+}
+
+.aprendendo-quiz .aprendendo-quiz-acoes button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+@media (max-width: 600px) {
+  .aprendendo-quiz .aprendendo-quiz-acoes button {
+    padding-inline: 7px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-height: 600px) {
+  .aprendendo-tela:has(.aprendendo-estudo) {
+    padding-bottom: 5px;
+  }
+  .aprendendo-quiz > header {
+    padding-block: 6px;
+  }
+  .aprendendo-quiz-corpo {
+    padding-block: 6px;
+    font-size: 0.875rem;
+  }
+  .aprendendo-quiz-progresso {
+    margin-bottom: 5px;
+  }
+  .aprendendo-alternativas label {
+    min-height: 34px;
+  }
+  .aprendendo-quiz .aprendendo-quiz-acoes,
+  .aprendendo-estudo .aprendendo-aula-acoes {
+    min-height: 46px;
+    padding-block: 4px;
+  }
+  .aprendendo-quiz .aprendendo-quiz-acoes button {
+    min-height: 36px;
+  }
+}
+
+.aprendendo-cartao-foto {
+  position: relative;
+}
+
+@media (max-height: 680px) {
+  .aprendendo-estudo > .aprendendo-aula-capa {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .aprendendo-estudo > .aprendendo-aula-capa img {
+    display: none;
+  }
+
+  .aprendendo-aula-capa > div {
+    padding: 6px 10px;
+  }
+
+  .aprendendo-aula-capa p {
+    margin: 0;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-height: 600px) {
+  .aprendendo-quiz > header {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+}

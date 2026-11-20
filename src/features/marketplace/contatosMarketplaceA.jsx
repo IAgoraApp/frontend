@@ -1,14 +1,8 @@
 import { usePerfilPreparacao } from '../../app/dados/perfilNavegacao';
 import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import {
-  ArrowLeft,
-  Building2,
-  MessageCircle,
-  Send,
-  Trash2,
-} from 'lucide-react';
+import { Building2 } from 'lucide-react';
 import {
   alterarBancoMarketplace,
   inserir,
@@ -17,6 +11,7 @@ import {
 import { EditorMvp, PaginaMvp, VazioMvp } from '../../shared/ui/mvp';
 import DialogoMarketplace from './dialogoMarketplace';
 import AcordoServico from './acordoServico';
+import CaixaConversas from './CaixaConversas';
 import NavegacaoMarketplace from './navegacaoMarketplace';
 import { statusContratacao } from './marketplaceDados';
 import {
@@ -50,8 +45,9 @@ export default function ContatosMarketplaceA({
   const navegar = useNavigate();
   const preparacao = usePerfilPreparacao();
   const [params] = useSearchParams();
-  const concluidos = params.get('status') === 'concluidos';
-  const historico = useRef(null);
+  const filtro = params.get('status');
+  const concluidos = filtro === 'concluidos' || filtro === 'avaliados';
+  const avaliados = filtro === 'avaliados';
   const [edicao, setEdicao] = useState(null);
   const [confirmacao, setConfirmacao] = useState(null);
   const notificar = useAvisoPerfilA();
@@ -65,7 +61,12 @@ export default function ContatosMarketplaceA({
     ['aceito', 'em_andamento', 'concluido'].includes(c.status)
   );
   const servicosVisiveis = servicosMarcados.filter(
-    c => (c.status === 'concluido') === concluidos
+    c =>
+      (c.status === 'concluido') === concluidos &&
+      (!avaliados ||
+        banco.avaliacao_servico.some(
+          a => a.contratado_id === c.id && a.perfil_id === perfil.id
+        ))
   );
   const chats = banco.chat_servico.filter(
     c => c.perfil_id === perfil.id && chatDaContratacao(banco, c)
@@ -73,17 +74,11 @@ export default function ContatosMarketplaceA({
   const chat = chats.find(c => c.id === Number(id));
   const chatId = chat?.id;
   const mensagens = banco.mensagem.filter(m => m.chat_id === chatId);
-  const ultimaMensagem = mensagens.at(-1)?.id;
   const empresaAtual = empresa(chat?.empresa_id);
   const vinculoAtual = contratacoes.find(c => c.id === chat?.contratado_id);
   const servicoAtual = banco.servico.find(
     s => s.id === vinculoAtual?.servico_id
   );
-
-  useLayoutEffect(() => {
-    const painel = historico.current;
-    if (painel) painel.scrollTop = painel.scrollHeight;
-  }, [chatId, ultimaMensagem]);
 
   const naoLidas = mensagens.some(
     m => m.user_id !== perfil.user_id && !m.lida_em
@@ -178,17 +173,25 @@ export default function ContatosMarketplaceA({
               </Link>
               <Link
                 to='/servicos-contratados?status=concluidos'
-                aria-current={concluidos ? 'page' : undefined}
+                aria-current={filtro === 'concluidos' ? 'page' : undefined}
               >
                 Concluídos
+              </Link>
+              <Link
+                to='/servicos-contratados?status=avaliados'
+                aria-current={avaliados ? 'page' : undefined}
+              >
+                Minhas avaliações
               </Link>
             </nav>
             <div className='mercado-a-servicos-lista'>
               {!servicosVisiveis.length && (
                 <VazioMvp>
-                  {concluidos
-                    ? 'Nenhum serviço concluído para avaliar.'
-                    : 'Os serviços aparecem aqui após a confirmação do acordo.'}
+                  {avaliados
+                    ? 'Você ainda não avaliou nenhum serviço.'
+                    : concluidos
+                      ? 'Nenhum serviço concluído para avaliar.'
+                      : 'Os serviços aparecem aqui após a confirmação do acordo.'}
                 </VazioMvp>
               )}
               {servicosVisiveis
@@ -276,145 +279,45 @@ export default function ContatosMarketplaceA({
             </div>
           </section>
         ) : (
-          <div
-            className={
-              chat
-                ? 'mercado-a-inbox mercado-a-inbox-aberta'
-                : 'mercado-a-inbox'
+          <CaixaConversas
+            conversas={chats.map(c => {
+              const pedido = contratacoes.find(p => p.id === c.contratado_id);
+              const servico = banco.servico.find(
+                item => item.id === pedido?.servico_id
+              );
+              return {
+                id: c.id,
+                titulo: servico?.titulo || 'Serviço indisponível',
+                contato: empresa(c.empresa_id)?.nome || 'Empresa indisponível',
+              };
+            })}
+            chat={
+              chat && {
+                id: chat.id,
+                titulo: servicoAtual?.titulo || 'Conversa',
+              }
             }
-          >
-            <aside
-              className='mercado-a-conversas'
-              aria-label='Lista de conversas'
-            >
-              <h2>Conversas</h2>
-              {!chats.length && (
-                <VazioMvp>
-                  Abra um serviço no catálogo para iniciar uma conversa.
-                </VazioMvp>
-              )}
-              <ul>
-                {chats.map(c => {
-                  const historicoChat = banco.mensagem.filter(
-                    m => m.chat_id === c.id
-                  );
-                  const ultima = historicoChat.at(-1);
-                  const novas = historicoChat.filter(
-                    m => m.user_id !== perfil.user_id && !m.lida_em
-                  ).length;
-                  const vinculo = contratacoes.find(
-                    item => item.id === c.contratado_id
-                  );
-                  const nomeServico = banco.servico.find(
-                    s => s.id === vinculo?.servico_id
-                  )?.titulo;
-                  return (
-                    <li key={c.id}>
-                      <Link
-                        className='mercado-a-conversa'
-                        to={`/meus-contatos/${c.id}`}
-                        aria-current={chatId === c.id ? 'page' : undefined}
-                      >
-                        <span className='mercado-a-avatar'>
-                          <Building2 size={18} aria-hidden='true' />
-                        </span>
-                        <span className='mercado-a-conversa-resumo'>
-                          <strong>
-                            {nomeServico || 'Serviço indisponível'}
-                          </strong>
-                          <small>
-                            {empresa(c.empresa_id)?.nome ||
-                              'Empresa indisponível'}
-                          </small>
-                          <span>{ultima?.mensagem || 'Comece a conversa'}</span>
-                        </span>
-                        {novas > 0 && (
-                          <span
-                            className='mercado-a-nao-lidas'
-                            aria-label={`${novas} mensagens não lidas`}
-                          >
-                            {novas}
-                          </span>
-                        )}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </aside>
-            {chat ? (
-              <section
-                className='mercado-a-chat'
-                key={chat.id}
-                aria-label='Conversa com a empresa'
-              >
-                <header className='mercado-a-chat-topo'>
-                  <Link
-                    className='mercado-a-chat-voltar'
-                    to='/meus-contatos'
-                    aria-label='Voltar à lista de conversas'
-                  >
-                    <ArrowLeft size={20} aria-hidden='true' />
-                  </Link>
-                  <span className='mercado-a-avatar'>
-                    <Building2 size={18} aria-hidden='true' />
-                  </span>
-                  <div>
-                    <h2>{servicoAtual?.titulo || 'Conversa'}</h2>
-                    {servicoAtual && (
-                      <p>
-                        {empresaAtual?.nome}
-                        {vinculoAtual &&
-                          ` · ${statusContratacao[vinculoAtual.status] || vinculoAtual.status}`}
-                      </p>
-                    )}
-                  </div>
-                  <button
-                    type='button'
-                    className='mercado-a-chat-excluir'
-                    aria-label='Excluir conversa'
-                    onClick={() => {
-                      setErro('');
-                      setConfirmacao({
-                        titulo:
-                          vinculoAtual.status === 'pendente'
-                            ? 'Encerrar negociação?'
-                            : 'Excluir conversa?',
-                        texto:
-                          vinculoAtual.status === 'pendente'
-                            ? 'A negociação será encerrada e o histórico será removido.'
-                            : 'O histórico de mensagens desta conversa será removido.',
-                        acao: () => {
-                          alterarBancoMarketplace(db => {
-                            const atual = db.chat_servico.find(
-                              c => c.id === chat.id && c.perfil_id === perfil.id
-                            );
-                            if (!atual)
-                              throw new Error('Conversa indisponível.');
-                            const pedido = db.servico_contratado.find(
-                              c =>
-                                c.id === atual.contratado_id &&
-                                c.perfil_id === perfil.id
-                            );
-                            if (pedido?.status === 'pendente')
-                              pedido.status = 'cancelado';
-                            db.chat_servico = db.chat_servico.filter(
-                              c => c.id !== chat.id
-                            );
-                            db.mensagem = db.mensagem.filter(
-                              m => m.chat_id !== chat.id
-                            );
-                          });
-                          navegar('/meus-contatos', { replace: true });
-                        },
-                        sucesso: 'Conversa excluída.',
-                      });
-                    }}
-                  >
-                    <Trash2 size={18} aria-hidden='true' />
-                  </button>
-                </header>
-                <div className='mercado-a-chat-contexto'>
+            mensagens={banco.mensagem}
+            userId={perfil.user_id}
+            rota='/meus-contatos'
+            Icone={Building2}
+            interlocutor='a empresa'
+            vazio='Abra um serviço no catálogo para iniciar uma conversa.'
+            conversaAusente={Boolean(id && !chat)}
+            subtitulo={
+              servicoAtual &&
+              [
+                empresaAtual?.nome,
+                vinculoAtual &&
+                  (statusContratacao[vinculoAtual.status] ||
+                    vinculoAtual.status),
+              ]
+                .filter(Boolean)
+                .join(' · ')
+            }
+            contexto={
+              chat && (
+                <>
                   {vinculoAtual?.endereco_id && (
                     <p className='mercado-a-chat-endereco'>
                       {resumoEndereco(
@@ -424,103 +327,86 @@ export default function ContatosMarketplaceA({
                       )}
                     </p>
                   )}
-                  {!preparacao && <AcordoServico
-                    pedido={vinculoAtual}
-                    propostas={banco.propostas_marketplace}
-                    userId={perfil.user_id}
-                  />}
-                </div>
-                <ol
-                  className='mercado-a-mensagens'
-                  aria-label='Mensagens da conversa'
-                  aria-live='polite'
-                  ref={historico}
-                >
-                  {!mensagens.length && (
-                    <li className='mercado-a-chat-inicio'>
-                      Envie uma mensagem para começar a conversa.
-                    </li>
+                  {!preparacao && (
+                    <AcordoServico
+                      pedido={vinculoAtual}
+                      propostas={banco.propostas_marketplace}
+                      userId={perfil.user_id}
+                    />
                   )}
-                  {mensagens.map(m => (
-                    <li
-                      key={m.id}
-                      className='mercado-a-mensagem'
-                      data-enviada={m.user_id === perfil.user_id}
-                    >
-                      <p>{m.mensagem}</p>
-                      <time dateTime={m.data}>
-                        {new Date(m.data).toLocaleString('pt-BR', {
-                          dateStyle: 'short',
-                          timeStyle: 'short',
-                        })}
-                      </time>
-                    </li>
-                  ))}
-                </ol>
-                <form
-                  className='mercado-a-compositor'
-                  onSubmit={evento => {
-                    evento.preventDefault();
-                    const form = evento.currentTarget;
-                    const mensagem = new FormData(form).get('mensagem').trim();
-                    if (!mensagem) return;
+                </>
+              )
+            }
+            aoExcluir={() => {
+              setErro('');
+              setConfirmacao({
+                titulo:
+                  vinculoAtual.status === 'pendente'
+                    ? 'Encerrar negociação?'
+                    : 'Excluir conversa?',
+                texto:
+                  vinculoAtual.status === 'pendente'
+                    ? 'A negociação será encerrada e o histórico será removido.'
+                    : 'O histórico de mensagens desta conversa será removido.',
+                acao: () => {
+                  alterarBancoMarketplace(db => {
+                    const atual = db.chat_servico.find(
+                      c => c.id === chat.id && c.perfil_id === perfil.id
+                    );
+                    if (!atual) throw new Error('Conversa indisponível.');
+                    const pedido = db.servico_contratado.find(
+                      c =>
+                        c.id === atual.contratado_id &&
+                        c.perfil_id === perfil.id
+                    );
+                    if (pedido?.status === 'pendente')
+                      pedido.status = 'cancelado';
+                    db.chat_servico = db.chat_servico.filter(
+                      c => c.id !== chat.id
+                    );
+                    db.mensagem = db.mensagem.filter(
+                      m => m.chat_id !== chat.id
+                    );
+                  });
+                  navegar('/meus-contatos', { replace: true });
+                },
+                sucesso: 'Conversa excluída.',
+              });
+            }}
+            aoEnviar={evento => {
+              evento.preventDefault();
+              const form = evento.currentTarget;
+              const mensagem = new FormData(form).get('mensagem').trim();
+              if (!mensagem) return;
+              if (
+                executar(() =>
+                  alterarBancoMarketplace(db => {
                     if (
-                      executar(() =>
-                        alterarBancoMarketplace(db => {
-                          if (
-                            !db.chat_servico.some(
-                              c =>
-                                c.id === chat.id &&
-                                c.perfil_id === perfil.id &&
-                                chatDaContratacao(db, c)
-                            )
-                          )
-                            throw new Error('Conversa indisponível.');
-                          inserir(
-                            'mensagem',
-                            {
-                              chat_id: chat.id,
-                              user_id: perfil.user_id,
-                              mensagem,
-                              data: new Date().toISOString(),
-                              lida_em: null,
-                            },
-                            db
-                          );
-                        })
+                      !db.chat_servico.some(
+                        c =>
+                          c.id === chat.id &&
+                          c.perfil_id === perfil.id &&
+                          chatDaContratacao(db, c)
                       )
                     )
-                      form.reset();
-                  }}
-                >
-                  <textarea
-                    name='mensagem'
-                    aria-label='Mensagem para a empresa'
-                    placeholder='Escreva sua mensagem'
-                    rows={1}
-                    maxLength={2000}
-                    required
-                  />
-                  <button
-                    type='submit'
-                    className='mvp-primario'
-                    aria-label='Enviar mensagem'
-                  >
-                    <Send size={19} aria-hidden='true' />
-                  </button>
-                </form>
-              </section>
-            ) : (
-              <div className='mercado-a-chat-vazio'>
-                <MessageCircle size={28} aria-hidden='true' />
-                <p>
-                  {id
-                    ? 'Conversa não encontrada.'
-                    : 'Escolha uma conversa para acompanhar o serviço.'}
-                </p>
-              </div>
-            )}
-          </div>
+                      throw new Error('Conversa indisponível.');
+                    inserir(
+                      'mensagem',
+                      {
+                        chat_id: chat.id,
+                        user_id: perfil.user_id,
+                        mensagem,
+                        data: new Date().toISOString(),
+                        lida_em: null,
+                      },
+                      db
+                    );
+                  })
+                )
+              )
+                form.reset();
+            }}
+          />
         )}
         {edicao && !confirmacao && (
           <DialogoMarketplace

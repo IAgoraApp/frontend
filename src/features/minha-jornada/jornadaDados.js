@@ -3,7 +3,9 @@ import { proximoId, removerRegistro } from '../preparacao/modelo';
 import {
   descricaoGuia,
   encontrarGuia,
+  etapaCompras,
   etapasGuia,
+  fotosEtapa,
   nomeGuia,
   tarefasDaEtapa,
 } from './guiaMudanca';
@@ -12,7 +14,7 @@ function incluirEtapa(banco, jornada, { titulo, descricao, categoria = null }) {
   const etapas = banco.etapa_jornada.filter(
     item => item.jornada_id === jornada.id
   );
-  if (etapas.some(item => item.titulo === titulo))
+  if (!categoria && etapas.some(item => item.titulo === titulo))
     throw new Error('Já existe uma etapa com esse nome.');
   const etapa = {
     id: proximoId(banco.etapa_jornada),
@@ -45,38 +47,88 @@ function incluirTarefa(banco, etapa, { titulo, descricao }) {
   });
 }
 
+function incluirEtapaPadrao(banco, jornada, definicao) {
+  const etapa = incluirEtapa(banco, jornada, definicao);
+  for (const [titulo, descricao] of tarefasDaEtapa(definicao))
+    incluirTarefa(banco, etapa, { titulo, descricao });
+}
+
 function criarGuia(banco, usuario) {
   const jornada = {
     id: proximoId(banco.jornada),
     user_id: usuario,
     nome: nomeGuia,
+    comprasIncluidas: true,
     descricao: descricaoGuia,
     status: 'em_andamento',
     criada_em: new Date().toISOString(),
   };
   banco.jornada.push(jornada);
-  for (const definicao of etapasGuia) {
-    const etapa = incluirEtapa(banco, jornada, definicao);
-    for (const [titulo, descricao] of tarefasDaEtapa(definicao))
-      incluirTarefa(banco, etapa, { titulo, descricao });
-  }
+  for (const definicao of etapasGuia)
+    incluirEtapaPadrao(banco, jornada, definicao);
   return jornada;
 }
 
 export function atualizarGuia(usuario, etapaAtual, acao, dados) {
   alterarBancoPreparacao(banco => {
     const jornada = encontrarGuia(banco, usuario) ?? criarGuia(banco, usuario);
-    if (acao === 'adicionar-etapa') {
-      incluirEtapa(banco, jornada, dados);
-    } else {
-      const etapa = banco.etapa_jornada.find(
-        item =>
-          item.jornada_id === jornada.id && item.titulo === etapaAtual.titulo
+    if (!jornada.comprasIncluidas) {
+      const existentes = banco.etapa_jornada.filter(
+        item => item.jornada_id === jornada.id
       );
+      if (!existentes.some(item => item.categoria === etapaCompras.categoria))
+        incluirEtapaPadrao(banco, jornada, etapaCompras);
+      jornada.comprasIncluidas = true;
+    }
+    if (acao === 'adicionar-etapa') {
+      const etapa = incluirEtapa(banco, jornada, dados);
+      if (fotosEtapa.some(item => item.id === dados.foto)) {
+        banco.fotos_etapas_preparacao ??= [];
+        banco.fotos_etapas_preparacao.push({
+          etapa_id: etapa.id,
+          foto: dados.foto,
+        });
+      }
+    } else {
+      const etapasDaJornada = banco.etapa_jornada.filter(
+        item => item.jornada_id === jornada.id
+      );
+      const localizar = referencia =>
+        etapasDaJornada.find(item =>
+          referencia.registroId != null
+            ? item.id === referencia.registroId
+            : referencia.categoria
+              ? item.categoria === referencia.categoria
+              : item.titulo === referencia.titulo
+        );
+      const etapa = localizar(etapaAtual);
       if (!etapa) throw new Error('Esta etapa já não está disponível.');
-      if (acao === 'remover-etapa')
+      if (acao === 'renomear-etapa') {
+        if (
+          etapasDaJornada.some(
+            item => item.id !== etapa.id && item.titulo === dados.titulo
+          )
+        )
+          throw new Error('Já existe uma etapa com esse nome.');
+        etapa.titulo = dados.titulo;
+      } else if (acao === 'mover-etapa') {
+        const destino = localizar(dados);
+        if (!destino || destino.id === etapa.id) return;
+        const ordenadas = etapasDaJornada.toSorted((a, b) => a.ordem - b.ordem);
+        ordenadas.splice(ordenadas.indexOf(etapa), 1);
+        const indice =
+          ordenadas.indexOf(destino) + (dados.lado === 'depois' ? 1 : 0);
+        ordenadas.splice(indice, 0, etapa);
+        ordenadas.forEach((item, posicao) => {
+          item.ordem = posicao + 1;
+        });
+      } else if (acao === 'remover-etapa') {
         removerRegistro(banco, 'etapa_jornada', etapa.id);
-      else if (acao === 'adicionar-item') incluirTarefa(banco, etapa, dados);
+        banco.fotos_etapas_preparacao =
+          banco.fotos_etapas_preparacao?.filter(
+            item => item.etapa_id !== etapa.id
+          ) ?? [];
+      } else if (acao === 'adicionar-item') incluirTarefa(banco, etapa, dados);
       else {
         const tarefa = banco.tarefa_jornada.find(
           item =>

@@ -1,4 +1,4 @@
-import { useState, useSyncExternalStore } from 'react';
+import { createContext, useState, useSyncExternalStore } from 'react';
 
 const consulta = '(min-width: 768px) and (hover: hover) and (pointer: fine)';
 
@@ -11,9 +11,12 @@ function observarModo(avisar) {
 const suportaHover = () => window.matchMedia(consulta).matches;
 const semHover = () => false;
 
-export default function useMenuLateral() {
+export const HoverMenuLateral = createContext(null);
+
+export default function useMenuLateral(hoverCompartilhado) {
   const automatico = useSyncExternalStore(observarModo, suportaHover, semHover);
-  const [sobreMenu, setSobreMenu] = useState(false);
+  const hoverLocal = useState(false);
+  const [sobreMenu, setSobreMenu] = hoverCompartilhado ?? hoverLocal;
   const [focoTeclado, setFocoTeclado] = useState(false);
   const [recolhidoManual, setRecolhidoManual] = useState(false);
   const recolhido = automatico ? !sobreMenu && !focoTeclado : recolhidoManual;

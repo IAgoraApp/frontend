@@ -6,6 +6,7 @@ import {
   ChevronDown,
   Copy,
   House,
+  Flag,
   ListChecks,
   MessageCircle,
   PanelLeft,
@@ -25,6 +26,7 @@ import BotaoMenuLateral from '../../app/layouts/components/botaoMenuLateral';
 import useMenuLateral from '../../app/layouts/components/useMenuLateral';
 import { useRotinaBanco } from '../rotina/hooks/useRotinaBanco';
 import { areasCriacao, criarRegistro } from './criarRegistros';
+import { areasPreparacao, criarRegistroPreparacao } from './criarPreparacao';
 import './ia.css';
 
 const sugestoes = [
@@ -59,7 +61,7 @@ function responder(texto, preparacao) {
     preparacao &&
     /financ|dinheiro|orcamento|reserva|gasto|simul|custo/.test(pergunta)
   )
-    return 'Abra Finanças e informe a renda, a reserva e a data da mudança. Em Custos previstos, separe os gastos iniciais dos mensais. Se o saldo mensal ficar negativo, crie uma simulação para comparar outra opção de moradia. A estimativa de reserva soma os gastos iniciais a três meses dos gastos mensais cadastrados.';
+    return 'Abra Finanças e informe a renda, a reserva e a data da mudança. Em Custos previstos, separe os gastos iniciais dos mensais. Em Meu dinheiro, compare o saldo atual com o previsto após a mudança. Em Metas, você pode usar os custos do imóvel para calcular quanto guardar por mês ou por dia.';
   if (preparacao && /servic|empre|frete|montagem/.test(pergunta))
     return 'Em Empresas e Serviços, pesquise pelo serviço que precisa e confira onde o prestador atende. Para pedir orçamento de mudança, informe origem, destino, data, volume e se vai precisar de desmontagem ou montagem.';
   if (/receita/.test(pergunta))
@@ -84,33 +86,44 @@ const iconesCriacao = {
   limpeza: SprayCan,
   financas: Wallet,
   compras: ShoppingBasket,
+  jornada: ListChecks,
+  imoveis: House,
+  dinheiro: Wallet,
+  metas: Flag,
 };
 
 const conversasDaSessao = { itens: [], ativa: null };
+const conversasPreparacao = { itens: [], ativa: null };
 
 export default function InteligenciaArtificial() {
   const { pathname, state } = useLocation();
+  return <ConversaIA key={pathname} pathname={pathname} state={state} />;
+}
+
+function ConversaIA({ pathname, state }) {
   const rascunho = state?.rascunho;
-  const aceitaCriacao = pathname === '/ia';
   const preparacao = pathname === '/ia-b';
+  const aceitaCriacao = pathname === '/ia' || preparacao;
+  const areasDisponiveis = preparacao ? areasPreparacao : areasCriacao;
+  const sessao = preparacao ? conversasPreparacao : conversasDaSessao;
   const dados = useBancoMvp();
   const { despachar } = useRotinaBanco();
   const notificar = useAvisoPerfilA();
   const textoInicial =
     typeof rascunho === 'string' ? rascunho.slice(0, 2000) : '';
-  const [conversas, setConversas] = useState(() => conversasDaSessao.itens);
+  const [conversas, setConversas] = useState(() => sessao.itens);
   const [ativa, setAtiva] = useState(() =>
-    textoInicial ? null : conversasDaSessao.ativa
+    textoInicial ? null : sessao.ativa
   );
   const [texto, setTexto] = useState(textoInicial);
   const [area, setArea] = useState(() =>
-    aceitaCriacao && Object.hasOwn(areasCriacao, state?.area)
+    aceitaCriacao && Object.hasOwn(areasDisponiveis, state?.area)
       ? state.area
       : null
   );
   const [pedidoPendente, setPedidoPendente] = useState('');
   const seletor = useRef(null);
-  const areaAtiva = area && areasCriacao[area];
+  const areaAtiva = area && areasDisponiveis[area];
   const IconeArea = area && iconesCriacao[area];
   const [historicoAberto, setHistoricoAberto] = useState(false);
   const {
@@ -127,9 +140,9 @@ export default function InteligenciaArtificial() {
   const mensagens = conversa?.mensagens ?? [];
 
   useEffect(() => {
-    conversasDaSessao.itens = conversas;
-    conversasDaSessao.ativa = ativa;
-  }, [conversas, ativa]);
+    sessao.itens = conversas;
+    sessao.ativa = ativa;
+  }, [conversas, ativa, sessao]);
 
   useEffect(() => {
     fim.current?.scrollIntoView({ block: 'nearest', behavior: 'instant' });
@@ -157,12 +170,14 @@ export default function InteligenciaArtificial() {
     if (seletor.current) seletor.current.open = false;
     const id = ativa ?? crypto.randomUUID();
     let resposta;
-    if (aceitaCriacao && contexto) {
+    if (aceitaCriacao && Object.hasOwn(areasDisponiveis, contexto)) {
       const pedido = pedidoPendente
         ? pedidoPendente + '\n' + conteudo
         : conteudo;
       try {
-        resposta = criarRegistro(contexto, pedido, dados, despachar);
+        resposta = preparacao
+          ? criarRegistroPreparacao(contexto, pedido, dados)
+          : criarRegistro(contexto, pedido, dados, despachar);
         if (resposta.pendente) setPedidoPendente(pedido.slice(0, 4000));
         else escolherArea(null);
       } catch (falha) {
@@ -378,7 +393,14 @@ export default function InteligenciaArtificial() {
                   </div>
                   {mensagem.area && (
                     <span className='ia-mensagem-area'>
-                      Criar · {areasCriacao[mensagem.area].nome}
+                      Criar ·{' '}
+                      {
+                        (
+                          areasDisponiveis[mensagem.area] ??
+                          areasCriacao[mensagem.area] ??
+                          areasPreparacao[mensagem.area]
+                        )?.nome
+                      }
                     </span>
                   )}
                   <p>{mensagem.texto}</p>
@@ -481,7 +503,7 @@ export default function InteligenciaArtificial() {
                     <ChevronDown size={14} aria-hidden='true' />
                   </summary>
                   <ul aria-label='Áreas para criar registros'>
-                    {Object.entries(areasCriacao).map(([id, item]) => {
+                    {Object.entries(areasDisponiveis).map(([id, item]) => {
                       const Icone = iconesCriacao[id];
                       return (
                         <li key={id}>

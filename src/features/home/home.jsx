@@ -1,3 +1,4 @@
+import CabecalhoInicio from './components/CabecalhoInicio';
 import { Link } from 'react-router-dom';
 import { Rodape } from '../../shared/index';
 import { Botao, Container, Titulo } from '../../shared/ui/index';
@@ -19,47 +20,15 @@ export default function Inicio({ preparacao = false }) {
       className='inicio-tela min-w-0 bg-white font-corpo text-(--azul-titulo) [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-offset-4 [&_a:focus-visible]:outline-(--laranja-principal)'
     >
       <Container como='main' classe='inicio-conteudo'>
-        <div className='inicio-boas-vindas flex flex-col justify-between gap-6 lg:flex-row lg:items-center'>
-          <Titulo
-            como='h1'
-            classe='text-3xl leading-tight font-extrabold sm:text-4xl'
-          >
-            {preparacao ? 'Oi! Vamos planejar sua mudança?' : 'Oi! O que vamos resolver hoje?'}
-          </Titulo>
-          <div className='flex min-w-0 items-center justify-between gap-6 rounded-[10px] bg-(--azul-fundo) px-5 py-4 lg:w-[445px]'>
-            <div className='min-w-0'>
-              <p className='text-xs font-bold tracking-[1.5px] text-(--laranja-principal)'>
-                SEU MOMENTO
-              </p>
-              <p className='mt-1 truncate font-bold text-(--azul-titulo)'>
-                {momentoAtual}
-              </p>
-            </div>
-            <Link
-              to='/onboarding'
-              state={{ usuarioMvp: banco.perfil?.user_id }}
-              className='inline-flex min-h-11 shrink-0 items-center font-bold text-(--laranja-principal)'
-            >
-              Alterar ↗
-            </Link>
-          </div>
-        </div>
-
-        <nav
-          className='inicio-ferramentas'
-          aria-label='Ferramentas para a vida real'
-        >
-          {(preparacao ? atalhosPreparacao : atalhosInicio).map(item => (
-            <Link key={item.rota} to={item.rota}>
-              <span
-                aria-hidden='true'
-                className='inicio-ferramentas-icone'
-                style={{ '--ferramenta-icone': `url("${item.icone}")` }}
-              />
-              {item.rotulo}
-            </Link>
-          ))}
-        </nav>
+        <CabecalhoInicio
+          titulo={preparacao ? 'Oi! Vamos planejar sua mudança?' : 'Oi! O que vamos resolver hoje?'}
+          rotulo='SEU MOMENTO'
+          contexto={momentoAtual}
+          destino='/onboarding'
+          estado={{ usuarioMvp: banco.perfil?.user_id }}
+          acao='Alterar ↗'
+          atalhos={preparacao ? atalhosPreparacao : atalhosInicio}
+        />
 
         <div className='inicio-paineis grid items-stretch gap-5 lg:grid-cols-2'>
           <section
