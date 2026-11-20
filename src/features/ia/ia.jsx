@@ -1,3 +1,6 @@
+import { contaApi } from '../../app/dados/contaApi';
+import { useSessao } from '../../app/dados/sessao';
+import CartaoCriacao from './cartaoCriacao';
 import { acessoLocal } from '../../app/dados/acessoLocal';
 import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
 import { useEffect, useRef, useState } from 'react';
@@ -13,7 +16,6 @@ import {
   PanelLeft,
   Plus,
   Sparkles,
-  Store,
   ShoppingBasket,
   SprayCan,
   Wallet,
@@ -29,6 +31,58 @@ import { useRotinaBanco } from '../rotina/hooks/useRotinaBanco';
 import { areasCriacao, criarRegistro } from './criarRegistros';
 import { areasPreparacao, criarRegistroPreparacao } from './criarPreparacao';
 import './ia.css';
+
+function propostaValida(resposta) {
+  const { receita, tarefa, lancamento } = resposta;
+  if (
+    typeof lancamento?.nome === 'string' &&
+    lancamento.nome.trim() &&
+    lancamento.nome.length <= 150 &&
+    ['receita', 'despesa'].includes(lancamento.tipo) &&
+    Number.isFinite(lancamento.valor) &&
+    lancamento.valor >= 0.01 &&
+    lancamento.valor < 1e13 &&
+    typeof lancamento.data === 'string' &&
+    /^\d{4}-\d{2}-\d{2}$/.test(lancamento.data) &&
+    Number.isFinite(Date.parse(lancamento.data)) &&
+    typeof lancamento.pago === 'boolean'
+  )
+    return { ...lancamento, tipoRegistro: 'lancamento' };
+  if (
+    typeof receita?.nome === 'string' &&
+    receita.nome.trim() &&
+    receita.nome.length <= 150 &&
+    typeof receita.preparo === 'string' &&
+    receita.preparo.trim() &&
+    Array.isArray(receita.ingredientes) &&
+    receita.ingredientes.length > 0 &&
+    receita.ingredientes.length <= 30 &&
+    receita.ingredientes.every(
+      item =>
+        typeof item?.nomeItem === 'string' &&
+        item.nomeItem.trim() &&
+        item.nomeItem.length <= 150 &&
+        Number.isFinite(item.quantidade) &&
+        item.quantidade >= 0.01 &&
+        item.quantidade < 1e8
+    )
+  )
+    return { ...receita, tipoRegistro: 'receita' };
+
+  if (
+    typeof tarefa?.nome === 'string' &&
+    tarefa.nome.trim() &&
+    tarefa.nome.length <= 150 &&
+    Number.isInteger(tarefa.categoriaId) &&
+    tarefa.categoriaId > 0 &&
+    typeof tarefa.prazo === 'string' &&
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/.test(tarefa.prazo) &&
+    Number.isFinite(Date.parse(tarefa.prazo))
+  )
+    return { ...tarefa, tipoRegistro: 'tarefa' };
+
+  return null;
+}
 
 const sugestoes = [
   {
@@ -47,9 +101,9 @@ const sugestoes = [
     texto: 'Como montar uma rotina para a semana?',
   },
   {
-    Icone: Store,
-    titulo: 'Meu negócio por aqui',
-    texto: 'Como apresentar meus serviços no IAgora?',
+    Icone: MessageCircle,
+    titulo: 'Resolver um conflito',
+    texto: 'Como conversar sobre a divisão das tarefas de casa?',
   },
 ];
 
@@ -98,13 +152,22 @@ const conversasPreparacao = { itens: [], ativa: null };
 
 export default function InteligenciaArtificial() {
   const { pathname, state } = useLocation();
-  return <ConversaIA key={pathname} pathname={pathname} state={state} />;
+  const sessao = useSessao();
+  return (
+    <ConversaIA
+      key={pathname + ':' + (sessao?.token ?? '')}
+      pathname={pathname}
+      state={state}
+      autenticacao={sessao}
+    />
+  );
 }
 
-function ConversaIA({ pathname, state }) {
+function ConversaIA({ pathname, state, autenticacao }) {
   const rascunho = state?.rascunho;
   const preparacao = pathname === '/ia-b';
-  const aceitaCriacao = acessoLocal && (pathname === '/ia' || preparacao);
+  const aceitaCriacao =
+    !autenticacao && acessoLocal && (pathname === '/ia' || preparacao);
   const areasDisponiveis = preparacao ? areasPreparacao : areasCriacao;
   const sessao = preparacao ? conversasPreparacao : conversasDaSessao;
   const dados = useBancoMvp();
@@ -112,9 +175,20 @@ function ConversaIA({ pathname, state }) {
   const notificar = useAvisoPerfilA();
   const textoInicial =
     typeof rascunho === 'string' ? rascunho.slice(0, 2000) : '';
-  const [conversas, setConversas] = useState(() => sessao.itens);
+  const [conversas, setConversas] = useState(() =>
+    autenticacao ? [] : sessao.itens
+  );
+  const conversasAtuais = useRef(conversas);
+  const filaHistorico = useRef(Promise.resolve());
+  const falhasHistorico = useRef(new Map());
+  const [errosHistorico, setErrosHistorico] = useState([]);
+  const [carregandoHistorico, setCarregandoHistorico] = useState(
+    Boolean(autenticacao)
+  );
+  const [erroCarga, setErroCarga] = useState('');
+  const [tentativaCarga, setTentativaCarga] = useState(0);
   const [ativa, setAtiva] = useState(() =>
-    textoInicial ? null : sessao.ativa
+    textoInicial || autenticacao ? null : sessao.ativa
   );
   const [texto, setTexto] = useState(textoInicial);
   const [area, setArea] = useState(() =>
@@ -135,19 +209,82 @@ function ConversaIA({ pathname, state }) {
   } = useMenuLateral();
   const [copiada, setCopiada] = useState(null);
   const [erro, setErro] = useState('');
+  const [mensagemPendente, setMensagemPendente] = useState('');
+  const enviando = Boolean(mensagemPendente);
+  const requisicao = useRef(null);
   const campo = useRef(null);
   const fim = useRef(null);
   const conversa = conversas.find(item => item.id === ativa);
   const mensagens = conversa?.mensagens ?? [];
 
   useEffect(() => {
+    if (autenticacao) return;
     sessao.itens = conversas;
     sessao.ativa = ativa;
-  }, [conversas, ativa, sessao]);
+  }, [conversas, ativa, sessao, autenticacao]);
 
   useEffect(() => {
     fim.current?.scrollIntoView({ block: 'nearest', behavior: 'instant' });
-  }, [conversas, ativa]);
+  }, [conversas, ativa, mensagemPendente]);
+
+  useEffect(() => () => requisicao.current?.abort(), []);
+
+  useEffect(() => {
+    if (!autenticacao) return;
+    const controle = new AbortController();
+    contaApi('/assistente/historico', {
+      token: autenticacao.token,
+      signal: controle.signal,
+    })
+      .then(itens => {
+        if (controle.signal.aborted) return;
+        conversasAtuais.current = itens;
+        setConversas(itens);
+        if (!textoInicial) setAtiva(itens[0]?.id ?? null);
+        setCarregandoHistorico(false);
+      })
+      .catch(falha => {
+        if (!controle.signal.aborted) setErroCarga(falha.message);
+      });
+    return () => controle.abort();
+  }, [autenticacao, tentativaCarga, textoInicial]);
+
+  function persistirHistorico(id, conversa) {
+    if (!autenticacao) return;
+    const operacao = async () => {
+      try {
+        await contaApi('/assistente/historico/' + id, {
+          token: autenticacao.token,
+          metodo: conversa ? 'PUT' : 'DELETE',
+          dados: conversa && {
+            titulo: conversa.titulo,
+            mensagens: conversa.mensagens.map(m =>
+              m.registro?.estado === 'salvando'
+                ? { ...m, registro: { estado: 'incerto' } }
+                : m
+            ),
+          },
+        });
+        if (falhasHistorico.current.delete(id)) {
+          setErrosHistorico([...falhasHistorico.current]);
+        }
+      } catch (falha) {
+        falhasHistorico.current.set(id, falha.message);
+        setErrosHistorico([...falhasHistorico.current]);
+      }
+    };
+    filaHistorico.current = filaHistorico.current.then(operacao);
+  }
+
+  function alterarConversa(id, alterar, salvar = true) {
+    const atual = conversasAtuais.current.find(item => item.id === id);
+    const proxima = alterar(atual);
+    const outras = conversasAtuais.current.filter(item => item.id !== id);
+    const itens = proxima ? [proxima, ...outras] : outras;
+    conversasAtuais.current = itens;
+    setConversas(itens);
+    if (salvar) persistirHistorico(id, proxima);
+  }
 
   function escolherArea(proxima) {
     if (proxima !== area) setPedidoPendente('');
@@ -165,13 +302,57 @@ function ConversaIA({ pathname, state }) {
     campo.current?.focus();
   }
 
-  function enviar(pergunta = texto, contexto = area) {
+  async function enviar(pergunta = texto, contexto = area) {
     const conteudo = pergunta.trim();
-    if (!conteudo) return;
+    if (!conteudo || requisicao.current || carregandoHistorico) return;
     if (seletor.current) seletor.current.open = false;
     const id = ativa ?? crypto.randomUUID();
     let resposta;
-    if (aceitaCriacao && Object.hasOwn(areasDisponiveis, contexto)) {
+    if (autenticacao) {
+      const controle = new AbortController();
+      requisicao.current = controle;
+      setMensagemPendente(conteudo);
+      setTexto(atual => (atual.trim() === conteudo ? '' : atual));
+      setErro('');
+      try {
+        const resultado = await contaApi('/assistente/conversas', {
+          metodo: 'POST',
+          token: autenticacao.token,
+          signal: controle.signal,
+          timeout: 30000,
+          dados: {
+            preparacao,
+            mensagens: [
+              ...mensagens.slice(-8).map(({ papel, texto }) => ({
+                papel,
+                texto: texto.slice(0, 4000),
+              })),
+              { papel: 'usuario', texto: conteudo },
+            ],
+          },
+        });
+        const proposta = propostaValida(resultado);
+        resposta = {
+          texto:
+            !proposta &&
+            (resultado.receita || resultado.tarefa || resultado.lancamento)
+              ? resultado.texto +
+                '\n\nA proposta veio incompleta. Peça uma nova versão para poder salvar.'
+              : resultado.texto,
+          links: resultado.links,
+          proposta,
+        };
+      } catch (falha) {
+        if (!controle.signal.aborted) {
+          setErro(falha.message);
+          setTexto(atual => atual || conteudo);
+        }
+        return;
+      } finally {
+        requisicao.current = null;
+        if (!controle.signal.aborted) setMensagemPendente('');
+      }
+    } else if (aceitaCriacao && Object.hasOwn(areasDisponiveis, contexto)) {
       const pedido = pedidoPendente
         ? pedidoPendente + '\n' + conteudo
         : conteudo;
@@ -200,20 +381,15 @@ function ConversaIA({ pathname, state }) {
       },
       { id: crypto.randomUUID(), papel: 'assistente', ...resposta },
     ];
-    setConversas(anteriores =>
-      ativa
-        ? anteriores.map(item =>
-            item.id === ativa
-              ? { ...item, mensagens: [...item.mensagens, ...novasMensagens] }
-              : item
-          )
-        : [
-            { id, titulo: conteudo.slice(0, 70), mensagens: novasMensagens },
-            ...anteriores,
-          ]
-    );
+    alterarConversa(id, anterior => ({
+      id,
+      titulo: anterior?.titulo ?? conteudo.slice(0, 70),
+      mensagens: [...(anterior?.mensagens ?? []), ...novasMensagens],
+    }));
     setAtiva(id);
-    setTexto('');
+    setTexto(atual =>
+      !autenticacao || atual.trim() === conteudo ? '' : atual
+    );
     setErro('');
     campo.current?.focus();
   }
@@ -248,7 +424,11 @@ function ConversaIA({ pathname, state }) {
         >
           <PanelLeft size={18} /> Conversas
         </button>
-        <button type='button' onClick={novaConversa}>
+        <button
+          type='button'
+          onClick={novaConversa}
+          disabled={enviando || carregandoHistorico}
+        >
           <Plus size={18} /> Nova conversa
         </button>
       </div>
@@ -280,6 +460,7 @@ function ConversaIA({ pathname, state }) {
           className='ia-nova'
           type='button'
           onClick={novaConversa}
+          disabled={enviando || carregandoHistorico}
           aria-label='Nova conversa'
           title={menuRecolhido ? 'Nova conversa' : undefined}
         >
@@ -293,7 +474,27 @@ function ConversaIA({ pathname, state }) {
         >
           <h2>Suas conversas</h2>
           <div className='ia-lista'>
-            {!conversas.length && (
+            {carregandoHistorico &&
+              (erroCarga ? (
+                <p role='alert' className='ia-sem-historico'>
+                  {erroCarga}{' '}
+                  <button
+                    type='button'
+                    className='ia-ver-registro'
+                    onClick={() => {
+                      setErroCarga('');
+                      setTentativaCarga(valor => valor + 1);
+                    }}
+                  >
+                    Recarregar histórico
+                  </button>
+                </p>
+              ) : (
+                <p role='status' className='ia-sem-historico'>
+                  Carregando conversas…
+                </p>
+              ))}
+            {!carregandoHistorico && !conversas.length && (
               <p className='ia-sem-historico'>
                 Sua primeira conversa começa ao lado. Vamos pensar juntos?
               </p>
@@ -305,11 +506,13 @@ function ConversaIA({ pathname, state }) {
               >
                 <button
                   type='button'
+                  disabled={enviando || carregandoHistorico}
                   aria-current={ativa === item.id ? 'true' : undefined}
                   onClick={() => {
                     setAtiva(item.id);
                     setTexto('');
                     escolherArea(null);
+                    setErro('');
                     setHistoricoAberto(false);
                   }}
                 >
@@ -319,11 +522,14 @@ function ConversaIA({ pathname, state }) {
                 <button
                   type='button'
                   className='ia-excluir'
+                  disabled={
+                    enviando ||
+                    carregandoHistorico ||
+                    item.mensagens.some(m => m.registro?.estado === 'salvando')
+                  }
                   aria-label={`Excluir conversa: ${item.titulo}`}
                   onClick={() => {
-                    setConversas(anteriores =>
-                      anteriores.filter(c => c.id !== item.id)
-                    );
+                    alterarConversa(item.id, () => null);
                     if (ativa === item.id) novaConversa();
                   }}
                 >
@@ -332,10 +538,32 @@ function ConversaIA({ pathname, state }) {
               </div>
             ))}
           </div>
-          <p className='ia-nota-historico'>
-            As conversas ficam disponíveis enquanto esta página estiver aberta
-            no navegador.
-          </p>
+          {errosHistorico.length > 0 && (
+            <p className='ia-nota-historico' role='alert'>
+              A alteração no histórico ainda não foi salva.{' '}
+              {errosHistorico[0][1]}{' '}
+              <button
+                type='button'
+                className='ia-ver-registro'
+                onClick={() => {
+                  for (const [id] of errosHistorico) {
+                    persistirHistorico(
+                      id,
+                      conversasAtuais.current.find(item => item.id === id) ??
+                        null
+                    );
+                  }
+                }}
+              >
+                Tentar novamente
+              </button>
+            </p>
+          )}
+          {!autenticacao && (
+            <p className='ia-nota-historico'>
+              Conversas de demonstração ficam nesta sessão.
+            </p>
+          )}
         </div>
       </aside>
       <section className='ia-espaco' aria-label='Chat com IAgora IA'>
@@ -343,10 +571,10 @@ function ConversaIA({ pathname, state }) {
           <span>
             <Sparkles size={17} /> Seu assistente do dia a dia
           </span>
-          <span className='ia-demo'>Demonstração</span>
+          {!autenticacao && <span className='ia-demo'>Demonstração</span>}
         </header>
         <div className='ia-conteudo'>
-          {!mensagens.length ? (
+          {!mensagens.length && !enviando ? (
             <div className='ia-boas-vindas'>
               <div className='ia-emblema' aria-hidden='true'>
                 <Sparkles size={34} strokeWidth={1.6} />
@@ -357,13 +585,11 @@ function ConversaIA({ pathname, state }) {
                 hoje?
               </p>
               <div className='ia-sugestoes'>
-                {(preparacao
-                  ? sugestoes.filter(item => item.Icone !== Store)
-                  : sugestoes
-                ).map(({ Icone, titulo, texto: sugestao }) => (
+                {sugestoes.map(({ Icone, titulo, texto: sugestao }) => (
                   <button
                     type='button'
                     key={titulo}
+                    disabled={enviando || carregandoHistorico}
                     onClick={() => enviar(sugestao, null)}
                   >
                     <Icone size={21} strokeWidth={1.7} />
@@ -405,6 +631,38 @@ function ConversaIA({ pathname, state }) {
                     </span>
                   )}
                   <p>{mensagem.texto}</p>
+                  {mensagem.proposta && (
+                    <CartaoCriacao
+                      proposta={mensagem.proposta}
+                      registro={mensagem.registro}
+                      sessao={autenticacao}
+                      aoAtualizar={registro =>
+                        alterarConversa(
+                          conversa.id,
+                          item => ({
+                            ...item,
+                            mensagens: item.mensagens.map(m =>
+                              m.id === mensagem.id ? { ...m, registro } : m
+                            ),
+                          }),
+                          registro.estado !== 'salvando'
+                        )
+                      }
+                    />
+                  )}
+                  {mensagem.links?.length > 0 && (
+                    <nav className='ia-links' aria-label='Páginas sugeridas'>
+                      {mensagem.links.map(link => (
+                        <Link
+                          key={link.rota}
+                          className='ia-ver-registro'
+                          to={link.rota}
+                        >
+                          {link.titulo}
+                        </Link>
+                      ))}
+                    </nav>
+                  )}
                   {mensagem.rota && (
                     <Link className='ia-ver-registro' to={mensagem.rota}>
                       Ver registro
@@ -428,6 +686,28 @@ function ConversaIA({ pathname, state }) {
                   )}
                 </article>
               ))}
+              {enviando && (
+                <>
+                  <article className='ia-mensagem ia-mensagem-usuario'>
+                    <div className='ia-autor'>
+                      <strong>Você</strong>
+                    </div>
+                    <p>{mensagemPendente}</p>
+                  </article>
+                  <article className='ia-mensagem ia-mensagem-assistente ia-aguardando'>
+                    <div className='ia-autor'>
+                      <Sparkles size={16} />
+                      <strong>IAgora IA</strong>
+                    </div>
+                    <div className='ia-indicador' role='status'>
+                      <span className='ia-sr-only'>Preparando resposta</span>
+                      <i aria-hidden='true' />
+                      <i aria-hidden='true' />
+                      <i aria-hidden='true' />
+                    </div>
+                  </article>
+                </>
+              )}
               <div ref={fim} />
             </div>
           )}
@@ -479,10 +759,11 @@ function ConversaIA({ pathname, state }) {
                 if (
                   evento.key === 'Enter' &&
                   !evento.shiftKey &&
-                  !evento.nativeEvent.isComposing
+                  !evento.nativeEvent.isComposing &&
+                  evento.keyCode !== 229
                 ) {
                   evento.preventDefault();
-                  enviar();
+                  evento.currentTarget.form?.requestSubmit();
                 }
               }}
             />
@@ -521,12 +802,12 @@ function ConversaIA({ pathname, state }) {
                   </ul>
                 </details>
               ) : (
-                <span>Vamos por partes, juntos.</span>
+                <span>Enter para enviar · Shift+Enter para nova linha</span>
               )}
               <button
                 type='submit'
                 className='ia-enviar'
-                disabled={!texto.trim()}
+                disabled={!texto.trim() || enviando || carregandoHistorico}
                 aria-label='Enviar mensagem'
               >
                 <ArrowUp size={21} />
@@ -547,9 +828,11 @@ function ConversaIA({ pathname, state }) {
             </nav>
           )}
           <p className='ia-aviso'>
-            {aceitaCriacao
-              ? 'Demonstração local. O modo Criar interpreta pedidos por regras e salva no banco de teste.'
-              : 'Demonstração com respostas prontas, sem conexão com uma IA.'}
+            {autenticacao
+              ? 'O Gemini recebe as mensagens recentes e uma seleção de dados da sua conta para responder. Na camada gratuita, o Google pode usar esse conteúdo para melhorar seus produtos. Evite incluir dados sensíveis.'
+              : aceitaCriacao
+                ? 'Demonstração local. O modo Criar interpreta pedidos por regras e salva no banco de teste.'
+                : 'Demonstração com respostas prontas, sem conexão com uma IA.'}
           </p>
         </div>
       </section>

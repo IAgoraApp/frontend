@@ -57,7 +57,7 @@ const rotasPublicas = new Set([
 
 export async function contaApi(
   caminho,
-  { metodo = 'GET', dados, token, signal, params, responseType } = {}
+  { metodo = 'GET', dados, token, signal, params, responseType, timeout } = {}
 ) {
   const resposta = await api.request({
     url: caminho,
@@ -67,6 +67,7 @@ export async function contaApi(
     signal,
     params,
     responseType,
+    timeout,
     autenticado: !rotasPublicas.has(caminho),
   });
   return resposta.status === 204 ? null : resposta.data;

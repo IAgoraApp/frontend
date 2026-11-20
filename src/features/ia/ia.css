@@ -609,3 +609,84 @@
     opacity: 1;
   }
 }
+
+.ia-cartao-criacao {
+  display: grid;
+  gap: 0.6rem;
+  border: 1px solid #d2ddec;
+  border-radius: 0.8rem;
+  overflow: hidden;
+  margin-block: 0.75rem;
+}
+
+.ia-cartao-criacao h3 {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.ia-cartao-criacao ul {
+  padding-inline-start: 1.25rem;
+  list-style: disc;
+}
+
+.ia-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.ia-cartao-imagem {
+  width: 100%;
+  height: clamp(6rem, 18vw, 10rem);
+  object-fit: cover;
+  display: block;
+}
+
+.ia-cartao-criacao[data-tipo='lancamento'] .ia-cartao-imagem,
+.ia-cartao-criacao[data-tipo='tarefa'] .ia-cartao-imagem {
+  object-fit: contain;
+  background: #e9f0fa;
+}
+
+.ia-cartao-corpo {
+  display: grid;
+  gap: 0.6rem;
+  padding: 0 1rem 1rem;
+}
+
+.ia-indicador {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 1.5rem;
+}
+
+.ia-indicador i {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: #416a9f;
+  animation: ia-ponto 1.2s ease-in-out infinite;
+}
+
+.ia-indicador i:nth-of-type(2) { animation-delay: 0.15s; }
+.ia-indicador i:nth-of-type(3) { animation-delay: 0.3s; }
+
+@keyframes ia-ponto {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.45; }
+  30% { transform: translateY(-0.3rem); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ia-indicador i { animation: none; }
+}
+
+.ia-cartao-criacao button {
+  justify-self: start;
+  cursor: pointer;
+}
+
+.ia-cartao-criacao button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
