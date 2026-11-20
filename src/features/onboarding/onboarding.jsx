@@ -21,7 +21,7 @@ export function Integracao({ cadastro = false }) {
   const [erro, setErro] = useState('');
   const conta = acessoLocal ? null : lerSessao();
   const sessao = conta?.tipo === 1 ? conta : null;
-  if (cadastro && !acessoLocal && sessao?.tipo !== 1)
+  if (!acessoLocal && sessao?.tipo !== 1)
     return <Navigate to='/login' replace />;
 
   if (cadastro && sessao && !sessao.cadastroPendente)
@@ -50,13 +50,13 @@ export function Integracao({ cadastro = false }) {
           dados: { tipo },
         });
       }
-      try {
+      if (acessoLocal) try {
         localStorage.setItem('iagora:situacao-moradia', opcao.id);
       } catch {
         // A escolha também é guardada no perfil da plataforma.
       }
-      const estado = lerEstadoPlataforma();
-      salvarEstadoPlataforma({
+      const estado = acessoLocal && lerEstadoPlataforma();
+      if (estado) salvarEstadoPlataforma({
         ...estado,
         perfil: {
           ...estado.perfil,

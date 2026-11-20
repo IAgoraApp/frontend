@@ -15,6 +15,8 @@ import {
   AcaoFinancas,
   DialogoFinancas,
 } from '../../financas/components/financeUi';
+import { useDadosServidor } from '../../../app/dados/contextoServidor';
+import { salvarMetaMudanca } from '../planejamentoApi';
 import { proximoId } from '../../preparacao/modelo';
 import { alterarDinheiro, centavos, validarValor } from '../dinheiroDados';
 import cofrinho from '../../financas/assets/porquinho-metas.webp';
@@ -247,6 +249,8 @@ function EditorMeta({
   dataMudanca,
   aoFinalizar,
 }) {
+  const servidor = useDadosServidor();
+  const [salvando, setSalvando] = useState(false);
   const [rascunho, setRascunho] = useState(inicial);
   const [erro, setErro] = useState('');
   const [confirmarExclusao, setConfirmarExclusao] = useState(false);
@@ -272,8 +276,11 @@ function EditorMeta({
     setErro('');
   }
 
-  function salvar(evento) {
+  async function salvar(evento) {
     evento.preventDefault();
+    if (salvando) return;
+    setSalvando(true);
+    setErro('');
     try {
       if (!rascunho.nome.trim()) throw new Error('Dê um nome para a meta.');
       if (!temAlvo)
@@ -284,16 +291,21 @@ function EditorMeta({
       if (rascunho.modo === 'aporte' && falta > 0 && prazo == null)
         throw new Error('Informe quanto você pode guardar por mês.');
       if (rascunho.modo === 'aporte') validarValor(aporte, 'o valor mensal');
-      alterarDinheiro(usuario, registro => {
-        const meta = {
+      const meta = {
           ...rascunho,
           alvo,
           estimativaMudanca: metaDaMudanca ? estimativa : undefined,
           data,
           meses: undefined,
           nome: rascunho.nome.trim(),
-          id: rascunho.id ?? proximoId(registro.metas),
+          aporte: rascunho.modo === 'aporte' ? aporte : null,
         };
+      if (servidor) {
+        const { id, nome, fonte, modo, estimativaMudanca } = meta;
+        await salvarMetaMudanca(id, { nome, fonte, modo, alvo, data: data || null, aporte: meta.aporte, estimativaMudanca });
+        await servidor.atualizar();
+      } else alterarDinheiro(usuario, registro => {
+        meta.id ??= proximoId(registro.metas);
         registro.metas = rascunho.id
           ? registro.metas.map(item => (item.id === meta.id ? meta : item))
           : [...registro.metas, meta];
@@ -301,6 +313,8 @@ function EditorMeta({
       aoFinalizar('Meta salva.');
     } catch (falha) {
       setErro(falha.message);
+    } finally {
+      setSalvando(false);
     }
   }
 
@@ -309,14 +323,22 @@ function EditorMeta({
     setErro('');
   }
 
-  function remover() {
+  async function remover() {
+    if (salvando) return;
+    setSalvando(true);
+    setErro('');
     try {
-      alterarDinheiro(usuario, registro => {
+      if (servidor) {
+        await salvarMetaMudanca(rascunho.id);
+        await servidor.atualizar();
+      } else alterarDinheiro(usuario, registro => {
         registro.metas = registro.metas.filter(item => item.id !== rascunho.id);
       });
       aoFinalizar('Meta excluída.');
     } catch (falha) {
       setErro(falha.message);
+    } finally {
+      setSalvando(false);
     }
   }
 
@@ -445,7 +467,7 @@ function EditorMeta({
         )}
         {erro && !confirmarExclusao && <p role='alert'>{erro}</p>}
         <footer>
-          <BotaoCasa type='submit'>Salvar meta</BotaoCasa>
+          <BotaoCasa type='submit' disabled={salvando}>Salvar meta</BotaoCasa>
         </footer>
       </form>
       <div className='dinheiro-meta-coluna'>
@@ -561,7 +583,7 @@ function EditorMeta({
             <AcaoFinancas secundario onClick={fecharConfirmacao}>
               Cancelar
             </AcaoFinancas>
-            <AcaoFinancas classe='finance-dialog-delete' onClick={remover}>
+            <AcaoFinancas classe='finance-dialog-delete' disabled={salvando} onClick={remover}>
               Excluir meta
             </AcaoFinancas>
           </div>

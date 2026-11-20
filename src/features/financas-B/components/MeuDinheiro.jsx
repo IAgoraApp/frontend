@@ -11,6 +11,8 @@ import { Link } from 'react-router-dom';
 import { moeda } from '../../../app/dados/bancoMvp';
 import { EditorMvp } from '../../../shared/ui/mvp';
 import { BotaoCasa, DialogoCasa } from '../../casa/components/casaUi';
+import { useDadosServidor } from '../../../app/dados/contextoServidor';
+import { salvarGastoAtual } from '../planejamentoApi';
 import { proximoId } from '../../preparacao/modelo';
 import {
   alterarDinheiro,
@@ -48,31 +50,50 @@ export default function MeuDinheiro({
   rotaPlano,
   editarSituacao,
 }) {
+  const servidor = useDadosServidor();
+  const [excluindo, setExcluindo] = useState(false);
   const [editor, setEditor] = useState(null);
   const [erro, setErro] = useState('');
   const rendaInformada = resumo.renda != null;
 
-  function salvarGasto(valores) {
+  async function salvarGasto(valores) {
+    const gasto = {
+      ...valores,
+      categoria: valores.categoria ?? '',
+      valor: validarValor(valores.valor, 'o gasto'),
+    };
+    if (servidor) {
+      await salvarGastoAtual(editor.id, gasto);
+      await servidor.atualizar();
+      return;
+    }
     alterarDinheiro(usuario, registro => {
-      const gasto = {
-        ...valores,
+      const registroGasto = {
+        ...gasto,
         id: editor.id ?? proximoId(registro.gastos),
-        valor: validarValor(valores.valor, 'o gasto'),
       };
       registro.gastos = editor.id
-        ? registro.gastos.map(item => (item.id === editor.id ? gasto : item))
-        : [...registro.gastos, gasto];
+        ? registro.gastos.map(item => (item.id === editor.id ? registroGasto : item))
+        : [...registro.gastos, registroGasto];
     });
   }
 
-  function removerGasto() {
+  async function removerGasto() {
+    if (excluindo) return;
+    setExcluindo(true);
+    setErro('');
     try {
-      alterarDinheiro(usuario, registro => {
+      if (servidor) {
+        await salvarGastoAtual(editor.id);
+        await servidor.atualizar();
+      } else alterarDinheiro(usuario, registro => {
         registro.gastos = registro.gastos.filter(item => item.id !== editor.id);
       });
       setEditor(null);
     } catch (falha) {
       setErro(falha.message);
+    } finally {
+      setExcluindo(false);
     }
   }
 
@@ -211,6 +232,7 @@ export default function MeuDinheiro({
                 <button
                   type='button'
                   className='dinheiro-editor-excluir'
+                  disabled={excluindo}
                   onClick={removerGasto}
                 >
                   <Trash2 size={15} aria-hidden='true' /> Excluir gasto

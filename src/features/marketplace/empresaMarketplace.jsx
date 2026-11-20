@@ -1,3 +1,4 @@
+import ImagemMarketplace from './ImagemMarketplace';
 import { useState } from 'react';
 import {
   ArrowUpRight,
@@ -39,7 +40,7 @@ export function MarcaEmpresa({ empresa }) {
   return (
     <span className='mercado-a-marca-empresa' aria-hidden='true'>
       {!falhou && imagemPublica(empresa.logo) ? (
-        <img src={empresa.logo} alt='' onError={() => setFalhou(true)} />
+        <ImagemMarketplace src={empresa.logo} alt='' onError={() => setFalhou(true)} />
       ) : (
         iniciais || <Building2 size={24} />
       )}
@@ -47,11 +48,11 @@ export function MarcaEmpresa({ empresa }) {
   );
 }
 
-export function CartaoEmpresa({ empresa, estado }) {
+export function CartaoEmpresa({ empresa, estado, prefixo = '' }) {
   return (
     <Link
       className='mercado-a-perfil-cartao'
-      to={`/empresas/${empresa.id}`}
+      to={`${prefixo}/empresas/${empresa.id}`}
       state={estado}
     >
       <div className='mercado-a-perfil-identidade'>

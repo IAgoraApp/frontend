@@ -1,3 +1,6 @@
+import { useDadosServidor } from '../../app/dados/contextoServidor';
+import { encerrarSessao } from '../../app/dados/sessao';
+import { salvarIdentidade, salvarPerfilPessoal, vincularEndereco } from './perfilApi';
 import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
 import { useState } from 'react';
 import {
@@ -8,7 +11,7 @@ import {
   Receipt,
   UserRound,
 } from 'lucide-react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { rotaPerfilMoradia, usePerfilPreparacao } from '../../app/dados/perfilNavegacao';
 import { useBancoMvp } from '../../app/dados/bancoMvp';
 import Rodape from '../../shared/footer';
@@ -50,6 +53,8 @@ function EnderecoPerfil({ endereco }) {
 }
 
 export default function PerfilA() {
+  const servidor = useDadosServidor();
+  const navegar = useNavigate();
   const preparacao = usePerfilPreparacao();
   const rotaPerfil = rotaPerfilMoradia(preparacao ? 2 : 1);
   const { b, perfil, casa } = useBancoMvp();
@@ -68,9 +73,12 @@ export default function PerfilA() {
     setModal(tipo);
   }
 
-  function removerEndereco() {
+  async function removerEndereco() {
     try {
-      desvincularEnderecoPerfil(perfil.user_id);
+      if (servidor) {
+        await vincularEndereco(perfil.id);
+        await servidor.atualizar();
+      } else desvincularEnderecoPerfil(perfil.user_id);
       setModal('');
       notificar('Endereço removido do perfil.');
     } catch (falha) {
@@ -97,10 +105,14 @@ export default function PerfilA() {
           <IdentidadePerfil
             nome={perfil.nome}
             email={usuario.email}
-            foto={perfil.foto}
+            foto={perfil.foto === '/images/perfil-padrao.svg' ? null : perfil.foto}
             situacao={situacao}
             aoAlterarFoto={() => abrirModal('foto')}
           />
+          {servidor && <Botao type='button' variante='contorno' classe='mb-4' onClick={() => {
+            encerrarSessao();
+            navegar('/login', { replace: true });
+          }}>Sair da conta</Botao>}
           <div className='grid min-w-0 gap-4'>
             <NavegacaoPerfil areas={areas} rota={rotaPerfil} visao={visao} />
             {visao === 'perfil' ? (
@@ -133,8 +145,11 @@ export default function PerfilA() {
                         },
                       ]}
                       mostrarCancelar={false}
-                      onSave={valores => {
-                        salvarInformacoes(perfil.user_id, valores);
+                      onSave={async valores => {
+                        if (servidor) {
+                          await salvarIdentidade(perfil.id, valores);
+                          await servidor.atualizar();
+                        } else salvarInformacoes(perfil.user_id, valores);
                         notificar('Informações pessoais atualizadas.');
                       }}
                     />
@@ -316,8 +331,12 @@ export default function PerfilA() {
                     )
                   }
                   rotuloSalvar='Salvar alterações'
-                  onSave={valores => {
-                    if (modal === 'foto')
+                  onSave={async valores => {
+                    if (servidor) {
+                      if (modal === 'foto') await salvarPerfilPessoal(perfil.id, { foto: valores.foto ?? '' });
+                      else await vincularEndereco(perfil.id, valores);
+                      await servidor.atualizar();
+                    } else if (modal === 'foto')
                       salvarFotoPerfil(perfil.user_id, valores.foto);
                     else salvarEnderecoPerfil(perfil.user_id, valores);
                     notificar(

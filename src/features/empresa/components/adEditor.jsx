@@ -1,6 +1,8 @@
 import { Camera, ClipboardList, CircleDollarSign } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useDadosServidor } from '../../../app/dados/contextoServidor';
+import { enviarImagemEmpresa } from '../empresaApi';
 import { EditorMvp } from '../../../shared/ui/mvp';
 import { categoriasMercado } from '../../marketplace/content';
 import EditorFotos from './photoEditor';
@@ -20,6 +22,7 @@ export default function EditorAnuncio({
   aoSalvar,
   aoCancelar,
 }) {
+  const servidor = useDadosServidor();
   const [fotos, setFotos] = useState(anuncio?.fotos ?? []);
   const [tipo, setTipo] = useState(anuncio?.tipo_preco ?? 'fixo');
   const [ocupado, setOcupado] = useState(false);
@@ -92,7 +95,7 @@ export default function EditorAnuncio({
     },
   ];
 
-  const imagens = [
+  const imagens = servidor && !anuncio ? [] : [
     {
       nome: 'fotos',
       rotulo: 'Fotos do serviço',
@@ -102,12 +105,14 @@ export default function EditorAnuncio({
           fotos={fotos}
           aoAlterar={setFotos}
           aoCarregar={setOcupado}
+          enviar={servidor ? arquivo => enviarImagemEmpresa(arquivo, anuncio?.id) : undefined}
         />
       ),
     },
   ];
   return (
     <section className='mvp-painel empresa-servico-editor'>
+      {servidor && !anuncio && <p>Salve o rascunho para adicionar fotos.</p>}
       <EditorMvp
         cabecalho={false}
         mostrarCancelar={Boolean(aoCancelar)}
@@ -152,14 +157,14 @@ export default function EditorAnuncio({
                   campos: atendimento,
                 },
               ]),
-          { titulo: 'Imagens', Icone: Camera, aberta: true, campos: imagens },
+          ...(imagens.length ? [{ titulo: 'Imagens', Icone: Camera, aberta: true, campos: imagens }] : []),
         ]}
         onSave={dados => {
           if (ocupado)
             throw new Error(
               'Aguarde o carregamento das fotos antes de salvar.'
             );
-          aoSalvar(
+          return aoSalvar(
             somenteFotos
               ? { ...anuncio, fotos }
               : {

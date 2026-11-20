@@ -1,3 +1,5 @@
+import { useDadosServidor } from '../../../app/dados/contextoServidor';
+import { abrirConversa as criarConversa, marcarMensagensLidas, mudarContratacao, ocultarConversa, salvarMensagem } from '../../marketplace/marketplaceApi';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import {
@@ -65,6 +67,9 @@ export default function SolicitacoesMarketplace({
   pedidos,
   chatInicial,
 }) {
+  const servidor = useDadosServidor();
+  const atualizar = servidor?.atualizar;
+  const [ocupado, setOcupado] = useState(false);
   const [params] = useSearchParams();
   const [busca, setBusca] = useState('');
   const [filtro, setFiltro] = useState('todos');
@@ -121,6 +126,10 @@ export default function SolicitacoesMarketplace({
   );
   useEffect(() => {
     if (!chatId || !mensagensNaoLidas) return;
+    if (atualizar) {
+      marcarMensagensLidas(chatId).then(atualizar).catch(() => {});
+      return;
+    }
     try {
       alterarBancoMarketplace(db => {
         if (
@@ -142,11 +151,12 @@ export default function SolicitacoesMarketplace({
     } catch (falha) {
       notificar(falha.message);
     }
-  }, [chatId, empresa.id, mensagensNaoLidas, notificar, userId]);
+  }, [atualizar, chatId, empresa.id, mensagensNaoLidas, notificar, userId]);
 
-  function abrirConversa(pedidoId) {
+  async function abrirConversa(pedidoId) {
     try {
       let canal = chats.find(c => c.contratado_id === pedidoId);
+      if (!canal && atualizar) canal = await criarConversa({ empresaId: empresa.id, contratadoId: pedidoId });
       if (!canal) {
         alterarBancoMarketplace(db => {
           const pedido = db.servico_contratado.find(p => p.id === pedidoId);
@@ -159,9 +169,16 @@ export default function SolicitacoesMarketplace({
     }
   }
 
-  function confirmar() {
+  async function confirmar() {
+    if (ocupado) return;
+    setOcupado(true);
     try {
-      alterarBancoMarketplace(db => {
+      if (atualizar) {
+        const operacoes = { aceito: 'aceitar', recusado: 'recusar', em_andamento: 'iniciar', concluido: 'concluir' };
+        if (acao.excluirChat) await ocultarConversa(acao.id);
+        else await mudarContratacao(acao.id, operacoes[acao.status]);
+        await atualizar();
+      } else alterarBancoMarketplace(db => {
         if (acao.excluirChat) {
           if (
             !db.chat_servico.some(
@@ -194,16 +211,23 @@ export default function SolicitacoesMarketplace({
       setAcao(null);
     } catch (falha) {
       setErro(falha.message);
+    } finally {
+      setOcupado(false);
     }
   }
 
-  function enviar(evento) {
+  async function enviar(evento) {
     evento.preventDefault();
     const form = evento.currentTarget;
     const texto = new FormData(form).get('mensagem').trim();
-    if (!texto) return;
+    if (!texto || ocupado) return;
+    setOcupado(true);
     try {
-      alterarBancoMarketplace(db => {
+      if (atualizar) {
+        if (!chatId) throw new Error('A conversa não está disponível.');
+        await salvarMensagem(chatId, texto);
+        await atualizar();
+      } else alterarBancoMarketplace(db => {
         const atual = db.servico_contratado.find(
           p => p.id === pedidoAtivo?.id && porId.has(p.servico_id)
         );
@@ -233,6 +257,8 @@ export default function SolicitacoesMarketplace({
       form.reset();
     } catch (falha) {
       setErro(falha.message);
+    } finally {
+      setOcupado(false);
     }
   }
 
@@ -511,7 +537,7 @@ export default function SolicitacoesMarketplace({
           </p>
           {erro && <p role='alert'>{erro}</p>}
           <div className='mercado-a-contato-acoes'>
-            <button type='button' className='mvp-primario' onClick={confirmar}>
+            <button type='button' className='mvp-primario' onClick={confirmar} disabled={ocupado}>
               Confirmar
             </button>
           </div>

@@ -11,7 +11,8 @@ import {
 } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { alterarBancoPreparacao, useBancoMvp } from '../../app/dados/bancoMvp';
-import { acessoLocal } from '../../app/dados/acessoLocal';
+import { useDadosServidor } from '../../app/dados/contextoServidor';
+import { concluirAula } from './aprendizadoApi';
 import { Botao, EstadoVazio } from '../../shared/ui';
 import LayoutPreparacao from '../preparacao/LayoutPreparacao';
 import { proximoId } from '../preparacao/modelo';
@@ -239,6 +240,7 @@ function Estudo({
 
 export default function Aprendendo() {
   const { b, perfil } = useBancoMvp();
+  const servidor = useDadosServidor();
   const usuario = perfil?.user_id;
   const [params, setParams] = useSearchParams();
   const [inicio, setInicio] = useState(0);
@@ -289,7 +291,18 @@ export default function Aprendendo() {
     }
   }
 
-  function salvarConclusao(concluida) {
+  async function salvarConclusao(concluida) {
+    if (servidor) {
+      try {
+        await concluirAula(aula.id, concluida);
+        await servidor.atualizar();
+        setErro(null);
+        return true;
+      } catch (falha) {
+        setErro({ aulaId: aula.id, mensagem: falha.message });
+        return false;
+      }
+    }
     return executar(db => {
       const atual = db.progresso_aula.find(
         item => item.user_id === usuario && item.aula_id === aula.id
@@ -307,7 +320,7 @@ export default function Aprendendo() {
 
   return (
     <LayoutPreparacao
-      titulo={aula && acessoLocal ? undefined : 'Aprendendo a morar'}
+      titulo={aula ? undefined : 'Aprendendo a morar'}
       chaveSecao={aula?.id ?? 'catalogo'}
     >
       <div className='aprendendo-tela'>
@@ -316,12 +329,7 @@ export default function Aprendendo() {
             {erro.mensagem}
           </p>
         )}
-        {!acessoLocal ? (
-          <EstadoVazio
-            titulo='Disponível na prévia local'
-            descricao='A biblioteca e seu progresso aguardam integração com o servidor.'
-          />
-        ) : aula ? (
+        {aula ? (
           <>
             <nav
               className='aprendendo-navegacao-aula'
@@ -345,8 +353,8 @@ export default function Aprendendo() {
               usuario={usuario}
               concluida={progresso.has(aula.id)}
               alternarConclusao={() => salvarConclusao(!progresso.has(aula.id))}
-              concluirPeloQuiz={() => {
-                if (salvarConclusao(true)) setParams({});
+              concluirPeloQuiz={async () => {
+                if (await salvarConclusao(true)) setParams({});
               }}
               quizAtivo={params.get('modo') === 'quiz'}
               alternarModo={alternarModo}

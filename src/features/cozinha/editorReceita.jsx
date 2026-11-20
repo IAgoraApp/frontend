@@ -1,3 +1,6 @@
+import { useDadosServidor } from '../../app/dados/contextoServidor';
+import { lerImagemComoDados } from '../../app/estado/estadoEmpresa';
+import { salvarReceitaApi } from './cozinhaApi';
 import { medidaProduto } from './catalogoProdutos';
 import { useState } from 'react';
 import { Plus, Trash2 } from 'lucide-react';
@@ -12,6 +15,8 @@ export default function EditorReceita({
   voltar,
   aoSalvar,
 }) {
+  const servidor = useDadosServidor();
+  const [salvando, setSalvando] = useState(false);
   const [ingredientes, setIngredientes] = useState(() =>
     itens.map(item => ({ ...item, chave: item.id }))
   );
@@ -26,22 +31,23 @@ export default function EditorReceita({
     );
   }
 
-  function enviar(evento) {
+  async function enviar(evento) {
     evento.preventDefault();
+    if (salvando) return;
     const campos = new FormData(evento.currentTarget);
     const nome = campos.get('nome').trim();
     const preparo = campos.get('preparo').trim();
-    const imagem = campos.get('imagem').trim();
+    const selecionado = campos.get('arquivo');
+    const arquivo = selecionado?.name ? selecionado : null;
     const modo = campos.get('visibilidade');
 
     if (!nome || !preparo) {
       setErro('Preencha o nome e o modo de preparo.');
       return;
     }
-    if (imagem && !/^https?:\/\//i.test(imagem)) {
-      setErro(
-        'Informe um endereço de imagem que comece com https:// ou http://.'
-      );
+    if (arquivo && (!['image/jpeg', 'image/png', 'image/webp'].includes(arquivo.type)
+      || !arquivo.size || arquivo.size > 5 * 1024 * 1024)) {
+      setErro('Use JPG, PNG ou WebP de até 5 MB.');
       return;
     }
     if (ingredientes.some(item => !item.produto_id && !item.nome_item.trim())) {
@@ -49,23 +55,27 @@ export default function EditorReceita({
       return;
     }
 
+    setSalvando(true);
+    setErro('');
     try {
-      const id = salvarReceita(
-        {
-          ...(receita && { id: receita.id }),
-          nome,
-          preparo,
-          descricao: campos.get('descricao').trim(),
-          tipo: campos.get('tipo') || null,
-          imagem: imagem || null,
-          status: modo === 'rascunho' ? 'rascunho' : 'publicada',
-        },
-        ingredientes,
-        usuario
-      );
+      const dados = {
+        ...(receita && { id: receita.id }),
+        nome, preparo, descricao: campos.get('descricao').trim(),
+        tipo: campos.get('tipo') || null,
+        ...(campos.has('removerImagem') && { imagem: '' }),
+        status: modo === 'rascunho' ? 'rascunho' : 'publicada',
+      };
+      const id = servidor
+        ? await salvarReceitaApi(dados, ingredientes, usuario, arquivo)
+        : salvarReceita({
+            ...dados, ...(arquivo && { imagem: await lerImagemComoDados(arquivo) }),
+          }, ingredientes, usuario);
+      await servidor?.atualizar();
       aoSalvar(id);
     } catch (falha) {
       setErro(falha.message);
+    } finally {
+      setSalvando(false);
     }
   }
 
@@ -104,15 +114,16 @@ export default function EditorReceita({
             />
           </label>
           <label>
-            Link da foto (opcional)
-            <input
-              name='imagem'
-              type='url'
-              defaultValue={receita?.imagem}
-              placeholder='https://…'
-              maxLength={500}
-            />
+            Foto da receita (opcional)
+            <input name='arquivo' type='file' accept='image/jpeg,image/png,image/webp' />
+            <small>JPG, PNG ou WebP, até 5 MB.</small>
           </label>
+          {receita?.imagem && (
+            <label>
+              <input name='removerImagem' type='checkbox' />
+              Remover foto atual
+            </label>
+          )}
         </div>
       </fieldset>
 
@@ -235,7 +246,7 @@ export default function EditorReceita({
         </p>
       )}
       <div className='receitas-acoes'>
-        <button type='submit' className='receitas-botao receitas-primario'>
+        <button type='submit' disabled={salvando} className='receitas-botao receitas-primario'>
           Salvar receita
         </button>
         <Link className='receitas-botao' to={voltar}>

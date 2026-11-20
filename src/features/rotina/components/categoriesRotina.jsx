@@ -1,3 +1,5 @@
+import { useDadosServidor } from '../../../app/dados/contextoServidor';
+import { salvarCategoriaRotina } from '../rotinaApi';
 import { useAvisoPerfilA } from '../../../app/avisos/avisosPerfilA';
 import { useId, useState } from 'react';
 import { ChevronRight, ListChecks, Pencil, Plus, Trash2 } from 'lucide-react';
@@ -15,6 +17,7 @@ const campos = [
 const quantidade = total => total + (total === 1 ? ' tarefa' : ' tarefas');
 
 export default function CategoriasRotina({ categorias, tarefas, userId }) {
+  const servidor = useDadosServidor();
   const idTitulo = useId();
   const [modal, setModal] = useState(null);
   const notificar = useAvisoPerfilA();
@@ -34,9 +37,12 @@ export default function CategoriasRotina({ categorias, tarefas, userId }) {
     setModal({ modo: proximo, id });
   }
 
-  function excluir() {
+  async function excluir() {
     try {
-      alterarBanco(b => {
+      if (servidor) {
+        await salvarCategoriaRotina(categoria.id);
+        await servidor.atualizar();
+      } else alterarBanco(b => {
         if (b.tarefa.some(t => t.categoria_id === categoria.id))
           throw new Error(
             'Mova as tarefas vinculadas para outra categoria antes de excluir.'
@@ -177,8 +183,11 @@ export default function CategoriasRotina({ categorias, tarefas, userId }) {
                       </button>
                     )
                   }
-                  onSave={v => {
-                    salvarRegistro('categoria_tarefa', v);
+                  onSave={async v => {
+                    if (servidor) {
+                      await salvarCategoriaRotina(v.id, { nome: v.nome, cor: v.cor, icone: v.icone });
+                      await servidor.atualizar();
+                    } else salvarRegistro('categoria_tarefa', v);
                     notificar(
                       categoria ? 'Categoria atualizada.' : 'Categoria criada.'
                     );

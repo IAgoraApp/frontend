@@ -1,3 +1,6 @@
+import CobrancasPerfilA from '../perfil/components/CobrancasPerfilA';
+import { useBancoMvp } from '../../app/dados/bancoMvp';
+import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { Botao, Container } from '../../shared/ui';
@@ -30,7 +33,7 @@ export default function PerfilDaConta({ empresa = false, cadastro = false }) {
   if (!sessao || sessao.tipo !== (empresa ? 2 : 1))
     return <Navigate to='/login' replace />;
   if (cadastro && !sessao.cadastroPendente)
-    return <Navigate to='/empresa/perfil' replace />;
+    return <Navigate to='/empresa' replace />;
   return <EditorPerfil sessao={sessao} empresa={empresa} cadastro={cadastro} />;
 }
 
@@ -38,6 +41,8 @@ function EditorPerfil({ sessao, empresa, cadastro, local = false }) {
   const navegar = useNavigate();
   const { pathname } = useLocation();
   const notificar = useAvisoPerfilA();
+  const [params] = useSearchParams();
+  const { b } = useBancoMvp();
   const [perfil, setPerfil] = useState(local ? {} : null);
   const [carregando, setCarregando] = useState(!local);
   const [salvando, setSalvando] = useState(false);
@@ -67,7 +72,7 @@ function EditorPerfil({ sessao, empresa, cadastro, local = false }) {
         setPerfil(result);
       })
       .catch(falha => {
-        if (falha.name === 'AbortError') return;
+        if (controller.signal.aborted) return;
         if (empresa && falha.status === 404)
           setPerfil({ email_comercial: sessao.email });
         else setErro(falha.message);
@@ -122,17 +127,22 @@ function EditorPerfil({ sessao, empresa, cadastro, local = false }) {
           throw new Error('Informe a categoria e o telefone comercial.');
         if (local) {
           cadastrarEmpresaLocal(sessao.email || payload.email_comercial, payload);
-          navegar('/empresa/perfil', { replace: true });
+          navegar('/empresa', { replace: true });
           return;
         }
         await contaApi(perfil.id ? endpoint : '/empresas/perfil', {
           metodo: perfil.id ? 'PATCH' : 'POST',
-          dados: payload,
+          dados: {
+            ...payload,
+            emailComercial: payload.email_comercial,
+            localAtendimento: payload.local_atendimento,
+            horarioAtendimento: payload.horario_atendimento,
+          },
           token,
         });
         if (cadastro) {
           salvarSessao({ ...sessao, cadastroPendente: false });
-          navegar('/empresa/perfil', { replace: true });
+          navegar('/empresa', { replace: true });
           return;
         }
         setPerfil(await contaApi(endpoint, { token }));
@@ -301,8 +311,8 @@ function EditorPerfil({ sessao, empresa, cadastro, local = false }) {
                   name='local_atendimento'
                   placeholder='São Paulo - SP, Osasco - SP'
                   defaultValue={
-                    Array.isArray(perfil.local_atendimento)
-                      ? perfil.local_atendimento.join(', ')
+                    Array.isArray(perfil.localAtendimento ?? perfil.local_atendimento)
+                      ? (perfil.localAtendimento ?? perfil.local_atendimento).join(', ')
                       : ''
                   }
                 />
@@ -312,7 +322,7 @@ function EditorPerfil({ sessao, empresa, cadastro, local = false }) {
                 <input
                   name='horario_atendimento'
                   placeholder='08:00-18:00'
-                  defaultValue={perfil.horario_atendimento?.segunda_sexta}
+                  defaultValue={(perfil.horarioAtendimento ?? perfil.horario_atendimento)?.segunda_sexta}
                 />
               </label>
               <label className='etapa-cadastro-linha etapa-cadastro-opcional'>
@@ -398,7 +408,9 @@ function EditorPerfil({ sessao, empresa, cadastro, local = false }) {
   return (
     <main className='acesso-pagina py-5'>
       <Container classe='grid gap-4 md:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)]'>
-        {formulario}
+        {!empresa && ['assinatura', 'pagamentos'].includes(params.get('visao'))
+          ? <CobrancasPerfilA b={b} userId={sessao.id} visao={params.get('visao')} aoSalvar={notificar} />
+          : formulario}
         <aside className='self-start rounded-xl bg-(--azul-titulo) p-5 text-white sm:p-6'>
           <h2 className='text-xl font-extrabold'>Sua conta</h2>
           <p className='mt-2 wrap-anywhere'>
@@ -415,6 +427,11 @@ function EditorPerfil({ sessao, empresa, cadastro, local = false }) {
               {empresa ? 'Abrir painel' : 'Abrir meu espaço'}
             </Link>
           )}
+          {!empresa && ['assinatura', 'pagamentos'].map(visao => (
+            <Link key={visao} className='mt-4 block font-bold underline' to={pathname + '?visao=' + visao}>
+              {visao === 'assinatura' ? 'Assinatura' : 'Pagamentos'}
+            </Link>
+          ))}
           <button
             type='button'
             className='mt-4 cursor-pointer text-sm font-bold underline'

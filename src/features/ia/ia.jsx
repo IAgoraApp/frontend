@@ -1,3 +1,4 @@
+import { acessoLocal } from '../../app/dados/acessoLocal';
 import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -103,7 +104,7 @@ export default function InteligenciaArtificial() {
 function ConversaIA({ pathname, state }) {
   const rascunho = state?.rascunho;
   const preparacao = pathname === '/ia-b';
-  const aceitaCriacao = pathname === '/ia' || preparacao;
+  const aceitaCriacao = acessoLocal && (pathname === '/ia' || preparacao);
   const areasDisponiveis = preparacao ? areasPreparacao : areasCriacao;
   const sessao = preparacao ? conversasPreparacao : conversasDaSessao;
   const dados = useBancoMvp();

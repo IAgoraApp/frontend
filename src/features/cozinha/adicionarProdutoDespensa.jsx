@@ -1,3 +1,5 @@
+import { useDadosServidor } from '../../app/dados/contextoServidor';
+import { adicionarAoEstoque, salvarProduto } from './cozinhaApi';
 import { useState } from 'react';
 import { alterarBancoCompras, inserir } from '../../app/dados/bancoMvp';
 import { DialogoCasa } from '../casa/components/casaUi';
@@ -18,6 +20,8 @@ export default function AdicionarProdutoDespensa({
   aoFechar,
   aoSalvar,
 }) {
+  const servidor = useDadosServidor();
+  const [salvando, setSalvando] = useState(false);
   const [personalizado, setPersonalizado] = useState(false);
   const [busca, setBusca] = useState('');
   const [produtoId, setProdutoId] = useState('');
@@ -34,8 +38,11 @@ export default function AdicionarProdutoDespensa({
       ? [selecionado, ...filtrados]
       : filtrados;
 
-  function salvar(evento) {
+  async function salvar(evento) {
     evento.preventDefault();
+    if (salvando) return;
+    setSalvando(true);
+    setErro('');
     const soCatalogo = evento.nativeEvent.submitter?.value === 'catalogo';
     const dados = new FormData(evento.currentTarget);
     const texto = chave => String(dados.get(chave) ?? '').trim();
@@ -48,32 +55,30 @@ export default function AdicionarProdutoDespensa({
         throw new Error(
           'Informe uma quantidade maior que zero, com até duas casas decimais.'
         );
-      alterarBancoCompras(db => {
-        let produto = db.produto.find(p => String(p.id) === produtoId);
-        if (personalizado) {
-          const nome = texto('nome');
-          const marca = texto('marca');
-          const tamanho = texto('tamanho') ? decimal(texto('tamanho')) : null;
-          if (!nome) throw new Error('Informe o nome do produto.');
-          if (
-            tamanho !== null &&
-            (!Number.isFinite(tamanho) || tamanho <= 0 || tamanho > limite)
-          )
-            throw new Error('Informe um tamanho de embalagem válido.');
-          produto =
-            db.produto.find(
-              p =>
-                normalizarTexto(p.nome) === normalizarTexto(nome) &&
-                normalizarTexto(p.marca || '') === normalizarTexto(marca) &&
-                (p.tamanho == null ? null : Number(p.tamanho)) === tamanho &&
-                p.unidade === unidade
-            ) ??
-            inserir(
-              'produto',
-              { nome, marca: marca || null, tamanho, unidade, imagem: null },
-              db
-            );
-        }
+      let produto = selecionado;
+      let dadosProduto;
+      if (personalizado) {
+        const nome = texto('nome');
+        const marca = texto('marca');
+        const tamanho = texto('tamanho') ? decimal(texto('tamanho')) : null;
+        if (!nome) throw new Error('Informe o nome do produto.');
+        if (tamanho !== null && (!Number.isFinite(tamanho) || tamanho <= 0 || tamanho > limite))
+          throw new Error('Informe um tamanho de embalagem válido.');
+        dadosProduto = { nome, marca: marca || null, tamanho, unidade };
+        produto = produtos.find(p =>
+          normalizarTexto(p.nome) === normalizarTexto(nome) &&
+          normalizarTexto(p.marca || '') === normalizarTexto(marca) &&
+          (p.tamanho == null ? null : Number(p.tamanho)) === tamanho &&
+          p.unidade === unidade
+        );
+      }
+      if (servidor) {
+        if (!produto && dadosProduto) produto = await salvarProduto(dadosProduto);
+        if (!produto) throw new Error('Selecione um produto do catálogo.');
+        if (!soCatalogo) await adicionarAoEstoque(casaId, produto.id, quantidade);
+        await servidor.atualizar();
+      } else alterarBancoCompras(db => {
+        if (!produto && dadosProduto) produto = inserir('produto', dadosProduto, db);
         if (!produto) throw new Error('Selecione um produto do catálogo.');
         if (soCatalogo) return;
         const estoque = db.estoque_item.find(
@@ -97,6 +102,8 @@ export default function AdicionarProdutoDespensa({
       );
     } catch (falha) {
       setErro(falha.message);
+    } finally {
+      setSalvando(false);
     }
   }
 
@@ -222,7 +229,7 @@ export default function AdicionarProdutoDespensa({
         <div className='cozinha-editor-acoes'>
           {personalizado && (
             <button
-              type='submit'
+              type='submit' disabled={salvando}
               value='catalogo'
               formNoValidate
               className='cozinha-botao'
@@ -230,7 +237,7 @@ export default function AdicionarProdutoDespensa({
               Salvar só no catálogo
             </button>
           )}
-          <button type='submit' className='mvp-primario'>
+          <button type='submit' disabled={salvando} className='mvp-primario'>
             Adicionar à despensa
           </button>
         </div>

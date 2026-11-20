@@ -1,3 +1,6 @@
+import { useDadosServidor } from '../../app/dados/contextoServidor';
+import { favoritarServico } from './marketplaceApi';
+import ImagemMarketplace from './ImagemMarketplace';
 import { usePerfilPreparacao } from '../../app/dados/perfilNavegacao';
 import { useState } from 'react';
 import {
@@ -39,7 +42,7 @@ export function FotoServico({ servico, destaque = false }) {
       : fotosMercado.equipeServicos;
   return (
     <>
-      <img
+      <ImagemMarketplace
         className='mercado-a-foto'
         src={fonte}
         alt=''
@@ -91,8 +94,14 @@ export default function CatalogoMarketplaceA({
   const localizacao = useLocation();
   const preparacao = usePerfilPreparacao();
   const [params, setParams] = useSearchParams();
-  const [favoritos, setFavoritos] = useState(() => lerFavoritos(usuario));
+  const servidor = useDadosServidor();
+  const [alterando, setAlterando] = useState(false);
+  const [favoritosLocais, setFavoritos] = useState(() => servidor ? new Set() : lerFavoritos(usuario));
+  const favoritos = servidor
+    ? new Set(servidor.dados.servico_favorito?.map(servico => servico.id))
+    : favoritosLocais;
   const [erro, setErro] = useState('');
+  const prefixo = dentroDaEmpresa ? '/empresa/marketplace' : '';
   const ehEmpresa = pathname.startsWith('/empresas/');
   const ehFavoritos = pathname === '/favoritos';
   const rotaCatalogo = dentroDaEmpresa
@@ -133,7 +142,21 @@ export default function CatalogoMarketplaceA({
     );
   });
 
-  function alternarFavorito(id) {
+  async function alternarFavorito(id) {
+    if (alterando) return;
+    if (servidor) {
+      setAlterando(true);
+      setErro('');
+      try {
+        await favoritarServico(id, !favoritos.has(id));
+        await servidor.atualizar();
+      } catch (falha) {
+        setErro(falha.message);
+      } finally {
+        setAlterando(false);
+      }
+      return;
+    }
     const proximos = lerFavoritos(usuario);
     if (proximos.has(id)) proximos.delete(id);
     else proximos.add(id);
@@ -152,7 +175,7 @@ export default function CatalogoMarketplaceA({
   if (ehEmpresa && !empresa)
     return (
       <PaginaMvp titulo='Empresa indisponível'>
-        <Link className='mvp-link' to='/marketplace'>
+        <Link className='mvp-link' to={rotaCatalogo}>
           Voltar ao catálogo
         </Link>
       </PaginaMvp>
@@ -163,7 +186,7 @@ export default function CatalogoMarketplaceA({
       <div className='mercado-a'>
         {empresa ? (
           <>
-            <VoltarMarketplace />
+            <VoltarMarketplace destino={rotaCatalogo} />
             <PerfilEmpresaMarketplace key={empresa.id} empresa={empresa} />
           </>
         ) : (
@@ -317,10 +340,10 @@ export default function CatalogoMarketplaceA({
                           ) : (
                             <Link
                               className='mercado-a-cartao-link'
-                              to={`/servicos/${s.id}`}
+                              to={`${prefixo}/servicos/${s.id}`}
                               state={{
                                 retorno: {
-                                  url: pathname + localizacao.search,
+                                  url: localizacao.pathname + localizacao.search,
                                   rotulo: ehEmpresa
                                     ? 'Voltar ao perfil da empresa'
                                     : ehFavoritos
@@ -344,10 +367,10 @@ export default function CatalogoMarketplaceA({
                         ) : (
                           <Link
                             className='mercado-a-empresa'
-                            to={`/empresas/${perfil.id}`}
+                            to={`${prefixo}/empresas/${perfil.id}`}
                             state={{
                               retorno: {
-                                url: pathname + localizacao.search,
+                                url: localizacao.pathname + localizacao.search,
                                 rotulo: ehFavoritos
                                   ? 'Voltar aos favoritos'
                                   : 'Voltar ao catálogo',

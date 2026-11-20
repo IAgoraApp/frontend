@@ -1,3 +1,5 @@
+import { useDadosServidor } from '../../app/dados/contextoServidor';
+import { salvarEstoque } from './cozinhaApi';
 import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
 import { useState } from 'react';
 import { Archive, Pencil, Plus, Search, X } from 'lucide-react';
@@ -12,6 +14,7 @@ import './organizacaoCozinha.css';
 export default function DespensaA() {
   const { b: banco, casa } = useBancoMvp();
   const casaId = casa?.id;
+  const servidor = useDadosServidor();
   const [busca, setBusca] = useState('');
   const notificar = useAvisoPerfilA();
   const [editor, setEditor] = useState(null);
@@ -32,8 +35,11 @@ export default function DespensaA() {
       )
     );
 
-  function remover(item) {
-    alterarBancoCompras(db => {
+  async function remover(item) {
+    if (servidor) {
+      await salvarEstoque(item.id);
+      await servidor.atualizar();
+    } else alterarBancoCompras(db => {
       const atual = db.estoque_item.find(
         e => e.id === item.id && e.casa_id === casaId
       );
@@ -44,14 +50,17 @@ export default function DespensaA() {
     notificar('Produto removido da despensa.');
   }
 
-  function salvar(item) {
+  async function salvar(item) {
     if (
       !Number.isFinite(item.quantidade) ||
       item.quantidade < 0 ||
       item.quantidade > 99999999.99
     )
       throw new Error('Informe uma quantidade de estoque válida.');
-    alterarBancoCompras(db => {
+    if (servidor) {
+      await salvarEstoque(item.id, { quantidade: Number(item.quantidade.toFixed(2)) });
+      await servidor.atualizar();
+    } else alterarBancoCompras(db => {
       const atual = db.estoque_item.find(
         e => e.id === item.id && e.casa_id === casaId
       );

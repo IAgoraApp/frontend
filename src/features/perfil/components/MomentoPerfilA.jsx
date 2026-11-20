@@ -1,3 +1,5 @@
+import { useDadosServidor } from '../../../app/dados/contextoServidor';
+import { salvarPerfilPessoal } from '../perfilApi';
 import { useAvisoPerfilA } from '../../../app/avisos/avisosPerfilA';
 import { useState } from 'react';
 import { ArrowRight, Check, House, KeyRound } from 'lucide-react';
@@ -31,6 +33,8 @@ const momentos = [
 
 export default function MomentoPerfilA({ perfil }) {
   const navegar = useNavigate();
+  const servidor = useDadosServidor();
+  const [salvando, setSalvando] = useState(false);
   const [escolha, setEscolha] = useState(perfil.tipo);
   const [erro, setErro] = useState('');
   const notificar = useAvisoPerfilA();
@@ -38,18 +42,26 @@ export default function MomentoPerfilA({ perfil }) {
   const selecionado = momentos.find(item => item.id === escolha);
   const alterado = !!selecionado && escolha !== perfil.tipo;
 
-  function salvar(evento) {
+  async function salvar(evento) {
     evento.preventDefault();
-    if (!alterado) return;
+    if (!alterado || salvando) return;
+    setSalvando(true);
 
     try {
-      salvarMomentoPerfil(perfil.user_id, escolha);
-      definirUsuarioMvpAtivo(perfil.user_id);
+      if (servidor) {
+        await salvarPerfilPessoal(perfil.id, { tipo: escolha });
+        await servidor.atualizar();
+      } else {
+        salvarMomentoPerfil(perfil.user_id, escolha);
+        definirUsuarioMvpAtivo(perfil.user_id);
+      }
       setErro('');
       notificar('Alteração salva.');
       navegar(rotaPerfilMoradia(escolha), { replace: true });
     } catch (falha) {
       setErro(falha.message);
+    } finally {
+      setSalvando(false);
     }
   }
 
@@ -123,7 +135,7 @@ export default function MomentoPerfilA({ perfil }) {
               >
                 Cancelar
               </Botao>
-              <Botao type='submit' classe='text-sm px-3! whitespace-nowrap'>
+              <Botao type='submit' disabled={salvando} classe='text-sm px-3! whitespace-nowrap'>
                 Salvar meu momento
               </Botao>
             </>

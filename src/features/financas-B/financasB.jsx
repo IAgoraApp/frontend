@@ -1,3 +1,5 @@
+import { useDadosServidor } from '../../app/dados/contextoServidor';
+import { salvarCusto, salvarPlano, salvarSituacaoFinanceira } from './planejamentoApi';
 import { useState } from 'react';
 import { House, Flag, List, Pencil, Plus, Wallet } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -74,6 +76,7 @@ const secoes = [
 ];
 
 export default function Planejamento() {
+  const servidor = useDadosServidor();
   const { b, perfil } = useBancoMvp();
   const usuario = perfil?.user_id;
   const [params, setParams] = useSearchParams();
@@ -139,8 +142,15 @@ export default function Planejamento() {
       ...(planoMudanca && { plano: planoMudanca.id }),
       ...(imovel && plano === planoMudanca && { imovel: imovel.id }),
     });
-  function salvarSituacao(valores) {
-    alterarDinheiro(usuario, (registro, banco) => {
+  async function salvarSituacao(valores) {
+    if (servidor) {
+      await salvarSituacaoFinanceira({
+        renda: valores.renda == null ? null : validarValor(valores.renda, 'a renda'),
+        reserva: valores.reserva == null ? null : validarValor(valores.reserva, 'a reserva'),
+        mudancaPrevista: valores.data || null,
+      });
+      await servidor.atualizar();
+    } else alterarDinheiro(usuario, (registro, banco) => {
       registro.renda =
         valores.renda == null ? renda : validarValor(valores.renda, 'a renda');
       registro.reserva =
@@ -167,9 +177,20 @@ export default function Planejamento() {
     setErro('');
   }
 
-  function salvar(valores) {
+  async function salvar(valores) {
     const { entidade, registro, pai, imovelId } = editor;
-    const id = editarMoradia(
+    let id;
+    if (servidor) {
+      if (entidade === 'plano_moradia') {
+        id = await salvarPlano(registro?.id, valores, imovelId, registro?.status);
+      } else {
+        const idPlano = pai ?? await salvarPlano(null, {
+          nome: imovel.titulo, renda_mensal: 0, reserva_atual: 0,
+        }, imovelId);
+        await salvarCusto(idPlano, registro?.id, valores);
+      }
+      await servidor.atualizar();
+    } else id = editarMoradia(
       usuario,
       entidade,
       pai,
@@ -319,6 +340,7 @@ export default function Planejamento() {
               )}
               resumo={resumoDinheiro}
               custos={custos}
+              plano={plano}
               selecionar={opcao => setParams({ imovel: opcao.id })}
               adicionarImovel={() => setAdicionandoImovel(true)}
               rotaDinheiro={
@@ -470,9 +492,9 @@ export default function Planejamento() {
                   </BotaoCasa>
                   <BotaoCasa
                     type='button'
-                    onClick={() => {
+                    onClick={async () => {
                       try {
-                        salvar(null);
+                        await salvar(null);
                         setEditor(null);
                       } catch (falha) {
                         setErro(falha.message);

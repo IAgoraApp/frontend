@@ -9,7 +9,8 @@ import {
   Trash2,
 } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { acessoLocal } from '../../app/dados/acessoLocal';
+import { useDadosServidor } from '../../app/dados/contextoServidor';
+import { atualizarGuiaApi } from './jornadaApi';
 import { useBancoMvp } from '../../app/dados/bancoMvp';
 import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
 import {
@@ -27,6 +28,8 @@ import './minhaJornada.css';
 
 export default function MinhaJornada() {
   const { b, perfil } = useBancoMvp();
+  const servidor = useDadosServidor();
+  const [salvando, setSalvando] = useState(false);
   const usuario = perfil?.user_id;
   const [params, setParams] = useSearchParams();
   const [erro, setErro] = useState('');
@@ -36,13 +39,13 @@ export default function MinhaJornada() {
   const [galeriaAberta, setGaleriaAberta] = useState(false);
   const [remocao, setRemocao] = useState(null);
   const [itemAberto, setItemAberto] = useState(null);
-  const editavel = acessoLocal && !!usuario;
+  const editavel = !!usuario;
   const {
     etapas,
     feitas,
     total,
     proxima: pendente,
-  } = lerGuia(b, acessoLocal ? usuario : undefined);
+  } = lerGuia(b, usuario);
   const ativa = etapas.find(item => item.id === params.get('etapa'));
   const tarefaAberta = ativa?.tarefas.find(item => item.titulo === itemAberto);
 
@@ -62,16 +65,24 @@ export default function MinhaJornada() {
     );
   }
 
-  function salvar(acao, dados, etapa = ativa) {
-    if (!editavel)
-      throw new Error('As alterações estão disponíveis na prévia local.');
-    atualizarGuia(usuario, etapa, acao, dados);
-    setErro('');
+  async function salvar(acao, dados, etapa = ativa) {
+    if (!editavel || salvando) return;
+    setSalvando(true);
+    try {
+      if (servidor) {
+        await atualizarGuiaApi(b, usuario, etapa, acao, dados);
+        await servidor.atualizar();
+      } else atualizarGuia(usuario, etapa, acao, dados);
+      setErro('');
+    } finally {
+      setSalvando(false);
+    }
   }
 
-  function executar(acao, dados, etapa = ativa) {
+  async function executar(acao, dados, etapa = ativa) {
     try {
-      salvar(acao, dados, etapa);
+      if (salvando) return;
+      await salvar(acao, dados, etapa);
       if (acao === 'mover-etapa') notificar('Ordem das etapas atualizada.');
       if (acao.startsWith('remover-'))
         notificar(
@@ -276,8 +287,8 @@ export default function MinhaJornada() {
                 { nome: 'titulo', rotulo: 'Nome da etapa', limite: 150 },
               ]}
               rotuloSalvar='Salvar nome'
-              onSave={dados => {
-                salvar('renomear-etapa', dados, editor.etapa);
+              onSave={async dados => {
+                await salvar('renomear-etapa', dados, editor.etapa);
                 notificar('Nome da etapa atualizado.');
               }}
               onClose={() => setEditor(null)}

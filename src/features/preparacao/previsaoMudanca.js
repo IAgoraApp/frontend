@@ -7,6 +7,8 @@ function planoAtivo(banco, usuario) {
 }
 
 export function lerPrevisaoMudanca(banco, usuario) {
+  const situacao = banco.dinheiro_preparacao?.find(item => item.user_id === usuario);
+  if (situacao && Object.hasOwn(situacao, 'mudancaPrevista')) return situacao.mudancaPrevista;
   return (
     planoAtivo(banco, usuario)?.mudanca_prevista ??
     banco.previsoes_mudanca?.find(item => item.user_id === usuario)?.data ??

@@ -74,6 +74,7 @@ export function EditorMvp({
   mostrarCancelar = true,
 }) {
   const [erro, setErro] = useState('');
+  const [salvando, setSalvando] = useState(false);
   const camposFormulario = secoes
     ? [...secoes.flatMap(secao => secao.campos), ...(campos ?? [])]
     : campos;
@@ -136,8 +137,11 @@ export function EditorMvp({
             if (secao) secao.open = true;
           }
         }}
-        onSubmit={evento => {
+        onSubmit={async evento => {
           evento.preventDefault();
+          if (salvando) return;
+          setErro('');
+          setSalvando(true);
           const form = new FormData(evento.currentTarget);
           const valores = { ...inicial };
           camposFormulario.forEach(c => {
@@ -157,10 +161,12 @@ export function EditorMvp({
               throw new Error(
                 `Preencha o campo ${vazio.rotulo.toLowerCase()}.`
               );
-            onSave(valores);
+            await onSave(valores);
             onClose?.();
           } catch (e) {
             setErro(e.message);
+          } finally {
+            setSalvando(false);
           }
         }}
       >
@@ -202,8 +208,8 @@ export function EditorMvp({
               Cancelar
             </button>
           )}
-          <button className='mvp-primario' type='submit'>
-            {rotuloSalvar}
+          <button className='mvp-primario' type='submit' disabled={salvando}>
+            {salvando ? 'Salvando…' : rotuloSalvar}
           </button>
         </div>
       </form>
@@ -221,10 +227,13 @@ export function ColecaoMvp({
   podeEditar = true,
   podeExcluir = true,
   onSave,
+  onDelete,
   onSuccess,
 }) {
   const [editor, setEditor] = useState(null);
   const [exclusao, setExclusao] = useState(null);
+  const [excluindo, setExcluindo] = useState(false);
+  const [erro, setErro] = useState('');
   return (
     <section className='mvp-painel'>
       <div className='mvp-painel-topo'>
@@ -248,9 +257,9 @@ export function ColecaoMvp({
           }
           campos={campos}
           inicial={editor}
-          onSave={valores => {
-            if (onSave) onSave(valores);
-            else salvarRegistro(colecao, valores);
+          onSave={async valores => {
+            if (onSave) await onSave(valores);
+            else await salvarRegistro(colecao, valores);
             onSuccess?.(
               valores.id ? 'Alterações salvas.' : 'Registro adicionado.'
             );
@@ -269,16 +278,27 @@ export function ColecaoMvp({
           </button>
           <button
             type='button'
-            onClick={() => {
-              removerRegistro(colecao, exclusao.id);
-              setExclusao(null);
-              onSuccess?.('Registro excluído.');
+            disabled={excluindo}
+            onClick={async () => {
+              setExcluindo(true);
+              setErro('');
+              try {
+                if (onDelete) await onDelete(exclusao.id);
+                else await removerRegistro(colecao, exclusao.id);
+                setExclusao(null);
+                onSuccess?.('Registro excluído.');
+              } catch (falha) {
+                setErro(falha.message);
+              } finally {
+                setExcluindo(false);
+              }
             }}
           >
             Excluir
           </button>
         </div>
       )}
+      {erro && <p role='alert'>{erro}</p>}
       {!registros.length ? (
         <VazioMvp />
       ) : (

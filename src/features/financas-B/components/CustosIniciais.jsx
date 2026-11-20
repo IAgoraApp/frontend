@@ -1,3 +1,5 @@
+import { useDadosServidor } from '../../../app/dados/contextoServidor';
+import { editarCategoriaCusto } from '../planejamentoApi';
 import { useState } from 'react';
 import { ChevronRight, Pencil, Plus, ReceiptText } from 'lucide-react';
 import { alterarBancoPreparacao, moeda } from '../../../app/dados/bancoMvp';
@@ -50,6 +52,8 @@ export default function CustosIniciais({
   adicionar,
   editar,
 }) {
+  const servidor = useDadosServidor();
+  const [ocupado, setOcupado] = useState(false);
   const [aberto, setAberto] = useState(null);
   const [criando, setCriando] = useState(false);
   const [confirmandoExclusao, setConfirmandoExclusao] = useState(false);
@@ -86,10 +90,16 @@ export default function CustosIniciais({
     }));
   const ativo = dados.find(grupo => grupo.categoria === aberto);
 
-  function excluirCategoria() {
+  async function excluirCategoria() {
+    if (ocupado) return;
+    setOcupado(true);
+    setErro('');
     const ids = new Set(ativo.itens.map(item => item.id));
     try {
-      alterarBancoPreparacao(bancoAtual => {
+      if (servidor) {
+        await editarCategoriaCusto(escopo, ativo.categoria);
+        await servidor.atualizar();
+      } else alterarBancoPreparacao(bancoAtual => {
         bancoAtual.custo_moradia = bancoAtual.custo_moradia.filter(
           item => !ids.has(item.id) || item.tipo !== 'inicial'
         );
@@ -114,13 +124,16 @@ export default function CustosIniciais({
       });
       setAberto(null);
       setConfirmandoExclusao(false);
-    } catch {
-      setErro('Não foi possível excluir a categoria neste navegador.');
+    } catch (falha) {
+      setErro(falha.message);
+    } finally {
+      setOcupado(false);
     }
   }
 
-  function criar(evento) {
+  async function criar(evento) {
     evento.preventDefault();
+    if (ocupado) return;
     const titulo = new FormData(evento.currentTarget).get('titulo').trim();
     if (!titulo) {
       setErro('Informe o nome da categoria.');
@@ -136,8 +149,13 @@ export default function CustosIniciais({
     const categoria =
       'extra-' +
       Array.from(identificador, valor => valor.toString(16)).join('-');
+    setOcupado(true);
+    setErro('');
     try {
-      alterarBancoPreparacao(bancoAtual => {
+      if (servidor) {
+        await editarCategoriaCusto(escopo, categoria, { titulo, foto });
+        await servidor.atualizar();
+      } else alterarBancoPreparacao(bancoAtual => {
         bancoAtual.categorias_custos_preparacao ??= [];
         bancoAtual.categorias_custos_preparacao.push({
           usuario,
@@ -147,9 +165,11 @@ export default function CustosIniciais({
           foto,
         });
       });
-    } catch {
-      setErro('Não foi possível salvar a categoria neste navegador.');
+    } catch (falha) {
+      setErro(falha.message);
       return;
+    } finally {
+      setOcupado(false);
     }
     setCriando(false);
     setAberto(categoria);
@@ -193,7 +213,7 @@ export default function CustosIniciais({
                 >
                   Cancelar
                 </BotaoCasa>
-                <BotaoCasa type='button' onClick={excluirCategoria}>
+                <BotaoCasa type='button' onClick={excluirCategoria} disabled={ocupado}>
                   Excluir categoria
                 </BotaoCasa>
               </div>
@@ -340,7 +360,7 @@ export default function CustosIniciais({
               >
                 Cancelar
               </BotaoCasa>
-              <BotaoCasa type='submit'>Criar categoria</BotaoCasa>
+              <BotaoCasa type='submit' disabled={ocupado}>Criar categoria</BotaoCasa>
             </div>
           </form>
         </DialogoCasa>

@@ -9,6 +9,8 @@ import {
 } from 'react-router-dom';
 import { useBancoMvp } from '../../app/dados/bancoMvp';
 import { acessoLocal } from '../../app/dados/acessoLocal';
+import { useDadosServidor } from '../../app/dados/contextoServidor';
+import { acionarAnuncio, cancelarAnuncio, cobrarAnuncio, contratarAnuncio, salvarAnuncio } from './empresaApi';
 import { lerSessao } from '../../app/dados/contaApi';
 import { Botao } from '../../shared/ui';
 import { DialogoCasa } from '../casa/components/casaUi';
@@ -69,13 +71,15 @@ function EmpresaConteudo({ visao }) {
   const { id } = useParams();
   const [params] = useSearchParams();
   const { b } = useBancoMvp();
+  const servidor = useDadosServidor();
+  const [ocupado, setOcupado] = useState(false);
   const notificar = useAvisoPerfilA();
   const [confirmacao, setConfirmacao] = useState(null);
   const [editandoInformacoes, setEditandoInformacoes] = useState(false);
   const [erro, setErro] = useState('');
   const userId = acessoLocal
     ? contaEmpresaLocal(b, lerSessao())?.id
-    : undefined;
+    : lerSessao()?.id;
   const empresa = empresaDoUsuario(b, userId);
   const servicos = servicosDaEmpresa(b, empresa);
   const ids = new Set(servicos.map(s => s.id));
@@ -86,30 +90,36 @@ function EmpresaConteudo({ visao }) {
     c => c.id === Number(id) && c.empresa_id === empresa?.id
   );
 
-  function executar(operacao, mensagem, destino) {
+  async function executar(operacao, mensagem, destino) {
+    if (ocupado) return;
+    setOcupado(true);
     try {
-      operacao();
+      await operacao();
       setErro('');
       setConfirmacao(null);
       if (mensagem) notificar(mensagem);
       if (destino) navegar(destino);
     } catch (falha) {
       setErro(falha.message);
+    } finally {
+      setOcupado(false);
     }
   }
 
-  function salvar(dados, permanecer = false) {
-    const salvo = salvarServico(userId, anuncio?.id, dados);
+  async function salvar(dados, permanecer = false) {
+    const salvo = servidor
+      ? await salvarAnuncio(anuncio?.id, dados)
+      : salvarServico(userId, anuncio?.id, dados);
+    if (permanecer) await servidor?.atualizar();
     notificar(anuncio ? 'Serviço atualizado.' : 'Rascunho salvo.');
     if (!permanecer) navegar(`/empresa/anuncios/${salvo.id}`);
   }
 
-  if (!acessoLocal || !userId)
+  if (!userId)
     return (
       <PaginaMvp titulo='Área profissional'>
         <VazioMvp>
-          Este módulo está disponível no ambiente de demonstração enquanto o
-          servidor não oferece os recursos comerciais.
+          Entre com uma conta profissional para acessar seus serviços.
         </VazioMvp>
       </PaginaMvp>
     );
@@ -276,15 +286,21 @@ function EmpresaConteudo({ visao }) {
                 servico={anuncio}
                 executar={executar}
                 operacoes={{
-                  contratar: (plano, renovacao) => {
-                    contratarPublicacao(userId, anuncio.id, plano, renovacao);
+                  contratar: async (plano, renovacao) => {
+                    if (servidor) {
+                      await contratarAnuncio(anuncio.id, plano, renovacao);
+                      await servidor.atualizar();
+                    } else contratarPublicacao(userId, anuncio.id, plano, renovacao);
                     if (!renovacao)
                       notificar(
                         'Publicação contratada. Gere a cobrança para concluir.'
                       );
                   },
-                  cobrar: (publicacao, metodo) => {
-                    cobrarPublicacao(userId, publicacao, metodo);
+                  cobrar: async (publicacao, metodo) => {
+                    if (servidor) {
+                      await cobrarAnuncio(publicacao, metodo);
+                      await servidor.atualizar();
+                    } else cobrarPublicacao(userId, publicacao, metodo);
                     notificar('Cobrança de teste criada.');
                   },
                   confirmarCancelamento: publicacao => {
@@ -346,14 +362,17 @@ function EmpresaConteudo({ visao }) {
             </Botao>
             <Botao
               type='button'
+              disabled={ocupado}
               onClick={() => {
                 const { acao, publicacao } = confirmacao;
                 setConfirmacao(null);
                 executar(
                   () =>
                     acao === 'cancelar'
-                      ? cancelarPublicacao(userId, publicacao)
-                      : acionarServico(userId, anuncio.id, acao),
+                      ? servidor ? cancelarAnuncio(publicacao).then(servidor.atualizar) : cancelarPublicacao(userId, publicacao)
+                      : servidor
+                        ? acionarAnuncio(anuncio.id, acao).then(() => servidor.atualizar())
+                        : acionarServico(userId, anuncio.id, acao),
                   'Alteração salva.',
                   acao === 'excluir' ? '/empresa/anuncios' : undefined
                 );

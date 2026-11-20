@@ -4,6 +4,8 @@ import { DialogoCasa } from '../casa/components/casaUi';
 import { camposEnderecoPerfil } from '../perfil/perfilDados';
 import { modelo } from '../preparacao/modelo';
 import { tipoValorImovel } from '../preparacao/valorImovel';
+import { useDadosServidor } from '../../app/dados/contextoServidor';
+import { salvarImovelApi } from '../financas-B/planejamentoApi';
 import { opcoesMobilia, salvarImovel } from './imovelDados';
 import './encontrarCasa.css';
 
@@ -103,6 +105,7 @@ export default function EditorImovel({
   aoFechar,
   aoExcluir,
 }) {
+  const servidor = useDadosServidor();
   const tipoSalvo = imovel.tipo?.trim();
   const tipoNormalizado = tipoSalvo?.toLowerCase();
   const tipoParaEdicao = tiposImovel.some(
@@ -132,7 +135,13 @@ export default function EditorImovel({
         campos={campoObservacoes}
         rotuloSalvar={imovel.id ? 'Salvar alterações' : 'Adicionar imóvel'}
         onClose={aoFechar}
-        onSave={valores => aoSalvar(salvarImovel(usuario, imovel.id, valores))}
+        onSave={async valores => {
+          const id = servidor
+            ? await salvarImovelApi(imovel.id, valores)
+            : salvarImovel(usuario, imovel.id, valores);
+          await servidor?.atualizar();
+          aoSalvar(id);
+        }}
         acaoSecundaria={
           aoExcluir && (
             <button

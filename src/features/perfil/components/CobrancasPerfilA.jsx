@@ -1,3 +1,5 @@
+import { useDadosServidor } from '../../../app/dados/contextoServidor';
+import { cancelarPlano, criarMetodoTeste, editarMetodo, gerarCobranca, resolverCobranca, selecionarPlano } from '../cobrancasApi';
 import { useState } from 'react';
 import { Check, CreditCard } from 'lucide-react';
 import { dataCurta, moeda } from '../../../app/dados/bancoMvp';
@@ -45,6 +47,8 @@ function Situacao({ valor }) {
 }
 
 export default function CobrancasPerfilA({ b, userId, visao, aoSalvar, atualizarPublicacao }) {
+  const servidor = useDadosServidor();
+  const [ocupado, setOcupado] = useState(false);
   const [modal, setModal] = useState(null);
   const [erro, setErro] = useState('');
   const assinaturas = b.assinatura
@@ -67,14 +71,19 @@ export default function CobrancasPerfilA({ b, userId, visao, aoSalvar, atualizar
     setErro('');
     setModal({ tipo, registro });
   }
-  function executar(operacao, mensagem) {
+  async function executar(operacao, mensagem) {
+    if (ocupado) return;
+    setOcupado(true);
     try {
-      operacao();
+      await operacao();
+      await servidor?.atualizar();
       setModal(null);
       setErro('');
       aoSalvar(mensagem);
     } catch (falha) {
       setErro(falha.message);
+    } finally {
+      setOcupado(false);
     }
   }
 
@@ -342,7 +351,7 @@ export default function CobrancasPerfilA({ b, userId, visao, aoSalvar, atualizar
                   type='button'
                   onClick={() =>
                     executar(
-                      () => salvarPlano(userId, registro.id),
+                      () => servidor ? selecionarPlano(registro.id, atual?.id) : salvarPlano(userId, registro.id),
                       'Plano selecionado. Gere uma cobrança para concluir o teste.'
                     )
                   }
@@ -371,7 +380,7 @@ export default function CobrancasPerfilA({ b, userId, visao, aoSalvar, atualizar
                   classe='bg-(--vermelho-alerta)!'
                   onClick={() =>
                     executar(
-                      () => cancelarAssinatura(userId, registro.id),
+                      () => servidor ? cancelarPlano(registro.id) : cancelarAssinatura(userId, registro.id),
                       'Assinatura cancelada no ambiente de teste.'
                     )
                   }
@@ -414,8 +423,11 @@ export default function CobrancasPerfilA({ b, userId, visao, aoSalvar, atualizar
                   }}
                   rotuloSalvar='Gerar cobrança'
                   onClose={() => setModal(null)}
-                  onSave={v => {
-                    criarCobranca(userId, registro.id, v.metodo_id);
+                  onSave={async v => {
+                    if (servidor) {
+                      await gerarCobranca(registro.id, v.metodo_id);
+                      await servidor.atualizar();
+                    } else criarCobranca(userId, registro.id, v.metodo_id);
                     aoSalvar('Cobrança de teste gerada.');
                   }}
                 />
@@ -481,14 +493,14 @@ export default function CobrancasPerfilA({ b, userId, visao, aoSalvar, atualizar
               </dl>
               {registro.status === 'pendente' &&
                 registro.gateway === 'mock' &&
-                (registro.assinatura_id || (registro.publicacao_id && atualizarPublicacao)) && (
+                (registro.assinatura_id || (registro.publicacao_id && (servidor || atualizarPublicacao))) && (
                   <div className='mt-4 flex flex-wrap justify-end gap-2'>
                     <Botao
                       type='button'
                       variante='contorno'
                       onClick={() =>
                         executar(
-                          () => (registro.publicacao_id ? atualizarPublicacao : atualizarCobranca)(userId, registro.id, false),
+                          () => servidor ? resolverCobranca(registro.id, false) : (registro.publicacao_id ? atualizarPublicacao : atualizarCobranca)(userId, registro.id, false),
                           'Cobrança cancelada.'
                         )
                       }
@@ -499,7 +511,7 @@ export default function CobrancasPerfilA({ b, userId, visao, aoSalvar, atualizar
                       type='button'
                       onClick={() =>
                         executar(
-                          () => (registro.publicacao_id ? atualizarPublicacao : atualizarCobranca)(userId, registro.id, true),
+                          () => servidor ? resolverCobranca(registro.id, true) : (registro.publicacao_id ? atualizarPublicacao : atualizarCobranca)(userId, registro.id, true),
                           'Pagamento de teste confirmado.'
                         )
                       }
@@ -538,7 +550,7 @@ export default function CobrancasPerfilA({ b, userId, visao, aoSalvar, atualizar
                       onClick={() =>
                         executar(
                           () =>
-                            atualizarMetodo(userId, registro.id, 'principal'),
+                            servidor ? editarMetodo(registro.id, 'principal') : atualizarMetodo(userId, registro.id, 'principal'),
                           'Método definido como principal.'
                         )
                       }
@@ -551,7 +563,7 @@ export default function CobrancasPerfilA({ b, userId, visao, aoSalvar, atualizar
                     variante='contorno'
                     onClick={() =>
                       executar(
-                        () => atualizarMetodo(userId, registro.id, 'desativar'),
+                        () => servidor ? editarMetodo(registro.id, 'desativar') : atualizarMetodo(userId, registro.id, 'desativar'),
                         'Método desativado.'
                       )
                     }
@@ -603,8 +615,12 @@ export default function CobrancasPerfilA({ b, userId, visao, aoSalvar, atualizar
                     : 'Salvar apelido'
                 }
                 onClose={() => setModal(null)}
-                onSave={dados => {
-                  if (modal.tipo === 'novo-metodo')
+                onSave={async dados => {
+                  if (servidor) {
+                    if (modal.tipo === 'novo-metodo') await criarMetodoTeste(dados);
+                    else await editarMetodo(registro.id, 'apelido', dados.apelido);
+                    await servidor.atualizar();
+                  } else if (modal.tipo === 'novo-metodo')
                     cadastrarMetodoTeste(userId, dados);
                   else
                     atualizarMetodo(

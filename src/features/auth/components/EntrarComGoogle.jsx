@@ -29,7 +29,7 @@ function carregarGoogle() {
   return carregamento;
 }
 
-export default function EntrarComGoogle({ aoReceber, bloqueado }) {
+export default function EntrarComGoogle({ aoReceber, bloqueado, cadastro = false }) {
   const elemento = useRef(null);
   const [falha, setFalha] = useState(false);
 
@@ -49,7 +49,7 @@ export default function EntrarComGoogle({ aoReceber, bloqueado }) {
         google.renderButton(destino, {
           theme: 'outline',
           size: 'large',
-          text: 'signin_with',
+          text: cadastro ? 'signup_with' : 'signin_with',
           locale: 'pt-BR',
           width: Math.min(400, Math.floor(destino.clientWidth)),
         });
@@ -61,14 +61,13 @@ export default function EntrarComGoogle({ aoReceber, bloqueado }) {
       ativo = false;
       destino?.replaceChildren();
     };
-  }, [aoReceber]);
+  }, [aoReceber, cadastro]);
 
   if (!clientId || falha) {
     return (
       <div className='acesso-google'>
         <button type='button' disabled className='acesso-google-desativado'>
-          <img src={iconeGoogle} alt='' width='18' height='18' /> Entrar com
-          Google
+          <img src={iconeGoogle} alt='' width='18' height='18' /> {cadastro ? 'Cadastrar com Google' : 'Entrar com Google'}
         </button>
         <p>O acesso com Google está indisponível no momento.</p>
       </div>

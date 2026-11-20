@@ -1,3 +1,5 @@
+import { useDadosServidor } from '../../../app/dados/contextoServidor';
+import { aplicarAcaoRotina } from '../rotinaApi';
 import { useState } from 'react';
 import {
   alterarBanco,
@@ -72,6 +74,7 @@ function salvarRegra(db, tarefaId, tarefa) {
 
 export function useRotinaBanco() {
   const { b, perfil, tarefas, categorias } = useBancoMvp();
+  const servidor = useDadosServidor();
   const [lembretes, setLembretes] = useState({});
   const porId = new Map(
     tarefas.map(t => {
@@ -96,7 +99,7 @@ export function useRotinaBanco() {
           startDate: regra?.inicio,
           endDate: regra?.fim || '',
           icon: 'lista',
-          reminder: lembretes[t.id] || 'none',
+          reminder: servidor ? String(t.lembrete_minutos ?? 'none') : lembretes[t.id] || 'none',
         },
       ];
     })
@@ -124,9 +127,17 @@ export function useRotinaBanco() {
       )
     );
 
-  function despachar(acao) {
-    if (acao.type === 'update' && 'reminder' in acao.changes) {
+  async function despachar(acao) {
+    if (!servidor && acao.type === 'update' && 'reminder' in acao.changes) {
       setLembretes(atual => ({ ...atual, [acao.id]: acao.changes.reminder }));
+      return;
+    }
+    if (servidor) {
+      try {
+        await aplicarAcaoRotina(acao, { ...b, categorias, tarefas: porId });
+      } finally {
+        await servidor.atualizar();
+      }
       return;
     }
     alterarBanco(db => {

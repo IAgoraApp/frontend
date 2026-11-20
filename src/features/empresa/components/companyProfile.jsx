@@ -1,3 +1,6 @@
+import { encerrarSessao } from '../../../app/dados/contaApi';
+import { useDadosServidor } from '../../../app/dados/contextoServidor';
+import { enviarImagemEmpresa, salvarEnderecoComercial, salvarPerfilEmpresa, validarPerfilEmpresa } from '../empresaApi';
 import {
   ArrowLeft,
   Camera,
@@ -58,10 +61,11 @@ const midias = [
 ];
 
 function imagemValida(valor) {
-  return /^(https?:\/\/|data:image\/jpeg;base64,)/i.test(valor ?? '');
+  return /^(https?:\/\/|\/imagens-marketplace\/|data:image\/jpeg;base64,)/i.test(valor ?? '');
 }
 
 function EditorMidiasEmpresa({ empresa, userId, aoFechar, notificar }) {
+  const servidor = useDadosServidor();
   const [imagens, setImagens] = useState({
     logo: imagemValida(empresa.logo) ? empresa.logo : '',
     banner: imagemValida(empresa.banner) ? empresa.banner : '',
@@ -85,7 +89,7 @@ function EditorMidiasEmpresa({ empresa, userId, aoFechar, notificar }) {
     if (!arquivo) return;
     setOcupado(true);
     try {
-      atualizar(nome, await lerImagemComoDados(arquivo));
+      atualizar(nome, await (servidor ? enviarImagemEmpresa(arquivo) : lerImagemComoDados(arquivo)));
     } catch (falha) {
       setErro(falha.message || 'Não foi possível abrir a imagem.');
     } finally {
@@ -131,7 +135,7 @@ function EditorMidiasEmpresa({ empresa, userId, aoFechar, notificar }) {
                           maxLength={500}
                           placeholder='https://'
                           value={
-                            imagens[nome].startsWith('data:')
+                            imagens[nome].startsWith('data:') || imagens[nome].startsWith('/imagens-marketplace/')
                               ? ''
                               : imagens[nome]
                           }
@@ -157,7 +161,7 @@ function EditorMidiasEmpresa({ empresa, userId, aoFechar, notificar }) {
             grupoSecoes='midias-empresa'
             onClose={aoFechar}
             rotuloSalvar='Salvar imagens'
-            onSave={() => {
+            onSave={async () => {
               if (ocupado) throw new Error('Aguarde o carregamento da imagem.');
               const logo = imagens.logo.trim();
               const banner = imagens.banner.trim();
@@ -165,7 +169,10 @@ function EditorMidiasEmpresa({ empresa, userId, aoFechar, notificar }) {
                 throw new Error(
                   'Informe um endereço que comece com http:// ou https://.'
                 );
-              salvarEmpresa(userId, {
+              if (servidor) {
+                await salvarPerfilEmpresa({ logo, banner }, true);
+                await servidor.atualizar();
+              } else salvarEmpresa(userId, {
                 cnpj: empresa.cnpj,
                 logo: logo || null,
                 banner: banner || null,
@@ -195,6 +202,7 @@ export default function PerfilEmpresa({
   executar,
   notificar,
 }) {
+  const servidor = useDadosServidor();
   const [params] = useSearchParams();
   const navegar = useNavigate();
   const [editarDados, setEditarDados] = useState(false);
@@ -308,6 +316,10 @@ export default function PerfilEmpresa({
             Cadastrar perfil da empresa
           </h1>
         )}
+        {servidor && <Botao type='button' variante='contorno' onClick={() => {
+          encerrarSessao();
+          navegar('/login', { replace: true });
+        }}>Sair da conta</Botao>}
         <div className='grid min-w-0 gap-4'>
           <NavegacaoPerfil areas={areas} rota='/empresa/perfil' visao={atual} />
           {atual !== 'perfil' ? (
@@ -331,7 +343,12 @@ export default function PerfilEmpresa({
                       variante='contorno'
                       onClick={() =>
                         executar(
-                          () => enviarEmpresaParaAnalise(userId),
+                          async () => {
+                            if (servidor) {
+                              await validarPerfilEmpresa();
+                              await servidor.atualizar();
+                            } else enviarEmpresaParaAnalise(userId);
+                          },
                           'Perfil enviado para análise.'
                         )
                       }
@@ -409,12 +426,14 @@ export default function PerfilEmpresa({
                       ))}
                     </div>
                   )}
-                  <Link
-                    className='mvp-link mt-3 inline-block'
-                    to='/empresa/anuncios'
-                  >
-                    Gerenciar meus serviços
-                  </Link>
+                  <div className='mt-3 flex flex-wrap items-center gap-3'>
+                    <Link className='mvp-primario' to='/empresa/anunciar'>
+                      Cadastrar serviço
+                    </Link>
+                    <Link className='mvp-link' to='/empresa/anuncios'>
+                      Gerenciar meus serviços
+                    </Link>
+                  </div>
                 </section>
               )}
             </div>
@@ -458,13 +477,16 @@ export default function PerfilEmpresa({
             campos={camposEnderecoPerfil}
             inicial={endereco}
             onClose={() => setEditarEndereco(false)}
-            onSave={valores => {
+            onSave={async valores => {
               const dados = Object.fromEntries(
                 camposEnderecoPerfil.map(({ nome }) => [nome, valores[nome]])
               );
               if (!/^\d{5}-?\d{3}$/.test(dados.cep))
                 throw new Error('Informe um CEP com oito dígitos.');
-              salvarEnderecoEmpresa(userId, dados);
+              if (servidor) {
+                await salvarEnderecoComercial(dados);
+                await servidor.atualizar();
+              } else salvarEnderecoEmpresa(userId, dados);
               notificar('Endereço atualizado.');
             }}
           />

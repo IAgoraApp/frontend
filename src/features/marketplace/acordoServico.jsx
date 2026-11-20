@@ -1,3 +1,5 @@
+import { useDadosServidor } from '../../app/dados/contextoServidor';
+import { editarProposta } from './marketplaceApi';
 import { useState } from 'react';
 import { alterarBancoMarketplace, moeda } from '../../app/dados/bancoMvp';
 import { atualizarAcordo } from './contratacoes';
@@ -9,6 +11,8 @@ const formatarAgendamento = data =>
   });
 
 export default function AcordoServico({ pedido, propostas, userId }) {
+  const servidor = useDadosServidor();
+  const [ocupado, setOcupado] = useState(false);
   const [editando, setEditando] = useState(false);
   const [erro, setErro] = useState('');
   const proposta = propostas?.findLast(
@@ -16,9 +20,14 @@ export default function AcordoServico({ pedido, propostas, userId }) {
   );
   const minha = proposta?.autor_user_id === userId;
 
-  function executar(tipo, campos = {}) {
+  async function executar(tipo, campos = {}) {
+    if (ocupado) return;
+    setOcupado(true);
     try {
-      alterarBancoMarketplace(db =>
+      if (servidor) {
+        await editarProposta(pedido.id, proposta?.id, tipo, campos);
+        await servidor.atualizar();
+      } else alterarBancoMarketplace(db =>
         atualizarAcordo(db, pedido.id, userId, {
           tipo,
           propostaId: proposta?.id ?? null,
@@ -29,6 +38,8 @@ export default function AcordoServico({ pedido, propostas, userId }) {
       setEditando(false);
     } catch (falha) {
       setErro(falha.message);
+    } finally {
+      setOcupado(false);
     }
   }
 
@@ -108,7 +119,7 @@ export default function AcordoServico({ pedido, propostas, userId }) {
           </label>
           <p>O pagamento é feito diretamente com a empresa.</p>
           <div className='mercado-a-contato-acoes'>
-            <button type='submit' className='mvp-primario'>
+            <button type='submit' disabled={ocupado} className='mvp-primario'>
               Enviar proposta
             </button>
             <button

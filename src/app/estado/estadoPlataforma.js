@@ -1,6 +1,9 @@
+import { acessoLocal } from '../dados/acessoLocal';
+import { lerSessao } from '../dados/sessao';
+
 const CHAVE_ARMAZENAMENTO = 'iagora_estado_plataforma_v1';
 
-const estadoInicial = {
+const dadosDemonstracao = import.meta.env.DEV && acessoLocal ? {
   perfil: {
     nome: 'Ana',
     nomeCompleto: 'Ana Clara Souza',
@@ -41,11 +44,21 @@ const estadoInicial = {
       { id: 's3', texto: 'Frutas e legumes da semana', concluido: false },
     ],
   },
+} : null;
+
+const estadoInicial = dadosDemonstracao ?? {
+  perfil: {}, servicosFavoritos: [], avaliacoesServicos: [], contatosCliente: [],
+  checklists: { diaADia: [], mudanca: [], mercado: [] },
 };
+
+function chaveDaConta() {
+  if (acessoLocal) return CHAVE_ARMAZENAMENTO;
+  return CHAVE_ARMAZENAMENTO + ':' + (lerSessao()?.id ?? 'visitante');
+}
 
 export function lerEstadoPlataforma() {
   try {
-    const salvo = localStorage.getItem(CHAVE_ARMAZENAMENTO);
+    const salvo = localStorage.getItem(chaveDaConta());
     if (!salvo) return estadoInicial;
     const analisado = JSON.parse(salvo);
     return {
@@ -60,7 +73,7 @@ export function lerEstadoPlataforma() {
 
 export function salvarEstadoPlataforma(proximoEstado) {
   try {
-    localStorage.setItem(CHAVE_ARMAZENAMENTO, JSON.stringify(proximoEstado));
+    localStorage.setItem(chaveDaConta(), JSON.stringify(proximoEstado));
     window.dispatchEvent(new CustomEvent('iagora:estado'));
   } catch {
     return false;

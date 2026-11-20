@@ -72,13 +72,11 @@ function FormularioAcesso({ params }) {
   const entrar = useCallback(
     (sessao, novaConta = false) => {
       salvarSessao({ ...sessao, cadastroPendente: novaConta });
-      const destino = novaConta
-        ? sessao.tipo === 2
-          ? '/cadastro/dados-da-empresa'
-          : '/cadastro/moradia'
-        : sessao.tipo === 2
-          ? '/empresa/perfil'
-          : '/perfil';
+      const profissional = sessao.tipo === 2;
+      let destino = profissional ? '/empresa' : '/home';
+      if (novaConta) {
+        destino = profissional ? '/cadastro/dados-da-empresa' : '/cadastro/moradia';
+      }
       navegar(destino, {
         replace: true,
       });
@@ -93,12 +91,15 @@ function FormularioAcesso({ params }) {
       setErro('');
       setCarregando(true);
       try {
-        entrar(
-          await contaApi('/user/login/google', {
-            metodo: 'POST',
-            dados: { credential, ...(senha && { senha }) },
-          })
-        );
+        const sessao = await contaApi('/user/login/google', {
+          metodo: 'POST',
+          dados: {
+            credential,
+            ...(senha && { senha }),
+            ...(cadastro && { tipo: empresa ? 2 : 1 }),
+          },
+        });
+        entrar(sessao, sessao.novaConta);
       } catch (falha) {
         if (falha.status === 409 && !senha) setVinculoGoogle(credential);
         else setErro(falha.message);
@@ -107,7 +108,7 @@ function FormularioAcesso({ params }) {
         setCarregando(false);
       }
     },
-    [entrar, setErro, setVinculoGoogle]
+    [cadastro, empresa, entrar, setErro, setVinculoGoogle]
   );
 
   async function enviar(evento) {
@@ -331,8 +332,8 @@ function FormularioAcesso({ params }) {
                 {aviso}
               </p>
             )}
-            {modo === 'login' &&
-              !entradaLocal &&
+            {(modo === 'login' || cadastro) &&
+              !acessoLocal &&
               (vinculoGoogle ? (
                 <form
                   className='acesso-campos'
@@ -380,6 +381,7 @@ function FormularioAcesso({ params }) {
                 </form>
               ) : (
                 <EntrarComGoogle
+                  cadastro={cadastro}
                   aoReceber={entrarComGoogle}
                   bloqueado={carregando}
                 />

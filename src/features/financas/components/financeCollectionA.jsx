@@ -12,7 +12,7 @@ import {
   Wallet,
 } from 'lucide-react';
 import { EditorMvp } from '../../../shared/ui/mvp';
-import { atualizarFinancas, excluirFinancas } from '../financasDados';
+import { useFinancas } from '../useFinancas';
 import {
   AcaoFinancas,
   DialogoFinancas,
@@ -51,6 +51,8 @@ export default function ColecaoFinancas({
   criarAoAbrir = false,
   onCloseRegistro,
 }) {
+  const { atualizarFinancas, excluirFinancas } = useFinancas();
+  const [ocupado, setOcupado] = useState(false);
   const [selecionado, setSelecionado] = useState(null);
   const [edicao, setEdicao] = useState(null);
   const editor = edicao ?? (criarAoAbrir ? padrao : null);
@@ -68,9 +70,11 @@ export default function ColecaoFinancas({
     onCloseRegistro?.();
   }
 
-  function executar(acao, mensagem, fecharDepois = false) {
+  async function executar(acao, mensagem, fecharDepois = false) {
+    if (ocupado) return false;
+    setOcupado(true);
     try {
-      const resultado = acao();
+      const resultado = await acao();
       if (fecharDepois) fechar();
       setErro('');
       notificar(
@@ -80,6 +84,8 @@ export default function ColecaoFinancas({
     } catch (e) {
       setErro(e.message);
       return false;
+    } finally {
+      setOcupado(false);
     }
   }
 
@@ -156,9 +162,9 @@ export default function ColecaoFinancas({
               campos={campos}
               inicial={editor}
               onClose={fechar}
-              onSave={valores => {
-                if (onSave) onSave(valores);
-                else atualizarFinancas(colecao, valores);
+              onSave={async valores => {
+                if (onSave) await onSave(valores);
+                else await atualizarFinancas(colecao, valores);
                 onSaved?.(valores);
                 notificar('Alterações salvas.');
               }}

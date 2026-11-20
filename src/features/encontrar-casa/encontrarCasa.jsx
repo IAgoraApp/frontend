@@ -12,7 +12,8 @@ import {
   Wallet,
 } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { acessoLocal } from '../../app/dados/acessoLocal';
+import { useDadosServidor } from '../../app/dados/contextoServidor';
+import { salvarImovelApi, salvarSituacaoFinanceira } from '../financas-B/planejamentoApi';
 import {
   alterarBancoPreparacao,
   dataCurta,
@@ -52,6 +53,8 @@ function salvarPrevisao(usuario, data) {
 
 export default function EncontrarCasa() {
   const { b, perfil } = useBancoMvp();
+  const servidor = useDadosServidor();
+  const [excluindo, setExcluindo] = useState(false);
   const [params, setParams] = useSearchParams();
   const [editor, setEditor] = useState(null);
   const [editarPrevisao, setEditarPrevisao] = useState(false);
@@ -89,9 +92,14 @@ export default function EncontrarCasa() {
     setEditor(registro ?? {});
   }
 
-  function confirmarExclusao() {
+  async function confirmarExclusao() {
+    if (excluindo) return;
+    setExcluindo(true);
     try {
-      alterarBancoPreparacao(banco => {
+      if (servidor) {
+        await salvarImovelApi(imovel.id);
+        await servidor.atualizar();
+      } else alterarBancoPreparacao(banco => {
         banco.casa_desejada = banco.casa_desejada.filter(
           item => item.id !== imovel.id || item.user_id !== usuario
         );
@@ -104,6 +112,8 @@ export default function EncontrarCasa() {
       setParams({});
     } catch (falha) {
       setErro(falha.message);
+    } finally {
+      setExcluindo(false);
     }
   }
 
@@ -113,14 +123,14 @@ export default function EncontrarCasa() {
       descricao='Acompanhe as opções que você considera para a mudança.'
       chaveSecao='imoveis-desejados'
       acao={
-        acessoLocal && (
+        usuario && (
           <BotaoCasa onClick={() => abrirEditor()}>
             <Plus size={17} aria-hidden='true' /> Adicionar imóvel
           </BotaoCasa>
         )
       }
     >
-      {acessoLocal && usuario && (
+      {usuario && (
         <section
           className='imoveis-previsao'
           aria-labelledby='imoveis-previsao-titulo'
@@ -141,12 +151,7 @@ export default function EncontrarCasa() {
           </button>
         </section>
       )}
-      {!acessoLocal ? (
-        <EstadoVazio
-          titulo='Disponível na prévia local'
-          descricao='A lista de imóveis aguarda integração com o servidor.'
-        />
-      ) : !imovel ? (
+      {!imovel ? (
         <EstadoVazio
           titulo='Nenhum imóvel cadastrado'
           descricao='Adicione uma opção para guardar o endereço, o valor e suas observações.'
@@ -316,9 +321,11 @@ export default function EncontrarCasa() {
             cabecalho={false}
             campos={camposPrevisao}
             inicial={{ mudanca_prevista: dataPrevista }}
-            onSave={valores =>
-              salvarPrevisao(usuario, valores.mudanca_prevista)
-            }
+            onSave={async valores => {
+              if (!servidor) return salvarPrevisao(usuario, valores.mudanca_prevista);
+              await salvarSituacaoFinanceira({ mudancaPrevista: valores.mudanca_prevista });
+              await servidor.atualizar();
+            }}
             onClose={() => setEditarPrevisao(false)}
             rotuloSalvar='Salvar data'
             acaoSecundaria={
@@ -380,7 +387,7 @@ export default function EncontrarCasa() {
             >
               Cancelar
             </Botao>
-            <Botao type='button' onClick={confirmarExclusao}>
+            <Botao type='button' onClick={confirmarExclusao} disabled={excluindo}>
               Excluir imóvel
             </Botao>
           </div>

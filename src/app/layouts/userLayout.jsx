@@ -34,7 +34,7 @@ export default function LayoutUsuario({
   const { perfil } = useBancoMvp(usuarioAtivo);
   const momento = acessoLocal
     ? (usuarioAtivo ? perfil?.tipo : undefined)
-    : sessao?.momentoMoradia;
+    : perfil?.tipo ?? sessao?.momentoMoradia;
   const compartilhada = rotasCompartilhadas.test(pathname);
   const preparacao = momento
     ? momento === 2

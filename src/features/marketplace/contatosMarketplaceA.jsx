@@ -1,3 +1,5 @@
+import { useDadosServidor } from '../../app/dados/contextoServidor';
+import { gravarAvaliacao, marcarMensagensLidas, mudarContratacao, ocultarConversa, salvarMensagem } from './marketplaceApi';
 import { usePerfilPreparacao } from '../../app/dados/perfilNavegacao';
 import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
 import { useEffect, useState } from 'react';
@@ -42,6 +44,9 @@ export default function ContatosMarketplaceA({
   aoConversar,
   erroChat,
 }) {
+  const servidor = useDadosServidor();
+  const atualizar = servidor?.atualizar;
+  const [ocupado, setOcupado] = useState(false);
   const navegar = useNavigate();
   const preparacao = usePerfilPreparacao();
   const [params] = useSearchParams();
@@ -86,6 +91,10 @@ export default function ContatosMarketplaceA({
 
   useEffect(() => {
     if (!naoLidas || !chatId) return;
+    if (atualizar) {
+      marcarMensagensLidas(chatId).then(atualizar).catch(() => {});
+      return;
+    }
     try {
       alterarBancoMarketplace(db => {
         const agora = new Date().toISOString();
@@ -101,22 +110,31 @@ export default function ContatosMarketplaceA({
     } catch {
       // As mensagens continuam acessíveis sem salvar o recibo de leitura.
     }
-  }, [chatId, naoLidas, perfil.user_id]);
+  }, [atualizar, chatId, naoLidas, perfil.user_id]);
 
-  function executar(acao, sucesso) {
+  async function executar(acao, sucesso) {
+    if (ocupado) return false;
+    setOcupado(true);
     try {
-      acao();
+      await acao();
       setErro('');
       if (sucesso !== undefined) notificar(sucesso);
       return true;
     } catch (falha) {
       setErro(falha.message);
       return false;
+    } finally {
+      setOcupado(false);
     }
   }
 
-  function salvarEdicao(valores) {
-    alterarBancoMarketplace(db => {
+  async function salvarEdicao(valores) {
+    if (atualizar) {
+      await gravarAvaliacao(edicao.contratacao.id, edicao.avaliacao?.id, {
+        nota: valores.nota, comentario: valores.comentario ?? '',
+      });
+      await atualizar();
+    } else alterarBancoMarketplace(db => {
       const contratacao = db.servico_contratado.find(
         c => c.id === edicao.contratacao.id && c.perfil_id === perfil.id
       );
@@ -348,8 +366,13 @@ export default function ContatosMarketplaceA({
                   vinculoAtual.status === 'pendente'
                     ? 'A negociação será encerrada e o histórico será removido.'
                     : 'O histórico de mensagens desta conversa será removido.',
-                acao: () => {
-                  alterarBancoMarketplace(db => {
+                acao: async () => {
+                  if (atualizar) {
+                    if (vinculoAtual?.status === 'pendente')
+                      await mudarContratacao(vinculoAtual.id, 'cancelar');
+                    await ocultarConversa(chat.id);
+                    await atualizar();
+                  } else alterarBancoMarketplace(db => {
                     const atual = db.chat_servico.find(
                       c => c.id === chat.id && c.perfil_id === perfil.id
                     );
@@ -373,13 +396,20 @@ export default function ContatosMarketplaceA({
                 sucesso: 'Conversa excluída.',
               });
             }}
-            aoEnviar={evento => {
+            aoEnviar={async evento => {
               evento.preventDefault();
               const form = evento.currentTarget;
               const mensagem = new FormData(form).get('mensagem').trim();
               if (!mensagem) return;
+              if (atualizar) {
+                if (await executar(async () => {
+                  await salvarMensagem(chat.id, mensagem);
+                  await atualizar();
+                })) form.reset();
+                return;
+              }
               if (
-                executar(() =>
+                await executar(() =>
                   alterarBancoMarketplace(db => {
                     if (
                       !db.chat_servico.some(
@@ -430,7 +460,12 @@ export default function ContatosMarketplaceA({
                         setErro('');
                         setConfirmacao({
                           titulo: 'Excluir avaliação?',
-                          acao: () =>
+                          acao: async () => {
+                            if (atualizar) {
+                              await gravarAvaliacao(edicao.contratacao.id, edicao.avaliacao.id);
+                              await atualizar();
+                              return;
+                            }
                             alterarBancoMarketplace(db => {
                               db.avaliacao_servico =
                                 db.avaliacao_servico.filter(
@@ -438,7 +473,8 @@ export default function ContatosMarketplaceA({
                                     a.id !== edicao.avaliacao.id ||
                                     a.perfil_id !== perfil.id
                                 );
-                            }),
+                            });
+                          },
                           sucesso: 'Avaliação excluída.',
                         });
                       }}
@@ -479,8 +515,9 @@ export default function ContatosMarketplaceA({
               <button
                 type='button'
                 className='mvp-primario'
-                onClick={() => {
-                  if (executar(confirmacao.acao, confirmacao.sucesso)) {
+                disabled={ocupado}
+                onClick={async () => {
+                  if (await executar(confirmacao.acao, confirmacao.sucesso)) {
                     setConfirmacao(null);
                     setEdicao(null);
                   }

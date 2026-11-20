@@ -1,3 +1,5 @@
+import { useDadosServidor } from '../../app/dados/contextoServidor';
+import { marcarComprado, salvarItemCompra, salvarListaCompras } from './cozinhaApi';
 import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -21,6 +23,8 @@ const rotaCompras = '/cozinha?visao=compras';
 const camposLista = [{ nome: 'nome', rotulo: 'Nome da lista' }];
 
 export default function ComprasA({ banco, casaId }) {
+  const servidor = useDadosServidor();
+  const [ocupado, setOcupado] = useState(false);
   const [params, setParams] = useSearchParams();
   const notificar = useAvisoPerfilA();
   const [editor, setEditor] = useState(null);
@@ -61,11 +65,15 @@ export default function ComprasA({ banco, casaId }) {
     campoQuantidade,
   ];
 
-  function salvarLista(valores) {
+  async function salvarLista(valores) {
     if (valores.nome.length > 150)
       throw new Error('Use até 150 caracteres no nome da lista.');
     let id = valores.id;
-    alterarBancoCompras(db => {
+    if (servidor) {
+      const resultado = await salvarListaCompras(id, { casaId, nome: valores.nome });
+      id ??= resultado.id;
+      await servidor.atualizar();
+    } else alterarBancoCompras(db => {
       if (id) {
         const existente = db.compras.find(
           item => item.id === id && item.casa_id === casaId
@@ -84,8 +92,15 @@ export default function ComprasA({ banco, casaId }) {
     notificar(valores.id ? 'Lista atualizada.' : 'Lista criada.');
   }
 
-  function salvarItem(valores) {
-    alterarBancoCompras(db => {
+  async function salvarItem(valores) {
+    if (servidor) {
+      await salvarItemCompra(lista.id, valores.id, {
+        nomeItem: valores.nome_item,
+        produtoId: valores.produto_id,
+        quantidade: valores.quantidade,
+      });
+      await servidor.atualizar();
+    } else alterarBancoCompras(db => {
       if (
         !db.compras.some(
           item => item.id === lista.id && item.casa_id === casaId
@@ -126,31 +141,43 @@ export default function ComprasA({ banco, casaId }) {
     notificar(valores.id ? 'Item atualizado.' : 'Item adicionado à lista.');
   }
 
-  function executar(acao) {
+  async function executar(acao) {
+    if (ocupado) return false;
+    setOcupado(true);
     try {
-      acao();
+      await acao();
       setErro('');
       return true;
     } catch (falha) {
       setErro(falha.message);
       return false;
+    } finally {
+      setOcupado(false);
     }
   }
 
   function alternar(item, comprado) {
-    executar(() =>
+    executar(async () => {
+      if (servidor) {
+        await marcarComprado(lista.id, item.id, comprado);
+        await servidor.atualizar();
+        return;
+      }
       alterarBancoCompras(db => {
         const existente = db.compra_item.find(
           e => e.id === item.id && e.compras_id === lista.id
         );
         if (!existente) throw new Error('O item não está mais disponível.');
         existente.comprado = comprado;
-      })
-    );
+      });
+    });
   }
 
-  function excluirLista() {
-    alterarBancoCompras(db => {
+  async function excluirLista() {
+    if (servidor) {
+      await salvarListaCompras(lista.id);
+      await servidor.atualizar();
+    } else alterarBancoCompras(db => {
       db.compras = db.compras.filter(
         item => item.id !== lista.id || item.casa_id !== casaId
       );
@@ -389,8 +416,11 @@ export default function ComprasA({ banco, casaId }) {
             aoSalvar={salvarItem}
             aoExcluir={
               editor.valores.id
-                ? () => {
-                    alterarBancoCompras(db => {
+                ? async () => {
+                    if (servidor) {
+                      await salvarItemCompra(lista.id, editor.valores.id);
+                      await servidor.atualizar();
+                    } else alterarBancoCompras(db => {
                       db.compra_item = db.compra_item.filter(
                         item =>
                           item.id !== editor.valores.id ||

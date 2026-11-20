@@ -11,6 +11,7 @@ export function EditorCozinha({
   aoFechar,
 }) {
   const [confirmar, setConfirmar] = useState(false);
+  const [excluindo, setExcluindo] = useState(false);
   const [erro, setErro] = useState('');
 
   return (
@@ -38,12 +39,17 @@ export function EditorCozinha({
               <button
                 type='button'
                 className='cozinha-botao cozinha-perigo'
-                onClick={() => {
+                disabled={excluindo}
+                onClick={async () => {
+                  setExcluindo(true);
+                  setErro('');
                   try {
-                    aoExcluir();
+                    await aoExcluir();
                     aoFechar();
                   } catch (falha) {
                     setErro(falha.message);
+                  } finally {
+                    setExcluindo(false);
                   }
                 }}
               >

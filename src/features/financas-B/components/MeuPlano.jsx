@@ -10,6 +10,8 @@ import fotoStudio from '../../encontrar-casa/assets/studio-sp-iagora.jpg';
 import fotoMesa from '../../casa/assets/casa-organizada-notebook.jpg';
 import fotoCozinha from '../../casa/assets/cozinha-comida-boa.jpg';
 import arteTransporte from '../../calculadoras/assets/transporte.svg';
+import { useDadosServidor } from '../../../app/dados/contextoServidor';
+import { salvarCustosMensais } from '../planejamentoApi';
 import { salvarGastosImovel } from '../moradiaDados';
 import { tipoValorImovel } from '../../preparacao/valorImovel';
 
@@ -74,10 +76,13 @@ export default function MeuPlano({
   endereco,
   resumo,
   custos,
+  plano,
   selecionar,
   adicionarImovel,
   rotaDinheiro,
 }) {
+  const servidor = useDadosServidor();
+  const [salvando, setSalvando] = useState(false);
   const [grupoAtivo, setGrupoAtivo] = useState(null);
   const [rascunho, setRascunho] = useState({});
   const [erro, setErro] = useState('');
@@ -162,24 +167,25 @@ export default function MeuPlano({
     setGrupoAtivo(grupo);
   }
 
-  function salvar(evento) {
+  async function salvar(evento) {
     evento.preventDefault();
+    if (salvando) return;
+    setSalvando(true);
     try {
-      salvarGastosImovel(
-        usuario,
-        imovel.id,
-        camposAtivos
-          .filter(campo => !campo.imovelMensal)
-          .map(campo => ({
-            ...campo,
-            valor: rascunho[campo.nome] ?? campo.valor,
-          }))
-      );
+      const gastos = camposAtivos
+        .filter(campo => !campo.imovelMensal)
+        .map(campo => ({ ...campo, valor: rascunho[campo.nome] ?? campo.valor }));
+      if (servidor) {
+        await salvarCustosMensais(plano, imovel, gastos);
+        await servidor.atualizar();
+      } else salvarGastosImovel(usuario, imovel.id, gastos);
       setGrupoAtivo(null);
       setErro('');
       notificar('Gastos do imóvel salvos.');
     } catch (falha) {
       setErro(falha.message);
+    } finally {
+      setSalvando(false);
     }
   }
 
@@ -378,7 +384,7 @@ export default function MeuPlano({
               >
                 Cancelar
               </BotaoCasa>
-              <BotaoCasa type='submit'>Salvar gastos</BotaoCasa>
+              <BotaoCasa type='submit' disabled={salvando}>Salvar gastos</BotaoCasa>
             </footer>
           </form>
         </DialogoCasa>

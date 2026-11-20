@@ -10,6 +10,8 @@ import {
   salvarRegistro,
   useBancoMvp,
 } from '../../app/dados/bancoMvp';
+import { useDadosServidor } from '../../app/dados/contextoServidor';
+import { excluirExecucaoLimpeza, excluirRegistroCasa, registrarLimpeza, salvarRegistroCasa } from '../casa/casaApi';
 import { EditorMvp, PaginaMvp } from '../../shared/ui/mvp';
 import { DialogoCasa } from '../casa/components/casaUi';
 import CardsComodos from './components/cardsComodos';
@@ -23,6 +25,9 @@ import './limpezaA.css';
 export default function LimpezaA() {
   const { b, casa, comodos, limpezas, perfil } = useBancoMvp();
   const [params, setParams] = useSearchParams();
+  const servidor = useDadosServidor();
+  const [erro, setErro] = useState('');
+  const [ocupado, setOcupado] = useState(false);
   const [modal, setModal] = useState(null);
   const [confirmarExclusao, setConfirmarExclusao] = useState(false);
   const notificar = useAvisoPerfilA();
@@ -71,7 +76,27 @@ export default function LimpezaA() {
     aoEditar: item => setModal({ tipo: 'limpeza', item }),
   };
 
+  async function executar(operacao, mensagem, depois) {
+    if (ocupado) return;
+    setOcupado(true);
+    setErro('');
+    try {
+      await operacao();
+      depois?.();
+      notificar(mensagem);
+    } catch (falha) {
+      setErro(falha.message);
+    } finally {
+      setOcupado(false);
+    }
+  }
+
   function concluir(limpeza) {
+    if (servidor) return executar(async () => {
+      if (limpeza.ultima_vez === dia) return;
+      await registrarLimpeza(limpeza.id, perfil.id);
+      await servidor.atualizar();
+    }, `Limpeza registrada: ${limpeza.nome}.`);
     alterarBanco(db => {
       const atual = db.limpezas.find(l => l.id === limpeza.id);
       if (!atual || atual.ultima_vez === dia) return;
@@ -90,6 +115,12 @@ export default function LimpezaA() {
   }
 
   function excluirExecucao(id) {
+    if (servidor) return executar(async () => {
+      const execucao = historico.find(item => item.id === id);
+      if (!execucao) throw new Error('Registro de limpeza indisponível.');
+      await excluirExecucaoLimpeza(execucao.limpeza_id, id);
+      await servidor.atualizar();
+    }, 'Registro removido do histórico de limpeza.');
     alterarBanco(db => {
       const execucao = db.execucao_limpeza.find(item => item.id === id);
       const atividade = db.limpezas.find(
@@ -151,6 +182,7 @@ export default function LimpezaA() {
           ) : null
         }
       >
+        {erro && <p className='mvp-vazio' role='alert'>{erro}</p>}
         {ehHistorico ? (
           <ExtratoLimpeza
             registros={historico}
@@ -402,7 +434,17 @@ export default function LimpezaA() {
                       )
                     }
                     onClose={fecharModal}
-                    onSave={valores => {
+                    onSave={async valores => {
+                      if (servidor) {
+                        const novo = await salvarRegistroCasa(
+                          modal.tipo === 'comodo' ? 'comodo' : 'limpezas', valores
+                        );
+                        await servidor.atualizar();
+                        if (modal.tipo === 'comodo') setModal(null);
+                        if (modal.tipo === 'comodo') selecionarComodo(novo.id);
+                        notificar(modal.item ? 'Limpeza atualizada.' : 'Registro adicionado.');
+                        return;
+                      }
                       if (modal.tipo === 'comodo') {
                         let novo;
                         alterarBanco(db => {
@@ -442,7 +484,12 @@ export default function LimpezaA() {
                           <button
                             className='limpeza-excluir-tarefa'
                             type='button'
+                            disabled={ocupado}
                             onClick={() => {
+                              if (servidor) return executar(async () => {
+                                await excluirRegistroCasa('limpezas', modal.item.id);
+                                await servidor.atualizar();
+                              }, 'Atividade excluída.', fecharModal);
                               removerRegistro('limpezas', modal.item.id);
                               fecharModal();
                               notificar('Atividade excluída.');

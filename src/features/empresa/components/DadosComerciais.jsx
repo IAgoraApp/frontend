@@ -1,3 +1,6 @@
+import { useDadosServidor } from '../../../app/dados/contextoServidor';
+import { salvarPerfilEmpresa } from '../empresaApi';
+import ImagemMarketplace from '../../marketplace/ImagemMarketplace';
 import { useState } from 'react';
 import { Building2, Clock3, Mail, MapPin } from 'lucide-react';
 import { EditorMvp } from '../../../shared/ui/mvp';
@@ -164,7 +167,7 @@ export function PreviaVisualEmpresa({ empresa }) {
     !falhou && empresa.banner && !empresa.banner.startsWith('/mock/');
   return (
     <figure className='empresa-editor-visual'>
-      <img
+      <ImagemMarketplace
         src={capa ? empresa.banner : fotoAtendimento}
         alt={capa ? 'Capa da empresa' : ''}
         onError={capa ? () => setFalhou(true) : undefined}
@@ -186,6 +189,7 @@ export default function DadosComerciais({
   aoFechar,
   notificar,
 }) {
+  const servidor = useDadosServidor();
   return (
     <EditorMvp
       cabecalho={false}
@@ -199,7 +203,7 @@ export default function DadosComerciais({
       grupoSecoes='dados-comerciais'
       rotuloSalvar='Salvar alterações'
       inicial={{ ...empresa, local: empresa?.local_atendimento?.join(', ') }}
-      onSave={valores => {
+      onSave={async valores => {
         const {
           nome,
           cnpj,
@@ -210,6 +214,9 @@ export default function DadosComerciais({
           descricao,
           local,
         } = valores;
+        const cnpjSemMascara = cnpj?.replace(/\D/g, '');
+        if (!/^\d{14}$/.test(cnpjSemMascara ?? ''))
+          throw new Error('Informe os 14 dígitos do CNPJ.');
         if (site && !/^https?:\/\//i.test(site))
           throw new Error('O site deve começar com http:// ou https://.');
         const alterados = JSON.parse(valores.horario_atendimento ?? '{}');
@@ -224,9 +231,9 @@ export default function DadosComerciais({
           if (valor) horario_atendimento[id] = valor;
           else delete horario_atendimento[id];
         }
-        salvarEmpresa(userId, {
+        const dados = {
           nome,
-          cnpj,
+          cnpj: cnpjSemMascara,
           categoria,
           telefone,
           email_comercial,
@@ -237,7 +244,16 @@ export default function DadosComerciais({
             .split(',')
             .map(item => item.trim())
             .filter(Boolean),
-        });
+        };
+        if (servidor) {
+          await salvarPerfilEmpresa({
+            nome: dados.nome, cnpj: dados.cnpj, categoria: dados.categoria,
+            telefone: dados.telefone, descricao: dados.descricao ?? '',
+            site: dados.site ?? '', emailComercial: dados.email_comercial,
+            localAtendimento: dados.local_atendimento, horarioAtendimento: dados.horario_atendimento,
+          }, Boolean(empresa));
+          await servidor.atualizar();
+        } else salvarEmpresa(userId, dados);
         notificar('Informações comerciais atualizadas.');
       }}
     />

@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { ArrowRight, Check, ChevronLeft, ListChecks } from 'lucide-react';
 import { Botao } from '../../shared/ui';
+import { useDadosServidor } from '../../app/dados/contextoServidor';
+import { finalizarQuiz, iniciarQuiz, responderQuiz } from './aprendizadoApi';
 import { proximoId } from '../preparacao/modelo';
 
 export default function QuizAula({
@@ -10,6 +12,9 @@ export default function QuizAula({
   usuario,
   onConcluir,
 }) {
+  const servidor = useDadosServidor();
+  const [ocupado, setOcupado] = useState(false);
+  const [erro, setErro] = useState('');
   const [indice, setIndice] = useState(null);
   const questoes = banco.questao.filter(item => item.quiz_id === quiz.id);
   const tentativas = banco.tentativa_quiz.filter(
@@ -36,7 +41,27 @@ export default function QuizAula({
     respostas.some(r => r.questao_id === q.id)
   );
 
-  function iniciar() {
+  async function gravar(operacao) {
+    if (ocupado) return false;
+    setOcupado(true);
+    setErro('');
+    try {
+      await operacao();
+      await servidor.atualizar();
+      return true;
+    } catch (falha) {
+      setErro(falha.message);
+      return false;
+    } finally {
+      setOcupado(false);
+    }
+  }
+
+  async function iniciar() {
+    if (servidor) {
+      if (await gravar(() => iniciarQuiz(quiz.id))) setIndice(0);
+      return;
+    }
     if (
       executar(db => {
         if (
@@ -59,7 +84,12 @@ export default function QuizAula({
       setIndice(0);
   }
 
-  function responder(alternativa) {
+  async function responder(alternativa) {
+    if (servidor) {
+      if (await gravar(() => responderQuiz(tentativa.id, questao.id, alternativa.id, resposta?.id)))
+        setIndice(posicao);
+      return;
+    }
     if (
       executar(db => {
         const atual = db.resposta_quiz.find(
@@ -80,6 +110,7 @@ export default function QuizAula({
   }
 
   function finalizar() {
+    if (servidor) return gravar(() => finalizarQuiz(tentativa.id));
     executar(db => {
       const registro = db.tentativa_quiz.find(
         item => item.id === tentativa.id && item.pontuacao == null
@@ -141,6 +172,7 @@ export default function QuizAula({
                 <label key={item.id}>
                   <input
                     type='radio'
+                    disabled={ocupado}
                     name={'questao-' + questao.id}
                     checked={resposta?.alternativa_id === item.id}
                     onChange={() => responder(item)}
@@ -190,6 +222,7 @@ export default function QuizAula({
         )}
       </div>
 
+      {erro && <p role='alert' className='aprendendo-erro'>{erro}</p>}
       <footer className='aprendendo-quiz-acoes'>
         {questoes.length > 0 &&
           (tentativa ? (
@@ -212,14 +245,14 @@ export default function QuizAula({
                   Próxima questão <ArrowRight size={16} aria-hidden='true' />
                 </Botao>
               ) : (
-                <Botao type='button' disabled={!completa} onClick={finalizar}>
+                <Botao type='button' disabled={!completa || ocupado} onClick={finalizar}>
                   Ver resultado <ArrowRight size={16} aria-hidden='true' />
                 </Botao>
               )}
             </>
           ) : ultima ? (
             <>
-              <Botao type='button' variante='contorno' onClick={iniciar}>
+              <Botao type='button' variante='contorno' onClick={iniciar} disabled={ocupado}>
                 Tentar novamente
               </Botao>
               <Botao type='button' onClick={onConcluir}>
@@ -227,7 +260,7 @@ export default function QuizAula({
               </Botao>
             </>
           ) : (
-            <Botao type='button' onClick={iniciar}>
+            <Botao type='button' onClick={iniciar} disabled={ocupado}>
               Iniciar quiz
             </Botao>
           ))}

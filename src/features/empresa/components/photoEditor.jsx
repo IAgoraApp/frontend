@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import ImagemMarketplace from '../../marketplace/ImagemMarketplace';
 import { Botao } from '../../../shared/ui/index';
 import { lerImagemComoDados } from '../../../app/estado/estadoEmpresa';
 
@@ -6,6 +7,7 @@ export default function EditorFotos({
   fotos,
   aoAlterar,
   aoCarregar,
+  enviar,
   rotulo = 'Fotos do serviço',
   limite = 5,
 }) {
@@ -25,7 +27,7 @@ export default function EditorFotos({
     setOcupado(true);
     aoCarregar?.(true);
     try {
-      const imagens = await Promise.all(arquivos.map(lerImagemComoDados));
+      const imagens = await Promise.all(arquivos.map(enviar ?? lerImagemComoDados));
       aoAlterar([...fotos, ...imagens]);
     } catch (falha) {
       setErro(falha.message || 'Não foi possível ler a imagem selecionada.');
@@ -56,8 +58,7 @@ export default function EditorFotos({
           className='min-h-12 w-full min-w-0 max-w-full cursor-pointer rounded-xl border border-dashed border-[#9fb0bf] bg-[#f4f7fa] p-3 text-sm text-(--azul-titulo) file:mr-3 file:cursor-pointer file:rounded-full file:border-0 file:bg-[#102a43] file:px-4 file:py-2 file:text-xs file:font-bold file:text-white'
         />
         <p className='text-xs text-(--texto-apoio)'>
-          Formatos aceitos: JPG, PNG ou WebP, até 5 MB por arquivo. As imagens
-          ficam armazenadas localmente neste navegador.
+          Formatos aceitos: JPG, PNG ou WebP, até 5 MB por arquivo.
         </p>
       </div>
 
@@ -85,7 +86,7 @@ export default function EditorFotos({
                   Imagem de exemplo
                 </p>
               ) : (
-                <img
+                <ImagemMarketplace
                   src={foto}
                   alt={
                     indice === 0
