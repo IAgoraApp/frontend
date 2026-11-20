@@ -33,7 +33,7 @@ function partesEtiquetaData(dataIso) {
   };
 }
 
-export default function CartaoAgenda({ eventosDisponiveis = [] }) {
+export default function CartaoAgenda({ eventosDisponiveis = [], rotaVazia = '/rotina?visao=lista', acaoVazia = 'Adicionar na rotina →' }) {
   const hoje = chaveData();
   const [mesReferencia, setMesReferencia] = useState(
     () => new Date(new Date().getFullYear(), new Date().getMonth(), 1, 12)
@@ -267,10 +267,10 @@ export default function CartaoAgenda({ eventosDisponiveis = [] }) {
                 </button>
               ) : (
                 <Link
-                  to='/rotina?visao=lista'
+                  to={rotaVazia}
                   className='mt-2 inline-block text-xs font-bold text-(--laranja-principal)'
                 >
-                  Adicionar na rotina →
+                  {acaoVazia}
                 </Link>
               )}
             </div>

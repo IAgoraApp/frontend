@@ -10,6 +10,7 @@ import {
   UserRound,
 } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { rotaPerfilMoradia, usePerfilPreparacao } from '../../app/dados/perfilNavegacao';
 import { useBancoMvp } from '../../app/dados/bancoMvp';
 import Rodape from '../../shared/footer';
 import { Botao, Container, Titulo } from '../../shared/ui';
@@ -70,6 +71,8 @@ function EnderecoPerfil({ endereco }) {
 }
 
 export default function PerfilA() {
+  const preparacao = usePerfilPreparacao();
+  const rotaPerfil = rotaPerfilMoradia(preparacao ? 2 : 1);
   const { b, perfil, casa } = useBancoMvp();
   const [params] = useSearchParams();
   const visao =
@@ -154,7 +157,7 @@ export default function PerfilA() {
               {areas.map(([id, nome, Icone]) => (
                 <Link
                   key={id}
-                  to={id === 'perfil' ? '/perfil' : '?visao=' + id}
+                  to={id === 'perfil' ? rotaPerfil : '?visao=' + id}
                   aria-current={visao === id ? 'page' : undefined}
                   className='flex min-h-11 min-w-0 flex-col items-center justify-center gap-1 rounded-lg px-1 py-2 text-center text-xs font-bold text-(--texto-apoio) hover:bg-(--azul-fundo) aria-[current=page]:bg-(--laranja-fundo) aria-[current=page]:text-[#9d2c08] sm:flex-row sm:gap-2 sm:px-3 sm:text-sm'
                 >
@@ -165,7 +168,7 @@ export default function PerfilA() {
             </nav>
             {visao === 'perfil' ? (
               <div className='grid min-w-0 gap-4'>
-                <MomentoPerfilA perfil={perfil} />
+                <MomentoPerfilA key={perfil.user_id + ':' + perfil.tipo} perfil={perfil} />
                 <section
                   aria-labelledby='perfil-informacoes'
                   className='min-w-0 rounded-2xl border border-(--borda-suave) bg-white p-5 sm:p-6'
@@ -178,6 +181,7 @@ export default function PerfilA() {
                   </Titulo>
                   <div className='perfil-editor mt-5'>
                     <EditorMvp
+                      key={perfil.user_id}
                       cabecalho={false}
                       titulo='Informações pessoais'
                       rotuloSalvar='Salvar alterações'
@@ -214,17 +218,19 @@ export default function PerfilA() {
                         id='perfil-residencia'
                         classe='text-xl font-extrabold'
                       >
-                        Minha residência
+                        {preparacao ? 'Minha jornada' : 'Minha residência'}
                       </Titulo>
                     </div>
                     <p className='mt-3 text-sm text-(--texto-apoio)'>
-                      {casa?.nome || 'Residência sem nome'}
+                      {preparacao
+                        ? 'Organize as etapas para a sua mudança.'
+                        : casa?.nome || 'Nenhuma residência cadastrada.'}
                     </p>
                     <Link
-                      to='/casa'
+                      to={preparacao ? '/minhajornada' : '/casa'}
                       className='mt-2 inline-flex min-h-11 items-center gap-1 text-sm font-bold text-[#9d2c08] hover:underline'
                     >
-                      Abrir Minha casa{' '}
+                      {preparacao ? 'Abrir Minha Jornada' : 'Abrir Minha casa'}{' '}
                       <ChevronRight size={16} aria-hidden='true' />
                     </Link>
                     <Link
@@ -274,7 +280,7 @@ export default function PerfilA() {
               </div>
             ) : (
               <CobrancasPerfilA
-                key={visao}
+                key={perfil.user_id + ':' + visao}
                 b={b}
                 userId={perfil.user_id}
                 visao={visao}

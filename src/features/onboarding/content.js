@@ -25,11 +25,3 @@ export const opcoesMomento = [
     alt: 'Moradora na cozinha de seu studio planejando reparos e tarefas do dia a dia',
   },
 ];
-
-export const opcoesPrioridades = [
-  'Planejar minha mudança',
-  'Organizar a casa e a rotina',
-  'Cuidar do meu dinheiro',
-  'Aprender a cozinhar',
-  'Conhecer serviços para a casa',
-];

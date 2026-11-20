@@ -65,6 +65,7 @@ export function MenuLateralCasa({
   secoes,
   pathname,
   visao,
+  parametros,
 }) {
   const referencia = useRef(null);
   const idMenu = useId();
@@ -178,7 +179,7 @@ export function MenuLateralCasa({
                       return (
                         <Link
                           key={rotuloLink}
-                          to={`${destino}?visao=${id}`}
+                          to={destino + '?' + new URLSearchParams({ ...parametros, visao: id })}
                           aria-current={linkAtivo(link) ? 'page' : undefined}
                         >
                           {rotuloLink}

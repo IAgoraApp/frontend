@@ -104,7 +104,10 @@ export default function Cabecalho({
     if (rota === '/planejamento' && caminho.startsWith('/planejamento')) {
       return true;
     }
-    if (rota === '/minhajornada' && caminho.startsWith('/minhajornada')) {
+    if (
+      rota === '/minhajornada' &&
+      ['/minhajornada', '/planejamento', '/aprendendo', '/encontrar-casa'].includes(caminho)
+    ) {
       return true;
     }
     if (rota === '/aprendendo' && caminho.startsWith('/aprendendo')) {

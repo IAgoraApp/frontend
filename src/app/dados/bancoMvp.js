@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'react';
+import { lerUsuarioMvpAtivo, usePerfilPreparacao } from './perfilNavegacao';
 import banco from '../../../iagora_banco_mock_completo.json';
 
 const chaveReceitas = 'iagora:banco-mvp:receitas:v1';
@@ -90,10 +91,11 @@ export function alterarBancoCobrancas(operacao) {
 }
 
 const chavePerfil = 'iagora:banco-mvp:perfil:v1';
+const chavePerfilUsuario = usuario => usuario === USUARIO_A ? chavePerfil : chavePerfil + ':' + usuario;
 
-function aplicarPerfilSalvo(bancoAtual) {
+function aplicarPerfilSalvo(bancoAtual, chave = chavePerfil) {
   try {
-    const salvo = JSON.parse(window.localStorage.getItem(chavePerfil));
+    const salvo = JSON.parse(window.localStorage.getItem(chave));
     if (!salvo) return {};
     const perfil = bancoAtual.perfil.find(item => item.id === salvo.perfil?.id);
     const usuario = bancoAtual.users.find(item => item.id === perfil?.user_id);
@@ -132,11 +134,45 @@ function mesclarEnderecosMarketplace(db, salvos) {
   const ids = new Set(db.endereco.map(item => item.id));
   db.endereco.push(...salvos.filter(item => !ids.has(item.id)));
 }
-let dados = { ...structuredClone(banco.dados), ...lerReceitasSalvas(), ...lerFinancasSalvas(), ...lerComprasSalvas(), ...lerMarketplaceSalvo(), ...lerCobrancasSalvas() };
+const chavePreparacao = 'iagora:banco-mvp:preparacao:v1';
+const colecoesPreparacao = [
+  'jornada', 'etapa_jornada', 'tarefa_jornada', 'plano_moradia',
+  'custo_moradia', 'simulacao_moradia', 'simulacao_item', 'casa_desejada',
+  'progresso_aula', 'tentativa_quiz', 'resposta_quiz', 'enderecos_preparacao',
+];
+
+function lerPreparacaoSalva() {
+  try {
+    const salvo = JSON.parse(localStorage.getItem(chavePreparacao));
+    return Object.fromEntries(
+      colecoesPreparacao.filter(c => Array.isArray(salvo?.[c])).map(c => [c, salvo[c]])
+    );
+  } catch {
+    return {};
+  }
+}
+
+export function alterarBancoPreparacao(operacao) {
+  alterarBanco(b => {
+    Object.assign(b, lerPreparacaoSalva());
+    b.enderecos_preparacao ??= [];
+    mesclarEnderecosMarketplace(b, b.enderecos_preparacao);
+    operacao(b);
+    localStorage.setItem(chavePreparacao, JSON.stringify(
+      Object.fromEntries(colecoesPreparacao.map(c => [c, b[c]]))
+    ));
+  });
+}
+
+let dados = { ...structuredClone(banco.dados), ...lerReceitasSalvas(), ...lerFinancasSalvas(), ...lerComprasSalvas(), ...lerMarketplaceSalvo(), ...lerCobrancasSalvas(), ...lerPreparacaoSalva() };
 mesclarEnderecosMarketplace(dados, dados.enderecos_marketplace);
+mesclarEnderecosMarketplace(dados, dados.enderecos_preparacao);
 aplicarPerfilSalvo(dados);
+for (const perfil of banco.dados.perfil.filter(item => item.user_id !== 1))
+  aplicarPerfilSalvo(dados, chavePerfil + ':' + perfil.user_id);
 const ouvintes = new Set();
 export const USUARIO_A = 1;
+export const USUARIO_B = banco.dados.perfil.find(perfil => perfil.tipo === 2).user_id;
 export const hoje = () => {
   const data = new Date();
   return `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, '0')}-${String(data.getDate()).padStart(2, '0')}`;
@@ -204,14 +240,15 @@ export function alterarBancoCompras(operacao) {
 export function alterarBancoPerfil(userId, operacao) {
   alterarBanco(b => {
     mesclarEnderecosMarketplace(b, lerMarketplaceSalvo().enderecos_marketplace);
-    const enderecos = aplicarPerfilSalvo(b);
+    const chave = chavePerfilUsuario(userId);
+    const enderecos = aplicarPerfilSalvo(b, chave);
     const perfil = b.perfil.find(item => item.user_id === userId);
     const usuario = b.users.find(item => item.id === userId);
     if (!perfil || !usuario) throw new Error('Perfil indisponível.');
     const endereco = operacao(b, perfil, usuario);
     if (endereco) enderecos[endereco.id] = endereco;
     try {
-      localStorage.setItem(chavePerfil, JSON.stringify({
+      localStorage.setItem(chave, JSON.stringify({
         perfil,
         email: usuario.email,
         enderecos,
@@ -308,13 +345,15 @@ const inscrever = ouvir => {
   return () => ouvintes.delete(ouvir);
 };
 const snapshot = () => dados;
-export function useBancoMvp() {
+export function useBancoMvp(usuarioSelecionado) {
+  const preparacao = usePerfilPreparacao();
+  const usuario = usuarioSelecionado ?? lerUsuarioMvpAtivo() ?? (preparacao ? USUARIO_B : USUARIO_A);
   const b = useSyncExternalStore(inscrever, snapshot);
-  const perfil = b.perfil.find(item => item.user_id === USUARIO_A);
-  const casa = b.casa.find(item => item.user_id === USUARIO_A);
+  const perfil = b.perfil.find(item => item.user_id === usuario);
+  const casa = b.casa.find(item => item.user_id === usuario);
   const comodos = b.comodo.filter(item => item.casa_id === casa?.id);
   const categorias = b.categoria_tarefa.filter(
-    item => item.user_id === USUARIO_A
+    item => item.user_id === usuario
   );
   const tarefas = b.tarefa.filter(item =>
     categorias.some(c => c.id === item.categoria_id)
@@ -330,8 +369,8 @@ export function useBancoMvp() {
       comodos.some(c => c.id === item.comodo_id)
     ),
     transacoes: b.transacao_financeira.filter(
-      item => item.user_id === USUARIO_A
+      item => item.user_id === usuario
     ),
-    endereco: b.endereco.find(item => item.id === casa?.endereco_id),
+    endereco: b.endereco.find(item => item.id === (casa?.endereco_id ?? perfil?.endereco_id)),
   };
 }

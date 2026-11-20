@@ -1,3 +1,4 @@
+import { usePerfilPreparacao } from '../../app/dados/perfilNavegacao';
 import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
 import { useEffect, useState } from 'react';
 import {
@@ -30,6 +31,7 @@ import ContatosMarketplaceA from './contatosMarketplaceA';
 import './marketplaceA.css';
 
 export default function MarketplaceA({ dentroDaEmpresa = false }) {
+  const preparacao = usePerfilPreparacao();
   const { b, perfil, endereco } = useBancoMvp();
   const { id, slug } = useParams();
   const { pathname, search, state } = useLocation();
@@ -58,6 +60,9 @@ export default function MarketplaceA({ dentroDaEmpresa = false }) {
     });
     return () => cancelAnimationFrame(quadro);
   }, [rotaAvaliacoes, id]);
+
+  if (preparacao && pathname === '/favoritos')
+    return <Navigate to='/marketplace' replace />;
 
   function abrirChat(empresaId, contratadoId) {
     try {

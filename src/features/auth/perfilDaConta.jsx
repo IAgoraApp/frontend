@@ -7,6 +7,8 @@ import {
   lerSessao,
   salvarSessao,
 } from '../../app/dados/contaApi';
+import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
+import { rotaPerfilMoradia } from '../../app/dados/perfilNavegacao';
 import { acessoLocal } from '../../app/dados/acessoLocal';
 import { atualizarEmpresa } from '../../app/estado/estadoEmpresa';
 import { EtapaCadastro } from './components/EtapaCadastro';
@@ -34,6 +36,8 @@ export default function PerfilDaConta({ empresa = false, cadastro = false }) {
 
 function EditorPerfil({ sessao, empresa, cadastro, local = false }) {
   const navegar = useNavigate();
+  const { pathname } = useLocation();
+  const notificar = useAvisoPerfilA();
   const [perfil, setPerfil] = useState(local ? {} : null);
   const [carregando, setCarregando] = useState(!local);
   const [salvando, setSalvando] = useState(false);
@@ -53,6 +57,13 @@ function EditorPerfil({ sessao, empresa, cadastro, local = false }) {
       .then(result => {
         if (!result)
           throw new Error('O servidor não retornou os dados do perfil.');
+        if (controller.signal.aborted) return;
+        if (!empresa && [1, 2].includes(Number(result.tipo))) {
+          const momentoMoradia = Number(result.tipo);
+          const sessaoAtual = lerSessao();
+          if (sessaoAtual?.token === token)
+            salvarSessao({ ...sessaoAtual, momentoMoradia });
+        }
         setPerfil(result);
       })
       .catch(falha => {
@@ -66,6 +77,12 @@ function EditorPerfil({ sessao, empresa, cadastro, local = false }) {
       });
     return () => controller.abort();
   }, [endpoint, token, empresa, sessao.email, local]);
+
+  const rotaMoradia = perfil && rotaPerfilMoradia(Number(perfil.tipo));
+  useEffect(() => {
+    if (!empresa && rotaMoradia && pathname !== rotaMoradia)
+      navegar(rotaMoradia, { replace: true });
+  }, [empresa, navegar, pathname, rotaMoradia]);
 
   async function salvar(evento) {
     evento.preventDefault();
@@ -134,6 +151,10 @@ function EditorPerfil({ sessao, empresa, cadastro, local = false }) {
           token,
         });
         setPerfil(atual => ({ ...atual, ...payload }));
+        salvarSessao({ ...sessao, momentoMoradia: payload.tipo });
+        notificar('Perfil salvo.');
+        navegar(rotaPerfilMoradia(payload.tipo), { replace: true });
+        return;
       }
       setAviso('Perfil salvo.');
     } catch (falha) {

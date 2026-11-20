@@ -1,3 +1,4 @@
+import { usePerfilPreparacao } from '../../app/dados/perfilNavegacao';
 import { useState } from 'react';
 import {
   ArrowUpRight,
@@ -88,6 +89,7 @@ export default function CatalogoMarketplaceA({
   erroChat,
 }) {
   const localizacao = useLocation();
+  const preparacao = usePerfilPreparacao();
   const [params, setParams] = useSearchParams();
   const [favoritos, setFavoritos] = useState(() => lerFavoritos(usuario));
   const [erro, setErro] = useState('');
@@ -289,7 +291,7 @@ export default function CatalogoMarketplaceA({
                     <li key={s.id} className='mercado-a-cartao'>
                       <div className='mercado-a-cartao-foto'>
                         <FotoServico servico={s} />
-                        {!dentroDaEmpresa && (
+                        {!dentroDaEmpresa && !preparacao && (
                           <button
                             type='button'
                             aria-label={`Favoritar ${s.titulo}`}
