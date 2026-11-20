@@ -1,357 +1,379 @@
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useState } from 'react';
 import {
-  AssinaturaEditorial,
-  Botao,
-  Container,
-  Titulo,
-} from '../../shared/ui/index';
-import Rodape from '../../shared/footer';
-import {
-  lerEstadoPlataforma,
-  salvarEstadoPlataforma,
-} from '../../app/estado/estadoPlataforma';
-import { etapasFixasJornada } from './content';
-import {
-  CartoesJornada,
-  EtapaJornada,
-  VisaoDetalheMeta,
-  VisaoDocumentos,
-  VisaoEditarMeta,
-  VisaoHistorico,
-  VisaoMetas,
-  VisaoNovaMeta,
-  VisaoPendencias,
-} from './components/index';
+  ArrowLeft,
+  ArrowUpRight,
+  ChevronRight,
+  CircleCheck,
+  Plus,
+  Trash2,
+} from 'lucide-react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { acessoLocal } from '../../app/dados/acessoLocal';
+import { useBancoMvp } from '../../app/dados/bancoMvp';
+import { DialogoCasa } from '../casa/components/casaUi';
+import LayoutPreparacao from '../preparacao/LayoutPreparacao';
+import RegistrosPreparacao from '../preparacao/RegistrosPreparacao';
+import { EditorMvp } from '../../shared/ui/mvp';
+import { atualizarGuia } from './jornadaDados';
+import { modelo } from '../preparacao/modelo';
+import { descricaoGuia, lerGuia, nomeGuia } from './guiaMudanca';
+import './minhaJornada.css';
 
-export default function MinhaJornada() {
-  const [parametros, definirParametros] = useSearchParams();
-  const [estado, setEstado] = useState(lerEstadoPlataforma);
-  const [docsMarcados, setDocsMarcados] = useState(() => {
-    const salvo = {};
-    for (const doc of lerEstadoPlataforma().documentosJornada || []) {
-      if (doc.situacao === 'Pronto') salvo[doc.id] = true;
-    }
-    return salvo;
-  });
+const ehJornadaPersonalizada = jornada =>
+  jornada.nome !== nomeGuia || jornada.descricao !== descricaoGuia;
 
-  useEffect(() => {
-    const atualizar = () => setEstado(lerEstadoPlataforma());
-    window.addEventListener('iagora:estado', atualizar);
-    return () => window.removeEventListener('iagora:estado', atualizar);
-  }, []);
+function GuiaMudanca() {
+  const { b, perfil } = useBancoMvp();
+  const usuario = perfil?.user_id;
+  const [params, setParams] = useSearchParams();
+  const [erro, setErro] = useState('');
+  const [editor, setEditor] = useState(null);
+  const [remocao, setRemocao] = useState(null);
+  const [itemAberto, setItemAberto] = useState(null);
+  const editavel = acessoLocal && !!usuario;
+  const {
+    etapas,
+    feitas,
+    total,
+    proxima: pendente,
+  } = lerGuia(b, acessoLocal ? usuario : undefined);
+  const ativa = etapas.find(item => item.id === params.get('etapa'));
+  const proxima = ativa && etapas[etapas.indexOf(ativa) + 1];
+  const tarefaAberta = ativa?.tarefas.find(item => item.titulo === itemAberto);
 
-  const visaoParam = parametros.get('visao');
-  const etapaParam = parametros.get('etapa');
-  const metaParam = parametros.get('meta');
-  const etapaAtual =
-    etapaParam !== null && Number.isInteger(Number(etapaParam))
-      ? Number(etapaParam)
-      : null;
-
-  const metaAtual =
-    (estado.metasJornada || []).find(item => item.id === metaParam) || null;
-
-  const visao =
-    etapaAtual !== null &&
-    etapasFixasJornada.some(item => item.id === etapaAtual)
-      ? 'etapa'
-      : [
-            'metas',
-            'nova-meta',
-            'detalhe-meta',
-            'editar-meta',
-            'pendencias',
-            'documentos',
-            'historico',
-          ].includes(visaoParam)
-        ? visaoParam
-        : 'hub';
-
-  function atualizarPlataforma(transformar) {
-    setEstado(anterior => {
-      const proximo = transformar(anterior);
-      salvarEstadoPlataforma(proximo);
-      return proximo;
-    });
-  }
-
-  function abrirVisao(proxima, idEtapa = null, idMeta = null) {
-    definirParametros(
+  function abrirEtapa(id) {
+    setErro('');
+    setEditor(null);
+    setRemocao(null);
+    setItemAberto(null);
+    setParams(
       anterior => {
-        const atualizado = new URLSearchParams(anterior);
-        if (!proxima || proxima === 'hub') atualizado.delete('visao');
-        else atualizado.set('visao', proxima);
-        if (idEtapa !== null && idEtapa !== undefined) {
-          atualizado.set('etapa', String(idEtapa));
-        } else {
-          atualizado.delete('etapa');
-        }
-        if (idMeta) atualizado.set('meta', idMeta);
-        else atualizado.delete('meta');
-        return atualizado;
+        const proximo = new URLSearchParams(anterior);
+        if (id) proximo.set('etapa', id);
+        else proximo.delete('etapa');
+        return proximo;
       },
-      { preventScrollReset: true }
+      { replace: true, preventScrollReset: true }
     );
   }
 
-  function alternarTarefaEtapa(chaveEtapa, indice, feito, tituloTarefa) {
-    atualizarPlataforma(anterior => {
-      const etapas = (anterior.etapasJornada || []).map(etapa => {
-        if (etapa.id !== chaveEtapa) return etapa;
-        const itens = [...(etapa.itens || [])];
-        const existente = itens[indice] || {
-          id: `${chaveEtapa}-${indice + 1}`,
-          texto: tituloTarefa,
-          feito: false,
-        };
-        itens[indice] = { ...existente, feito };
-        const todosFeitos = itens.length > 0 && itens.every(item => item.feito);
-        const algumFeito = itens.some(item => item.feito);
-        return {
-          ...etapa,
-          itens,
-          situacao: todosFeitos
-            ? 'concluida'
-            : algumFeito
-              ? 'andamento'
-              : 'pendente',
-        };
-      });
-      return { ...anterior, etapasJornada: etapas };
-    });
+  function salvar(acao, dados) {
+    if (!editavel)
+      throw new Error('As alterações estão disponíveis na prévia local.');
+    atualizarGuia(usuario, ativa, acao, dados);
+    setErro('');
   }
 
-  function concluirEtapa(chaveEtapa, tarefas) {
-    atualizarPlataforma(anterior => {
-      const etapas = (anterior.etapasJornada || []).map(etapa => {
-        if (etapa.id !== chaveEtapa) return etapa;
-        const itens = tarefas.map((tarefa, indice) => ({
-          id: etapa.itens?.[indice]?.id || `${chaveEtapa}-${indice + 1}`,
-          texto: etapa.itens?.[indice]?.texto || tarefa.titulo,
-          feito: true,
-        }));
-        return { ...etapa, itens, situacao: 'concluida' };
-      });
-      return { ...anterior, etapasJornada: etapas };
-    });
+  function executar(acao, dados) {
+    try {
+      salvar(acao, dados);
+      if (acao === 'remover-etapa') abrirEtapa();
+      if (acao === 'remover-item') setItemAberto(null);
+      setRemocao(null);
+    } catch (falha) {
+      setErro(falha.message);
+      setRemocao(null);
+    }
   }
 
-  function situacaoEtapaRotulo(chaveEtapa) {
-    const encontrada = (estado.etapasJornada || []).find(
-      item => item.id === chaveEtapa
+  function formulario(tipo) {
+    const entidade = tipo === 'etapa' ? 'etapa_jornada' : 'tarefa_jornada';
+    return (
+      <EditorMvp
+        cabecalho={false}
+        campos={modelo[entidade].campos
+          .filter(item => ['titulo', 'descricao'].includes(item.nome))
+          .map(item => ({
+            ...item,
+            limite: item.maxLength,
+            obrigatorio: !item.opcional,
+            rotulo:
+              item.nome === 'descricao' && tipo === 'item'
+                ? 'Dica para realizar a tarefa (opcional)'
+                : item.rotulo,
+          }))}
+        onSave={dados => salvar('adicionar-' + tipo, dados)}
+        onClose={() => setEditor(null)}
+      />
     );
-    if (encontrada?.situacao === 'concluida') return 'Concluída ✓';
-    if (encontrada?.situacao === 'andamento') return 'Em andamento ↗';
-    return 'Começar ↗';
   }
 
   return (
-    <div
-      lang='pt-BR'
-      className='min-w-0 flex-1 bg-white font-corpo text-(--azul-titulo) [&_a:focus-visible]:outline-2 [&_a:focus-visible]:outline-offset-4 [&_a:focus-visible]:outline-(--laranja-principal)'
+    <LayoutPreparacao
+      titulo='Minha jornada'
+      chaveSecao={ativa?.id ?? 'guia-mudanca'}
+      descricao='Da escolha do imóvel aos primeiros dias na casa, siga os checklists no seu ritmo.'
     >
-      <Container como='main' classe='py-7 sm:py-10'>
-        {visao === 'hub' && (
-          <>
-            <div className='flex flex-col items-start justify-between gap-6 md:flex-row md:items-center'>
-              <div className='space-y-3'>
-                <Titulo
-                  como='h1'
-                  classe='text-3xl leading-tight font-extrabold sm:text-5xl'
-                >
-                  Sua independência, passo a passo.
-                </Titulo>
-                <p className='text-base text-(--texto-apoio) sm:text-lg'>
-                  Retome de onde parou. Cada etapa pode ser ajustada ao seu
-                  ritmo.
-                </p>
-              </div>
-              <AssinaturaEditorial tipo='chave' etiqueta='DO SEU JEITO ↗' />
-            </div>
-
-            <section
-              aria-label='Etapas da jornada'
-              className='mt-8 space-y-4 rounded-xl bg-(--azul-fundo) p-4 sm:p-6'
-            >
-              {etapasFixasJornada.map(etapa => (
-                <button
-                  key={etapa.id}
-                  type='button'
-                  onClick={() => abrirVisao('etapa', etapa.id)}
-                  className='flex min-h-20 w-full items-center justify-between gap-4 rounded-xl bg-white px-5 py-4 text-left transition-shadow hover:shadow-sm sm:px-8'
-                >
-                  <div className='min-w-0'>
-                    <strong className='block text-lg font-bold text-(--azul-titulo)'>
-                      {etapa.numero} / {etapa.tituloNav}
-                    </strong>
-                    <span className='mt-0.5 block text-sm text-(--texto-apoio)'>
-                      {etapa.subtitulo}
-                    </span>
-                  </div>
-                  <span className='shrink-0 text-sm font-bold text-(--azul-titulo)'>
-                    {situacaoEtapaRotulo(etapa.chave)}
+      <div className='jornada-guia'>
+        <div className='jornada-guia-progresso'>
+          <div>
+            <strong>
+              {total > 0 && feitas === total
+                ? 'Checklist completo'
+                : 'Progresso da mudança'}
+            </strong>
+            <p>
+              {feitas} de {total} itens concluídos
+            </p>
+          </div>
+          <progress
+            aria-label='Progresso da mudança'
+            max={total || 1}
+            value={feitas}
+          />
+          <Link to='?visao=jornadas'>
+            Jornadas cadastradas <ChevronRight size={16} aria-hidden='true' />
+          </Link>
+        </div>
+        {editavel && !ativa && (
+          <div className='jornada-guia-personalizar'>
+            <button type='button' onClick={() => setEditor('etapa')}>
+              <Plus size={17} aria-hidden='true' /> Adicionar etapa
+            </button>
+          </div>
+        )}
+        {!etapas.length && (
+          <p>Adicione uma etapa para montar seu checklist de mudança.</p>
+        )}
+        {erro && !ativa && <p role='alert'>{erro}</p>}
+        {editor === 'etapa' && !ativa && (
+          <section
+            className='jornada-guia-checklist'
+            aria-label='Adicionar etapa'
+          >
+            <h2>Adicionar etapa</h2>
+            {formulario('etapa')}
+          </section>
+        )}
+        {!ativa && (
+          <nav className='jornada-guia-etapas' aria-label='Etapas da mudança'>
+            {etapas.map((etapa, indice) => (
+              <button
+                className='jornada-guia-cartao'
+                type='button'
+                key={etapa.id}
+                data-proxima={pendente?.id === etapa.id}
+                onClick={() => abrirEtapa(etapa.id)}
+              >
+                <img src={etapa.foto} alt='' />
+                <span className='jornada-guia-cartao-texto'>
+                  <span className='jornada-guia-cartao-ordem'>
+                    Etapa {indice + 1} · {etapa.feitas}/{etapa.tarefas.length}
+                    {etapa.tarefas.length > 0 &&
+                      etapa.feitas === etapa.tarefas.length && (
+                        <CircleCheck size={15} aria-label='Concluída' />
+                      )}
                   </span>
-                </button>
-              ))}
-            </section>
-
-            <div className='mt-6 flex flex-wrap gap-3'>
-              <Botao
-                cor='laranja'
-                classe='rounded-full px-7'
-                onClick={() => abrirVisao('metas')}
-              >
-                Minhas metas
-              </Botao>
-              <Botao
-                variante='secundario'
-                classe='rounded-full px-7'
-                onClick={() => abrirVisao('pendencias')}
-              >
-                Pendências
-              </Botao>
-              <Botao
-                variante='secundario'
-                classe='rounded-full px-7'
-                onClick={() => abrirVisao('historico')}
-              >
-                Histórico
-              </Botao>
+                  <strong>{etapa.titulo}</strong>
+                  <span className='jornada-guia-cartao-descricao'>
+                    {etapa.descricao}
+                  </span>
+                </span>
+              </button>
+            ))}
+          </nav>
+        )}
+        {ativa && (
+          <section
+            className='jornada-guia-detalhe'
+            aria-labelledby='jornada-etapa-titulo'
+          >
+            <button
+              className='jornada-guia-voltar'
+              type='button'
+              onClick={() => abrirEtapa()}
+            >
+              <ArrowLeft size={17} aria-hidden='true' /> Todas as etapas
+            </button>
+            <header className='jornada-guia-etapa-capa'>
+              <img src={ativa.foto} alt='' />
+              <div>
+                <span>
+                  Etapa {etapas.indexOf(ativa) + 1} de {etapas.length}
+                </span>
+                <h2 id='jornada-etapa-titulo'>{ativa.titulo}</h2>
+                {ativa.descricao && <p>{ativa.descricao}</p>}
+                <progress
+                  aria-label='Progresso desta etapa'
+                  value={ativa.feitas}
+                  max={ativa.tarefas.length || 1}
+                />
+                <p aria-live='polite'>
+                  {ativa.feitas} de {ativa.tarefas.length} itens concluídos
+                </p>
+                {ativa.apoio && (
+                  <Link to={ativa.apoio.rota}>
+                    {ativa.apoio.rotulo}{' '}
+                    <ArrowUpRight size={16} aria-hidden='true' />
+                  </Link>
+                )}
+              </div>
+            </header>
+            <div className='jornada-guia-checklist'>
+              <h3>Checklist da etapa</h3>
+              <p>Marque o que já fez ou abra um item para ver como fazer.</p>
+              {!editavel && (
+                <p>As marcações estão disponíveis na prévia local.</p>
+              )}
+              {erro && !tarefaAberta && <p role='alert'>{erro}</p>}
+              <ul>
+                {ativa.tarefas.map(tarefa => (
+                  <li
+                    className='jornada-guia-linha'
+                    key={tarefa.id ?? tarefa.titulo}
+                  >
+                    <input
+                      type='checkbox'
+                      aria-label={'Concluir: ' + tarefa.titulo}
+                      checked={tarefa.concluida}
+                      disabled={!editavel}
+                      onChange={() => executar('alternar-item', tarefa)}
+                    />
+                    <button
+                      type='button'
+                      aria-haspopup='dialog'
+                      onClick={() => {
+                        setErro('');
+                        setRemocao(null);
+                        setItemAberto(tarefa.titulo);
+                      }}
+                    >
+                      <span>
+                        <strong>{tarefa.titulo}</strong>
+                        <small>Ver orientações</small>
+                      </span>
+                      <ChevronRight size={18} aria-hidden='true' />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+              {!ativa.tarefas.length && (
+                <p>Adicione um item para começar este checklist.</p>
+              )}
+              {editavel && (
+                <div className='jornada-guia-personalizar'>
+                  <button
+                    type='button'
+                    onClick={() => {
+                      setEditor('item');
+                      setRemocao(null);
+                    }}
+                  >
+                    <Plus size={16} aria-hidden='true' /> Adicionar item
+                  </button>
+                  <button
+                    type='button'
+                    onClick={() => {
+                      setRemocao({ acao: 'remover-etapa' });
+                      setEditor(null);
+                    }}
+                  >
+                    Remover etapa
+                  </button>
+                </div>
+              )}
+              {remocao?.acao === 'remover-etapa' && (
+                <div className='jornada-guia-confirmar'>
+                  <p>Remover esta etapa e todos os seus itens?</p>
+                  <button type='button' onClick={() => setRemocao(null)}>
+                    Cancelar
+                  </button>
+                  <button type='button' onClick={() => executar(remocao.acao)}>
+                    Remover etapa e itens
+                  </button>
+                </div>
+              )}
+              {editor === 'item' && formulario('item')}
+              {proxima && (
+                <div className='jornada-guia-acoes'>
+                  <button type='button' onClick={() => abrirEtapa(proxima.id)}>
+                    Próxima etapa <ChevronRight size={17} aria-hidden='true' />
+                  </button>
+                </div>
+              )}
             </div>
-
-            <CartoesJornada />
-          </>
+          </section>
         )}
-
-        {visao === 'etapa' && etapaAtual !== null && (
-          <EtapaJornada
-            etapaAtual={etapaAtual}
-            estadoPlataforma={estado}
-            aoAlternarTarefa={alternarTarefaEtapa}
-            aoConcluirEtapa={concluirEtapa}
-            aoAbrirEtapa={id => abrirVisao('etapa', id)}
-            aoVoltar={() => abrirVisao('hub')}
-            aoAbrirVisao={proxima => abrirVisao(proxima)}
-          />
-        )}
-
-        {visao === 'metas' && (
-          <VisaoMetas
-            metas={estado.metasJornada || []}
-            aoVoltar={() => abrirVisao('hub')}
-            aoNovaMeta={() => abrirVisao('nova-meta')}
-            aoAbrirHistorico={() => abrirVisao('historico')}
-            aoAbrirDetalheMeta={idMeta => abrirVisao('detalhe-meta', null, idMeta)}
-            aoAvancarMeta={idMeta =>
-              atualizarPlataforma(anterior => ({
-                ...anterior,
-                metasJornada: (anterior.metasJornada || []).map(meta => {
-                  if (meta.id !== idMeta) return meta;
-                  const passo = meta.objetivo > 50 ? 500 : 1;
-                  const atual = Math.min(meta.objetivo, meta.atual + passo);
-                  return {
-                    ...meta,
-                    atual,
-                    concluida: atual >= meta.objetivo,
-                  };
-                }),
-              }))
-            }
-          />
-        )}
-
-        {visao === 'detalhe-meta' && (
-          <VisaoDetalheMeta
-            meta={metaAtual}
-            aoVoltar={() => abrirVisao('metas')}
-            aoEditarMeta={idMeta => abrirVisao('editar-meta', null, idMeta)}
-            aoAvancarMeta={idMeta =>
-              atualizarPlataforma(anterior => ({
-                ...anterior,
-                metasJornada: (anterior.metasJornada || []).map(meta => {
-                  if (meta.id !== idMeta) return meta;
-                  const passo = meta.objetivo > 50 ? 500 : 1;
-                  const atual = Math.min(meta.objetivo, meta.atual + passo);
-                  return {
-                    ...meta,
-                    atual,
-                    concluida: atual >= meta.objetivo,
-                  };
-                }),
-              }))
-            }
-          />
-        )}
-
-        {visao === 'editar-meta' && (
-          <VisaoEditarMeta
-            key={metaAtual?.id || 'vazia'}
-            meta={metaAtual}
-            aoVoltar={() =>
-              abrirVisao(metaAtual ? 'detalhe-meta' : 'metas', null, metaAtual?.id)
-            }
-            aoVerMetas={() => abrirVisao('metas')}
-            aoSalvar={metaAtualizada => {
-              atualizarPlataforma(anterior => ({
-                ...anterior,
-                metasJornada: (anterior.metasJornada || []).map(meta =>
-                  meta.id === metaAtualizada.id ? metaAtualizada : meta
-                ),
-              }));
-              abrirVisao('detalhe-meta', null, metaAtualizada.id);
+        {tarefaAberta && (
+          <DialogoCasa
+            titulo={tarefaAberta.titulo}
+            aoFechar={() => {
+              setItemAberto(null);
+              setRemocao(null);
             }}
-          />
+            classe='jornada-guia-modal'
+          >
+            <img className='jornada-guia-capa-modal' src={ativa.foto} alt='' />
+            <h3 className='font-bold'>Como fazer</h3>
+            <p className='mt-1 whitespace-pre-line text-(--texto-apoio)'>
+              {tarefaAberta.descricao ||
+                'Este item ainda não tem uma dica cadastrada.'}
+            </p>
+            {tarefaAberta.referencia && (
+              <div className='jornada-guia-item-acoes'>
+                <a
+                  href={tarefaAberta.referencia[1]}
+                  target='_blank'
+                  rel='noreferrer'
+                >
+                  {tarefaAberta.referencia[0]}{' '}
+                  <ArrowUpRight size={14} aria-hidden='true' />
+                </a>
+              </div>
+            )}
+            {erro && <p role='alert'>{erro}</p>}
+            {editavel && (
+              <div className='jornada-guia-personalizar'>
+                <button
+                  type='button'
+                  onClick={() => executar('alternar-item', tarefaAberta)}
+                >
+                  {tarefaAberta.concluida
+                    ? 'Marcar como pendente'
+                    : 'Marcar como concluído'}
+                </button>
+                {remocao?.acao !== 'remover-item' && (
+                  <button
+                    type='button'
+                    onClick={() => setRemocao({ acao: 'remover-item' })}
+                  >
+                    <Trash2 size={16} aria-hidden='true' /> Remover item
+                  </button>
+                )}
+              </div>
+            )}
+            {remocao?.acao === 'remover-item' && (
+              <div className='jornada-guia-confirmar'>
+                <p>Remover este item do checklist?</p>
+                <button type='button' onClick={() => setRemocao(null)}>
+                  Cancelar
+                </button>
+                <button
+                  type='button'
+                  onClick={() => executar('remover-item', tarefaAberta)}
+                >
+                  Confirmar remoção
+                </button>
+              </div>
+            )}
+          </DialogoCasa>
         )}
-
-        {visao === 'nova-meta' && (
-          <VisaoNovaMeta
-            aoVoltar={() => abrirVisao('metas')}
-            aoSalvar={novaMeta => {
-              atualizarPlataforma(anterior => ({
-                ...anterior,
-                metasJornada: [novaMeta, ...(anterior.metasJornada || [])],
-              }));
-              abrirVisao('metas');
-            }}
-          />
-        )}
-
-        {visao === 'pendencias' && (
-          <VisaoPendencias
-            pendencias={estado.pendenciasJornada || []}
-            aoVoltar={() => abrirVisao('hub')}
-            aoAlternarPendencia={id =>
-              atualizarPlataforma(anterior => ({
-                ...anterior,
-                pendenciasJornada: (anterior.pendenciasJornada || []).map(item =>
-                  item.id === id ? { ...item, feito: !item.feito } : item
-                ),
-              }))
-            }
-          />
-        )}
-
-        {visao === 'documentos' && (
-          <VisaoDocumentos
-            documentosMarcados={docsMarcados}
-            aoAlternarDocumento={(id, marcado) =>
-              setDocsMarcados(anterior => ({ ...anterior, [id]: marcado }))
-            }
-            aoVoltar={() => abrirVisao('etapa', 3)}
-          />
-        )}
-
-        {visao === 'historico' && (
-          <VisaoHistorico
-            estadoPlataforma={estado}
-            aoAbrirEtapa={id => abrirVisao('etapa', id)}
-            aoAbrirVisao={proxima => abrirVisao(proxima)}
-            aoVoltar={() => abrirVisao('hub')}
-          />
-        )}
-      </Container>
-      <Rodape />
-    </div>
+      </div>
+    </LayoutPreparacao>
   );
+}
+
+export default function MinhaJornada() {
+  const [params] = useSearchParams();
+  if (params.has('entidade') || params.get('visao') === 'jornadas') {
+    return (
+      <RegistrosPreparacao
+        raiz='jornada'
+        filtrarRaiz={ehJornadaPersonalizada}
+        titulo='Jornadas cadastradas'
+        descricao='Acompanhe suas jornadas e gerencie as etapas e tarefas.'
+      />
+    );
+  }
+  return <GuiaMudanca />;
 }

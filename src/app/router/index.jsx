@@ -1,5 +1,6 @@
+import ResidenciaNecessaria from '../../features/preparacao/ResidenciaNecessaria';
 import { acessoLocal } from '../dados/acessoLocal';
-import { Perfil } from '../../features/perfil/perfil';
+import PerfilA from '../../features/perfil/perfilA';
 import MarketplaceA from '../../features/marketplace/marketplaceA';
 import Inicio from '../../features/home/home';
 import CasaA from '../../features/casa/casaA';
@@ -42,10 +43,10 @@ const rotas = createBrowserRouter([
               {
                 element: <LayoutCasa areaCasa />,
                 children: [
-                  { path: '/casa', element: <CasaA /> },
-                  { path: '/limpeza', element: <LimpezaA /> },
+                  { path: '/casa', element: <ResidenciaNecessaria><CasaA /></ResidenciaNecessaria> },
+                  { path: '/limpeza', element: <ResidenciaNecessaria><LimpezaA /></ResidenciaNecessaria> },
                   { path: '/cozinha', element: <CozinhaA /> },
-                  { path: '/despensa', element: <DespensaA /> },
+                  { path: '/despensa', element: <ResidenciaNecessaria><DespensaA /></ResidenciaNecessaria> },
                 ],
               },
               { path: '/rotina', element: <Rotina /> },
@@ -60,7 +61,7 @@ const rotas = createBrowserRouter([
               },
               {
                 path: '/perfil',
-                element: acessoLocal ? <Perfil /> : <PerfilDaConta />,
+                element: acessoLocal ? <PerfilA /> : <PerfilDaConta />,
               },
               {
                 path: '/checklists',
@@ -134,11 +135,6 @@ const rotas = createBrowserRouter([
                 path: '/meus-contatos/:id',
                 element: <MarketplaceA />,
               },
-            ],
-          },
-          {
-            element: <LayoutUsuario tipoUsuario='consumidorB' />,
-            children: [
               {
                 path: '/home-b',
                 element: <Funcionalidades.InicioPreparacao />,
@@ -149,7 +145,7 @@ const rotas = createBrowserRouter([
               },
               {
                 path: '/financas-b',
-                element: <Navigate to='/planejamento' replace />,
+                element: <Funcionalidades.Planejamento />,
               },
               {
                 path: '/planejamento',
@@ -162,7 +158,7 @@ const rotas = createBrowserRouter([
               },
               {
                 path: '/perfil-b',
-                element: acessoLocal ? <Perfil /> : <PerfilDaConta />,
+                element: acessoLocal ? <PerfilA /> : <PerfilDaConta />,
               },
               {
                 path: '/ia-b',

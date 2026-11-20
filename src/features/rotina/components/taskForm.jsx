@@ -120,7 +120,7 @@ export default function FormularioTarefa({
             : 'Defina o que fazer e quando quer ver a tarefa na sua agenda.'
         }
       />
-      {!tarefa && (
+      {!tarefa && aoAssistente && (
         <div className='rotina-form-ajuda' hidden={compacto && etapa > 0}>
           <BotaoRotina tom='secundario' onClick={aoAssistente}>
             <Sparkles size={16} aria-hidden='true' /> Com a IA

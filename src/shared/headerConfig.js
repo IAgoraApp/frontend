@@ -37,9 +37,8 @@ const dadosCabecalhoConsumidorB = {
   linksNavegacao: [
     { nome: 'Início', rota: '/home-b' },
     { nome: 'Minha jornada', rota: '/minhajornada' },
-    { nome: 'Finanças', rota: '/planejamento' },
-    { nome: 'Aprendendo a morar', rota: '/aprendendo' },
-    { nome: 'Encontrar casa', rota: '/encontrar-casa' },
+    { nome: 'Finanças', rota: '/financas-b' },
+    { nome: 'Empresas e Serviços', rota: '/marketplace' },
     { nome: 'IA', rota: '/ia-b' },
   ],
   botaoAcao: {

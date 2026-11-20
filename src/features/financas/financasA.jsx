@@ -333,8 +333,8 @@ function AcoesRecorrencia({
   );
 }
 
-export default function FinancasA() {
-  const { b, perfil, transacoes } = useBancoMvp();
+export default function FinancasA({ usuario, rota = '/financas' }) {
+  const { b, perfil, transacoes } = useBancoMvp(usuario);
   const [params, setParams] = useSearchParams();
   const chaveContaAtiva = 'iagora:financas:conta-ativa:' + perfil.user_id;
   const [contaAtivaId, setContaAtivaId] = useState(() => {
@@ -448,8 +448,8 @@ export default function FinancasA() {
           titulo='Finanças'
           IconeTitulo={Wallet}
           rotulo='Navegação de finanças'
-          secoes={secoesFinancas}
-          pathname='/financas'
+          secoes={rota === '/financas' ? secoesFinancas : secoesFinancas.filter(secao => secao.rota === '/financas').map(secao => ({ ...secao, rota }))}
+          pathname={rota}
           visao={visao}
         />
       }

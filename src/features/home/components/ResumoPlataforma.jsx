@@ -1,6 +1,11 @@
 import { ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { hoje, moeda } from '../../../app/dados/bancoMvp';
+import { listar, resumoMoradia } from '../../preparacao/modelo';
+import {
+  nomeCategoria,
+  servicoPublico,
+} from '../../marketplace/marketplaceDados';
 import { Titulo } from '../../../shared/ui/index';
 
 import fotoCasa from '../../casa/assets/residencia-minha.png';
@@ -14,8 +19,8 @@ import arteIA from '../../rotina/assets/robot.png';
 const quantidade = (total, singular, plural) =>
   `${total} ${total === 1 ? singular : plural}`;
 
-export function ResumoPlataforma({ banco }) {
-  const { b, casa, comodos, limpezas, transacoes } = banco;
+export function ResumoPlataforma({ banco, preparacao = false }) {
+  const { b, perfil, casa, comodos, limpezas, transacoes } = banco;
   const dia = hoje();
   const contas = transacoes.filter(
     t => t.tipo === 'despesa' && t.status === 'pendente'
@@ -35,38 +40,98 @@ export function ResumoPlataforma({ banco }) {
   const proximaConta = contas
     .filter(conta => conta.vencimento)
     .sort((a, b) => a.vencimento.localeCompare(b.vencimento))[0];
-  const casaCards = [
-    [
-      fotoCasa,
-      casa?.nome || 'Minha residência',
-      quantidade(comodos.length, 'cômodo cadastrado', 'cômodos cadastrados'),
-      '/casa',
-    ],
-    [
-      fotoLimpeza,
-      'Limpeza',
-      limpezasPendentes.length
-        ? quantidade(
-            limpezasPendentes.length,
-            'atividade até hoje',
-            'atividades até hoje'
-          )
-        : 'Limpezas de hoje em dia',
-      '/limpeza',
-    ],
-    [
-      fotoCozinha,
-      'Cozinha',
-      itensPendentes.length
-        ? quantidade(
-            itensPendentes.length,
-            'item por comprar',
-            'itens por comprar'
-          )
-        : 'Receitas, despensa e compras',
-      '/cozinha',
-    ],
-  ];
+  const usuario = perfil?.user_id;
+  const plano =
+    preparacao &&
+    listar(b, 'plano_moradia', usuario).find(item => item.status === 'ativo');
+  const custosPlano = plano
+    ? listar(b, 'custo_moradia', usuario, plano.id)
+    : [];
+  const categoriasDisponiveis = preparacao
+    ? [
+        ...new Set(
+          b.servico
+            .filter(servico =>
+              servicoPublico(
+                servico,
+                b.perfil_empresa.find(
+                  empresa => empresa.id === servico.empresa_id
+                )
+              )
+            )
+            .map(servico => servico.categoria)
+        ),
+      ]
+    : [];
+  const totalDoUsuario = colecao =>
+    b[colecao].filter(item => item.user_id === usuario).length;
+  const casaCards = preparacao
+    ? [
+        [
+          fotoCasa,
+          'Imóveis desejados',
+          quantidade(
+            totalDoUsuario('casa_desejada'),
+            'imóvel cadastrado',
+            'imóveis cadastrados'
+          ),
+          '/encontrar-casa',
+        ],
+        [
+          fotoLimpeza,
+          'Minha jornada',
+          quantidade(totalDoUsuario('jornada'), 'jornada', 'jornadas'),
+          '/minhajornada',
+        ],
+        [
+          fotoCozinha,
+          'Aprendendo a morar',
+          quantidade(
+            b.progresso_aula.filter(
+              item => item.user_id === usuario && item.concluida
+            ).length,
+            'aula concluída',
+            'aulas concluídas'
+          ),
+          '/aprendendo',
+        ],
+      ]
+    : [
+        [
+          fotoCasa,
+          casa?.nome || 'Minha residência',
+          quantidade(
+            comodos.length,
+            'cômodo cadastrado',
+            'cômodos cadastrados'
+          ),
+          '/casa',
+        ],
+        [
+          fotoLimpeza,
+          'Limpeza',
+          limpezasPendentes.length
+            ? quantidade(
+                limpezasPendentes.length,
+                'atividade até hoje',
+                'atividades até hoje'
+              )
+            : 'Limpezas de hoje em dia',
+          '/limpeza',
+        ],
+        [
+          fotoCozinha,
+          'Cozinha',
+          itensPendentes.length
+            ? quantidade(
+                itensPendentes.length,
+                'item por comprar',
+                'itens por comprar'
+              )
+            : 'Receitas, despensa e compras',
+          '/cozinha',
+        ],
+      ];
   return (
     <section className='inicio-resumo' aria-labelledby='inicio-resumo-titulo'>
       <Titulo id='inicio-resumo-titulo'>Visão geral</Titulo>
@@ -79,21 +144,47 @@ export function ResumoPlataforma({ banco }) {
           <Titulo como='h3' id='inicio-financas-titulo'>
             Finanças
           </Titulo>
-          <p className='inicio-financas-valor'>{moeda(valorPendente)}</p>
-          <p>
-            {contas.length
-              ? `A pagar em ${quantidade(contas.length, 'lançamento', 'lançamentos')}`
-              : 'Nenhum pagamento pendente'}
-          </p>
-          {proximaConta && (
-            <p className='inicio-financas-conta'>
-              {proximaConta.vencimento < dia
-                ? 'Em atraso'
-                : 'Próximo vencimento'}{' '}
-              <strong>{proximaConta.descricao}</strong>
-            </p>
+          {preparacao ? (
+            <>
+              <p className='inicio-financas-valor'>
+                {custosPlano.length
+                  ? moeda(
+                      resumoMoradia(
+                        plano.renda_mensal,
+                        plano.reserva_atual,
+                        custosPlano
+                      ).inicial
+                    )
+                  : 'Custos da mudança'}
+              </p>
+              <p>
+                {custosPlano.length
+                  ? 'Gastos iniciais registrados no seu plano'
+                  : 'Cadastre os gastos iniciais para estimar quanto precisa guardar.'}
+              </p>
+            </>
+          ) : (
+            <>
+              <p className='inicio-financas-valor'>{moeda(valorPendente)}</p>
+              <p>
+                {contas.length
+                  ? `A pagar em ${quantidade(contas.length, 'lançamento', 'lançamentos')}`
+                  : 'Nenhum pagamento pendente'}
+              </p>
+              {proximaConta && (
+                <p className='inicio-financas-conta'>
+                  {proximaConta.vencimento < dia
+                    ? 'Em atraso'
+                    : 'Próximo vencimento'}{' '}
+                  <strong>{proximaConta.descricao}</strong>
+                </p>
+              )}
+            </>
           )}
-          <Link className='inicio-resumo-link' to='/financas'>
+          <Link
+            className='inicio-resumo-link'
+            to={preparacao ? '/financas-b?visao=custos' : '/financas'}
+          >
             Ver minhas finanças <ChevronRight size={18} aria-hidden='true' />
           </Link>
         </div>
@@ -105,7 +196,7 @@ export function ResumoPlataforma({ banco }) {
         aria-labelledby='inicio-casa-titulo'
       >
         <Titulo como='h3' id='inicio-casa-titulo'>
-          Minha casa
+          {preparacao ? 'Minha mudança' : 'Minha casa'}
         </Titulo>
         <ul className='inicio-casa-cartoes'>
           {casaCards.map(([foto, nome, resumo, rota]) => (
@@ -139,20 +230,37 @@ export function ResumoPlataforma({ banco }) {
               Encontre profissionais, confira avaliações e escolha quem chamar
               para cuidar da sua casa.
             </p>
-            <ul
-              className='inicio-mercado-categorias'
-              aria-label='Categorias de serviços'
-            >
-              <li>
-                <Link to='/categoria/limpeza'>Limpeza</Link>
-              </li>
-              <li>
-                <Link to='/categoria/manutencao'>Manutenção</Link>
-              </li>
-              <li>
-                <Link to='/categoria/mudancas'>Mudanças</Link>
-              </li>
-            </ul>
+            {preparacao ? (
+              categoriasDisponiveis.length > 0 && (
+                <ul
+                  className='inicio-mercado-categorias'
+                  aria-label='Categorias de serviços'
+                >
+                  {categoriasDisponiveis.map(categoria => (
+                    <li key={categoria}>
+                      <Link to={'/categoria/' + categoria}>
+                        {nomeCategoria(categoria)}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )
+            ) : (
+              <ul
+                className='inicio-mercado-categorias'
+                aria-label='Categorias de serviços'
+              >
+                <li>
+                  <Link to='/categoria/limpeza'>Limpeza</Link>
+                </li>
+                <li>
+                  <Link to='/categoria/manutencao'>Manutenção</Link>
+                </li>
+                <li>
+                  <Link to='/categoria/mudancas'>Mudanças</Link>
+                </li>
+              </ul>
+            )}
             <Link className='inicio-resumo-link' to='/marketplace'>
               Explorar serviços <ChevronRight size={18} aria-hidden='true' />
             </Link>
@@ -165,17 +273,24 @@ export function ResumoPlataforma({ banco }) {
           <img src={arteIA} alt='' loading='lazy' />
           <div className='inicio-servico-conteudo'>
             <Titulo como='h3' id='inicio-ia-titulo'>
-              Assistente IA
+              {preparacao ? 'Ajuda para planejar' : 'Assistente IA'}
             </Titulo>
             <p>
-              Peça ajuda para organizar a semana, planejar uma mudança ou cuidar
-              da casa.
+              {preparacao
+                ? 'Consulte orientações para interpretar seus custos e organizar as próximas etapas.'
+                : 'Peça ajuda para organizar a semana, planejar uma mudança ou cuidar da casa.'}
             </p>
             <p className='inicio-ia-exemplo'>
-              “Como montar uma rotina para a semana?”
+              {preparacao
+                ? 'Respostas prontas sobre o planejamento'
+                : '“Como montar uma rotina para a semana?”'}
             </p>
-            <Link className='inicio-resumo-link' to='/ia'>
-              Conversar com a IA <ChevronRight size={18} aria-hidden='true' />
+            <Link
+              className='inicio-resumo-link'
+              to={preparacao ? '/ia-b' : '/ia'}
+            >
+              {preparacao ? 'Ver orientações' : 'Conversar com a IA'}{' '}
+              <ChevronRight size={18} aria-hidden='true' />
             </Link>
           </div>
         </section>

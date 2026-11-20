@@ -1,7 +1,8 @@
 import { useAvisoPerfilA } from '../../../app/avisos/avisosPerfilA';
 import { useState } from 'react';
 import { ArrowRight, Check, House, KeyRound } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { definirUsuarioMvpAtivo, rotaPerfilMoradia } from '../../../app/dados/perfilNavegacao';
 import { Botao, Titulo } from '../../../shared/ui';
 import fotoPlanejamento from '../../onboarding/assets/onboarding-quero-morar-sozinho.jpg';
 import fotoCasa from '../../onboarding/assets/onboarding-ja-moro-sozinho.jpg';
@@ -29,6 +30,7 @@ const momentos = [
 ];
 
 export default function MomentoPerfilA({ perfil }) {
+  const navegar = useNavigate();
   const [escolha, setEscolha] = useState(perfil.tipo);
   const [erro, setErro] = useState('');
   const notificar = useAvisoPerfilA();
@@ -42,8 +44,10 @@ export default function MomentoPerfilA({ perfil }) {
 
     try {
       salvarMomentoPerfil(perfil.user_id, escolha);
+      definirUsuarioMvpAtivo(perfil.user_id);
       setErro('');
       notificar('Alteração salva.');
+      navegar(rotaPerfilMoradia(escolha), { replace: true });
     } catch (falha) {
       setErro(falha.message);
     }

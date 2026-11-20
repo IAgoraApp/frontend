@@ -263,3 +263,43 @@
   .etapa-cadastro-empresa .acesso-formulario > p { margin-bottom: 0; }
   .etapa-cadastro-empresa .acesso-campos { gap: 10px 16px; }
 }
+
+.etapa-cadastro:has(.onboarding-onda) {
+  position: relative;
+  isolation: isolate;
+}
+.onboarding-onda {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: -1;
+  width: 100%;
+  height: clamp(104px, 27vh, 300px);
+  background: var(--laranja-principal);
+  mask: url('../../onboarding/assets/onda.svg') center / 100% 100% no-repeat;
+  pointer-events: none;
+}
+
+
+@media (min-width: 760px) {
+  .etapa-cadastro:has(.onboarding-onda) .etapa-cadastro-conteudo {
+    width: min(100%, 1160px);
+  }
+  .etapa-cadastro:has(.onboarding-onda) h1 {
+    font-size: clamp(2.25rem, 4.5vw, 3.75rem);
+    line-height: 1.03;
+  }
+  .etapa-cadastro-momentos {
+    gap: 28px;
+  }
+  .etapa-cadastro-momentos img {
+    height: auto;
+    aspect-ratio: 16 / 10;
+    max-height: 42dvh;
+  }
+  .etapa-cadastro-momentos h2 {
+    font-size: clamp(1.5rem, 2.5vw, 1.75rem);
+  }
+  .etapa-cadastro-momentos p {
+    font-size: 1rem;
+  }
+}

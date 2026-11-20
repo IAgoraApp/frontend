@@ -50,11 +50,18 @@ const sugestoes = [
   },
 ];
 
-function responder(texto) {
+function responder(texto, preparacao) {
   const pergunta = texto
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase();
+  if (
+    preparacao &&
+    /financ|dinheiro|orcamento|reserva|gasto|simul|custo/.test(pergunta)
+  )
+    return 'Abra Finanças e informe a renda, a reserva e a data da mudança. Em Custos previstos, separe os gastos iniciais dos mensais. Se o saldo mensal ficar negativo, crie uma simulação para comparar outra opção de moradia. A estimativa de reserva soma os gastos iniciais a três meses dos gastos mensais cadastrados.';
+  if (preparacao && /servic|empre|frete|montagem/.test(pergunta))
+    return 'Em Empresas e Serviços, pesquise pelo serviço que precisa e confira onde o prestador atende. Para pedir orçamento de mudança, informe origem, destino, data, volume e se vai precisar de desmontagem ou montagem.';
   if (/receita/.test(pergunta))
     return 'Para montar uma receita, me diga quais ingredientes você tem e para quantas pessoas quer cozinhar. Na Cozinha, use Nova receita para guardar os ingredientes, as quantidades e o modo de preparo.';
   if (/atividades de limpeza/.test(pergunta))
@@ -85,6 +92,7 @@ export default function InteligenciaArtificial() {
   const { pathname, state } = useLocation();
   const rascunho = state?.rascunho;
   const aceitaCriacao = pathname === '/ia';
+  const preparacao = pathname === '/ia-b';
   const dados = useBancoMvp();
   const { despachar } = useRotinaBanco();
   const notificar = useAvisoPerfilA();
@@ -165,7 +173,7 @@ export default function InteligenciaArtificial() {
         };
       }
     } else {
-      resposta = { texto: responder(conteudo) };
+      resposta = { texto: responder(conteudo, preparacao) };
     }
     const novasMensagens = [
       {
@@ -333,7 +341,10 @@ export default function InteligenciaArtificial() {
                 hoje?
               </p>
               <div className='ia-sugestoes'>
-                {sugestoes.map(({ Icone, titulo, texto: sugestao }) => (
+                {(preparacao
+                  ? sugestoes.filter(item => item.Icone !== Store)
+                  : sugestoes
+                ).map(({ Icone, titulo, texto: sugestao }) => (
                   <button
                     type='button'
                     key={titulo}
@@ -499,6 +510,19 @@ export default function InteligenciaArtificial() {
               </button>
             </div>
           </form>
+          {preparacao && (
+            <nav
+              aria-label='Ferramentas de planejamento'
+              className='flex flex-wrap justify-center gap-3 py-1 text-sm font-semibold'
+            >
+              <Link className='underline' to='/minhajornada'>
+                Minha jornada
+              </Link>
+              <Link className='underline' to='/financas-b'>
+                Planejamento financeiro
+              </Link>
+            </nav>
+          )}
           <p className='ia-aviso'>
             {aceitaCriacao
               ? 'Demonstração local. O modo Criar interpreta pedidos por regras e salva no banco de teste.'

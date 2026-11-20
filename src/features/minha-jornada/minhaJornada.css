@@ -1,0 +1,233 @@
+.jornada-guia { display: grid; gap: 14px; }
+.jornada-guia-progresso {
+  display: grid;
+  grid-template-columns: auto minmax(40px, 1fr) auto;
+  align-items: center;
+  gap: clamp(10px, 2vw, 24px);
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--azul-titulo);
+  color: white;
+}
+.jornada-guia-progresso p { color: #dce8f1; font-size: .8125rem; }
+.jornada-guia-progresso progress {
+  width: 100%;
+  height: 8px;
+  accent-color: #ff914d;
+}
+.jornada-guia-progresso a,
+.jornada-guia-acoes :is(a, button) {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 40px;
+  font-size: .875rem;
+  font-weight: 750;
+}
+.jornada-guia-progresso a:hover,
+.jornada-guia-acoes :is(a, button):hover { text-decoration: underline; }
+.jornada-guia-grade { display: grid; gap: 14px; }
+.jornada-guia-etapas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.jornada-guia-cartao {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--borda-suave);
+  border-radius: 12px;
+  background: white;
+  text-align: left;
+  cursor: pointer;
+}
+.jornada-guia-cartao img {
+  width: 100%;
+  height: clamp(80px, 12vw, 145px);
+  object-fit: cover;
+}
+.jornada-guia-cartao-texto {
+  display: grid;
+  align-content: start;
+  flex: 1;
+  gap: 3px;
+  width: 100%;
+  padding: 8px 10px 10px;
+}
+.jornada-guia-cartao-ordem {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--texto-apoio);
+  font-size: .75rem;
+  font-weight: 700;
+}
+.jornada-guia-cartao strong { line-height: 1.2; }
+.jornada-guia-cartao:hover { border-color: var(--laranja-principal); }
+.jornada-guia-checklist {
+  min-width: 0;
+  padding: clamp(12px, 2vw, 22px);
+  border: 1px solid var(--borda-suave);
+  border-radius: 12px;
+  background: white;
+}
+.jornada-guia-checklist h2 { font-size: clamp(1.3rem, 2.2vw, 1.7rem); font-weight: 800; }
+.jornada-guia-checklist > p { color: var(--texto-apoio); }
+.jornada-guia-checklist ul { margin-block: 12px 4px; border-top: 1px solid var(--borda-suave); }
+.jornada-guia-checklist li { border-bottom: 1px solid var(--borda-suave); }
+.jornada-guia-checklist label {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  align-items: start;
+  gap: 9px;
+  padding-block: 10px;
+  cursor: pointer;
+}
+.jornada-guia-checklist input[type='checkbox'] { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--laranja-principal); }
+.jornada-guia-checklist label strong { display: block; line-height: 1.25; }
+.jornada-guia-checklist label span span { display: block; margin-top: 3px; color: var(--texto-apoio); font-size: .875rem; }
+.jornada-guia-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 12px;
+  color: var(--azul-principal);
+}
+.jornada-guia-acoes button { cursor: pointer; }
+
+@media (max-width: 520px) {
+  .jornada-guia-progresso { grid-template-columns: minmax(0, 1fr) auto; }
+  .jornada-guia-progresso progress { grid-row: 2; grid-column: 1 / -1; }
+}
+
+.jornada-guia-cartao[data-proxima='true'] .jornada-guia-cartao-texto { background: #fff2e8; }
+.jornada-guia-cartao-descricao { color: var(--texto-apoio); font-size: .875rem; }
+.jornada-guia-modal .jornada-guia-checklist { padding: 0; border: 0; }
+.jornada-guia-capa-modal {
+  width: 100%;
+  height: clamp(105px, 23dvh, 190px);
+  margin-bottom: 12px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.jornada-guia-modal .jornada-guia-checklist label { padding-block: 12px; }
+.jornada-guia-modal .jornada-guia-checklist label:has(input:checked) strong {
+  color: var(--verde-sucesso);
+}
+@media (min-width: 1100px) {
+  .jornada-guia-etapas { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .jornada-guia-cartao img { height: clamp(135px, 16vw, 215px); }
+}
+
+.jornada-guia-modal .jornada-guia-acoes {
+  position: sticky;
+  bottom: 0;
+  margin-top: 8px;
+  border-top: 1px solid var(--borda-suave);
+  background: white;
+}
+
+.jornada-guia-personalizar,
+.jornada-guia-item-acoes,
+.jornada-guia-confirmar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+.jornada-guia-personalizar button,
+.jornada-guia-confirmar button {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding-inline: 10px;
+  border-radius: 7px;
+  border: 1px solid var(--borda-suave);
+  background: white;
+  font-size: .875rem;
+  font-weight: 750;
+  cursor: pointer;
+}
+.jornada-guia-personalizar button:hover,
+.jornada-guia-confirmar button:hover { background: var(--azul-fundo); }
+.jornada-guia-item-acoes { padding: 0 0 5px 29px; }
+.jornada-guia-item-acoes a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--azul-principal);
+  font-size: .8125rem;
+  font-weight: 650;
+  text-decoration: underline;
+}
+.jornada-guia-item-acoes button {
+  display: grid;
+  place-items: center;
+  margin-left: auto;
+  min-width: 36px;
+  min-height: 36px;
+  color: var(--vermelho-alerta);
+  cursor: pointer;
+}
+.jornada-guia-confirmar {
+  padding: 9px;
+  margin-bottom: 8px;
+  border-radius: 7px;
+  background: #fff2e8;
+}
+
+.jornada-guia-detalhe { display: grid; gap: 16px; }
+.jornada-guia-voltar {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  gap: 6px;
+  font-weight: 750;
+  color: var(--azul-principal);
+  cursor: pointer;
+}
+.jornada-guia-voltar:hover { text-decoration: underline; }
+.jornada-guia-etapa-capa {
+  display: grid;
+  overflow: hidden;
+  border-radius: 14px;
+  border: 1px solid var(--borda-suave);
+  background: white;
+}
+.jornada-guia-etapa-capa img {
+  width: 100%;
+  height: clamp(145px, 24vw, 240px);
+  object-fit: cover;
+}
+.jornada-guia-etapa-capa > div { padding: clamp(14px, 2.7vw, 28px); }
+.jornada-guia-etapa-capa span { font-size: .8rem; font-weight: 750; color: var(--texto-apoio); }
+.jornada-guia-etapa-capa h2 { margin-block: 3px 4px; font-size: clamp(1.55rem, 3vw, 2.25rem); font-weight: 850; line-height: 1.15; }
+.jornada-guia-etapa-capa p { color: var(--texto-apoio); font-size: .9rem; }
+.jornada-guia-etapa-capa progress { width: min(100%, 20rem); height: 8px; margin-top: 12px; accent-color: var(--laranja-principal); }
+.jornada-guia-etapa-capa a { display: inline-flex; align-items: center; gap: 5px; margin-top: 8px; font-weight: 750; color: var(--azul-principal); }
+.jornada-guia-checklist h3 { font-size: 1.2rem; font-weight: 800; }
+.jornada-guia-linha { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 13px; }
+.jornada-guia-linha button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding-block: 11px;
+  text-align: left;
+  cursor: pointer;
+}
+.jornada-guia-linha button:hover strong { text-decoration: underline; }
+.jornada-guia-linha svg { flex-shrink: 0; }
+.jornada-guia-linha small { display: block; color: var(--texto-apoio); }
+.jornada-guia-checklist .jornada-guia-personalizar { margin-top: 12px; }
+.jornada-guia-modal :is(.jornada-guia-personalizar, .jornada-guia-confirmar, .jornada-guia-item-acoes) { margin-top: 12px; }
+.jornada-guia-modal .jornada-guia-item-acoes { padding-left: 0; }
+@media (min-width: 760px) {
+  .jornada-guia-etapa-capa { grid-template-columns: minmax(0, .92fr) minmax(0, 1fr); }
+  .jornada-guia-etapa-capa img { min-height: 215px; height: 100%; max-height: 270px; }
+}

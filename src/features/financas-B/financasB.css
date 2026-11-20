@@ -1,0 +1,162 @@
+.moradia-financas {
+  --font-titulo: var(--font-corpo);
+}
+
+.moradia-financas :is(a, button, select):focus-visible {
+  outline: 2px solid var(--laranja-principal);
+  outline-offset: 3px;
+}
+
+.moradia-seletor {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.875rem 1.125rem;
+  border: 1px solid var(--borda-suave);
+  border-radius: 0.75rem;
+  background: white;
+}
+
+.moradia-seletor label {
+  display: grid;
+  min-width: 0;
+  width: min(100%, 23rem);
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.moradia-seletor select {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.4rem 0.65rem;
+  border: 1px solid var(--borda-suave);
+  border-radius: 0.6rem;
+  background: var(--azul-fundo);
+}
+
+.moradia-status {
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  background: var(--azul-fundo);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.moradia-balanco {
+  display: grid;
+  gap: 1rem;
+}
+
+.moradia-medida {
+  display: grid;
+  gap: 0.35rem;
+  align-content: start;
+  min-width: 0;
+  padding: clamp(0.875rem, 2vw, 1.25rem);
+  border-radius: 0.75rem;
+  background: var(--azul-fundo);
+}
+
+.moradia-medida p,
+.moradia-medida dt {
+  font-size: 0.875rem;
+  color: var(--texto-apoio);
+}
+
+.moradia-medida dd {
+  font-size: clamp(1.25rem, 3vw, 2rem);
+  line-height: 1.2;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.moradia-medida-trilho {
+  height: 0.5rem;
+  margin-block: 0.35rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--borda-suave);
+}
+
+.moradia-medida-trilho div {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--azul-principal);
+}
+
+.moradia-medida-trilho [data-deficit='true'] {
+  background: var(--vermelho-alerta);
+}
+
+.moradia-linha {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0.7rem 0.25rem;
+  text-align: left;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.moradia-linha:hover {
+  background: var(--azul-fundo);
+}
+
+.moradia-linha small {
+  display: block;
+  color: var(--texto-apoio);
+}
+
+.moradia-cenario {
+  padding: 0.625rem 0.9rem;
+  border: 1px solid var(--borda-suave);
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.moradia-cenario:hover,
+.moradia-cenario[aria-current='page'] {
+  background: var(--laranja-fundo);
+  color: #9d2c08;
+}
+
+.moradia-link,
+.moradia-tabela a {
+  color: #9d2c08;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.moradia-tabela {
+  width: 100%;
+  font-size: 0.875rem;
+}
+
+.moradia-tabela :is(th, td) {
+  padding: 0.75rem;
+  text-align: right;
+  border-bottom: 1px solid var(--borda-suave);
+  font-variant-numeric: tabular-nums;
+}
+
+.moradia-tabela th:first-child {
+  min-width: 10rem;
+  text-align: left;
+}
+
+.moradia-tabela thead {
+  background: var(--azul-fundo);
+}
+
+@media (min-width: 48rem) {
+  .moradia-balanco {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
