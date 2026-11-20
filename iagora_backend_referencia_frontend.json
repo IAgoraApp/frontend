@@ -263,7 +263,7 @@
         },
         {
           "nome": "Etapa Jornada",
-          "descricao": "Aqui será a parte responsável por gerenciar as etapas das jornadas pessoais dos usuários, permitindo cadastrar, visualizar, editar, organizar e concluir etapas relacionadas ao planejamento de morar sozinho.\n\nCada etapa representará uma fase da jornada, como planejamento financeiro, organização da mudança, escolha da moradia ou preparação para a vida independente.\n\nAs etapas poderão possuir tarefas específicas, gerenciadas pelo módulo `tarefa_jornada`, permitindo acompanhar o progresso de cada fase e da jornada como um todo.\n\n```\nTable etapa_jornada {\n  id int [pk, increment]\n  jornada_id int [not null]\n  titulo varchar(150) [not null]\n  descricao text\n  categoria varchar(50)\n  ordem int [not null]\n  status varchar(30) [not null, default: 'pendente']\n  prazo date\n  concluida_em datetime\n}\n```",
+          "descricao": "Aqui será a parte responsável por gerenciar as etapas das jornadas pessoais dos usuários, permitindo cadastrar, visualizar, editar, organizar e concluir etapas relacionadas ao planejamento de morar sozinho.\n\nCada etapa representará uma fase da jornada, como planejamento financeiro, organização da mudança, escolha da moradia ou preparação para a vida independente.\n\nAs etapas poderão possuir tarefas específicas, gerenciadas pelo módulo `tarefa_jornada`, permitindo acompanhar o progresso de cada fase e da jornada como um todo.\n\nA imagem ilustrativa da etapa pode ser definida pelos mesmos endpoints de criação e edição.\n\n```\nTable etapa_jornada {\n  id int [pk, increment]\n  jornada_id int [not null]\n  titulo varchar(150) [not null]\n  descricao text\n  categoria varchar(50)\n  ordem int [not null]\n  status varchar(30) [not null, default: 'pendente']\n  prazo date\n  concluida_em datetime\n  foto varchar(150)\n}\n```",
           "checklists": [
             {
               "nome": "Rotas",
@@ -283,7 +283,8 @@
               "nome": "Regras",
               "itens": [
                 "O campo categoria pode representar áreas como financas, moradia, mudanca, organizacao e aprendizado",
-                "O campo status deve aceitar os valores pendente e concluida"
+                "O campo status deve aceitar os valores pendente e concluida",
+                "A imagem escolhida pelo usuário é identificada pela chave de uma opção do catálogo visual da jornada."
               ]
             }
           ]
@@ -309,7 +310,7 @@
         },
         {
           "nome": "Plano Moradia",
-          "descricao": "Aqui será a parte responsável por gerenciar os planos de moradia dos usuários, permitindo cadastrar, visualizar, editar e excluir planejamentos financeiros relacionados ao objetivo de morar sozinho.\n\nO sistema permitirá que o usuário informe sua renda mensal, reserva financeira disponível e previsão de mudança, organizando os valores necessários para conquistar sua independência.\n\nCada plano poderá possuir custos estimados e simulações financeiras, gerenciados pelos módulos `custo_moradia` e `simulacao_moradia`, permitindo avaliar se morar sozinho é financeiramente viável.\n\n```\nTable plano_moradia {\n  id int [pk, increment]\n  user_id int [not null]\n  nome varchar(150) [not null]\n  renda_mensal decimal(12,2) [not null, default: 0]\n  reserva_atual decimal(12,2) [not null, default: 0]\n  mudanca_prevista date\n  status varchar(30) [not null, default: 'ativo']\n}\n```",
+          "descricao": "Aqui será a parte responsável por gerenciar os planos de moradia dos usuários, permitindo cadastrar, visualizar, editar e excluir planejamentos financeiros relacionados ao objetivo de morar sozinho.\n\nO sistema permitirá que o usuário informe sua renda mensal, reserva financeira disponível e previsão de mudança, organizando os valores necessários para conquistar sua independência.\n\nCada plano poderá possuir custos estimados e simulações financeiras, gerenciados pelos módulos `custo_moradia` e `simulacao_moradia`, permitindo avaliar se morar sozinho é financeiramente viável.\n\nO plano pode ser associado a um imóvel desejado para separar o orçamento de cada opção.\n\n```\nTable plano_moradia {\n  id int [pk, increment]\n  user_id int [not null]\n  nome varchar(150) [not null]\n  renda_mensal decimal(12,2) [not null, default: 0]\n  reserva_atual decimal(12,2) [not null, default: 0]\n  mudanca_prevista date\n  status varchar(30) [not null, default: 'ativo']\n  casa_desejada_id int [ref: > casa_desejada.id]\n}\n```",
           "checklists": [
             {
               "nome": "Rotas",
@@ -323,6 +324,13 @@
                 "PATCH /planos-moradia/:id/arquivar - Arquivar plano de moradia",
                 "PATCH /planos-moradia/:id/reativar - Reativar plano de moradia",
                 "DELETE /planos-moradia/:id - Excluir plano de moradia"
+              ]
+            },
+            {
+              "nome": "Regras",
+              "itens": [
+                "O imóvel vinculado deve pertencer ao usuário do plano. Cada imóvel pode ter no máximo um plano vinculado.",
+                "As telas usam a renda e a reserva de Meu dinheiro como referência atual quando preenchidas; os dados legados do plano podem servir como fallback."
               ]
             }
           ]
@@ -378,7 +386,7 @@
         },
         {
           "nome": "Casa Desejada",
-          "descricao": "Aqui será a parte responsável por gerenciar os imóveis que os usuários desejam morar, permitindo cadastrar, visualizar, editar e excluir opções de moradia.\n\nO usuário poderá salvar casas, apartamentos, kitnets ou outros tipos de imóveis, registrando informações como localização, valor, tipo e descrição.\n\nEssa funcionalidade permitirá organizar diferentes opções de moradia e consultar seus valores durante o planejamento da mudança, sem precisar cadastrar o imóvel como uma casa real no sistema.\n\n```\nTable casa_desejada {\n  id int [pk, increment]\n  user_id int [not null]\n  endereco_id int\n  titulo varchar(150) [not null]\n  descricao varchar(500)\n  tipo varchar(150) [not null]\n  valor decimal(12,2)\n}\n```",
+          "descricao": "Aqui será a parte responsável por gerenciar os imóveis que os usuários desejam morar, permitindo cadastrar, visualizar, editar e excluir opções de moradia.\n\nO usuário poderá salvar casas, apartamentos, kitnets ou outros tipos de imóveis, registrando informações como localização, valor, tipo e descrição.\n\nEssa funcionalidade permitirá organizar diferentes opções de moradia e consultar seus valores durante o planejamento da mudança, sem precisar cadastrar o imóvel como uma casa real no sistema.\n\nO cadastro também distingue o valor total de compra do valor mensal de locação e guarda a situação da mobília.\n\n```\nTable casa_desejada {\n  id int [pk, increment]\n  user_id int [not null]\n  endereco_id int\n  titulo varchar(150) [not null]\n  descricao varchar(500)\n  tipo varchar(150) [not null]\n  valor decimal(12,2)\n  valor_tipo varchar(20)\n  mobilia varchar(30)\n}\n```",
           "checklists": [
             {
               "nome": "Rotas",
@@ -388,6 +396,13 @@
                 "GET /casas-desejadas/:id - Buscar imóvel desejado pelo ID",
                 "PATCH /casas-desejadas/:id - Atualizar informações do imóvel",
                 "DELETE /casas-desejadas/:id - Excluir imóvel desejado"
+              ]
+            },
+            {
+              "nome": "Regras",
+              "itens": [
+                "valor_tipo aceita mensal ou total. Apenas valores mensais entram automaticamente nos gastos recorrentes.",
+                "mobilia aceita mobiliado, parcial, sem-moveis ou valor nulo."
               ]
             }
           ]
@@ -760,6 +775,157 @@
                 "PATCH /planos-publicacao/:id - Atualizar informações do plano",
                 "PATCH /planos-publicacao/:id/ativar - Ativar plano",
                 "PATCH /planos-publicacao/:id/desativar - Desativar plano"
+              ]
+            }
+          ]
+        },
+        {
+          "nome": "Meu Dinheiro",
+          "descricao": "Aqui será a parte responsável por consultar e atualizar a renda atual, a reserva disponível e a previsão de mudança usadas em Meu dinheiro, Meu plano, Imóveis desejados e Metas.\n\n```\nTable dinheiro_preparacao {\n  user_id int [pk]\n  renda decimal(12,2)\n  reserva decimal(12,2)\n  mudanca_prevista date\n}\n```",
+          "checklists": [
+            {
+              "nome": "Rotas",
+              "itens": [
+                "GET /meu-dinheiro - Consultar a situação financeira do usuário autenticado",
+                "PATCH /meu-dinheiro - Atualizar renda, reserva ou previsão da mudança"
+              ]
+            },
+            {
+              "nome": "Regras",
+              "itens": [
+                "Cada usuário possui uma única situação financeira. Valores monetários informados devem ser não negativos.",
+                "O PATCH distingue campos omitidos de valores nulos. Uma data nula remove a previsão."
+              ]
+            }
+          ]
+        },
+        {
+          "nome": "Gasto Atual da Preparação",
+          "descricao": "Aqui será a parte responsável pelos gastos atuais de Meu dinheiro e seu tratamento no orçamento após a mudança.\n\n```\nTable gasto_preparacao {\n  id int [pk, increment]\n  user_id int [not null]\n  nome varchar(100) [not null]\n  valor decimal(12,2) [not null]\n  frequencia varchar(20) [not null]\n  destino varchar(20) [not null]\n}\n```",
+          "checklists": [
+            {
+              "nome": "Rotas",
+              "itens": [
+                "POST /meu-dinheiro/gastos - Cadastrar gasto mensal atual",
+                "GET /meu-dinheiro/gastos - Listar gastos atuais",
+                "PATCH /meu-dinheiro/gastos/:id - Editar gasto",
+                "DELETE /meu-dinheiro/gastos/:id - Excluir gasto"
+              ]
+            },
+            {
+              "nome": "Regras",
+              "itens": [
+                "frequencia aceita fixo ou variavel; destino aceita continua, termina ou transferido.",
+                "Apenas os gastos com destino continua são somados aos gastos do plano na projeção após a mudança."
+              ]
+            }
+          ]
+        },
+        {
+          "nome": "Meta da Mudança",
+          "descricao": "Aqui será a parte responsável por guardar as metas do perfil de preparação. O usuário pode definir um alvo próprio ou guardar a estimativa da mudança junto da meta.\n\n```\nTable meta_mudanca {\n  id int [pk, increment]\n  user_id int [not null]\n  nome varchar(150) [not null]\n  fonte varchar(20) [not null]\n  alvo decimal(12,2) [not null]\n  modo varchar(20) [not null]\n  data date\n  aporte decimal(12,2)\n  estimativa_mudanca json\n}\n```",
+          "checklists": [
+            {
+              "nome": "Rotas",
+              "itens": [
+                "POST /metas-mudanca - Cadastrar meta de mudança",
+                "GET /metas-mudanca - Listar metas do usuário autenticado",
+                "GET /metas-mudanca/:id - Consultar uma meta",
+                "PATCH /metas-mudanca/:id - Editar meta",
+                "DELETE /metas-mudanca/:id - Excluir meta"
+              ]
+            },
+            {
+              "nome": "Regras",
+              "itens": [
+                "fonte aceita personalizada ou mudanca. modo aceita prazo ou aporte.",
+                "O modo prazo usa a data desejada; o modo aporte usa o valor que o usuário pode guardar por mês."
+              ]
+            }
+          ]
+        },
+        {
+          "nome": "Categoria de Custo Inicial",
+          "descricao": "Aqui será a parte responsável pelos cards de categorias dos gastos iniciais, incluindo categorias personalizadas, imagens e preferências de exclusão das categorias padrão.\n\n```\nTable categoria_custo_inicial {\n  id int [pk, increment]\n  user_id int [not null]\n  plano_id int [ref: > plano_moradia.id]\n  casa_desejada_id int [ref: > casa_desejada.id]\n  categoria varchar(50) [not null]\n  titulo varchar(60)\n  foto varchar(150)\n  oculta boolean [not null, default: false]\n}\n```",
+          "checklists": [
+            {
+              "nome": "Rotas",
+              "itens": [
+                "GET /categorias-custo-inicial - Listar categorias pelo imóvel ou plano informado",
+                "POST /categorias-custo-inicial - Cadastrar categoria com título e imagem",
+                "DELETE /categorias-custo-inicial/:categoria - Excluir categoria no escopo informado"
+              ]
+            },
+            {
+              "nome": "Regras",
+              "itens": [
+                "O escopo deve pertencer ao usuário autenticado. O imóvel permite salvar categorias antes do primeiro custo criar o plano.",
+                "A exclusão deve remover os custos iniciais da categoria no mesmo escopo; nas categorias padrão, deve guardar a preferência de ocultação."
+              ]
+            }
+          ]
+        },
+        {
+          "nome": "Proposta de Atendimento",
+          "descricao": "Aqui será a parte responsável pela negociação de dia, horário e valor entre cliente e empresa na conversa do serviço.\n\n```\nTable proposta_atendimento {\n  id int [pk, increment]\n  contratado_id int [not null, ref: > servico_contratado.id]\n  autor_user_id int [not null]\n  data_agendamento datetime [not null]\n  valor decimal(10,2) [not null]\n  status varchar(20) [not null, default: 'pendente']\n}\n```",
+          "checklists": [
+            {
+              "nome": "Rotas",
+              "itens": [
+                "GET /contratacoes/:id/propostas - Listar propostas e estados da negociação",
+                "POST /contratacoes/:id/propostas - Enviar proposta ou contraproposta",
+                "PATCH /contratacoes/:id/propostas/:propostaId/confirmar - Confirmar a proposta",
+                "PATCH /contratacoes/:id/propostas/:propostaId/recusar - Recusar a proposta",
+                "PATCH /contratacoes/:id/propostas/:propostaId/retirar - Retirar a proposta enviada"
+              ]
+            },
+            {
+              "nome": "Regras",
+              "itens": [
+                "Apenas cliente e empresa da contratação podem consultar ou negociar enquanto ela estiver pendente. Deve haver no máximo uma proposta pendente.",
+                "O autor pode retirar; a outra parte pode confirmar ou recusar. Uma contraproposta substitui a anterior.",
+                "A confirmação deve validar horário futuro e atualizar data, valor e status da contratação na mesma operação."
+              ]
+            }
+          ]
+        },
+        {
+          "nome": "Serviço Favorito",
+          "descricao": "Aqui será a parte responsável pela seção Favoritos do Marketplace.\n\n```\nTable servico_favorito {\n  user_id int [pk]\n  servico_id int [pk, ref: > servico.id]\n}\n```",
+          "checklists": [
+            {
+              "nome": "Rotas",
+              "itens": [
+                "GET /servicos-favoritos - Listar os serviços favoritos do usuário autenticado",
+                "PUT /servicos/:id/favorito - Adicionar serviço aos favoritos",
+                "DELETE /servicos/:id/favorito - Remover serviço dos favoritos"
+              ]
+            },
+            {
+              "nome": "Regras",
+              "itens": [
+                "O par user_id e servico_id é único. Favoritar novamente não cria registros duplicados.",
+                "A listagem deve respeitar a visibilidade dos serviços no catálogo."
+              ]
+            }
+          ]
+        },
+        {
+          "nome": "Imagens da Empresa e dos Serviços",
+          "descricao": "Aqui será a parte responsável por receber as imagens selecionadas na área profissional e devolver suas URLs para uso no logo, na capa e na galeria dos serviços. As URLs são gravadas pelos endpoints de edição já descritos nos cards Perfil Empresa e Serviços.",
+          "checklists": [
+            {
+              "nome": "Rotas",
+              "itens": [
+                "POST /empresas/meu-perfil/imagens - Enviar uma imagem para logo ou capa do perfil",
+                "POST /servicos/:id/imagens - Enviar imagem para a galeria de um serviço da empresa"
+              ]
+            },
+            {
+              "nome": "Regras",
+              "itens": [
+                "Somente o proprietário pode enviar as imagens. Validar tipo, tamanho e quantidade no servidor.",
+                "Aceitar JPG, PNG e WebP. A ordem de fotos no serviço define a imagem principal."
               ]
             }
           ]

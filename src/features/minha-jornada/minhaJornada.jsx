@@ -3,42 +3,50 @@ import {
   ArrowLeft,
   ArrowUpRight,
   ChevronRight,
-  CircleCheck,
+  ImagePlus,
   Plus,
+  Route,
   Trash2,
 } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { acessoLocal } from '../../app/dados/acessoLocal';
+import { useDadosServidor } from '../../app/dados/contextoServidor';
+import { atualizarGuiaApi } from './jornadaApi';
 import { useBancoMvp } from '../../app/dados/bancoMvp';
+import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
+import {
+  AcaoFinancas,
+  DialogoFinancas,
+} from '../financas/components/financeUi';
+import CartoesEtapas from './CartoesEtapas';
 import { DialogoCasa } from '../casa/components/casaUi';
 import LayoutPreparacao from '../preparacao/LayoutPreparacao';
-import RegistrosPreparacao from '../preparacao/RegistrosPreparacao';
 import { EditorMvp } from '../../shared/ui/mvp';
 import { atualizarGuia } from './jornadaDados';
 import { modelo } from '../preparacao/modelo';
-import { descricaoGuia, lerGuia, nomeGuia } from './guiaMudanca';
+import { fotosEtapa, lerGuia } from './guiaMudanca';
 import './minhaJornada.css';
 
-const ehJornadaPersonalizada = jornada =>
-  jornada.nome !== nomeGuia || jornada.descricao !== descricaoGuia;
-
-function GuiaMudanca() {
+export default function MinhaJornada() {
   const { b, perfil } = useBancoMvp();
+  const servidor = useDadosServidor();
+  const [salvando, setSalvando] = useState(false);
   const usuario = perfil?.user_id;
   const [params, setParams] = useSearchParams();
   const [erro, setErro] = useState('');
+  const notificar = useAvisoPerfilA();
   const [editor, setEditor] = useState(null);
+  const [fotoEtapa, setFotoEtapa] = useState(null);
+  const [galeriaAberta, setGaleriaAberta] = useState(false);
   const [remocao, setRemocao] = useState(null);
   const [itemAberto, setItemAberto] = useState(null);
-  const editavel = acessoLocal && !!usuario;
+  const editavel = !!usuario;
   const {
     etapas,
     feitas,
     total,
     proxima: pendente,
-  } = lerGuia(b, acessoLocal ? usuario : undefined);
+  } = lerGuia(b, usuario);
   const ativa = etapas.find(item => item.id === params.get('etapa'));
-  const proxima = ativa && etapas[etapas.indexOf(ativa) + 1];
   const tarefaAberta = ativa?.tarefas.find(item => item.titulo === itemAberto);
 
   function abrirEtapa(id) {
@@ -57,22 +65,34 @@ function GuiaMudanca() {
     );
   }
 
-  function salvar(acao, dados) {
-    if (!editavel)
-      throw new Error('As alterações estão disponíveis na prévia local.');
-    atualizarGuia(usuario, ativa, acao, dados);
-    setErro('');
+  async function salvar(acao, dados, etapa = ativa) {
+    if (!editavel || salvando) return;
+    setSalvando(true);
+    try {
+      if (servidor) {
+        await atualizarGuiaApi(b, usuario, etapa, acao, dados);
+        await servidor.atualizar();
+      } else atualizarGuia(usuario, etapa, acao, dados);
+      setErro('');
+    } finally {
+      setSalvando(false);
+    }
   }
 
-  function executar(acao, dados) {
+  async function executar(acao, dados, etapa = ativa) {
     try {
-      salvar(acao, dados);
+      if (salvando) return;
+      await salvar(acao, dados, etapa);
+      if (acao === 'mover-etapa') notificar('Ordem das etapas atualizada.');
+      if (acao.startsWith('remover-'))
+        notificar(
+          acao === 'remover-etapa' ? 'Etapa excluída.' : 'Item removido.'
+        );
       if (acao === 'remover-etapa') abrirEtapa();
       if (acao === 'remover-item') setItemAberto(null);
       setRemocao(null);
     } catch (falha) {
       setErro(falha.message);
-      setRemocao(null);
     }
   }
 
@@ -88,11 +108,23 @@ function GuiaMudanca() {
             limite: item.maxLength,
             obrigatorio: !item.opcional,
             rotulo:
-              item.nome === 'descricao' && tipo === 'item'
-                ? 'Dica para realizar a tarefa (opcional)'
-                : item.rotulo,
+              tipo === 'etapa'
+                ? item.nome === 'titulo'
+                  ? 'Nome da etapa'
+                  : 'Descrição (opcional)'
+                : item.nome === 'descricao'
+                  ? 'Dica para realizar a tarefa (opcional)'
+                  : item.rotulo,
           }))}
-        onSave={dados => salvar('adicionar-' + tipo, dados)}
+        rotuloSalvar={
+          tipo === 'etapa' ? 'Criar etapa' : 'Adicionar ao checklist'
+        }
+        onSave={dados =>
+          salvar(
+            'adicionar-' + tipo,
+            tipo === 'etapa' ? { ...dados, foto: fotoEtapa?.id } : dados
+          )
+        }
         onClose={() => setEditor(null)}
       />
     );
@@ -101,92 +133,177 @@ function GuiaMudanca() {
   return (
     <LayoutPreparacao
       titulo='Minha jornada'
+      acao={
+        ativa && (
+          <button
+            className='jornada-guia-voltar'
+            type='button'
+            onClick={() => abrirEtapa()}
+          >
+            <ArrowLeft size={17} aria-hidden='true' /> Voltar às etapas
+          </button>
+        )
+      }
       chaveSecao={ativa?.id ?? 'guia-mudanca'}
-      descricao='Da escolha do imóvel aos primeiros dias na casa, siga os checklists no seu ritmo.'
+      descricao={
+        ativa
+          ? undefined
+          : 'Da escolha do imóvel aos primeiros dias na casa, siga os checklists no seu ritmo.'
+      }
     >
-      <div className='jornada-guia'>
-        <div className='jornada-guia-progresso'>
-          <div>
-            <strong>
-              {total > 0 && feitas === total
-                ? 'Checklist completo'
-                : 'Progresso da mudança'}
-            </strong>
-            <p>
-              {feitas} de {total} itens concluídos
-            </p>
+      <div
+        className={ativa ? 'jornada-guia jornada-guia-ativa' : 'jornada-guia'}
+      >
+        {!ativa && (
+          <div className='jornada-guia-progresso'>
+            <div>
+              <strong>
+                {total > 0 && feitas === total
+                  ? 'Checklist completo'
+                  : 'Progresso da mudança'}
+              </strong>
+              <p>
+                {feitas} de {total} itens concluídos
+              </p>
+            </div>
+            <progress
+              aria-label='Progresso da mudança'
+              max={total || 1}
+              value={feitas}
+            />
           </div>
-          <progress
-            aria-label='Progresso da mudança'
-            max={total || 1}
-            value={feitas}
-          />
-          <Link to='?visao=jornadas'>
-            Jornadas cadastradas <ChevronRight size={16} aria-hidden='true' />
-          </Link>
-        </div>
-        {editavel && !ativa && (
-          <div className='jornada-guia-personalizar'>
-            <button type='button' onClick={() => setEditor('etapa')}>
-              <Plus size={17} aria-hidden='true' /> Adicionar etapa
-            </button>
-          </div>
+        )}
+        {!ativa && (
+          <section
+            className='jornada-convite-ia'
+            aria-labelledby='jornada-convite-titulo'
+          >
+            <Route
+              className='jornada-convite-icone'
+              size={32}
+              aria-hidden='true'
+            />
+            <div>
+              <h2 id='jornada-convite-titulo'>Sua mudança, do seu jeito</h2>
+              <p>
+                Cada pessoa tem uma jornada diferente. Se quiser personalizar a
+                sua, converse com a iA sobre o que você precisa para morar
+                sozinho.
+              </p>
+            </div>
+            <Link to='/ia-b'>Conversar com a iA</Link>
+          </section>
         )}
         {!etapas.length && (
           <p>Adicione uma etapa para montar seu checklist de mudança.</p>
         )}
         {erro && !ativa && <p role='alert'>{erro}</p>}
         {editor === 'etapa' && !ativa && (
-          <section
-            className='jornada-guia-checklist'
-            aria-label='Adicionar etapa'
+          <DialogoCasa
+            titulo='Adicionar etapa'
+            classe='jornada-nova-etapa'
+            aoFechar={() => setEditor(null)}
           >
-            <h2>Adicionar etapa</h2>
-            {formulario('etapa')}
-          </section>
+            <div className='jornada-nova-etapa-grade'>
+              <div className='jornada-nova-etapa-foto'>
+                <button
+                  type='button'
+                  className='jornada-escolher-foto'
+                  aria-expanded={galeriaAberta}
+                  aria-controls='jornada-opcoes-foto'
+                  onClick={() => setGaleriaAberta(aberta => !aberta)}
+                >
+                  <img src={fotoEtapa?.foto ?? fotosEtapa[0].foto} alt='' />
+                  <span>
+                    <ImagePlus size={16} aria-hidden='true' /> Escolher foto
+                  </span>
+                </button>
+                <div
+                  id='jornada-opcoes-foto'
+                  className='jornada-opcoes-foto'
+                  hidden={!galeriaAberta}
+                >
+                  {fotosEtapa.map(imagem => (
+                    <button
+                      key={imagem.id}
+                      type='button'
+                      aria-label={'Usar foto de ' + imagem.titulo}
+                      aria-pressed={imagem.id === fotoEtapa?.id}
+                      onClick={() => {
+                        setFotoEtapa(imagem);
+                        setGaleriaAberta(false);
+                      }}
+                    >
+                      <img src={imagem.foto} alt='' />
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <p className='jornada-nova-etapa-ajuda'>
+                  Dê um nome à etapa. Depois, você pode montar o checklist dela.
+                </p>
+                {formulario('etapa')}
+              </div>
+            </div>
+          </DialogoCasa>
         )}
         {!ativa && (
-          <nav className='jornada-guia-etapas' aria-label='Etapas da mudança'>
-            {etapas.map((etapa, indice) => (
-              <button
-                className='jornada-guia-cartao'
-                type='button'
-                key={etapa.id}
-                data-proxima={pendente?.id === etapa.id}
-                onClick={() => abrirEtapa(etapa.id)}
-              >
-                <img src={etapa.foto} alt='' />
-                <span className='jornada-guia-cartao-texto'>
-                  <span className='jornada-guia-cartao-ordem'>
-                    Etapa {indice + 1} · {etapa.feitas}/{etapa.tarefas.length}
-                    {etapa.tarefas.length > 0 &&
-                      etapa.feitas === etapa.tarefas.length && (
-                        <CircleCheck size={15} aria-label='Concluída' />
-                      )}
-                  </span>
-                  <strong>{etapa.titulo}</strong>
-                  <span className='jornada-guia-cartao-descricao'>
-                    {etapa.descricao}
-                  </span>
-                </span>
-              </button>
-            ))}
-          </nav>
+          <CartoesEtapas
+            etapas={etapas}
+            pendente={pendente}
+            editavel={editavel}
+            abrir={abrirEtapa}
+            adicionar={() => {
+              setFotoEtapa(
+                fotosEtapa[Math.floor(Math.random() * fotosEtapa.length)]
+              );
+              setGaleriaAberta(false);
+              setEditor('etapa');
+            }}
+            renomear={etapa => {
+              setErro('');
+              setEditor({ etapa });
+            }}
+            remover={etapa => {
+              setErro('');
+              setRemocao({ acao: 'remover-etapa', etapa });
+            }}
+            mover={(origem, destino, lado) =>
+              executar('mover-etapa', { ...destino, lado }, origem)
+            }
+          />
+        )}
+        {editor?.etapa && (
+          <DialogoCasa
+            titulo='Renomear etapa'
+            classe='jornada-nova-etapa'
+            aoFechar={() => setEditor(null)}
+          >
+            <EditorMvp
+              cabecalho={false}
+              inicial={editor.etapa}
+              campos={[
+                { nome: 'titulo', rotulo: 'Nome da etapa', limite: 150 },
+              ]}
+              rotuloSalvar='Salvar nome'
+              onSave={async dados => {
+                await salvar('renomear-etapa', dados, editor.etapa);
+                notificar('Nome da etapa atualizado.');
+              }}
+              onClose={() => setEditor(null)}
+            />
+          </DialogoCasa>
         )}
         {ativa && (
           <section
             className='jornada-guia-detalhe'
             aria-labelledby='jornada-etapa-titulo'
           >
-            <button
-              className='jornada-guia-voltar'
-              type='button'
-              onClick={() => abrirEtapa()}
-            >
-              <ArrowLeft size={17} aria-hidden='true' /> Todas as etapas
-            </button>
             <header className='jornada-guia-etapa-capa'>
-              <img src={ativa.foto} alt='' />
+              <div className='jornada-etapa-foto'>
+                <img src={ativa.foto} alt='' />
+              </div>
               <div>
                 <span>
                   Etapa {etapas.indexOf(ativa) + 1} de {etapas.length}
@@ -210,91 +327,88 @@ function GuiaMudanca() {
               </div>
             </header>
             <div className='jornada-guia-checklist'>
-              <h3>Checklist da etapa</h3>
-              <p>Marque o que já fez ou abra um item para ver como fazer.</p>
-              {!editavel && (
-                <p>As marcações estão disponíveis na prévia local.</p>
-              )}
-              {erro && !tarefaAberta && <p role='alert'>{erro}</p>}
-              <ul>
-                {ativa.tarefas.map(tarefa => (
-                  <li
-                    className='jornada-guia-linha'
-                    key={tarefa.id ?? tarefa.titulo}
-                  >
-                    <input
-                      type='checkbox'
-                      aria-label={'Concluir: ' + tarefa.titulo}
-                      checked={tarefa.concluida}
-                      disabled={!editavel}
-                      onChange={() => executar('alternar-item', tarefa)}
-                    />
-                    <button
-                      type='button'
-                      aria-haspopup='dialog'
-                      onClick={() => {
-                        setErro('');
-                        setRemocao(null);
-                        setItemAberto(tarefa.titulo);
-                      }}
+              <header className='jornada-checklist-topo'>
+                <h3 id='jornada-checklist-titulo'>Checklist</h3>
+              </header>
+              <div
+                className='jornada-checklist-corpo'
+                id='jornada-checklist-corpo'
+                tabIndex={0}
+                role='region'
+                aria-labelledby='jornada-checklist-titulo'
+              >
+                {!editavel && (
+                  <p>As marcações estão disponíveis na prévia local.</p>
+                )}
+                {erro && !tarefaAberta && <p role='alert'>{erro}</p>}
+                <ul>
+                  {ativa.tarefas.map(tarefa => (
+                    <li
+                      className='jornada-guia-linha'
+                      key={tarefa.id ?? tarefa.titulo}
                     >
-                      <span>
-                        <strong>{tarefa.titulo}</strong>
-                        <small>Ver orientações</small>
-                      </span>
-                      <ChevronRight size={18} aria-hidden='true' />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-              {!ativa.tarefas.length && (
-                <p>Adicione um item para começar este checklist.</p>
-              )}
+                      <input
+                        type='checkbox'
+                        aria-label={'Concluir: ' + tarefa.titulo}
+                        checked={tarefa.concluida}
+                        disabled={!editavel}
+                        onChange={() => executar('alternar-item', tarefa)}
+                      />
+                      <button
+                        type='button'
+                        aria-haspopup='dialog'
+                        onClick={() => {
+                          setErro('');
+                          setRemocao(null);
+                          setItemAberto(tarefa.titulo);
+                        }}
+                      >
+                        <span>
+                          <strong>{tarefa.titulo}</strong>
+                          <small>Ver orientações</small>
+                        </span>
+                        <ChevronRight size={18} aria-hidden='true' />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+                {!ativa.tarefas.length && (
+                  <p>Adicione um item para começar este checklist.</p>
+                )}
+              </div>
               {editavel && (
-                <div className='jornada-guia-personalizar'>
+                <footer className='jornada-checklist-rodape'>
                   <button
+                    className='jornada-checklist-adicionar'
                     type='button'
-                    onClick={() => {
-                      setEditor('item');
-                      setRemocao(null);
-                    }}
+                    aria-haspopup='dialog'
+                    onClick={() => setEditor('item')}
                   >
-                    <Plus size={16} aria-hidden='true' /> Adicionar item
+                    <Plus size={17} aria-hidden='true' /> Adicionar item
                   </button>
-                  <button
-                    type='button'
-                    onClick={() => {
-                      setRemocao({ acao: 'remover-etapa' });
-                      setEditor(null);
-                    }}
-                  >
-                    Remover etapa
-                  </button>
-                </div>
-              )}
-              {remocao?.acao === 'remover-etapa' && (
-                <div className='jornada-guia-confirmar'>
-                  <p>Remover esta etapa e todos os seus itens?</p>
-                  <button type='button' onClick={() => setRemocao(null)}>
-                    Cancelar
-                  </button>
-                  <button type='button' onClick={() => executar(remocao.acao)}>
-                    Remover etapa e itens
-                  </button>
-                </div>
-              )}
-              {editor === 'item' && formulario('item')}
-              {proxima && (
-                <div className='jornada-guia-acoes'>
-                  <button type='button' onClick={() => abrirEtapa(proxima.id)}>
-                    Próxima etapa <ChevronRight size={17} aria-hidden='true' />
-                  </button>
-                </div>
+                </footer>
               )}
             </div>
           </section>
         )}
-        {tarefaAberta && (
+        {ativa && editor === 'item' && (
+          <DialogoCasa
+            titulo='Adicionar item'
+            classe='jornada-nova-etapa'
+            aoFechar={() => setEditor(null)}
+          >
+            <div className='jornada-nova-etapa-grade'>
+              <img src={ativa.foto} alt='' />
+              <div>
+                <p className='jornada-nova-etapa-ajuda'>
+                  Checklist de {ativa.titulo}
+                </p>
+                {formulario('item')}
+              </div>
+            </div>
+          </DialogoCasa>
+        )}
+        {tarefaAberta && !remocao && (
           <DialogoCasa
             titulo={tarefaAberta.titulo}
             aoFechar={() => {
@@ -332,48 +446,69 @@ function GuiaMudanca() {
                     ? 'Marcar como pendente'
                     : 'Marcar como concluído'}
                 </button>
-                {remocao?.acao !== 'remover-item' && (
-                  <button
-                    type='button'
-                    onClick={() => setRemocao({ acao: 'remover-item' })}
-                  >
-                    <Trash2 size={16} aria-hidden='true' /> Remover item
-                  </button>
-                )}
-              </div>
-            )}
-            {remocao?.acao === 'remover-item' && (
-              <div className='jornada-guia-confirmar'>
-                <p>Remover este item do checklist?</p>
-                <button type='button' onClick={() => setRemocao(null)}>
-                  Cancelar
-                </button>
                 <button
                   type='button'
-                  onClick={() => executar('remover-item', tarefaAberta)}
+                  onClick={() => {
+                    setErro('');
+                    setRemocao({
+                      acao: 'remover-item',
+                      etapa: ativa,
+                      tarefa: tarefaAberta,
+                    });
+                  }}
                 >
-                  Confirmar remoção
+                  <Trash2 size={16} aria-hidden='true' /> Remover item
                 </button>
               </div>
             )}
           </DialogoCasa>
         )}
+        {remocao && (
+          <DialogoFinancas
+            titulo={
+              remocao.tarefa ? 'Remover item do checklist?' : 'Excluir etapa?'
+            }
+            Icone={Trash2}
+            destrutivo
+            aoFechar={() => {
+              setRemocao(null);
+              setErro('');
+            }}
+          >
+            <p className='text-(--texto-apoio)'>
+              {remocao.tarefa
+                ? '“' + remocao.tarefa.titulo + '” será removido do checklist.'
+                : '“' +
+                  remocao.etapa.titulo +
+                  '” e todos os seus itens serão removidos da jornada.'}
+            </p>
+            {erro && (
+              <p role='alert' className='mt-3 text-(--vermelho-alerta)'>
+                {erro}
+              </p>
+            )}
+            <div className='finance-dialog-actions'>
+              <AcaoFinancas
+                secundario
+                onClick={() => {
+                  setRemocao(null);
+                  setErro('');
+                }}
+              >
+                Cancelar
+              </AcaoFinancas>
+              <AcaoFinancas
+                classe='finance-dialog-delete'
+                onClick={() =>
+                  executar(remocao.acao, remocao.tarefa, remocao.etapa)
+                }
+              >
+                {remocao.tarefa ? 'Remover item' : 'Excluir etapa'}
+              </AcaoFinancas>
+            </div>
+          </DialogoFinancas>
+        )}
       </div>
     </LayoutPreparacao>
   );
-}
-
-export default function MinhaJornada() {
-  const [params] = useSearchParams();
-  if (params.has('entidade') || params.get('visao') === 'jornadas') {
-    return (
-      <RegistrosPreparacao
-        raiz='jornada'
-        filtrarRaiz={ehJornadaPersonalizada}
-        titulo='Jornadas cadastradas'
-        descricao='Acompanhe suas jornadas e gerencie as etapas e tarefas.'
-      />
-    );
-  }
-  return <GuiaMudanca />;
 }

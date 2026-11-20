@@ -28,12 +28,14 @@ export function precoServico(servico) {
   return formatos[servico.tipo_preco] || valor;
 }
 
-export function servicoPublico(servico, empresa, agora = Date.now()) {
+export function servicoPublico(servico, empresa, agora = Date.now(), publicacoes) {
+  if (!empresa?.validado || !servico.ativo || !servico.validado ||
+      servico.status_publicacao !== 'publicado') return false;
+  if (publicacoes?.length) {
+    return publicacoes.some(p => p.status === 'ativa' &&
+      Date.parse(p.inicio) <= agora && Date.parse(p.fim) > agora);
+  }
   return (
-    !!empresa?.validado &&
-    servico.ativo &&
-    servico.validado &&
-    servico.status_publicacao === 'publicado' &&
     (!servico.publicado_em ||
       new Date(servico.publicado_em).getTime() <= agora) &&
     (!servico.expira_em || new Date(servico.expira_em).getTime() > agora)

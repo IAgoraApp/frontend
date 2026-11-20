@@ -147,19 +147,30 @@ export default function Rotina() {
     return { ...tarefa, ...origem, ...atual, id };
   }
 
-  function desfazer(tarefa) {
-    despachar({ type: 'undo', id: tarefa.occurrenceId ?? tarefa.id });
-    notificar('A tarefa voltou para a sua rotina.');
+  async function salvarNoBanco(acao) {
+    try {
+      await despachar(acao);
+      return true;
+    } catch (falha) {
+      notificar(falha.message);
+      return false;
+    }
   }
 
-  function concluir(tarefa, exibirResultado = false) {
+  async function desfazer(tarefa) {
+    if (!await salvarNoBanco({ type: 'undo', id: tarefa.occurrenceId ?? tarefa.id })) return false;
+    notificar('A tarefa voltou para a sua rotina.');
+    return true;
+  }
+
+  async function concluir(tarefa, exibirResultado = false) {
     const ocorrencia = resolverTarefa(tarefa);
     if (ocorrencia.completed) return;
-    despachar({
+    if (!await salvarNoBanco({
       type: 'complete',
       occurrence: ocorrencia,
       completedAt: new Date().toISOString(),
-    });
+    })) return;
     if (exibirResultado) {
       resultado(
         'Mais uma tarefa feita.',
@@ -167,24 +178,24 @@ export default function Rotina() {
       );
     } else {
       notificar('Mais uma tarefa feita.', () => {
-        despachar({ type: 'undo', id: ocorrencia.occurrenceId });
+        desfazer(ocorrencia);
       });
     }
   }
 
-  function salvarTarefa(valores, tarefa) {
+  async function salvarTarefa(valores, tarefa) {
     if (tarefa) {
-      despachar({
+      if (!await salvarNoBanco({
         type: 'update',
         id: tarefa.id,
         occurrence: tarefa,
         changes: valores,
-      });
+      })) return;
     } else {
-      despachar({
+      if (!await salvarNoBanco({
         type: 'add',
         tasks: [valores],
-      });
+      })) return;
     }
     resultado(
       tarefa ? 'Sua tarefa foi atualizada.' : 'Sua tarefa está na rotina.',
@@ -192,15 +203,15 @@ export default function Rotina() {
     );
   }
 
-  function salvarAjustes(tipo, tarefa, valores) {
+  async function salvarAjustes(tipo, tarefa, valores) {
     if (tipo === 'reagendar') {
-      despachar({
+      if (!await salvarNoBanco({
         type: 'reschedule',
         occurrence: tarefa,
         ...valores,
-      });
+      })) return;
     } else {
-      despachar({
+      if (!await salvarNoBanco({
         type: 'update',
         id: tarefa.id,
         changes:
@@ -211,7 +222,7 @@ export default function Rotina() {
                 weekdays: valores.weekdays,
                 endDate: valores.frequency === 'none' ? '' : valores.endDate,
               },
-      });
+      })) return;
     }
     resultado(
       'Sua tarefa foi atualizada.',
@@ -252,9 +263,8 @@ export default function Rotina() {
           tarefa={tarefa}
           aoAcao={abrir}
           aoConcluir={valor => concluir(valor, true)}
-          aoDesfazer={valor => {
-            desfazer(valor);
-            fechar();
+          aoDesfazer={async valor => {
+            if (await desfazer(valor)) fechar();
           }}
         />
       );
@@ -276,8 +286,8 @@ export default function Rotina() {
           {...comuns}
           tarefa={tarefa}
           aoCancelar={voltar}
-          aoExcluir={escopo => {
-            despachar({ type: 'delete', occurrence: tarefa, scope: escopo });
+          aoExcluir={async escopo => {
+            if (!await salvarNoBanco({ type: 'delete', occurrence: tarefa, scope: escopo })) return;
             fechar();
             notificar(
               escopo === 'series'

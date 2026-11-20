@@ -1,3 +1,5 @@
+import { useBancoMvp } from '../../app/dados/bancoMvp';
+import { selecionarContaEmpresaLocal } from '../empresa/empresaDados';
 import { acessoLocal } from '../../app/dados/acessoLocal';
 import { useCallback, useRef, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -37,6 +39,7 @@ export function Autenticacao() {
 
 function FormularioAcesso({ params }) {
   const navegar = useNavigate();
+  const { b } = useBancoMvp();
   const token = params.get('token');
   const modo = token
     ? 'nova-senha'
@@ -69,13 +72,11 @@ function FormularioAcesso({ params }) {
   const entrar = useCallback(
     (sessao, novaConta = false) => {
       salvarSessao({ ...sessao, cadastroPendente: novaConta });
-      const destino = novaConta
-        ? sessao.tipo === 2
-          ? '/cadastro/dados-da-empresa'
-          : '/cadastro/moradia'
-        : sessao.tipo === 2
-          ? '/empresa/perfil'
-          : '/perfil';
+      const profissional = sessao.tipo === 2;
+      let destino = profissional ? '/empresa' : '/home';
+      if (novaConta) {
+        destino = profissional ? '/cadastro/dados-da-empresa' : '/cadastro/moradia';
+      }
       navegar(destino, {
         replace: true,
       });
@@ -90,12 +91,15 @@ function FormularioAcesso({ params }) {
       setErro('');
       setCarregando(true);
       try {
-        entrar(
-          await contaApi('/user/login/google', {
-            metodo: 'POST',
-            dados: { credential, ...(senha && { senha }) },
-          })
-        );
+        const sessao = await contaApi('/user/login/google', {
+          metodo: 'POST',
+          dados: {
+            credential,
+            ...(senha && { senha }),
+            ...(cadastro && { tipo: empresa ? 2 : 1 }),
+          },
+        });
+        entrar(sessao, sessao.novaConta);
       } catch (falha) {
         if (falha.status === 409 && !senha) setVinculoGoogle(credential);
         else setErro(falha.message);
@@ -104,13 +108,17 @@ function FormularioAcesso({ params }) {
         setCarregando(false);
       }
     },
-    [entrar, setErro, setVinculoGoogle]
+    [cadastro, empresa, entrar, setErro, setVinculoGoogle]
   );
 
   async function enviar(evento) {
     evento.preventDefault();
     if (entradaLocal) {
-      const email = new FormData(evento.currentTarget).get('email');
+      const email = String(new FormData(evento.currentTarget).get('email') ?? '').trim().toLowerCase();
+      if (!cadastro && selecionarContaEmpresaLocal(b, email)) {
+        navegar('/empresa', { replace: true });
+        return;
+      }
       navegar(
         cadastro
           ? empresa
@@ -324,8 +332,8 @@ function FormularioAcesso({ params }) {
                 {aviso}
               </p>
             )}
-            {modo === 'login' &&
-              !entradaLocal &&
+            {(modo === 'login' || cadastro) &&
+              !acessoLocal &&
               (vinculoGoogle ? (
                 <form
                   className='acesso-campos'
@@ -373,6 +381,7 @@ function FormularioAcesso({ params }) {
                 </form>
               ) : (
                 <EntrarComGoogle
+                  cadastro={cadastro}
                   aoReceber={entrarComGoogle}
                   bloqueado={carregando}
                 />

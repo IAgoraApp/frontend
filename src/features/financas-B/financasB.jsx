@@ -1,260 +1,88 @@
+import { useDadosServidor } from '../../app/dados/contextoServidor';
+import { salvarCusto, salvarPlano, salvarSituacaoFinanceira } from './planejamentoApi';
 import { useState } from 'react';
-import {
-  ChartNoAxesCombined,
-  House,
-  List,
-  Pencil,
-  Plus,
-  Wallet,
-} from 'lucide-react';
+import { House, Flag, List, Pencil, Plus, Wallet } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
-import { dataCurta, moeda, useBancoMvp } from '../../app/dados/bancoMvp';
+import { useBancoMvp } from '../../app/dados/bancoMvp';
 import LayoutCasa from '../../app/layouts/casaLayout';
 import { MenuLateralCasa } from '../../app/layouts/components/casaNavigation';
 import { Container, Titulo } from '../../shared/ui';
 import { EditorMvp } from '../../shared/ui/mvp';
 import { BotaoCasa, CartaoCasa, DialogoCasa } from '../casa/components/casaUi';
+import { listar, modelo } from '../preparacao/modelo';
+import MeuPlano from './components/MeuPlano';
+import EditorImovel from '../encontrar-casa/EditorImovel';
+import MeuDinheiro from './components/MeuDinheiro';
+import CustosIniciais from './components/CustosIniciais';
+import MetasMudanca from './components/MetasMudanca';
 import {
-  estimarReserva,
-  listar,
-  modelo,
-  resumoMoradia,
-} from '../preparacao/modelo';
-import { editarMoradia } from './moradiaDados';
+  alterarDinheiro,
+  lerMeuDinheiro,
+  resumirOrcamento,
+  validarValor,
+} from './dinheiroDados';
+import {
+  gravarPrevisaoMudanca,
+  lerPrevisaoMudanca,
+} from '../preparacao/previsaoMudanca';
+import '../casa/casaA.css';
+import {
+  editarMoradia,
+  planoDeReferencia,
+  planoDoImovel,
+} from './moradiaDados';
 import './financasB.css';
 
 const rota = '/financas-b';
-const secoes = [
+const camposSituacaoFinanceira = [
   {
-    rota,
-    nome: 'Planejamento de moradia',
-    Icone: House,
-    inicial: 'plano',
-    links: [
-      ['plano', 'Meu plano', rota, House],
-      ['custos', 'Custos previstos', rota, List],
-      ['simulacoes', 'Simulações', rota, ChartNoAxesCombined],
-    ],
+    nome: 'renda',
+    rotulo: 'Renda líquida mensal (R$)',
+    tipo: 'number',
+    obrigatorio: false,
+  },
+  {
+    nome: 'reserva',
+    rotulo: 'Reserva atual (R$)',
+    tipo: 'number',
+    obrigatorio: false,
+  },
+  {
+    nome: 'data',
+    rotulo: 'Data prevista da mudança',
+    tipo: 'date',
+    obrigatorio: false,
   },
 ];
 
-function Medida({ titulo, disponivel, previsto, saldo, periodo }) {
-  const proporcao =
-    Math.max(disponivel, previsto) > 0
-      ? previsto / Math.max(disponivel, previsto)
-      : 0;
-  return (
-    <div className='moradia-medida'>
-      <dl>
-        <dt>{titulo}</dt>
-        <dd className={saldo < 0 ? 'text-(--vermelho-alerta)' : ''}>
-          {saldo < 0 && <span>Faltam </span>}
-          {moeda(Math.abs(saldo))}
-        </dd>
-      </dl>
-      <div className='moradia-medida-trilho' aria-hidden='true'>
-        <div
-          data-deficit={saldo < 0}
-          style={{ width: proporcao * 100 + '%' }}
-        />
-      </div>
-      <p>
-        {moeda(previsto)} em gastos {periodo} de {moeda(disponivel)} disponíveis
-      </p>
-    </div>
-  );
-}
-
-function Balanco({ registro, custos, simulacao = false }) {
-  const reserva = simulacao ? registro.reserva : registro.reserva_atual;
-  const { mensal, inicial, saldoMensal, saldoInicial } = resumoMoradia(
-    registro.renda_mensal,
-    reserva,
-    custos
-  );
-  const estimativa = estimarReserva(reserva, { mensal, inicial }, 3);
-  return (
-    <CartaoCasa
-      titulo={
-        simulacao
-          ? 'Resultado da simulação'
-          : 'Quanto preciso para morar sozinho?'
-      }
-    >
-      <div className='moradia-balanco'>
-        <Medida
-          titulo='Saldo mensal previsto'
-          disponivel={registro.renda_mensal}
-          previsto={mensal}
-          saldo={saldoMensal}
-          periodo='mensais'
-        />
-        <Medida
-          titulo='Reserva após a mudança'
-          disponivel={reserva}
-          previsto={inicial}
-          saldo={saldoInicial}
-          periodo='iniciais'
-        />
-      </div>
-      {custos.length > 0 && (
-        <div className='mt-4 rounded-lg bg-(--azul-fundo) p-4'>
-          <h3 className='font-bold'>Reserva para um cenário de 3 meses</h3>
-          <p>Gastos iniciais mais três meses de gastos mensais registrados.</p>
-          <p className='mt-1'>
-            Estimativa de {moeda(estimativa.alvo)}.{' '}
-            {estimativa.falta
-              ? 'Faltam ' + moeda(estimativa.falta) + ' na reserva.'
-              : 'A reserva informada cobre este cenário.'}
-          </p>
-        </div>
-      )}
-    </CartaoCasa>
-  );
-}
-
-function Custos({ registros, adicionar, editar }) {
-  return (
-    <div className='grid gap-4 lg:grid-cols-2'>
-      {[
-        ['mensal', 'Gastos mensais', 'Aluguel, contas e outros gastos do mês.'],
-        [
-          'inicial',
-          'Gastos iniciais',
-          'Caução, móveis e outros gastos da mudança.',
-        ],
-      ].map(([tipo, titulo, descricao]) => {
-        const itens = registros.filter(registro => registro.tipo === tipo);
-        return (
-          <CartaoCasa
-            key={tipo}
-            titulo={titulo}
-            acao={
-              <BotaoCasa
-                secundario
-                type='button'
-                onClick={() => adicionar(tipo)}
-              >
-                <Plus size={16} /> Adicionar
-              </BotaoCasa>
-            }
-          >
-            <p className='mb-3 text-sm text-(--texto-apoio)'>{descricao}</p>
-            {itens.length ? (
-              <>
-                <ul className='divide-y divide-(--borda-suave)'>
-                  {itens.map(item => (
-                    <li key={item.id}>
-                      <button
-                        type='button'
-                        className='moradia-linha'
-                        onClick={() => editar(item)}
-                        aria-label={'Editar ' + item.nome}
-                      >
-                        <span>
-                          <strong>{item.nome}</strong>
-                          <small>{item.categoria}</small>
-                        </span>
-                        <strong className='tabular-nums'>
-                          {moeda(item.valor)}
-                        </strong>
-                        <Pencil size={15} aria-hidden='true' />
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-                <p className='mt-2 flex justify-between gap-2 border-t border-(--borda-suave) pt-3 text-sm font-bold'>
-                  <span>Total</span>
-                  <span>
-                    {moeda(
-                      itens.reduce(
-                        (total, item) => total + Number(item.valor),
-                        0
-                      )
-                    )}
-                  </span>
-                </p>
-              </>
-            ) : (
-              <p className='rounded-xl bg-(--azul-fundo) p-3 text-sm'>
-                Nenhum gasto adicionado.
-              </p>
-            )}
-          </CartaoCasa>
-        );
-      })}
-    </div>
-  );
-}
-
-function Comparacao({ plano, custos, simulacoes, itens, abrir }) {
-  const cenarios = [
-    [
-      plano,
-      resumoMoradia(plano.renda_mensal, plano.reserva_atual, custos),
-      true,
-    ],
-    ...simulacoes.map(item => [
-      item,
-      resumoMoradia(
-        item.renda_mensal,
-        item.reserva,
-        itens.filter(custo => custo.simulacao_id === item.id)
-      ),
-      false,
-    ]),
-  ];
-  return (
-    <CartaoCasa titulo='Comparar cenários'>
-      <div className='overflow-x-auto'>
-        <table className='moradia-tabela'>
-          <thead>
-            <tr>
-              <th scope='col'>Cenário</th>
-              <th scope='col'>Gastos mensais</th>
-              <th scope='col'>Saldo mensal</th>
-              <th scope='col'>Gastos iniciais</th>
-              <th scope='col'>Saldo da reserva</th>
-            </tr>
-          </thead>
-          <tbody>
-            {cenarios.map(([item, resumo, base]) => (
-              <tr key={(base ? 'plano-' : 'simulacao-') + item.id}>
-                <th scope='row'>
-                  {base ? (
-                    'Plano de moradia'
-                  ) : (
-                    <Link to={abrir(item.id)}>{item.nome}</Link>
-                  )}
-                </th>
-                {[
-                  resumo.mensal,
-                  resumo.saldoMensal,
-                  resumo.inicial,
-                  resumo.saldoInicial,
-                ].map((valor, indice) => (
-                  <td
-                    key={indice}
-                    className={valor < 0 ? 'text-(--vermelho-alerta)' : ''}
-                  >
-                    {moeda(valor)}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </CartaoCasa>
-  );
-}
+const secoes = [
+  { rota, nome: 'Meu plano', Icone: House, visaoDireta: 'plano', links: [] },
+  {
+    rota,
+    nome: 'Meu dinheiro',
+    Icone: Wallet,
+    visaoDireta: 'dinheiro',
+    links: [],
+  },
+  {
+    rota,
+    nome: 'Custos previstos',
+    Icone: List,
+    visaoDireta: 'custos',
+    links: [],
+  },
+  { rota, nome: 'Metas', Icone: Flag, visaoDireta: 'metas', links: [] },
+];
 
 export default function Planejamento() {
+  const servidor = useDadosServidor();
   const { b, perfil } = useBancoMvp();
   const usuario = perfil?.user_id;
   const [params, setParams] = useSearchParams();
   const [editor, setEditor] = useState(null);
+  const [adicionandoImovel, setAdicionandoImovel] = useState(false);
+  const [editarSituacao, setEditarSituacao] = useState(false);
   const [excluir, setExcluir] = useState(false);
   const [erro, setErro] = useState('');
   const notificar = useAvisoPerfilA();
@@ -263,67 +91,149 @@ export default function Planejamento() {
     params.get('plano') ??
       (params.get('entidade') === 'plano_moradia' ? params.get('id') : null)
   );
-  const plano =
-    planos.find(item => item.id === idPlano) ??
-    planos.find(item => item.status === 'ativo') ??
-    planos[0];
-  const visao = ['custos', 'simulacoes'].includes(params.get('visao'))
+  const visao = ['custos', 'dinheiro', 'metas'].includes(params.get('visao'))
     ? params.get('visao')
     : 'plano';
-  const custos = plano ? listar(b, 'custo_moradia', usuario, plano.id) : [];
-  const simulacoes = plano
-    ? listar(b, 'simulacao_moradia', usuario, plano.id)
-    : [];
-  const simulacao = simulacoes.find(
-    item => item.id === Number(params.get('simulacao'))
+  const imoveis = listar(b, 'casa_desejada', usuario);
+  const planoReferencia =
+    planos.find(item => item.id === idPlano) ??
+    (visao === 'custos' && !params.has('imovel')
+      ? (planos.find(item => item.status === 'ativo') ?? planos[0])
+      : undefined);
+  const imovel =
+    imoveis.find(item => item.id === Number(params.get('imovel'))) ??
+    imoveis.find(
+      item =>
+        planoDoImovel(b, usuario, item.id)?.id === planoReferencia?.id &&
+        planoReferencia != null
+    ) ??
+    imoveis[0];
+  const visaoDinheiro = visao === 'dinheiro' || visao === 'metas';
+  const usaImovel = visao === 'plano' || visaoDinheiro || params.has('imovel');
+  const referenciaDoImovel = planoDeReferencia(b, usuario, imovel);
+  const planoSelecionado = planos.find(
+    item =>
+      item.id === idPlano &&
+      !imoveis.some(
+        opcao =>
+          opcao.id !== imovel?.id &&
+          planoDoImovel(b, usuario, opcao.id)?.id === item.id
+      )
   );
-  const itens = simulacao
-    ? listar(b, 'simulacao_item', usuario, simulacao.id)
-    : [];
-  const abrirSimulacao = id =>
+  const plano = usaImovel
+    ? visaoDinheiro || visao === 'custos'
+      ? (planoSelecionado ?? referenciaDoImovel)
+      : referenciaDoImovel
+    : (planos.find(item => item.id === idPlano) ??
+      planos.find(item => item.status === 'ativo') ??
+      planos[0]);
+  const custos = plano ? listar(b, 'custo_moradia', usuario, plano.id) : [];
+  const dadosDinheiro = lerMeuDinheiro(b, usuario);
+  const planoMudanca = plano ?? planoSelecionado ?? referenciaDoImovel;
+  const resumoDinheiro = resumirOrcamento(b, usuario, imovel, planoMudanca);
+  const { renda, reserva } = resumoDinheiro;
+  const dataMudanca = lerPrevisaoMudanca(b, usuario);
+  const rotaMeuPlano = rota + (imovel ? '?imovel=' + imovel.id : '');
+  const rotaCustosMeta =
     rota +
     '?' +
     new URLSearchParams({
-      visao: 'simulacoes',
-      plano: plano.id,
-      ...(id && { simulacao: id }),
+      visao: 'custos',
+      ...(planoMudanca && { plano: planoMudanca.id }),
+      ...(imovel && plano === planoMudanca && { imovel: imovel.id }),
     });
+  async function salvarSituacao(valores) {
+    if (servidor) {
+      await salvarSituacaoFinanceira({
+        renda: valores.renda == null ? null : validarValor(valores.renda, 'a renda'),
+        reserva: valores.reserva == null ? null : validarValor(valores.reserva, 'a reserva'),
+        mudancaPrevista: valores.data || null,
+      });
+      await servidor.atualizar();
+    } else alterarDinheiro(usuario, (registro, banco) => {
+      registro.renda =
+        valores.renda == null ? renda : validarValor(valores.renda, 'a renda');
+      registro.reserva =
+        valores.reserva == null
+          ? reserva
+          : validarValor(valores.reserva, 'a reserva');
+      if (valores.data !== dataMudanca)
+        gravarPrevisaoMudanca(banco, usuario, valores.data);
+    });
+    notificar('Dados financeiros atualizados.');
+  }
 
-  function abrirEditor(entidade, registro, pai, tipo) {
-    setEditor({ entidade, registro, pai, tipo });
+  function abrirEditor(
+    entidade,
+    registro,
+    pai,
+    tipo,
+    imovelId,
+    categoria,
+    grupo
+  ) {
+    setEditor({ entidade, registro, pai, tipo, imovelId, categoria, grupo });
     setExcluir(false);
     setErro('');
   }
 
-  function salvar(valores, copiar) {
-    const { entidade, registro, pai } = editor;
-    const id = editarMoradia(usuario, entidade, pai, registro, valores, copiar);
+  async function salvar(valores) {
+    const { entidade, registro, pai, imovelId } = editor;
+    let id;
+    if (servidor) {
+      if (entidade === 'plano_moradia') {
+        id = await salvarPlano(registro?.id, valores, imovelId, registro?.status);
+      } else {
+        const idPlano = pai ?? await salvarPlano(null, {
+          nome: imovel.titulo, renda_mensal: 0, reserva_atual: 0,
+        }, imovelId);
+        await salvarCusto(idPlano, registro?.id, valores);
+      }
+      await servidor.atualizar();
+    } else id = editarMoradia(
+      usuario,
+      entidade,
+      pai,
+      registro,
+      valores,
+      imovelId
+    );
     if (entidade === 'plano_moradia') {
-      setParams(id ? { plano: id, visao } : { visao: 'plano' });
-    } else if (entidade === 'simulacao_moradia') {
-      setParams({
-        visao: 'simulacoes',
-        plano: plano.id,
-        ...(id && { simulacao: id }),
-      });
+      setParams(
+        id
+          ? { plano: id, visao, ...(imovelId && { imovel: imovelId }) }
+          : { visao: 'plano', ...(imovelId && { imovel: imovelId }) }
+      );
+    } else if (entidade === 'custo_moradia' && imovelId && !pai) {
+      setParams({ visao: 'custos', imovel: imovelId });
     }
     notificar(valores ? 'Alterações salvas.' : 'Registro excluído.');
   }
 
   const config = editor && modelo[editor.entidade];
-  const novaSimulacao =
-    editor?.entidade === 'simulacao_moradia' && !editor.registro;
-  const novoCusto = tipo =>
+  const adicionarInicial = grupo =>
     abrirEditor(
-      simulacao && visao === 'simulacoes' ? 'simulacao_item' : 'custo_moradia',
+      'custo_moradia',
       null,
-      simulacao && visao === 'simulacoes' ? simulacao.id : plano.id,
-      tipo
+      plano?.id,
+      'inicial',
+      plano ? undefined : imovel?.id,
+      grupo.categoria,
+      grupo
     );
+
+  const imovelDoPlano = plano
+    ? b.vinculos_planos_imoveis?.find(
+        item => item.plano_id === plano.id && item.user_id === usuario
+      )?.imovel_id
+    : imovel?.id;
+  const escopoCustos = imovelDoPlano
+    ? 'imovel:' + imovelDoPlano
+    : 'plano:' + plano?.id;
 
   return (
     <LayoutCasa
-      secao={visao}
+      secao={visao === 'metas' ? visao + (params.get('meta') ?? '') : visao}
       navegacao={
         <MenuLateralCasa
           titulo='Finanças'
@@ -332,11 +242,20 @@ export default function Planejamento() {
           secoes={secoes}
           pathname={rota}
           visao={visao}
-          parametros={plano && { plano: plano.id }}
+          parametros={{
+            ...((plano ?? planoMudanca) && {
+              plano: (plano ?? planoMudanca).id,
+            }),
+            ...((usaImovel || planoReferencia) &&
+              imovel && { imovel: imovel.id }),
+          }}
         />
       }
     >
-      <main className='moradia-financas min-h-full min-w-0 bg-(--azul-fundo) font-corpo text-(--azul-titulo)'>
+      <main
+        data-visao={visao}
+        className='moradia-financas min-h-full min-w-0 bg-(--azul-fundo) font-corpo text-(--azul-titulo)'
+      >
         <Container classe='casa-pagina-conteudo space-y-4'>
           <header className='flex flex-wrap items-center justify-between gap-3'>
             <div>
@@ -344,213 +263,215 @@ export default function Planejamento() {
                 como='h1'
                 classe='text-3xl leading-tight font-bold tracking-[-0.02em] sm:text-4xl'
               >
-                Planejamento de moradia
+                {{
+                  plano: 'Meu plano',
+                  dinheiro: 'Meu dinheiro',
+                  custos: 'Custos previstos',
+                  metas: 'Metas',
+                }[visao] ?? 'Planejamento de moradia'}
               </Titulo>
               <p className='mt-1 text-sm text-(--texto-apoio)'>
-                Estime o custo de viver por conta própria e compare cenários
-                para a mudança.
-              </p>
-              <p className='mt-1 text-xs text-(--texto-apoio)'>
-                Os planos desta prévia ficam salvos neste navegador.
+                {{
+                  plano:
+                    'Organize quanto você pretende gastar por mês em cada imóvel.',
+                  dinheiro:
+                    'Acompanhe seus gastos de hoje e veja como a mudança afeta seu saldo.',
+                  custos: 'Organize os gastos de entrada para cada imóvel.',
+                  metas:
+                    'Escolha um valor ou use a estimativa da mudança para planejar quanto guardar.',
+                }[visao] ?? 'Estime o custo de viver por conta própria.'}
               </p>
             </div>
-            <BotaoCasa
-              type='button'
-              onClick={() => abrirEditor('plano_moradia')}
-            >
-              <Plus size={17} /> Novo plano
-            </BotaoCasa>
+            {visaoDinheiro && imoveis.length > 1 && (
+              <label className='dinheiro-imovel'>
+                Imóvel de referência
+                <select
+                  value={imovel?.id ?? ''}
+                  onChange={evento =>
+                    setParams(anteriores => {
+                      const proximos = new URLSearchParams(anteriores);
+                      proximos.set('imovel', evento.target.value);
+                      return proximos;
+                    })
+                  }
+                >
+                  {imoveis.map(item => (
+                    <option key={item.id} value={item.id}>
+                      {item.titulo}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
+            {visao !== 'plano' && !usaImovel && (
+              <BotaoCasa
+                type='button'
+                onClick={() => abrirEditor('plano_moradia')}
+              >
+                <Plus size={17} /> Novo plano
+              </BotaoCasa>
+            )}
           </header>
 
-          {!plano ? (
-            <CartaoCasa titulo='Crie seu primeiro plano'>
+          {visao === 'dinheiro' ? (
+            <MeuDinheiro
+              usuario={usuario}
+              dados={dadosDinheiro}
+              resumo={resumoDinheiro}
+              rotaPlano={rotaMeuPlano}
+              editarSituacao={() => setEditarSituacao(true)}
+            />
+          ) : visao === 'metas' ? (
+            <MetasMudanca
+              usuario={usuario}
+              dados={dadosDinheiro}
+              resumo={resumoDinheiro}
+              rotaPlano={rotaMeuPlano}
+              rotaCustos={rotaCustosMeta}
+              dataMudanca={dataMudanca}
+            />
+          ) : visao === 'plano' ? (
+            <MeuPlano
+              usuario={usuario}
+              imoveis={imoveis}
+              imovel={imovel}
+              endereco={b.endereco.find(
+                item => item.id === imovel?.endereco_id
+              )}
+              resumo={resumoDinheiro}
+              custos={custos}
+              plano={plano}
+              selecionar={opcao => setParams({ imovel: opcao.id })}
+              adicionarImovel={() => setAdicionandoImovel(true)}
+              rotaDinheiro={
+                rota +
+                '?visao=dinheiro' +
+                (imovel ? '&imovel=' + imovel.id : '')
+              }
+            />
+          ) : !plano && !(visao === 'custos' && imovel) ? (
+            <CartaoCasa titulo='Monte o orçamento do imóvel'>
               <p className='text-sm text-(--texto-apoio)'>
-                Comece pela sua renda e reserva. Depois, adicione os gastos do
-                mês e da mudança.
+                Salve os primeiros gastos em Meu plano para continuar.
               </p>
+              <Link
+                className='moradia-link mt-2 inline-block'
+                to={rota + (imovel ? '?imovel=' + imovel.id : '')}
+              >
+                Abrir Meu plano
+              </Link>
             </CartaoCasa>
           ) : (
             <>
-              <div className='moradia-seletor'>
-                <label>
-                  <span>Plano de moradia</span>
-                  <select
-                    value={plano.id}
-                    onChange={evento =>
-                      setParams({ visao, plano: evento.target.value })
-                    }
-                  >
-                    {planos.map(item => (
-                      <option key={item.id} value={item.id}>
-                        {item.nome}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <div className='flex flex-wrap items-center gap-2'>
-                  <span className='moradia-status'>
-                    {modelo.plano_moradia.status[plano.status]}
-                  </span>
-                  <BotaoCasa
-                    secundario
-                    type='button'
-                    onClick={() => abrirEditor('plano_moradia', plano)}
-                  >
-                    <Pencil size={15} /> Editar plano
+              {plano && (
+                <div className='moradia-seletor'>
+                  <label>
+                    <span>Plano de moradia</span>
+                    <select
+                      value={plano.id}
+                      onChange={evento =>
+                        setParams({
+                          visao,
+                          plano: evento.target.value,
+                          ...(usaImovel &&
+                            imovel &&
+                            evento.target.value === String(plano.id) && {
+                              imovel: imovel.id,
+                            }),
+                        })
+                      }
+                    >
+                      {planos.map(item => (
+                        <option key={item.id} value={item.id}>
+                          {item.nome}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <BotaoCasa secundario como={Link} to={rotaMeuPlano}>
+                    <Pencil size={15} aria-hidden='true' /> Editar plano
                   </BotaoCasa>
                 </div>
-              </div>
-
-              {visao === 'plano' && (
-                <>
-                  <Balanco registro={plano} custos={custos} />
-                  <CartaoCasa titulo='Dados do plano'>
-                    <dl className='grid gap-4 sm:grid-cols-3'>
-                      {[
-                        ['Renda mensal', moeda(plano.renda_mensal)],
-                        ['Reserva atual', moeda(plano.reserva_atual)],
-                        [
-                          'Mudança prevista',
-                          plano.mudanca_prevista
-                            ? dataCurta(plano.mudanca_prevista)
-                            : 'Sem data',
-                        ],
-                      ].map(([titulo, valor]) => (
-                        <div key={titulo}>
-                          <dt className='text-sm text-(--texto-apoio)'>
-                            {titulo}
-                          </dt>
-                          <dd className='font-bold'>{valor}</dd>
-                        </div>
-                      ))}
-                    </dl>
-                    <div className='mt-5 flex flex-wrap gap-4 text-sm font-bold'>
-                      <Link
-                        className='moradia-link'
-                        to={'?visao=custos&plano=' + plano.id}
-                      >
-                        Ver custos previstos
-                      </Link>
-                      <Link className='moradia-link' to={abrirSimulacao()}>
-                        Ver simulações
-                      </Link>
-                    </div>
-                  </CartaoCasa>
-                </>
               )}
 
               {visao === 'custos' && (
-                <Custos
+                <CustosIniciais
+                  key={escopoCustos}
                   registros={custos}
-                  adicionar={novoCusto}
-                  editar={item => abrirEditor('custo_moradia', item, plano.id)}
+                  banco={b}
+                  usuario={usuario}
+                  escopo={escopoCustos}
+                  adicionar={adicionarInicial}
+                  editar={(item, grupo) =>
+                    abrirEditor(
+                      'custo_moradia',
+                      item,
+                      plano.id,
+                      'inicial',
+                      undefined,
+                      item.categoria,
+                      grupo
+                    )
+                  }
                 />
-              )}
-
-              {visao === 'simulacoes' && (
-                <>
-                  <CartaoCasa
-                    titulo='Simulações'
-                    acao={
-                      <BotaoCasa
-                        type='button'
-                        onClick={() =>
-                          abrirEditor('simulacao_moradia', null, plano.id)
-                        }
-                      >
-                        <Plus size={17} /> Nova simulação
-                      </BotaoCasa>
-                    }
-                  >
-                    {simulacoes.length ? (
-                      <nav
-                        aria-label='Cenários do plano'
-                        className='flex flex-wrap gap-2'
-                      >
-                        {simulacoes.map(item => (
-                          <Link
-                            className='moradia-cenario'
-                            key={item.id}
-                            to={abrirSimulacao(item.id)}
-                            aria-current={
-                              simulacao?.id === item.id ? 'page' : undefined
-                            }
-                          >
-                            {item.nome}
-                          </Link>
-                        ))}
-                      </nav>
-                    ) : (
-                      <p className='text-sm text-(--texto-apoio)'>
-                        Crie um cenário para testar outra renda, reserva ou
-                        combinação de gastos.
-                      </p>
-                    )}
-                  </CartaoCasa>
-                  {simulacao && (
-                    <>
-                      <CartaoCasa
-                        titulo={simulacao.nome}
-                        acao={
-                          <BotaoCasa
-                            secundario
-                            type='button'
-                            onClick={() =>
-                              abrirEditor(
-                                'simulacao_moradia',
-                                simulacao,
-                                plano.id
-                              )
-                            }
-                          >
-                            <Pencil size={15} /> Editar simulação
-                          </BotaoCasa>
-                        }
-                      >
-                        <p className='text-sm text-(--texto-apoio)'>
-                          Renda mensal de {moeda(simulacao.renda_mensal)} e
-                          reserva de {moeda(simulacao.reserva)}.
-                        </p>
-                      </CartaoCasa>
-                      <Balanco registro={simulacao} custos={itens} simulacao />
-                      <Custos
-                        registros={itens}
-                        adicionar={novoCusto}
-                        editar={item =>
-                          abrirEditor('simulacao_item', item, simulacao.id)
-                        }
-                      />
-                    </>
-                  )}
-                  {simulacoes.length > 0 && (
-                    <Comparacao
-                      plano={plano}
-                      custos={custos}
-                      simulacoes={simulacoes}
-                      itens={b.simulacao_item}
-                      abrir={abrirSimulacao}
-                    />
-                  )}
-                </>
               )}
             </>
           )}
         </Container>
 
+        {adicionandoImovel && (
+          <EditorImovel
+            usuario={usuario}
+            aoFechar={() => setAdicionandoImovel(false)}
+            aoSalvar={id => {
+              setParams({ imovel: id });
+              notificar('Imóvel adicionado.');
+            }}
+          />
+        )}
+        {editarSituacao && (
+          <DialogoCasa
+            titulo='Renda, reserva e mudança'
+            aoFechar={() => setEditarSituacao(false)}
+          >
+            <p className='mb-4 text-sm text-(--texto-apoio)'>
+              Estes dados são usados em Meu dinheiro, Meu plano e Metas.
+            </p>
+            <EditorMvp
+              cabecalho={false}
+              campos={camposSituacaoFinanceira}
+              inicial={{ renda, reserva, data: dataMudanca }}
+              onSave={salvarSituacao}
+              onClose={() => setEditarSituacao(false)}
+              rotuloSalvar='Salvar dados'
+            />
+          </DialogoCasa>
+        )}
         {editor && (
           <DialogoCasa
             titulo={
               excluir
                 ? 'Excluir ' + config.singular + '?'
-                : (editor.registro ? 'Editar ' : 'Adicionar ') + config.singular
+                : (editor.registro ? 'Editar ' : 'Adicionar ') +
+                  (editor.grupo ? 'gasto inicial' : config.singular)
             }
+            classe={editor.grupo ? 'custos-entrada-modal' : ''}
             aoFechar={() => setEditor(null)}
           >
+            {editor.grupo && !excluir && (
+              <div className='custos-entrada-banner'>
+                <img src={editor.grupo.foto} alt='' />
+                <div>
+                  <strong>{editor.grupo.titulo}</strong>
+                  <p>Informe um valor estimado para este gasto único.</p>
+                </div>
+              </div>
+            )}
             {excluir ? (
               <>
                 <p className='text-sm text-(--texto-apoio)'>
                   {config.filhos?.length
-                    ? 'O registro e os custos ou simulações vinculados serão excluídos.'
+                    ? 'O plano e os custos vinculados serão excluídos.'
                     : 'O gasto será removido dos valores previstos.'}
                 </p>
                 {erro && (
@@ -571,9 +492,9 @@ export default function Planejamento() {
                   </BotaoCasa>
                   <BotaoCasa
                     type='button'
-                    onClick={() => {
+                    onClick={async () => {
                       try {
-                        salvar(null);
+                        await salvar(null);
                         setEditor(null);
                       } catch (falha) {
                         setErro(falha.message);
@@ -589,22 +510,30 @@ export default function Planejamento() {
                 cabecalho={false}
                 inicial={
                   editor.registro ??
-                  (novaSimulacao
+                  (editor.entidade === 'plano_moradia'
                     ? {
-                        renda_mensal: plano.renda_mensal,
-                        reserva: plano.reserva_atual,
+                        nome: editor.imovelId ? imovel?.titulo : '',
+                        renda_mensal: 0,
+                        reserva_atual: 0,
                       }
-                    : editor.entidade === 'plano_moradia'
-                      ? { renda_mensal: 0, reserva_atual: 0 }
-                      : { tipo: editor.tipo, valor: 0 })
+                    : {
+                        tipo: editor.tipo,
+                        categoria: editor.categoria,
+                        valor: 0,
+                      })
                 }
                 campos={[
-                  ...config.campos.map(campo => ({
-                    ...campo,
-                    limite: campo.maxLength,
-                    obrigatorio: !campo.opcional,
-                    opcoes: campo.opcoes && Object.entries(campo.opcoes),
-                  })),
+                  ...config.campos
+                    .filter(
+                      campo =>
+                        !editor.grupo || ['nome', 'valor'].includes(campo.nome)
+                    )
+                    .map(campo => ({
+                      ...campo,
+                      limite: campo.maxLength,
+                      obrigatorio: !campo.opcional,
+                      opcoes: campo.opcoes && Object.entries(campo.opcoes),
+                    })),
                   ...(editor.entidade === 'plano_moradia' && editor.registro
                     ? [
                         {
@@ -614,25 +543,26 @@ export default function Planejamento() {
                         },
                       ]
                     : []),
-                  ...(novaSimulacao && custos.length
-                    ? [
-                        {
-                          nome: 'copiarCustos',
-                          rotulo: 'Despesas do cenário',
-                          opcoes: [
-                            ['sim', 'Copiar custos do plano'],
-                            ['nao', 'Começar sem custos'],
-                          ],
-                          obrigatorio: false,
-                        },
-                      ]
-                    : []),
                 ]}
-                onSave={({ copiarCustos, ...valores }) =>
-                  salvar(valores, copiarCustos === 'sim')
+                onSave={valores =>
+                  salvar(
+                    editor.grupo
+                      ? {
+                          ...valores,
+                          tipo: 'inicial',
+                          categoria: editor.categoria,
+                        }
+                      : valores
+                  )
                 }
                 onClose={() => setEditor(null)}
-                rotuloSalvar='Salvar'
+                rotuloSalvar={
+                  editor.grupo
+                    ? editor.registro
+                      ? 'Salvar alterações'
+                      : 'Salvar gasto'
+                    : 'Salvar'
+                }
                 acaoSecundaria={
                   editor.registro && (
                     <button

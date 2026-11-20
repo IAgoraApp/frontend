@@ -11,6 +11,8 @@ import {
   Store,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useDadosServidor } from '../../app/dados/contextoServidor';
+import { editarResidencia, excluirRegistroCasa, salvarRegistroCasa } from './casaApi';
 import PerfilCasa from './components/perfilCasa';
 import { BotaoCasa, DialogoCasa } from './components/casaUi';
 import './casaA.css';
@@ -23,6 +25,7 @@ import {
 } from '../../shared/ui/mvp';
 export default function CasaA() {
   const { b, casa, comodos, endereco, limpezas } = useBancoMvp();
+  const servidor = useDadosServidor();
   const [editar, setEditar] = useState(false);
   const notificar = useAvisoPerfilA();
   const [painel, setPainel] = useState(null);
@@ -81,8 +84,16 @@ export default function CasaA() {
                   })),
                 ]}
                 onClose={() => setEditar(false)}
-                onSave={v => {
-                  alterarBanco(db => {
+                onSave={async v => {
+                  if (servidor) {
+                    const campos = ['rua', 'numero', 'bairro', 'cidade', 'estado', 'cep', 'complemento'];
+                    await editarResidencia(casa.id, {
+                      nome: v.nome,
+                      tipo: v.tipo,
+                      ...Object.fromEntries(campos.map(campo => [campo, v[campo]])),
+                    });
+                    await servidor.atualizar();
+                  } else alterarBanco(db => {
                     db.casa = db.casa.map(c =>
                       c.id === casa.id
                         ? { ...c, nome: v.nome, tipo: v.tipo }
@@ -179,6 +190,14 @@ export default function CasaA() {
             <ColecaoMvp
               titulo='Gerenciar cômodos'
               colecao='comodo'
+              onSave={servidor ? async valores => {
+                await salvarRegistroCasa('comodo', valores);
+                await servidor.atualizar();
+              } : undefined}
+              onDelete={servidor ? async id => {
+                await excluirRegistroCasa('comodo', id);
+                await servidor.atualizar();
+              } : undefined}
               onSuccess={notificar}
               registros={comodos}
               padrao={{ casa_id: casa.id }}

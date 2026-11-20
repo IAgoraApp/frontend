@@ -1,10 +1,13 @@
 import { useRef, useState } from 'react';
+import ImagemMarketplace from '../../marketplace/ImagemMarketplace';
 import { Botao } from '../../../shared/ui/index';
 import { lerImagemComoDados } from '../../../app/estado/estadoEmpresa';
 
 export default function EditorFotos({
   fotos,
   aoAlterar,
+  aoCarregar,
+  enviar,
   rotulo = 'Fotos do serviço',
   limite = 5,
 }) {
@@ -22,13 +25,15 @@ export default function EditorFotos({
       return;
     }
     setOcupado(true);
+    aoCarregar?.(true);
     try {
-      const imagens = await Promise.all(arquivos.map(lerImagemComoDados));
+      const imagens = await Promise.all(arquivos.map(enviar ?? lerImagemComoDados));
       aoAlterar([...fotos, ...imagens]);
     } catch (falha) {
       setErro(falha.message || 'Não foi possível ler a imagem selecionada.');
     } finally {
       setOcupado(false);
+      aoCarregar?.(false);
       evento.target.value = '';
     }
   }
@@ -53,8 +58,7 @@ export default function EditorFotos({
           className='min-h-12 w-full min-w-0 max-w-full cursor-pointer rounded-xl border border-dashed border-[#9fb0bf] bg-[#f4f7fa] p-3 text-sm text-(--azul-titulo) file:mr-3 file:cursor-pointer file:rounded-full file:border-0 file:bg-[#102a43] file:px-4 file:py-2 file:text-xs file:font-bold file:text-white'
         />
         <p className='text-xs text-(--texto-apoio)'>
-          Formatos aceitos: JPG, PNG ou WebP, até 5 MB por arquivo. As imagens
-          ficam armazenadas localmente neste navegador.
+          Formatos aceitos: JPG, PNG ou WebP, até 5 MB por arquivo.
         </p>
       </div>
 
@@ -77,19 +81,26 @@ export default function EditorFotos({
               key={`${foto}-${indice}`}
               className='overflow-hidden rounded-xl border border-[#dbe5ed] bg-white'
             >
-              <img
-                src={foto}
-                alt={
-                  indice === 0
-                    ? 'Foto principal'
-                    : `Foto complementar ${indice + 1}`
-                }
-                className='aspect-[1.5] w-full object-cover'
-              />
+              {foto.startsWith('/mock/') ? (
+                <p className='grid aspect-[1.5] place-items-center bg-(--azul-fundo) text-sm'>
+                  Imagem de exemplo
+                </p>
+              ) : (
+                <ImagemMarketplace
+                  src={foto}
+                  alt={
+                    indice === 0
+                      ? 'Foto principal'
+                      : `Foto complementar ${indice + 1}`
+                  }
+                  className='aspect-[1.5] w-full object-cover'
+                />
+              )}
               <div className='flex flex-wrap items-center justify-between gap-2 p-3'>
                 {indice > 0 ? (
                   <Botao
                     type='button'
+                    disabled={ocupado}
                     variante='secundario'
                     classe='min-h-[38px]! px-3! py-1! text-xs!'
                     onClick={() =>
@@ -105,8 +116,11 @@ export default function EditorFotos({
                 )}
                 <button
                   type='button'
+                  disabled={ocupado}
                   aria-label={`Remover imagem ${indice + 1}`}
-                  onClick={() => aoAlterar(fotos.filter((_, i) => i !== indice))}
+                  onClick={() =>
+                    aoAlterar(fotos.filter((_, i) => i !== indice))
+                  }
                   className='min-h-[38px] cursor-pointer px-2 text-xs font-bold text-[#b42318] hover:underline'
                 >
                   Remover

@@ -63,7 +63,7 @@ export function EmpresaAcesso({ modoInicial = 'divisao' }) {
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valores.email) ||
       valores.senha.length < 4
     ) {
-      setErro('Informe seu e-mail comercial e senha para acessar o painel.');
+      setErro('Informe seu e-mail comercial e senha para acessar sua conta.');
       return;
     }
     navegar('/empresa');
@@ -291,7 +291,7 @@ export function EmpresaAcesso({ modoInicial = 'divisao' }) {
               cor='marinho'
               classe='min-h-[52px]! w-full text-[15px]!'
             >
-              Entrar no painel ↗
+              Entrar na área profissional ↗
             </Botao>
 
             <p className='text-sm text-(--texto-apoio)'>

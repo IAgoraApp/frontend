@@ -67,12 +67,6 @@ export default function Cabecalho({
       return true;
     }
     if (
-      rota === '/empresa/dashboard' &&
-      (caminho === '/dashboard' || caminho.startsWith('/empresa/dashboard'))
-    ) {
-      return true;
-    }
-    if (
       rota === '/empresa/anuncios' &&
       (caminho.startsWith('/empresa/anuncios') ||
         caminho.startsWith('/meus-servicos') ||

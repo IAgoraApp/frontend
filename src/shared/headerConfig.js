@@ -1,16 +1,14 @@
 ﻿const dadosCabecalhoEmpresas = {
   rotaLogo: '/empresa',
   linksNavegacao: [
-    { nome: 'Painel', rota: '/empresa/dashboard' },
+    { nome: 'Início', rota: '/empresa' },
     { nome: 'Meus serviços', rota: '/empresa/anuncios' },
-    { nome: 'Perfil da empresa', rota: '/empresa/perfil' },
-    { nome: 'Marketplace', rota: '/empresa/marketplace' },
-    { nome: 'Contatos', rota: '/empresa/contatos' },
-    { nome: 'IA', rota: '/empresa/ia' },
+    { nome: 'Atendimentos', rota: '/empresa/contatos' },
+    { nome: 'Empresas e Serviços', rota: '/empresa/marketplace' },
   ],
   botaoAcao: {
-    rotulo: '+ Anunciar serviço',
-    rota: '/empresa/anunciar',
+    rotulo: 'Meu perfil',
+    rota: '/empresa/perfil',
     cor: 'laranja',
   },
 };

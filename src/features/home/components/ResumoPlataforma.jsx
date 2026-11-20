@@ -1,11 +1,8 @@
 import { ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { hoje, moeda } from '../../../app/dados/bancoMvp';
-import { listar, resumoMoradia } from '../../preparacao/modelo';
-import {
-  nomeCategoria,
-  servicoPublico,
-} from '../../marketplace/marketplaceDados';
+import { listar } from '../../preparacao/modelo';
+import { resumirOrcamento } from '../../financas-B/dinheiroDados';
 import { Titulo } from '../../../shared/ui/index';
 
 import fotoCasa from '../../casa/assets/residencia-minha.png';
@@ -41,28 +38,10 @@ export function ResumoPlataforma({ banco, preparacao = false }) {
     .filter(conta => conta.vencimento)
     .sort((a, b) => a.vencimento.localeCompare(b.vencimento))[0];
   const usuario = perfil?.user_id;
-  const plano =
-    preparacao &&
-    listar(b, 'plano_moradia', usuario).find(item => item.status === 'ativo');
-  const custosPlano = plano
-    ? listar(b, 'custo_moradia', usuario, plano.id)
-    : [];
-  const categoriasDisponiveis = preparacao
-    ? [
-        ...new Set(
-          b.servico
-            .filter(servico =>
-              servicoPublico(
-                servico,
-                b.perfil_empresa.find(
-                  empresa => empresa.id === servico.empresa_id
-                )
-              )
-            )
-            .map(servico => servico.categoria)
-        ),
-      ]
-    : [];
+  const imovel = preparacao
+    ? listar(b, 'casa_desejada', usuario)[0]
+    : undefined;
+  const resumo = preparacao ? resumirOrcamento(b, usuario, imovel) : undefined;
   const totalDoUsuario = colecao =>
     b[colecao].filter(item => item.user_id === usuario).length;
   const casaCards = preparacao
@@ -80,7 +59,7 @@ export function ResumoPlataforma({ banco, preparacao = false }) {
         [
           fotoLimpeza,
           'Minha jornada',
-          quantidade(totalDoUsuario('jornada'), 'jornada', 'jornadas'),
+          'Etapas e checklists da mudança',
           '/minhajornada',
         ],
         [
@@ -147,18 +126,12 @@ export function ResumoPlataforma({ banco, preparacao = false }) {
           {preparacao ? (
             <>
               <p className='inicio-financas-valor'>
-                {custosPlano.length
-                  ? moeda(
-                      resumoMoradia(
-                        plano.renda_mensal,
-                        plano.reserva_atual,
-                        custosPlano
-                      ).inicial
-                    )
+                {resumo.temCustoInicial
+                  ? moeda(resumo.custosIniciais)
                   : 'Custos da mudança'}
               </p>
               <p>
-                {custosPlano.length
+                {resumo.temCustoInicial
                   ? 'Gastos iniciais registrados no seu plano'
                   : 'Cadastre os gastos iniciais para estimar quanto precisa guardar.'}
               </p>
@@ -183,7 +156,12 @@ export function ResumoPlataforma({ banco, preparacao = false }) {
           )}
           <Link
             className='inicio-resumo-link'
-            to={preparacao ? '/financas-b?visao=custos' : '/financas'}
+            to={
+              preparacao
+                ? '/financas-b?visao=custos' +
+                  (imovel ? '&imovel=' + imovel.id : '')
+                : '/financas'
+            }
           >
             Ver minhas finanças <ChevronRight size={18} aria-hidden='true' />
           </Link>
@@ -216,36 +194,21 @@ export function ResumoPlataforma({ banco, preparacao = false }) {
         </ul>
       </section>
 
-      <div className='inicio-servicos-grade'>
-        <section
-          className='inicio-servico inicio-servico-mercado'
-          aria-labelledby='inicio-marketplace-titulo'
-        >
-          <img src={fotoServicos} alt='' loading='lazy' />
-          <div className='inicio-servico-conteudo'>
-            <Titulo como='h3' id='inicio-marketplace-titulo'>
-              Marketplace
-            </Titulo>
-            <p>
-              Encontre profissionais, confira avaliações e escolha quem chamar
-              para cuidar da sua casa.
-            </p>
-            {preparacao ? (
-              categoriasDisponiveis.length > 0 && (
-                <ul
-                  className='inicio-mercado-categorias'
-                  aria-label='Categorias de serviços'
-                >
-                  {categoriasDisponiveis.map(categoria => (
-                    <li key={categoria}>
-                      <Link to={'/categoria/' + categoria}>
-                        {nomeCategoria(categoria)}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              )
-            ) : (
+      {!preparacao && (
+        <div className='inicio-servicos-grade'>
+          <section
+            className='inicio-servico inicio-servico-mercado'
+            aria-labelledby='inicio-marketplace-titulo'
+          >
+            <img src={fotoServicos} alt='' loading='lazy' />
+            <div className='inicio-servico-conteudo'>
+              <Titulo como='h3' id='inicio-marketplace-titulo'>
+                Marketplace
+              </Titulo>
+              <p>
+                Encontre profissionais, confira avaliações e escolha quem chamar
+                para cuidar da sua casa.
+              </p>
               <ul
                 className='inicio-mercado-categorias'
                 aria-label='Categorias de serviços'
@@ -260,41 +223,35 @@ export function ResumoPlataforma({ banco, preparacao = false }) {
                   <Link to='/categoria/mudancas'>Mudanças</Link>
                 </li>
               </ul>
-            )}
-            <Link className='inicio-resumo-link' to='/marketplace'>
-              Explorar serviços <ChevronRight size={18} aria-hidden='true' />
-            </Link>
-          </div>
-        </section>
-        <section
-          className='inicio-servico inicio-servico-ia'
-          aria-labelledby='inicio-ia-titulo'
-        >
-          <img src={arteIA} alt='' loading='lazy' />
-          <div className='inicio-servico-conteudo'>
-            <Titulo como='h3' id='inicio-ia-titulo'>
-              {preparacao ? 'Ajuda para planejar' : 'Assistente IA'}
-            </Titulo>
-            <p>
-              {preparacao
-                ? 'Consulte orientações para interpretar seus custos e organizar as próximas etapas.'
-                : 'Peça ajuda para organizar a semana, planejar uma mudança ou cuidar da casa.'}
-            </p>
-            <p className='inicio-ia-exemplo'>
-              {preparacao
-                ? 'Respostas prontas sobre o planejamento'
-                : '“Como montar uma rotina para a semana?”'}
-            </p>
-            <Link
-              className='inicio-resumo-link'
-              to={preparacao ? '/ia-b' : '/ia'}
-            >
-              {preparacao ? 'Ver orientações' : 'Conversar com a IA'}{' '}
-              <ChevronRight size={18} aria-hidden='true' />
-            </Link>
-          </div>
-        </section>
-      </div>
+              <Link className='inicio-resumo-link' to='/marketplace'>
+                Explorar serviços <ChevronRight size={18} aria-hidden='true' />
+              </Link>
+            </div>
+          </section>
+          <section
+            className='inicio-servico inicio-servico-ia'
+            aria-labelledby='inicio-ia-titulo'
+          >
+            <img src={arteIA} alt='' loading='lazy' />
+            <div className='inicio-servico-conteudo'>
+              <Titulo como='h3' id='inicio-ia-titulo'>
+                Assistente IA
+              </Titulo>
+              <p>
+                Peça ajuda para organizar a semana, planejar uma mudança ou
+                cuidar da casa.
+              </p>
+              <p className='inicio-ia-exemplo'>
+                “Como montar uma rotina para a semana?”
+              </p>
+              <Link className='inicio-resumo-link' to='/ia'>
+                Conversar com a IA
+                <ChevronRight size={18} aria-hidden='true' />
+              </Link>
+            </div>
+          </section>
+        </div>
+      )}
     </section>
   );
 }

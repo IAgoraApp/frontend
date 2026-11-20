@@ -1,5 +1,4 @@
 import ResidenciaNecessaria from '../../features/preparacao/ResidenciaNecessaria';
-import { acessoLocal } from '../dados/acessoLocal';
 import PerfilA from '../../features/perfil/perfilA';
 import MarketplaceA from '../../features/marketplace/marketplaceA';
 import Inicio from '../../features/home/home';
@@ -61,7 +60,7 @@ const rotas = createBrowserRouter([
               },
               {
                 path: '/perfil',
-                element: acessoLocal ? <PerfilA /> : <PerfilDaConta />,
+                element: <PerfilA />,
               },
               {
                 path: '/checklists',
@@ -158,7 +157,7 @@ const rotas = createBrowserRouter([
               },
               {
                 path: '/perfil-b',
-                element: acessoLocal ? <PerfilA /> : <PerfilDaConta />,
+                element: <PerfilA />,
               },
               {
                 path: '/ia-b',
@@ -171,7 +170,7 @@ const rotas = createBrowserRouter([
             children: [
               {
                 path: '/empresa/ia',
-                element: <Funcionalidades.InteligenciaArtificial />,
+                element: <Navigate to='/empresa' replace />,
               },
               {
                 path: '/empresa',
@@ -179,11 +178,11 @@ const rotas = createBrowserRouter([
               },
               {
                 path: '/empresa/dashboard',
-                element: <Funcionalidades.Empresa visao='painel' />,
+                element: <Navigate to='/empresa/perfil' replace />,
               },
               {
                 path: '/dashboard',
-                element: <Funcionalidades.Empresa visao='painel' />,
+                element: <Navigate to='/empresa/perfil' replace />,
               },
               {
                 path: '/empresa/anuncios',
@@ -235,19 +234,11 @@ const rotas = createBrowserRouter([
               },
               {
                 path: '/empresa/perfil',
-                element: acessoLocal ? (
-                  <Funcionalidades.Empresa visao='perfil' />
-                ) : (
-                  <PerfilDaConta empresa />
-                ),
+                element: <Funcionalidades.Empresa visao='perfil' />,
               },
               {
                 path: '/perfil-empresa',
-                element: acessoLocal ? (
-                  <Funcionalidades.Empresa visao='perfil' />
-                ) : (
-                  <PerfilDaConta empresa />
-                ),
+                element: <Funcionalidades.Empresa visao='perfil' />,
               },
               {
                 path: '/empresa/perfil/midias',
@@ -275,6 +266,14 @@ const rotas = createBrowserRouter([
               },
               {
                 path: '/empresa/marketplace',
+                element: <MarketplaceA dentroDaEmpresa />,
+              },
+              {
+                path: '/empresa/marketplace/servicos/:id',
+                element: <MarketplaceA dentroDaEmpresa />,
+              },
+              {
+                path: '/empresa/marketplace/empresas/:id',
                 element: <MarketplaceA dentroDaEmpresa />,
               },
               {

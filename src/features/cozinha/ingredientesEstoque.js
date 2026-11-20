@@ -41,45 +41,51 @@ export function ingredientesNaDespensa(itens, produtos, estoque) {
   });
 }
 
+export function itensFaltantes(banco, receita, casaId) {
+  const itens = banco.receita_item.filter(
+    item => item.receita_id === receita.id
+  );
+  const estoque = banco.estoque_item.filter(item => item.casa_id === casaId);
+  const pendencias = new Map();
+
+  for (const ingrediente of ingredientesNaDespensa(
+    itens,
+    banco.produto,
+    estoque
+  )) {
+    if (!ingrediente.faltando) continue;
+    const chave = ingrediente.produtoId ?? normalizarTexto(ingrediente.nome);
+    const existente = pendencias.get(chave);
+    if (existente) existente.quantidade += ingrediente.faltando;
+    else
+      pendencias.set(chave, {
+        nome_item: ingrediente.nome,
+        produto_id: ingrediente.produtoId,
+        quantidade: ingrediente.faltando,
+      });
+  }
+
+  if (!pendencias.size)
+    throw new Error('Você já tem os ingredientes desta receita.');
+  return [...pendencias.values()].map(item => ({
+    ...item, quantidade: Math.ceil(Number(item.quantidade.toFixed(2))),
+  }));
+}
+
 export function criarListaDaReceita(receita, casaId) {
   let listaId;
   alterarBancoCompras(banco => {
-    const itens = banco.receita_item.filter(
-      item => item.receita_id === receita.id
-    );
-    const estoque = banco.estoque_item.filter(item => item.casa_id === casaId);
-    const pendencias = new Map();
-
-    for (const ingrediente of ingredientesNaDespensa(
-      itens,
-      banco.produto,
-      estoque
-    )) {
-      if (!ingrediente.faltando) continue;
-      const chave = ingrediente.produtoId ?? normalizarTexto(ingrediente.nome);
-      const existente = pendencias.get(chave);
-      if (existente) existente.quantidade += ingrediente.faltando;
-      else
-        pendencias.set(chave, {
-          nome_item: ingrediente.nome,
-          produto_id: ingrediente.produtoId,
-          quantidade: ingrediente.faltando,
-        });
-    }
-
-    if (!pendencias.size)
-      throw new Error('Você já tem os ingredientes desta receita.');
+    const pendencias = itensFaltantes(banco, receita, casaId);
     const lista = inserir(
       'compras',
       { nome: receita.nome, criacao: hoje(), casa_id: casaId },
       banco
     );
-    for (const item of pendencias.values()) {
+    for (const item of pendencias) {
       inserir(
         'compra_item',
         {
           ...item,
-          quantidade: Math.ceil(Number(item.quantidade.toFixed(2))),
           compras_id: lista.id,
           comprado: false,
           valor: null,

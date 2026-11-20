@@ -1,3 +1,5 @@
+import { useDadosServidor } from '../../app/dados/contextoServidor';
+import { abrirConversa } from './marketplaceApi';
 import { usePerfilPreparacao } from '../../app/dados/perfilNavegacao';
 import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
 import { useEffect, useState } from 'react';
@@ -10,7 +12,6 @@ import {
 } from 'react-router-dom';
 import {
   alterarBancoMarketplace,
-  dataCurta,
   useBancoMvp,
 } from '../../app/dados/bancoMvp';
 import { PaginaMvp, VazioMvp } from '../../shared/ui/mvp';
@@ -27,10 +28,12 @@ import {
   precoServico,
   servicoPublico,
 } from './marketplaceDados';
+import AvaliacoesServico from './AvaliacoesServico';
 import ContatosMarketplaceA from './contatosMarketplaceA';
 import './marketplaceA.css';
 
 export default function MarketplaceA({ dentroDaEmpresa = false }) {
+  const servidor = useDadosServidor();
   const preparacao = usePerfilPreparacao();
   const { b, perfil, endereco } = useBancoMvp();
   const { id, slug } = useParams();
@@ -42,13 +45,17 @@ export default function MarketplaceA({ dentroDaEmpresa = false }) {
   const empresas = b.perfil_empresa.filter(e => e.validado);
   const empresasPorId = new Map(empresas.map(e => [e.id, e]));
   const servicos = b.servico.filter(s =>
-    servicoPublico(s, empresasPorId.get(s.empresa_id))
+    servicoPublico(s, empresasPorId.get(s.empresa_id), undefined, b.publicacao_servico.filter(p => p.servico_id === s.id))
   );
-  const servico = pathname.startsWith('/servicos/')
+  const prefixo = dentroDaEmpresa ? '/empresa/marketplace' : '';
+  const caminho = prefixo && pathname.startsWith(prefixo)
+    ? pathname.slice(prefixo.length) : pathname;
+  const voltar = prefixo || '/marketplace';
+  const servico = caminho.startsWith('/servicos/')
     ? servicos.find(s => s.id === Number(id))
     : null;
   const empresa = empresasPorId.get(
-    pathname.startsWith('/empresas/') ? Number(id) : servico?.empresa_id
+    caminho.startsWith('/empresas/') ? Number(id) : servico?.empresa_id
   );
   const rotaContato = pathname.endsWith('/contato');
   const rotaAvaliacoes = pathname.endsWith('/avaliacoes');
@@ -64,12 +71,14 @@ export default function MarketplaceA({ dentroDaEmpresa = false }) {
   if (preparacao && pathname === '/favoritos')
     return <Navigate to='/marketplace' replace />;
 
-  function abrirChat(empresaId, contratadoId) {
+  async function abrirChat(empresaId, contratadoId) {
     try {
       let conversaId;
-      alterarBancoMarketplace(db => {
+      if (servidor) {
+        conversaId = (await abrirConversa({ empresaId, contratadoId })).id;
+      } else alterarBancoMarketplace(db => {
         const pedido = db.servico_contratado.find(
-          c => c.id === contratadoId && c.perfil_id === perfil.id
+          c => c.id === contratadoId && c.perfil_id === perfil?.id
         );
         conversaId = garantirChat(db, pedido, empresaId).id;
       });
@@ -100,12 +109,12 @@ export default function MarketplaceA({ dentroDaEmpresa = false }) {
     );
   }
 
-  if (pathname.startsWith('/servicos/')) {
+  if (caminho.startsWith('/servicos/')) {
     if (!servico)
       return (
         <PaginaMvp titulo='Serviço indisponível'>
           <VazioMvp>Esse serviço não está disponível no catálogo.</VazioMvp>
-          <Link className='mvp-link' to='/marketplace'>
+          <Link className='mvp-link' to={voltar}>
             Voltar aos serviços
           </Link>
         </PaginaMvp>
@@ -116,13 +125,13 @@ export default function MarketplaceA({ dentroDaEmpresa = false }) {
         navegar('/servicos/' + servico.id, { replace: true, state });
     }
 
-    const pedidoAberto = b.servico_contratado.find(
+    const pedidoAberto = !dentroDaEmpresa && b.servico_contratado.find(
       c =>
         c.servico_id === servico.id &&
-        c.perfil_id === perfil.id &&
+        c.perfil_id === perfil?.id &&
         ['pendente', 'aceito', 'em_andamento'].includes(c.status)
     );
-    const avaliacoes = b.avaliacao_servico.filter(a =>
+    const avaliacoes = servidor ? b.avaliacao_servico : b.avaliacao_servico.filter(a =>
       b.servico_contratado.some(
         c => c.id === a.contratado_id && c.servico_id === servico.id
       )
@@ -130,7 +139,7 @@ export default function MarketplaceA({ dentroDaEmpresa = false }) {
     return (
       <PaginaMvp cabecalho={false}>
         <header className='mercado-a-detalhe-topo'>
-          <VoltarMarketplace />
+          <VoltarMarketplace destino={voltar} />
           <div className='mercado-a-detalhe-identidade'>
             <div>
               <h1>{servico.titulo}</h1>
@@ -146,7 +155,7 @@ export default function MarketplaceA({ dentroDaEmpresa = false }) {
             {erroChat}
           </p>
         )}
-        {(contratar || rotaContato) && !pedidoAberto && (
+        {!dentroDaEmpresa && (contratar || rotaContato) && !pedidoAberto && (
           <SolicitarServico
             servico={servico}
             empresa={empresa}
@@ -192,7 +201,7 @@ export default function MarketplaceA({ dentroDaEmpresa = false }) {
               <p className='mercado-a-servico-pagamento'>
                 Pagamento combinado diretamente com a empresa.
               </p>
-              <div className='mercado-a-servico-acoes'>
+              {!dentroDaEmpresa && <div className='mercado-a-servico-acoes'>
                 {chatLiberado(pedidoAberto) ? (
                   <button
                     type='button'
@@ -215,7 +224,7 @@ export default function MarketplaceA({ dentroDaEmpresa = false }) {
                 <Link className='mvp-link' to='/servicos-contratados'>
                   Meus serviços
                 </Link>
-              </div>
+              </div>}
             </div>
           </section>
           <aside
@@ -224,51 +233,20 @@ export default function MarketplaceA({ dentroDaEmpresa = false }) {
           >
             <CartaoEmpresa
               empresa={empresa}
+              prefixo={prefixo}
               estado={
-                state?.retorno?.url === `/empresas/${empresa.id}`
+                state?.retorno?.url === `${prefixo}/empresas/${empresa.id}`
                   ? state.retorno.estado
                   : {
                       retorno: {
-                        url: `/servicos/${servico.id}`,
+                        url: `${prefixo}/servicos/${servico.id}`,
                         rotulo: 'Voltar ao serviço',
                         estado: state,
                       },
                     }
               }
             />
-            <section
-              className='mvp-painel mercado-a-avaliacoes'
-              id='avaliacoes-servico'
-              aria-labelledby='mercado-a-avaliacoes-titulo'
-              tabIndex={-1}
-            >
-              <div className='mvp-painel-topo'>
-                <h2 id='mercado-a-avaliacoes-titulo'>Avaliações</h2>
-                <span>
-                  {avaliacoes.length}{' '}
-                  {avaliacoes.length === 1 ? 'avaliação' : 'avaliações'}
-                </span>
-              </div>
-              {avaliacoes.length ? (
-                <ul
-                  className='mercado-a-avaliacoes-lista'
-                  tabIndex={0}
-                  aria-label='Comentários do serviço'
-                >
-                  {avaliacoes.map(a => (
-                    <li key={a.id}>
-                      <div>
-                        <strong>{a.nota} de 5</strong>
-                        <small>{dataCurta(a.data_avaliacao)}</small>
-                      </div>
-                      {a.comentario && <p>{a.comentario}</p>}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <VazioMvp>Ainda não há avaliações deste serviço.</VazioMvp>
-              )}
-            </section>
+            <AvaliacoesServico avaliacoes={avaliacoes} />
           </aside>
         </div>
       </PaginaMvp>
@@ -280,9 +258,9 @@ export default function MarketplaceA({ dentroDaEmpresa = false }) {
       dentroDaEmpresa={dentroDaEmpresa}
       empresas={empresas}
       empresa={empresa}
-      usuario={perfil.user_id}
+      usuario={perfil?.user_id ?? b.users[0]?.id}
       slug={slug}
-      pathname={pathname}
+      pathname={caminho}
       erroChat={erroChat}
     />
   );

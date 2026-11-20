@@ -1,5 +1,8 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useId, useRef } from 'react';
 import { Botao, Titulo } from '../../../shared/ui/index';
+
+let dialogosAbertos = 0;
+let overflowAnterior = '';
 
 export function BotaoCasa({
   secundario = false,
@@ -42,16 +45,20 @@ export function CartaoCasa({ titulo, children, classe = '', acao }) {
 
 export function DialogoCasa({ titulo, children, aoFechar, classe = '' }) {
   const referencia = useRef(null);
+  const idTitulo = useId();
 
   useEffect(() => {
     const elemento = referencia.current;
     const anterior = document.activeElement;
     elemento.showModal();
-    const rolagem = document.body.style.overflow;
+    if (dialogosAbertos === 0) overflowAnterior = document.body.style.overflow;
+    dialogosAbertos += 1;
     document.body.style.overflow = 'hidden';
     return () => {
       elemento.close();
-      document.body.style.overflow = rolagem;
+      dialogosAbertos -= 1;
+      if (dialogosAbertos === 0)
+        document.body.style.overflow = overflowAnterior;
       anterior?.focus();
     };
   }, []);
@@ -59,7 +66,7 @@ export function DialogoCasa({ titulo, children, aoFechar, classe = '' }) {
   return (
     <dialog
       ref={referencia}
-      aria-labelledby='titulo-dialogo-casa'
+      aria-labelledby={idTitulo}
       onCancel={evento => {
         evento.preventDefault();
         aoFechar();
@@ -70,11 +77,7 @@ export function DialogoCasa({ titulo, children, aoFechar, classe = '' }) {
       className={`fixed inset-0 m-auto max-h-[90dvh] w-[calc(100%-2rem)] max-w-2xl overflow-y-auto rounded-2xl border border-[#dbe5ed] bg-white p-5 text-(--azul-titulo) shadow-xl backdrop:bg-[#102a43]/40 sm:p-8 ${classe}`}
     >
       <div className='mb-6 flex items-start justify-between gap-4'>
-        <Titulo
-          como='h2'
-          id='titulo-dialogo-casa'
-          classe='text-2xl font-extrabold'
-        >
+        <Titulo como='h2' id={idTitulo} classe='text-2xl font-extrabold'>
           {titulo}
         </Titulo>
         <button

@@ -1,8 +1,8 @@
 import { Archive, House, Sparkles, Utensils } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
-import { useEffect, useId, useRef } from 'react';
+import { useContext, useEffect, useId, useRef } from 'react';
 import BotaoMenuLateral from './botaoMenuLateral';
-import useMenuLateral from './useMenuLateral';
+import useMenuLateral, { HoverMenuLateral } from './useMenuLateral';
 import '../../../shared/ui/mvp.css';
 const areas = [
   {
@@ -69,8 +69,9 @@ export function MenuLateralCasa({
 }) {
   const referencia = useRef(null);
   const idMenu = useId();
+  const hoverCompartilhado = useContext(HoverMenuLateral);
   const { automatico, recolhido, setRecolhidoManual, interacoes } =
-    useMenuLateral();
+    useMenuLateral(hoverCompartilhado);
   useEffect(() => {
     if (window.matchMedia('(max-width: 767px)').matches)
       referencia.current
@@ -106,92 +107,110 @@ export function MenuLateralCasa({
         )}
       </div>
       <nav id={idMenu} ref={referencia} aria-label={rotulo}>
-        {secoes.map(({ rota, nome, Icone, inicial, principal, links }) => {
-          const linkAtivo = ([id, , destino = rota]) =>
-            pathname === destino && (visao || inicial || null) === id;
+        {secoes.map(
+          ({ rota, nome, Icone, inicial, principal, links, visaoDireta }) => {
+            const linkAtivo = ([id, , destino = rota]) =>
+              pathname === destino && (visao || inicial || null) === id;
 
-          const principalAtivo =
-            pathname === rota && (!inicial || !visao || visao === inicial);
+            const principalAtivo =
+              pathname === rota &&
+              (visaoDireta
+                ? visao === visaoDireta
+                : !inicial || !visao || visao === inicial);
 
-          const grupoAtivo =
-            (principal && principalAtivo) || links.some(linkAtivo);
+            const grupoAtivo =
+              (principal && principalAtivo) || links.some(linkAtivo);
 
-          return (
-            <section key={nome}>
-              {(principal || !links.length) && (
-                <Link
-                  className={`casa-menu-principal${principal ? ' casa-menu-link-grupo menu-lateral-detalhe' : ''}`}
-                  inert={principal && recolhido ? true : undefined}
-                  to={rota}
-                  aria-label={nome}
-                  title={recolhido ? nome : undefined}
-                  aria-current={principalAtivo ? 'page' : undefined}
-                >
-                  <Icone size={16} aria-hidden='true' />
-                  <span className='menu-lateral-rotulo'>{nome}</span>
-                </Link>
-              )}
-              {links.length > 0 && (
-                <>
-                  {!principal && (
-                    <h2 className='menu-lateral-detalhe'>
-                      <Icone size={16} aria-hidden='true' />
-                      <span className='menu-lateral-rotulo'>{nome}</span>
-                    </h2>
-                  )}
-                  {automatico ? (
-                    <span
-                      className='casa-menu-grupo'
-                      data-ativo={grupoAtivo}
-                      aria-hidden='true'
-                    >
-                      <Icone size={16} />
-                    </span>
-                  ) : (
-                    <button
-                      type='button'
-                      className='casa-menu-grupo'
-                      aria-label={nome}
-                      title={nome}
-                      aria-controls={idMenu}
-                      data-ativo={grupoAtivo}
-                      onClick={evento => {
-                        const grupo = evento.currentTarget.closest('section');
-                        setRecolhidoManual(false);
-                        requestAnimationFrame(() => {
-                          const link = grupo.querySelector('a');
-                          const ativo = grupo.querySelector(
-                            '[aria-current="page"]'
-                          );
-                          (ativo ?? link)?.focus();
-                        });
-                      }}
-                    >
-                      <Icone size={16} aria-hidden='true' />
-                    </button>
-                  )}
-                  <div
-                    className='casa-menu-links menu-lateral-detalhe'
-                    inert={recolhido}
+            return (
+              <section key={nome}>
+                {(principal || !links.length) && (
+                  <Link
+                    className={`casa-menu-principal${principal ? ' casa-menu-link-grupo menu-lateral-detalhe' : ''}`}
+                    inert={principal && recolhido ? true : undefined}
+                    to={
+                      visaoDireta
+                        ? rota +
+                          '?' +
+                          new URLSearchParams({
+                            ...parametros,
+                            visao: visaoDireta,
+                          })
+                        : rota
+                    }
+                    aria-label={nome}
+                    title={recolhido ? nome : undefined}
+                    aria-current={principalAtivo ? 'page' : undefined}
                   >
-                    {links.map(link => {
-                      const [id, rotuloLink, destino = rota] = link;
-                      return (
-                        <Link
-                          key={rotuloLink}
-                          to={destino + '?' + new URLSearchParams({ ...parametros, visao: id })}
-                          aria-current={linkAtivo(link) ? 'page' : undefined}
-                        >
-                          {rotuloLink}
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </>
-              )}
-            </section>
-          );
-        })}
+                    <Icone size={16} aria-hidden='true' />
+                    <span className='menu-lateral-rotulo'>{nome}</span>
+                  </Link>
+                )}
+                {links.length > 0 && (
+                  <>
+                    {!principal && (
+                      <h2 className='menu-lateral-detalhe'>
+                        <Icone size={16} aria-hidden='true' />
+                        <span className='menu-lateral-rotulo'>{nome}</span>
+                      </h2>
+                    )}
+                    {automatico ? (
+                      <span
+                        className='casa-menu-grupo'
+                        data-ativo={grupoAtivo}
+                        aria-hidden='true'
+                      >
+                        <Icone size={16} />
+                      </span>
+                    ) : (
+                      <button
+                        type='button'
+                        className='casa-menu-grupo'
+                        aria-label={nome}
+                        title={nome}
+                        aria-controls={idMenu}
+                        data-ativo={grupoAtivo}
+                        onClick={evento => {
+                          const grupo = evento.currentTarget.closest('section');
+                          setRecolhidoManual(false);
+                          requestAnimationFrame(() => {
+                            const link = grupo.querySelector('a');
+                            const ativo = grupo.querySelector(
+                              '[aria-current="page"]'
+                            );
+                            (ativo ?? link)?.focus();
+                          });
+                        }}
+                      >
+                        <Icone size={16} aria-hidden='true' />
+                      </button>
+                    )}
+                    <div
+                      className='casa-menu-links menu-lateral-detalhe'
+                      inert={recolhido}
+                    >
+                      {links.map(link => {
+                        const [id, rotuloLink, destino = rota] = link;
+                        return (
+                          <Link
+                            key={rotuloLink}
+                            to={
+                              destino +
+                              '?' +
+                              new URLSearchParams({ ...parametros, visao: id })
+                            }
+                            aria-current={linkAtivo(link) ? 'page' : undefined}
+                          >
+                            {rotuloLink}
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
+              </section>
+            );
+          }
+        )}
       </nav>
     </aside>
   );

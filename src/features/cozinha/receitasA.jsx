@@ -1,3 +1,6 @@
+import ImagemMarketplace from '../marketplace/ImagemMarketplace';
+import { useDadosServidor } from '../../app/dados/contextoServidor';
+import { excluirReceita, favoritarReceita, planejarReceita, salvarListaCompras } from './cozinhaApi';
 import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -21,6 +24,7 @@ import { normalizarTexto } from './content';
 import {
   criarListaDaReceita,
   ingredientesNaDespensa,
+  itensFaltantes,
 } from './ingredientesEstoque';
 import { DialogoCasa } from '../casa/components/casaUi';
 import EditorReceita from './editorReceita';
@@ -81,7 +85,7 @@ function Foto({ receita, destaque = false }) {
     <div className='receitas-foto'>
       {foto && !fontesComErro.includes(foto.endereco) ? (
         <>
-          <img
+          <ImagemMarketplace
             src={foto.endereco}
             alt=''
             loading={destaque ? 'eager' : 'lazy'}
@@ -385,6 +389,8 @@ function Detalhe({
 }
 
 export default function ReceitasA({ banco, casaId, usuario }) {
+  const servidor = useDadosServidor();
+  const [ocupado, setOcupado] = useState(false);
   const [params, setParams] = useSearchParams();
   const navegar = useNavigate();
   const [busca, setBusca] = useState('');
@@ -445,20 +451,27 @@ export default function ReceitasA({ banco, casaId, usuario }) {
     if (id || editar) topo.current?.focus();
   }, [id, editar]);
 
-  function executar(acao, mensagem) {
+  async function executar(acao, mensagem) {
+    if (ocupado) return;
+    setOcupado(true);
     try {
-      acao();
+      await acao();
+      await servidor?.atualizar();
       setErro('');
       notificar(mensagem);
     } catch (falha) {
       setErro(falha.message);
+    } finally {
+      setOcupado(false);
     }
   }
 
   function favoritar(r) {
     executar(
       () =>
-        marcarReceita('receita_favorita', r.id, usuario, !favoritas.has(r.id)),
+        servidor
+          ? favoritarReceita(r.id, usuario, !favoritas.has(r.id))
+          : marcarReceita('receita_favorita', r.id, usuario, !favoritas.has(r.id)),
       favoritas.has(r.id)
         ? 'Receita removida dos favoritos.'
         : 'Receita adicionada aos favoritos.'
@@ -467,7 +480,9 @@ export default function ReceitasA({ banco, casaId, usuario }) {
 
   function planejar(r, status) {
     executar(
-      () => marcarReceita('receita_usuario', r.id, usuario, status),
+      () => servidor
+        ? planejarReceita(r.id, usuario, status, plano.has(r.id))
+        : marcarReceita('receita_usuario', r.id, usuario, status),
       status
         ? `Plano atualizado: ${situacoesPreparo[status]}.`
         : 'Receita retirada do plano.'
@@ -517,8 +532,14 @@ export default function ReceitasA({ banco, casaId, usuario }) {
               banco.estoque_item.filter(i => i.casa_id === casaId)
             )}
             aoCriarLista={casaId ? () =>
-              executar(() => {
-                const listaId = criarListaDaReceita(receita, casaId);
+              executar(async () => {
+                const listaId = servidor
+                  ? (await salvarListaCompras(null, {
+                      nome: receita.nome, casaId, itens: itensFaltantes(banco, receita, casaId).map(item => ({
+                        nomeItem: item.nome_item, produtoId: item.produto_id, quantidade: item.quantidade,
+                      })),
+                    })).id
+                  : criarListaDaReceita(receita, casaId);
                 navegar(`/cozinha?visao=compras&lista=${listaId}`);
               }, 'Lista de compras criada.')
               : undefined}
@@ -530,8 +551,9 @@ export default function ReceitasA({ banco, casaId, usuario }) {
             aoPlanejar={status => planejar(receita, status)}
             erro={erro}
             aoExcluir={() =>
-              executar(() => {
-                removerRegistro('receitas', receita.id);
+              executar(async () => {
+                if (servidor) await excluirReceita(receita.id);
+                else removerRegistro('receitas', receita.id);
                 setParams({ visao: 'minhas' });
               }, 'Receita excluída.')
             }

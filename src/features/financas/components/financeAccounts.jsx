@@ -1,10 +1,10 @@
+import { useFinancas } from '../useFinancas';
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Banknote, Check, ChevronRight, Plus, Wallet } from 'lucide-react';
 import { moeda } from '../../../app/dados/bancoMvp';
 import { EditorMvp } from '../../../shared/ui/mvp';
 import {
-  atualizarFinancas,
   camposConta,
   tiposConta,
   tipoNomeConta,
@@ -38,6 +38,7 @@ function SeletorContas({
   aoFechar,
   permiteSemConta,
 }) {
+  const { atualizarFinancas } = useFinancas();
   const [criando, setCriando] = useState(false);
   function selecionar(id) {
     aoSelecionar(id);
@@ -57,8 +58,8 @@ function SeletorContas({
           inicial={{ user_id: userId, saldo_inicial: 0 }}
           rotuloSalvar='Cadastrar e selecionar'
           onClose={() => setCriando(false)}
-          onSave={dados =>
-            selecionar(atualizarFinancas('conta_financeira', dados).id)
+          onSave={async dados =>
+            selecionar((await atualizarFinancas('conta_financeira', dados)).id)
           }
         />
       ) : (

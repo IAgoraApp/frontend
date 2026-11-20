@@ -1,6 +1,11 @@
 import { useSyncExternalStore } from 'react';
 import { lerUsuarioMvpAtivo, usePerfilPreparacao } from './perfilNavegacao';
-import banco from '../../../iagora_banco_mock_completo.json';
+import { acessoLocal } from './acessoLocal';
+import { useSessao } from './sessao';
+import { useDadosServidor } from './contextoServidor';
+const demonstracao = import.meta.env.DEV && acessoLocal
+  ? (await import('../../../iagora_banco_mock_completo.json')).default.dados
+  : null;
 
 const chaveReceitas = 'iagora:banco-mvp:receitas:v1';
 const colecoesReceitas = [
@@ -63,7 +68,10 @@ function lerComprasSalvas() {
 }
 
 const chaveCobrancas = 'iagora:banco-mvp:cobrancas:v1';
-const colecoesCobrancas = ['assinatura', 'pagamento', 'metodo_pagamento'];
+const colecoesCobrancas = [
+  'assinatura', 'pagamento', 'metodo_pagamento', 'perfil_empresa', 'servico',
+  'publicacao_servico', 'enderecos_empresa', 'validacoes_empresa', 'contas_empresa_locais',
+];
 
 function lerCobrancasSalvas() {
   try {
@@ -76,9 +84,25 @@ function lerCobrancasSalvas() {
   }
 }
 
+function mesclarDadosEmpresa(b) {
+  const enderecos = new Map((b.enderecos_empresa ?? []).map(e => [e.id, e]));
+  b.endereco = b.endereco.map(e => {
+    const atualizado = enderecos.get(e.id);
+    enderecos.delete(e.id);
+    return atualizado ?? e;
+  });
+  b.endereco.push(...enderecos.values());
+  const ids = new Set(b.users.map(u => u.id));
+  b.users.push(...(b.contas_empresa_locais ?? []).filter(u => !ids.has(u.id)));
+}
+
 export function alterarBancoCobrancas(operacao) {
   alterarBanco(b => {
     Object.assign(b, lerCobrancasSalvas());
+    b.enderecos_empresa ??= [];
+    b.validacoes_empresa ??= [];
+    b.contas_empresa_locais ??= [];
+    mesclarDadosEmpresa(b);
     operacao(b);
     try {
       localStorage.setItem(chaveCobrancas, JSON.stringify(
@@ -139,6 +163,11 @@ const colecoesPreparacao = [
   'jornada', 'etapa_jornada', 'tarefa_jornada', 'plano_moradia',
   'custo_moradia', 'simulacao_moradia', 'simulacao_item', 'casa_desejada',
   'progresso_aula', 'tentativa_quiz', 'resposta_quiz', 'enderecos_preparacao',
+  'previsoes_mudanca',
+  'fotos_etapas_preparacao',
+  'vinculos_planos_imoveis',
+  'dinheiro_preparacao',
+  'categorias_custos_preparacao',
 ];
 
 function lerPreparacaoSalva() {
@@ -164,15 +193,35 @@ export function alterarBancoPreparacao(operacao) {
   });
 }
 
-let dados = { ...structuredClone(banco.dados), ...lerReceitasSalvas(), ...lerFinancasSalvas(), ...lerComprasSalvas(), ...lerMarketplaceSalvo(), ...lerCobrancasSalvas(), ...lerPreparacaoSalva() };
-mesclarEnderecosMarketplace(dados, dados.enderecos_marketplace);
-mesclarEnderecosMarketplace(dados, dados.enderecos_preparacao);
-aplicarPerfilSalvo(dados);
-for (const perfil of banco.dados.perfil.filter(item => item.user_id !== 1))
-  aplicarPerfilSalvo(dados, chavePerfil + ':' + perfil.user_id);
+const bancoVazio = Object.fromEntries([
+  'users', 'endereco', 'perfil', 'casa', 'comodo', 'produto', 'estoque_item', 'compras',
+  'compra_item', 'receitas', 'receita_item', 'receita_usuario', 'receita_favorita',
+  'limpezas', 'execucao_limpeza', 'categoria_tarefa', 'tarefa', 'recorrencia_tarefa',
+  'execucao_tarefa', 'categoria_financas', 'conta_financeira', 'recorrencia_financeira',
+  'transacao_financeira', 'orcamento', 'meta_financeira', 'jornada', 'etapa_jornada',
+  'tarefa_jornada', 'plano_moradia', 'custo_moradia', 'simulacao_moradia', 'simulacao_item',
+  'casa_desejada', 'aula', 'quiz', 'questao', 'alternativa', 'progresso_aula',
+  'tentativa_quiz', 'resposta_quiz', 'perfil_empresa', 'servico', 'plano_publicacao',
+  'publicacao_servico', 'servico_contratado', 'avaliacao_servico', 'chat_servico',
+  'mensagem', 'plano_assinatura', 'assinatura', 'metodo_pagamento', 'pagamento',
+  ...colecoesCobrancas, ...colecoesPreparacao,
+  ...colecoesMarketplace,
+].map(colecao => [colecao, []]));
+
+let dados = acessoLocal
+  ? { ...structuredClone(demonstracao), ...lerReceitasSalvas(), ...lerFinancasSalvas(), ...lerComprasSalvas(), ...lerMarketplaceSalvo(), ...lerCobrancasSalvas(), ...lerPreparacaoSalva() }
+  : bancoVazio;
+if (acessoLocal) {
+  mesclarEnderecosMarketplace(dados, dados.enderecos_marketplace);
+  mesclarEnderecosMarketplace(dados, dados.enderecos_preparacao);
+  mesclarDadosEmpresa(dados);
+  aplicarPerfilSalvo(dados);
+  for (const perfil of demonstracao.perfil.filter(item => item.user_id !== 1))
+    aplicarPerfilSalvo(dados, chavePerfil + ':' + perfil.user_id);
+}
 const ouvintes = new Set();
 export const USUARIO_A = 1;
-export const USUARIO_B = banco.dados.perfil.find(perfil => perfil.tipo === 2).user_id;
+export const USUARIO_B = demonstracao?.perfil.find(perfil => perfil.tipo === 2)?.user_id ?? 2;
 export const hoje = () => {
   const data = new Date();
   return `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, '0')}-${String(data.getDate()).padStart(2, '0')}`;
@@ -188,6 +237,7 @@ export const dataCurta = valor =>
     : 'Sem prazo';
 
 export function alterarBanco(operacao) {
+  if (!acessoLocal) throw new Error('Esta operação ainda não está disponível no servidor.');
   const proximo = structuredClone(dados);
   operacao(proximo);
   dados = proximo;
@@ -331,9 +381,16 @@ export function removerRegistro(colecao, id) {
     }
   });
 }
-if (typeof window !== 'undefined') {
+if (acessoLocal && typeof window !== 'undefined') {
   window.addEventListener('storage', evento => {
-    if (evento.key !== chaveMarketplace || !evento.newValue) return;
+    if (!evento.newValue || ![chaveMarketplace, chaveCobrancas].includes(evento.key)) return;
+    if (evento.key === chaveCobrancas) {
+      alterarBanco(db => {
+        Object.assign(db, lerCobrancasSalvas());
+        mesclarDadosEmpresa(db);
+      });
+      return;
+    }
     alterarBanco(db => {
       Object.assign(db, lerMarketplaceSalvo());
       mesclarEnderecosMarketplace(db, db.enderecos_marketplace);
@@ -347,8 +404,13 @@ const inscrever = ouvir => {
 const snapshot = () => dados;
 export function useBancoMvp(usuarioSelecionado) {
   const preparacao = usePerfilPreparacao();
-  const usuario = usuarioSelecionado ?? lerUsuarioMvpAtivo() ?? (preparacao ? USUARIO_B : USUARIO_A);
-  const b = useSyncExternalStore(inscrever, snapshot);
+  const sessao = useSessao();
+  const servidor = useDadosServidor();
+  const usuario = acessoLocal
+    ? usuarioSelecionado ?? lerUsuarioMvpAtivo() ?? (preparacao ? USUARIO_B : USUARIO_A)
+    : sessao?.id;
+  const local = useSyncExternalStore(inscrever, snapshot);
+  const b = acessoLocal ? local : { ...bancoVazio, ...servidor?.dados };
   const perfil = b.perfil.find(item => item.user_id === usuario);
   const casa = b.casa.find(item => item.user_id === usuario);
   const comodos = b.comodo.filter(item => item.casa_id === casa?.id);

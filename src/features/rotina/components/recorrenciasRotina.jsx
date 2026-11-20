@@ -1,3 +1,6 @@
+import { contaApi } from '../../../app/dados/contaApi';
+import { useDadosServidor } from '../../../app/dados/contextoServidor';
+import { editarRecorrenciaRotina } from '../rotinaApi';
 import { useAvisoPerfilA } from '../../../app/avisos/avisosPerfilA';
 import { useState } from 'react';
 import { CalendarDays, Pencil, Plus, Repeat2, Trash2 } from 'lucide-react';
@@ -61,11 +64,11 @@ function EditorRecorrencia({ regra, tarefas, aoSalvar, aoFechar, aoExcluir }) {
   const [rotulo, , unidade] = frequencias[frequencia];
   const semanal = frequencia === 'semanal';
 
-  function enviar(evento) {
+  async function enviar(evento) {
     evento.preventDefault();
     const campos = new FormData(evento.currentTarget);
     try {
-      aoSalvar(
+      await aoSalvar(
         normalizarRecorrencia({
           id: regra?.id,
           tarefa_id: Number(campos.get('tarefa')),
@@ -179,7 +182,9 @@ function EditorRecorrencia({ regra, tarefas, aoSalvar, aoFechar, aoExcluir }) {
               Remover a repetição {rotulo.toLowerCase()}? As ocorrências já
               criadas ficam na agenda.
             </p>
-            <BotaoRotina tom='secundario' onClick={aoExcluir}>
+            <BotaoRotina tom='secundario' onClick={async () => {
+              try { await aoExcluir(); } catch (falha) { setErro(falha.message); }
+            }}>
               Confirmar remoção
             </BotaoRotina>
           </div>
@@ -206,12 +211,28 @@ function EditorRecorrencia({ regra, tarefas, aoSalvar, aoFechar, aoExcluir }) {
 }
 
 export default function RecorrenciasRotina({ regras, tarefas, execucoes }) {
+  const servidor = useDadosServidor();
+  const [erroApi, setErroApi] = useState('');
   const [editor, setEditor] = useState(null);
   const notificar = useAvisoPerfilA();
   const comRegra = new Set(regras.map(item => item.tarefa_id));
   const novasTarefas = tarefas.filter(tarefa => !comRegra.has(tarefa.id));
 
-  function gerar(regra) {
+  async function gerar(regra) {
+    if (servidor) {
+      try {
+        const proxima = proximaOcorrencia(regra, execucoes, hoje());
+        if (!proxima) return notificar('Nenhuma nova ocorrência neste período.');
+        const hora = tarefas.find(item => item.id === regra.tarefa_id)?.prazo?.slice(11, 16) || '12:00';
+        await contaApi(`/tarefas/${regra.tarefa_id}/execucoes`, {
+          metodo: 'POST', dados: { dataPrevista: `${proxima}T${hora}:00` },
+        });
+        await servidor.atualizar();
+        setErroApi('');
+        notificar(`Ocorrência adicionada à agenda para ${dataCurta(proxima)}.`);
+      } catch (falha) { setErroApi(falha.message); }
+      return;
+    }
     let proxima;
     alterarBanco(db => {
       const atual = db.recorrencia_tarefa.find(item => item.id === regra.id);
@@ -240,8 +261,14 @@ export default function RecorrenciasRotina({ regras, tarefas, execucoes }) {
     );
   }
 
-  function salvar(regra) {
-    alterarBanco(db => {
+  async function salvar(regra) {
+    if (servidor) {
+      await editarRecorrenciaRotina(regra.tarefa_id, Boolean(regra.id), {
+        frequencia: regra.frequencia, intervalo: regra.intervalo, inicio: regra.inicio, fim: regra.fim,
+        diasSemana: regra.dias_semana, diaMes: regra.dia_mes,
+      });
+      await servidor.atualizar();
+    } else alterarBanco(db => {
       if (
         db.recorrencia_tarefa.some(
           item => item.tarefa_id === regra.tarefa_id && item.id !== regra.id
@@ -272,6 +299,7 @@ export default function RecorrenciasRotina({ regras, tarefas, execucoes }) {
           <Plus size={17} aria-hidden='true' /> Nova recorrência
         </BotaoRotina>
       </CabecalhoRotina>
+      {erroApi && <p role='alert'>{erroApi}</p>}
       {regras.length ? (
         <ul className='rotina-recorrencia-lista'>
           {regras.map(regra => {
@@ -333,16 +361,16 @@ export default function RecorrenciasRotina({ regras, tarefas, execucoes }) {
           regra={editor.id ? editor : undefined}
           tarefas={
             editor.id
-              ? tarefas.filter(
-                  tarefa =>
-                    tarefa.id === editor.tarefa_id || !comRegra.has(tarefa.id)
-                )
+              ? tarefas.filter(tarefa => tarefa.id === editor.tarefa_id || (!servidor && !comRegra.has(tarefa.id)))
               : novasTarefas
           }
           aoSalvar={salvar}
           aoFechar={() => setEditor(null)}
-          aoExcluir={() => {
-            removerRegistro('recorrencia_tarefa', editor.id);
+          aoExcluir={async () => {
+            if (servidor) {
+              await editarRecorrenciaRotina(editor.tarefa_id, true);
+              await servidor.atualizar();
+            } else removerRegistro('recorrencia_tarefa', editor.id);
             setEditor(null);
             notificar('Repetição removida.');
           }}

@@ -8,7 +8,6 @@ import {
   useBancoMvp,
 } from '../../app/dados/bancoMvp';
 import { acessoLocal } from '../../app/dados/acessoLocal';
-import ComparacaoSimulacoes from './ComparacaoSimulacoes';
 import LayoutPreparacao, { campo, painel } from './LayoutPreparacao';
 import {
   listar,
@@ -60,7 +59,7 @@ function Campo({ def, valor }) {
 function Metricas({ entidade, registro, banco, usuario }) {
   const config = modelo[entidade];
   const filhos = config.filhos?.[0];
-  if (entidade === 'plano_moradia' || entidade === 'simulacao_moradia') {
+  if (entidade === 'plano_moradia') {
     const valores = resumoMoradia(
       registro.renda_mensal,
       registro.reserva_atual ?? registro.reserva,
@@ -116,12 +115,6 @@ function Metricas({ entidade, registro, banco, usuario }) {
         {custos.some(item => item.tipo === 'mensal') && (
           <p>Gastos mensais já registrados no plano: {moeda(mensal)}.</p>
         )}
-        <Link
-          className='mt-1 inline-block font-bold underline'
-          to={'/financas-b?visao=simulacoes&plano=' + plano.id}
-        >
-          Testar este valor em uma simulação
-        </Link>
       </div>
     );
   }
@@ -387,8 +380,7 @@ function Lista({ banco, entidade, pai, usuario, filtrar }) {
         if (config.status) novo.status = Object.keys(config.status)[0];
         if (entidade === 'tarefa_jornada') novo.concluida = false;
         if (entidade === 'etapa_jornada') novo.concluida_em = null;
-        if (['jornada', 'simulacao_moradia'].includes(entidade))
-          novo.criada_em = new Date().toISOString();
+        if (entidade === 'jornada') novo.criada_em = new Date().toISOString();
         atuais.push(novo);
       })
     )
@@ -524,7 +516,7 @@ function Lista({ banco, entidade, pai, usuario, filtrar }) {
 
 const trilhas = {
   jornada: ['jornada', 'etapa_jornada'],
-  plano_moradia: ['plano_moradia', 'simulacao_moradia'],
+  plano_moradia: ['plano_moradia'],
   casa_desejada: [],
 };
 
@@ -575,21 +567,17 @@ export default function RegistrosPreparacao({
             banco={b}
             usuario={usuario}
           />
-          {entidade === 'plano_moradia' && (
-            <ComparacaoSimulacoes
-              simulacoes={listar(b, 'simulacao_moradia', usuario, registro.id)}
-              itens={b.simulacao_item}
-            />
-          )}
-          {modelo[entidade].filhos.map(filho => (
-            <Lista
-              key={filho + registro.id}
-              banco={b}
-              usuario={usuario}
-              entidade={filho}
-              pai={registro.id}
-            />
-          ))}
+          {modelo[entidade].filhos
+            .filter(filho => filho !== 'simulacao_moradia')
+            .map(filho => (
+              <Lista
+                key={filho + registro.id}
+                banco={b}
+                usuario={usuario}
+                entidade={filho}
+                pai={registro.id}
+              />
+            ))}
         </>
       ) : (
         <Lista

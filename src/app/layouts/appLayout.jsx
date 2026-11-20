@@ -1,6 +1,7 @@
-import { useLayoutEffect } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Cabecalho } from '../../shared/index';
+import { HoverMenuLateral } from './components/useMenuLateral';
 
 export default function LayoutAplicacao({
   varianteCabecalho,
@@ -9,6 +10,8 @@ export default function LayoutAplicacao({
   propriedadesCabecalho,
   referencia,
 }) {
+  const hoverMenu = useState(false);
+  const [sobreMenu, setSobreMenu] = hoverMenu;
   const { pathname } = useLocation();
 
   useLayoutEffect(() => {
@@ -20,9 +23,23 @@ export default function LayoutAplicacao({
       ref={referencia}
       className={`flex min-h-dvh min-w-0 flex-col bg-white ${classe}`}
       data-layout-aplicacao='ativo'
+      onPointerMove={evento => {
+        if (
+          sobreMenu &&
+          evento.pointerType === 'mouse' &&
+          !(
+            evento.target instanceof Element &&
+            evento.target.closest('.casa-menu')
+          )
+        )
+          setSobreMenu(false);
+      }}
+      onPointerLeave={() => setSobreMenu(false)}
     >
       <Cabecalho {...propriedadesCabecalho} variante={varianteCabecalho} />
-      {children ?? <Outlet />}
+      <HoverMenuLateral.Provider value={hoverMenu}>
+        {children ?? <Outlet />}
+      </HoverMenuLateral.Provider>
     </div>
   );
 }

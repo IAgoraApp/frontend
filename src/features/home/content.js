@@ -102,8 +102,6 @@ export function obterEventosAgendaMes(referenciaMes) {
 export const atalhosPreparacao = [
   { rotulo: 'Minha jornada', rota: '/minhajornada', icone: iconeJornada },
   { rotulo: 'Imóveis desejados', rota: '/encontrar-casa', icone: iconeCasa },
-  { rotulo: 'Rotina', rota: '/rotina', icone: iconeChecklists },
   { rotulo: 'Finanças', rota: '/financas-b', icone: iconeFinancas },
-  { rotulo: 'Receitas', rota: '/cozinha', icone: iconeCozinha },
   { rotulo: 'Aprendendo a morar', rota: '/aprendendo', icone: iconeAulas },
 ];

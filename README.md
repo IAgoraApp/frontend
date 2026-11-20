@@ -50,8 +50,10 @@ sem o header de navegação.
 A rota técnica /manutencao e o errorElement seguem a organização do router original.
 Endereços desconhecidos são tratados pelo errorElement.
 
-Os helpers PublicRoute e PrivateRoute ficam em src/app/utils/checkAuth.jsx.
-Como no projeto original, ambos apenas renderizam Outlet; ainda não validam autenticação.
+As guardas de rota ficam em `src/app/utils/checkAuth.jsx`. A área privada
+carrega dados do backend com o JWT da sessão. Um 401 autenticado redireciona
+para o login. Use `VITE_API_URL` para configurar a API. Para uma prévia
+explicitamente isolada, selecione `VITE_ACESSO_LOCAL=true` em desenvolvimento.
 Os layouts são exportados por `src/app/layouts` e compartilham a estrutura de
 `AppLayout`. Cada grupo de rotas escolhe seu layout no router:
 
@@ -72,11 +74,11 @@ O header adapta a navegação ao espaço disponível: exibe os links no desktop 
 um menu recolhível em telas menores ou com zoom. O menu fecha ao navegar,
 pressionar Escape ou clicar fora; sua abertura não desloca a página.
 
-`rotina` implementa tarefas, calendário, histórico e modais com persistência local.
-Sua organização e limitações estão em `src/features/rotina/README.md`.
-As features `home-B` e `minha-jornada` têm apenas componentes vazios,
-exports e rotas, prontos para receber as telas. A home existente do userA foi mantida.
-Destinos como finanças e perfil empresarial ainda precisam das respectivas páginas.
+O frontend carrega dados reais por área. Cada feature mantém seu adaptador
+de API e usa os componentes e rotas existentes. A configuração, a matriz de
+cobertura e os comandos do seed estão em
+[`INTEGRACAO_FULLSTACK.md`](../INTEGRACAO_FULLSTACK.md). A suíte Playwright
+é iniciada com `npm run test:e2e` e usa um ambiente local de testes.
 
 Para adicionar páginas com navegação própria, agrupe as rotas sob o layout desejado:
 
@@ -97,3 +99,14 @@ renderizam o `Outlet` das rotas filhas. Uma composição nova também pode usar
 O login mantém espaço para as variações de texto e para a confirmação de senha,
 evitando deslocamentos ao alternar entre pessoa, empresa e cadastro. O campo de
 confirmação fica desabilitado e fora da navegação por teclado no modo de login.
+
+### Login com Google no ambiente local
+
+Inicie o MySQL configurado para o backend. Em `backend/`, execute
+`source ./env.sh && ./mvnw spring-boot:run`. O backend também lê `GOOGLE_CLIENT_ID` de `backend/.env.local` quando iniciado pelo IDE ou pelo terminal. Use o mesmo ID de `VITE_GOOGLE_CLIENT_ID` no frontend.
+O backend usa a porta 8080 por padrão. Confira `/api/health` antes de testar.
+
+Em `frontend/`, rode `npm run dev`. Para o backend local, mantenha
+`VITE_API_URL=http://127.0.0.1:8080`. Autorize no cliente OAuth do tipo
+Aplicativo da Web a origem exata em que você abre o Vite, como
+`http://localhost:5173`. Reinicie o Vite depois de modificar o `.env`.

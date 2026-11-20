@@ -1,3 +1,5 @@
+import { useDadosServidor } from '../../app/dados/contextoServidor';
+import { pedirAtendimento } from './marketplaceApi';
 import { useState } from 'react';
 import {
   alterarBancoMarketplace,
@@ -17,11 +19,16 @@ export default function SolicitarServico({
   aoFechar,
   aoEnviar,
 }) {
+  const servidor = useDadosServidor();
+  const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState('');
   const [usarNovoEndereco, setUsarNovoEndereco] = useState(!endereco);
 
-  function enviar(evento) {
+  async function enviar(evento) {
     evento.preventDefault();
+    if (enviando) return;
+    setEnviando(true);
+    setErro('');
     const dados = new FormData(evento.currentTarget);
     const descricao = String(dados.get('descricao') ?? '').trim();
     const data = dados.get('data') || null;
@@ -55,12 +62,18 @@ export default function SolicitarServico({
           !/^\d{5}-?\d{3}$/.test(novoEndereco.cep))
       )
         throw new Error('Confira o endereço, o CEP e a sigla do estado.');
-      alterarBancoMarketplace(db => {
+      if (servidor) {
+        const chat = await pedirAtendimento(servico.id, {
+          descricao, dataAgendamento: data, endereco: novoEndereco,
+          enderecoId: novoEndereco ? null : endereco?.id,
+        });
+        chatId = chat.id;
+      } else alterarBancoMarketplace(db => {
         const atual = db.servico.find(s => s.id === servico.id);
         const prestador = db.perfil_empresa.find(
           e => e.id === atual?.empresa_id
         );
-        if (!atual || !servicoPublico(atual, prestador))
+        if (!atual || !servicoPublico(atual, prestador, undefined, db.publicacao_servico.filter(p => p.servico_id === atual.id)))
           throw new Error('O serviço saiu do catálogo.');
         if (
           db.servico_contratado.some(
@@ -110,6 +123,8 @@ export default function SolicitarServico({
       aoEnviar(chatId);
     } catch (falha) {
       setErro(falha.message);
+    } finally {
+      setEnviando(false);
     }
   }
 
@@ -205,7 +220,7 @@ export default function SolicitarServico({
           </p>
         )}
         <div className='mercado-a-contato-acoes'>
-          <button type='submit' className='mvp-primario'>
+          <button type='submit' disabled={enviando} className='mvp-primario'>
             Abrir conversa
           </button>
           <button type='button' className='mvp-link' onClick={aoFechar}>

@@ -1,3 +1,4 @@
+import { useFinancas } from './useFinancas';
 import { useAvisoPerfilA } from '../../app/avisos/avisosPerfilA';
 import { useState } from 'react';
 import {
@@ -40,11 +41,9 @@ import {
   LinhasLancamentos,
 } from './components/financeViews';
 import {
-  atualizarFinancas,
   camposConta,
   frequencias,
   tipoNomeConta,
-  gerarRecorrencia,
   saldoMovimentos,
 } from './financasDados';
 
@@ -206,6 +205,7 @@ const adaptar = t => ({
 });
 
 function AcoesMeta({ meta, executar }) {
+  const { atualizarFinancas } = useFinancas();
   const [aporte, setAporte] = useState(false);
   const notificar = useAvisoPerfilA();
   if (meta.status !== 'ativa') return null;
@@ -236,8 +236,8 @@ function AcoesMeta({ meta, executar }) {
           inicial={{}}
           campos={[valor('aporte', 'Valor a adicionar')]}
           onClose={() => setAporte(false)}
-          onSave={({ aporte }) => {
-            atualizarFinancas('meta_financeira', meta, atual => ({
+          onSave={async ({ aporte }) => {
+            await atualizarFinancas('meta_financeira', meta, atual => ({
               valor_atual:
                 (Math.round(Number(atual.valor_atual) * 100) +
                   Math.round(aporte * 100)) /
@@ -258,6 +258,7 @@ function AcoesRecorrencia({
   categoriaCampo,
   categoriaInicial,
 }) {
+  const { atualizarFinancas, gerarRecorrencia } = useFinancas();
   const [gerando, setGerando] = useState(false);
   const notificar = useAvisoPerfilA();
   return (
@@ -316,8 +317,8 @@ function AcoesRecorrencia({
               categoriaCampo,
             ]}
             onClose={() => setGerando(false)}
-            onSave={v => {
-              const gerados = gerarRecorrencia(registro, v.mes, v.categoria_id);
+            onSave={async v => {
+              const gerados = await gerarRecorrencia(registro, v.mes, v.categoria_id);
               notificar(
                 gerados === 0
                   ? 'Nenhum novo lançamento para este mês.'
@@ -334,6 +335,7 @@ function AcoesRecorrencia({
 }
 
 export default function FinancasA({ usuario, rota = '/financas' }) {
+  const { atualizarFinancas } = useFinancas();
   const { b, perfil, transacoes } = useBancoMvp(usuario);
   const [params, setParams] = useSearchParams();
   const chaveContaAtiva = 'iagora:financas:conta-ativa:' + perfil.user_id;
@@ -906,8 +908,8 @@ export default function FinancasA({ usuario, rota = '/financas' }) {
                   registroInicial={contaAberta}
                   padrao={{ ...padrao, saldo_inicial: 0 }}
                   campos={camposConta}
-                  onSave={dados => {
-                    const conta = atualizarFinancas('conta_financeira', dados);
+                  onSave={async dados => {
+                    const conta = await atualizarFinancas('conta_financeira', dados);
                     if (!dados.id) ativarConta(conta.id);
                   }}
                   acoes={c =>
@@ -1048,7 +1050,7 @@ export default function FinancasA({ usuario, rota = '/financas' }) {
                   ]}
                   onSave={({ descricao, ...o }) => {
                     void descricao;
-                    atualizarFinancas('orcamento', {
+                    return atualizarFinancas('orcamento', {
                       ...o,
                       mes: o.mes + '-01',
                     });

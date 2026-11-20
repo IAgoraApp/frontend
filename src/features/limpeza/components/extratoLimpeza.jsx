@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import { hoje } from '../../../app/dados/bancoMvp';
 import { agruparExecucoes, dataLocalExecucao } from '../utils/extratoLimpeza';
-import { DialogoCasa } from '../../casa/components/casaUi';
+import { BotaoCasa, DialogoCasa } from '../../casa/components/casaUi';
 import { imagemComodo } from '../utils/imagemComodo';
 import './extratoLimpeza.css';
 
@@ -24,11 +24,13 @@ export default function ExtratoLimpeza({
   limpezas,
   comodos,
   perfis,
+  aoRemover,
 }) {
   const [mes, setMes] = useState('todos');
   const [comodo, setComodo] = useState('todos');
   const [busca, setBusca] = useState('');
   const [execucaoId, setExecucaoId] = useState(null);
+  const [confirmando, setConfirmando] = useState(false);
   const meses = [
     ...new Set(
       registros.map(e => dataLocalExecucao(e.realizada_em).slice(0, 7))
@@ -196,7 +198,10 @@ export default function ExtratoLimpeza({
       {execucao && (
         <DialogoCasa
           titulo={atividadeDetalhe?.nome || 'Limpeza realizada'}
-          aoFechar={() => setExecucaoId(null)}
+          aoFechar={() => {
+            setConfirmando(false);
+            setExecucaoId(null);
+          }}
         >
           <div className='extrato-detalhe'>
             {localDetalhe && (
@@ -236,6 +241,37 @@ export default function ExtratoLimpeza({
                   'Esta atividade ainda não tem orientações cadastradas.'}
               </p>
             </section>
+            {aoRemover &&
+              (confirmando ? (
+                <div className='mvp-confirmacao'>
+                  <p>Excluir este registro do histórico de limpeza?</p>
+                  <BotaoCasa
+                    secundario
+                    type='button'
+                    onClick={() => setConfirmando(false)}
+                  >
+                    Cancelar
+                  </BotaoCasa>
+                  <BotaoCasa
+                    type='button'
+                    onClick={() => {
+                      aoRemover(execucao.id);
+                      setConfirmando(false);
+                      setExecucaoId(null);
+                    }}
+                  >
+                    Excluir registro
+                  </BotaoCasa>
+                </div>
+              ) : (
+                <button
+                  className='mvp-link'
+                  type='button'
+                  onClick={() => setConfirmando(true)}
+                >
+                  Excluir do histórico
+                </button>
+              ))}
           </div>
         </DialogoCasa>
       )}
